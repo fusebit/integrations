@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-connector",
-  "version": "5.0.3-alpha.0",
+  "version": "5.0.4-alpha.0",
   "description": "Fusebit OAuth connector",
   "keywords": [
     "Fusebit",
@@ -37,5 +37,6 @@
   },
   "dependencies": {
     "superagent": "^6.1.0"
-  }
+  },
+  "gitHead": "a871863860f0c2cedb998952e63e57cfe41394b1"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/hubspot-connector",
-  "version": "5.0.3-alpha.0",
+  "version": "5.0.4-alpha.0",
   "description": "> TODO: description",
   "keywords": [
     "Fusebit",
@@ -28,12 +28,13 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^5.0.3-alpha.0"
+    "@fusebit-int/oauth-connector": "^5.0.4-alpha.0"
   },
   "devDependencies": {
     "typescript": "3.7.3"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "^4.0.0"
-  }
+  },
+  "gitHead": "a871863860f0c2cedb998952e63e57cfe41394b1"
 }
