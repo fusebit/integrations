@@ -33,10 +33,9 @@
     "typescript": "3.7.3"
   },
   "peerDependencies": {
-    "@fusebit-int/framework": "^4.0.0"
+    "@fusebit-int/framework": "5.0.1-alpha.0"
   },
   "dependencies": {
-    "@fusebit-int/framework": "^5.0.1-alpha.0",
     "superagent": "^6.1.0"
   }
 }
