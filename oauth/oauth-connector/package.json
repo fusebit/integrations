@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-connector",
-  "version": "3.0.2-alpha.0",
+  "version": "5.0.1-alpha.0",
   "description": "Fusebit OAuth connector",
   "keywords": [
     "Fusebit",
@@ -36,7 +36,7 @@
     "@fusebit-int/framework": "^4.0.0"
   },
   "dependencies": {
-    "@fusebit-int/framework": "^4.0.2-alpha.0",
+    "@fusebit-int/framework": "^5.0.1-alpha.0",
     "superagent": "^6.1.0"
   }
 }
