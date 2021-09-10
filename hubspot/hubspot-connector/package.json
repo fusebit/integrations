@@ -15,9 +15,6 @@
     "libc/**/*.d.ts",
     "libc/**/*.json"
   ],
-  "publishConfig": {
-    "registry": "http://localhost:3001/v1/account/acc-b86cb916e3f641ff/registry/default/npm/"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"
