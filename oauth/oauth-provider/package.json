@@ -1,7 +1,7 @@
 {
   "name": "@fusebit-int/oauth-provider",
-  "version": "5.0.7-alpha.3",
-  "description": "Fusebit OAuth Provider",
+  "version": "5.0.0",
+  "description": "Fusebit OAuth 2.0 Provider",
   "keywords": [
     "Fusebit",
     "OAuth"
@@ -21,16 +21,27 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "tsc:version": "tsc --version",
-    "build": "tsc -b --pretty"
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "prettier:fix": "prettier --write . --ignore-path ../../.prettierignore",
+    "prettier:check": "prettier --check . --ignore-path ../../.prettierignore",
+    "lint": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
   },
   "devDependencies": {
+    "@fusebit-int/framework": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "prettier": "^2.4.0",
     "typescript": "3.7.3"
   },
   "peerDependencies": {
-    "@fusebit-int/framework": "^4.0.0"
-  },
-  "gitHead": "a871863860f0c2cedb998952e63e57cfe41394b1"
+    "@fusebit-int/framework": "*"
+  }
 }

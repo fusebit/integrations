@@ -1,7 +1,6 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": { "rootDir": "src", "module": "CommonJS", "outDir": "libc" },
-    "include": ["src", "src/**/*.json"],
-    "references": [{ "path": "../../framework" }, { "path": "../../oauth/oauth-connector" }]
-  }
-  
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "rootDir": "src", "module": "CommonJS", "outDir": "libc" },
+  "include": ["src", "src/**/*.json"],
+  "references": [{ "path": "../../framework" }, { "path": "../../oauth/oauth-connector" }]
+}

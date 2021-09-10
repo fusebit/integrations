@@ -154,7 +154,7 @@ class OAuthEngine {
    * access token cannot be returned, an exception is thrown.
    * @param {*} Context The vendor user Context
    */
-  public async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string, identity: boolean = true) {
+  public async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string, identity = true) {
     let token: IOAuthToken | undefined;
     const tokenRw = identity
       ? {
@@ -247,7 +247,7 @@ class OAuthEngine {
 
     // Access token expired, but no refresh token; deleting.
     await tokenRw.delete(lookupKey);
-    throw new Error(`Access token is expired and cannot be refreshed because the refresh token is not present.`);
+    throw new Error('Access token is expired and cannot be refreshed because the refresh token is not present.');
   }
 
   protected async waitForRefreshedAccessToken(
@@ -259,7 +259,7 @@ class OAuthEngine {
   ) {
     if (count <= 0) {
       throw new Error(
-        `Error refreshing access token. Waiting for the access token to be refreshed exceeded the maximum time`
+        'Error refreshing access token. Waiting for the access token to be refreshed exceeded the maximum time'
       );
     }
 
@@ -269,7 +269,7 @@ class OAuthEngine {
         try {
           token = await tokenRw.get(lookupKey);
           if (!token || token.status === 'refresh_error') {
-            throw new Error(`Concurrent access token refresh operation failed`);
+            throw new Error('Concurrent access token refresh operation failed');
           }
         } catch (e) {
           return reject(new Error(`Error waiting for access token refresh: ${e.message}`));

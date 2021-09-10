@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/slack-connector",
-  "version": "5.0.7-alpha.3",
+  "version": "5.0.0",
   "description": "Fusebit Slack connector",
   "keywords": [
     "Fusebit",
@@ -15,9 +15,6 @@
     "libc/**/*.d.ts",
     "libc/**/*.json"
   ],
-  "publishConfig": {
-    "registry": "http://localhost:3001/v1/account/acc-b86cb916e3f641ff/registry/default/npm/"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"
@@ -25,19 +22,31 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "version": "tsc --version",
-    "build": "tsc -b --pretty"
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "prettier:fix": "prettier --write . --ignore-path ../../.prettierignore",
+    "prettier:check": "prettier --check . --ignore-path ../../.prettierignore",
+    "lint": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^5.0.7-alpha.3"
+    "@fusebit-int/oauth-connector": "^5.0.0",
+    "superagent": "6.1.0"
   },
   "devDependencies": {
+    "@fusebit-int/framework": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "prettier": "^2.4.0",
     "typescript": "3.7.3"
   },
   "peerDependencies": {
-    "@fusebit-int/framework": "^4.0.0"
-  },
-  "gitHead": "a871863860f0c2cedb998952e63e57cfe41394b1"
+    "@fusebit-int/framework": "*"
+  }
 }

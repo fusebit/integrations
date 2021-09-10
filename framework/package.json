@@ -1,7 +1,7 @@
 {
   "name": "@fusebit-int/framework",
-  "version": "5.0.7-alpha.3",
-  "description": "> TODO: description",
+  "version": "5.0.0",
+  "description": "Fusebit Official SDK",
   "keywords": [
     "fusebit"
   ],
@@ -25,13 +25,19 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "build": "tsc -b --pretty",
-    "tsc:version": "tsc --version"
+    "dev": "tsc --watch --pretty",
+    "tsc:version": "tsc --version",
+    "prettier:fix": "prettier --write . --ignore-path ../.prettierignore",
+    "prettier:check": "prettier --check . --ignore-path ../.prettierignore",
+    "lint": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "@types/koa": "2.11.0",
     "http-errors": "^1.8.0",
     "koa": "^2.13.1",
     "node-mocks-http": "^1.10.1",
@@ -40,11 +46,14 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.83",
-    "@types/koa": "^2.13.4",
     "@types/koa__router": "^8.0.8",
     "@types/statuses": "^2.0.0",
     "@types/superagent": "^4.1.12",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.4.0",
     "typescript": "3.7.3"
-  },
-  "gitHead": "a871863860f0c2cedb998952e63e57cfe41394b1"
+  }
 }

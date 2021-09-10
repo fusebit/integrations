@@ -25,135 +25,135 @@
   <body>
     <div id="root"></div>
     <script type="text/babel" crossorigin>
-const {
-  createMuiTheme,
-  ThemeProvider,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Grid,
-  Icon,
-} = MaterialUI;
+      const {
+        createMuiTheme,
+        ThemeProvider,
+        Button,
+        Dialog,
+        DialogContent,
+        DialogContentText,
+        DialogTitle,
+        DialogActions,
+        TextField,
+        Grid,
+        Icon,
+      } = MaterialUI;
 
-const FusebitTheme = {
-  ...createMuiTheme({
-    // Overrides of default MUI theme:
-    typography: {
-      fontFamily: '"Nunito Sans", sans-serif',
-    },
-    palette: {
-      primary: {
-        main: '#03032D', // FusebitColor.black
-      },
-      secondary: {
-        main: '#FB310A', // FusebitColor.red
-      },
-    },
-    overrides: {
-      MuiTab: {
-        wrapper: {
-          fontFamily: '"Poppins", sans-serif',
-        },
-      },
-      MuiButton: {
-        root: {
-          borderRadius: '100px',
-        },
-        label: {
-          fontFamily: '"Poppins", sans-serif',
-        },
-      },
-      MuiDialogContent: {
-        root: {
-          paddingBottom: '30px',
-          paddingTop: '30px',
-        },
-      },
-    },
-  }),
-};
+      const FusebitTheme = {
+        ...createMuiTheme({
+          // Overrides of default MUI theme:
+          typography: {
+            fontFamily: '"Nunito Sans", sans-serif',
+          },
+          palette: {
+            primary: {
+              main: '#03032D', // FusebitColor.black
+            },
+            secondary: {
+              main: '#FB310A', // FusebitColor.red
+            },
+          },
+          overrides: {
+            MuiTab: {
+              wrapper: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiButton: {
+              root: {
+                borderRadius: '100px',
+              },
+              label: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiDialogContent: {
+              root: {
+                paddingBottom: '30px',
+                paddingTop: '30px',
+              },
+            },
+          },
+        }),
+      };
 
-const { useState } = React;
+      const { useState } = React;
 
-function postForm(path, payload) {
-  const form = document.createElement('form');
-  form.method = 'post';
-  form.action = path;
+      function postForm(path, payload) {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = path;
 
-  const payloadField = document.createElement('input');
-  payloadField.type = 'hidden';
-  payloadField.name = 'payload';
-  payloadField.value = JSON.stringify({ payload, state: ##state## });
+        const payloadField = document.createElement('input');
+        payloadField.type = 'hidden';
+        payloadField.name = 'payload';
+        payloadField.value = JSON.stringify({ payload, state: ##state## });
 
-  form.appendChild(payloadField);
+        form.appendChild(payloadField);
 
-  document.body.appendChild(form);
-  form.submit();
-}
+        document.body.appendChild(form);
+        form.submit();
+      }
 
-function App() {
-  const renderers = JSONFormsMaterial.materialRenderers;
-  const cells = JSONFormsMaterial.materialCells;
+      function App() {
+        const renderers = JSONFormsMaterial.materialRenderers;
+        const cells = JSONFormsMaterial.materialCells;
 
-  const schema = ##schema##;
-  const uischema = ##uischema##;
-  const [data, setData] = useState(##data##);
+        const schema = ##schema##;
+        const uischema = ##uischema##;
+        const [data, setData] = useState(##data##);
 
-  const submitForm = () => {
-    const target = ##submitUrl##;
-    console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
-    postForm(target, data);
-  };
+        const submitForm = () => {
+          const target = ##submitUrl##;
+          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          postForm(target, data);
+        };
 
-  const cancelForm = () => {
-    const target = ##cancelUrl##;
-    console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
-    postForm(target, {});
-  };
+        const cancelForm = () => {
+          const target = ##cancelUrl##;
+          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          postForm(target, {});
+        };
 
-  return (
-    <Dialog open={true} fullWidth maxWidth="md" disableBackdropClick disableEscapeKeyDown>
-      <DialogTitle>
-        ##dialogTitle##
-      </DialogTitle>
-      <DialogContent>
-{/*
-        <Grid container spacing={21}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-*/}
-              <JSONFormsReact.JsonForms
-                renderers={renderers}
-                cells={cells}
-                schema={schema}
-                uischema={uischema}
-                data={data}
-                onChange={({ errors, data }) => setData(data)}
-              />
-{/*
-            </Grid>
-          </Grid>
-        </Grid>
-*/}
-      </DialogContent>
-      <DialogActions>
-        <Button variant="text" onClick={cancelForm}> Cancel </Button>
-        <Button variant="contained" color="primary" onClick={submitForm}> Submit </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
+        return (
+          <Dialog open={true} fullWidth maxWidth="md" disableBackdropClick disableEscapeKeyDown>
+            <DialogTitle>
+              ##dialogTitle##
+            </DialogTitle>
+            <DialogContent>
+      {/*
+              <Grid container spacing={21}>
+                <Grid item xs={12}>
+                  <Grid container spacing={2}>
+      */}
+                    <JSONFormsReact.JsonForms
+                      renderers={renderers}
+                      cells={cells}
+                      schema={schema}
+                      uischema={uischema}
+                      data={data}
+                      onChange={({ errors, data }) => setData(data)}
+                    />
+      {/*
+                  </Grid>
+                </Grid>
+              </Grid>
+      */}
+            </DialogContent>
+            <DialogActions>
+              <Button variant="text" onClick={cancelForm}> Cancel </Button>
+              <Button variant="contained" color="primary" onClick={submitForm}> Submit </Button>
+            </DialogActions>
+          </Dialog>
+        );
+      }
 
-ReactDOM.render(
-  <ThemeProvider theme={FusebitTheme}>
-    <App />
-  </ThemeProvider>,
-  document.getElementById('root')
-);
+      ReactDOM.render(
+        <ThemeProvider theme={FusebitTheme}>
+          <App />
+        </ThemeProvider>,
+        document.getElementById('root')
+      );
     </script>
   </body>
 </html>

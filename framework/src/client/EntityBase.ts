@@ -57,12 +57,9 @@ namespace EntityBase {
       ctx: RouterContext,
       dataKey: string
     ) => Storage.createStorage(ctx.state.params).get(dataKey);
-    public listData: (
-      ctx: RouterContext,
-      dataKeyPrefix: string,
-      options?: Storage.IListOption
-    ) => Promise<any> = async (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) =>
-      Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
+    public listData: (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) => Promise<any> =
+      async (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) =>
+        Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
     public deleteData: (ctx: RouterContext, dataKey: string, version?: string) => Promise<any> = async (
       ctx: RouterContext,
       dataKey: string,

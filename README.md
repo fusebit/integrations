@@ -34,12 +34,66 @@ Available packages
 Before using, [download and install Node.js](https://nodejs.org/en/download/).
 Node.js 14.17.6 or higher is recommended.
 
+### Install Dependencies
+
+```bash
+npm i
+```
+
+### Install package dependencies
+
+```bash
+lerna bootstrap
+```
+
+### Build TypeScript
+
+```bash
+lerna run build
+```
+
+### If you want to filter command for certain package
+
+```bash
+lerna run <command> --scope=<package>
+```
+
+### Watch mode
+Navigate to the package you're working on and run
+
+```bash
+npm run dev
+```
+
+### Run linter with auto fix
+
+```bash
+lerna run lint:fix
+```
+
+### Run prettier checks
+
+```bash
+lerna run prettier:check
+```
+
+### Run linter
+
+```bash
+lerna run lint
+```
+### Run linter fix
+
+```bash
+lerna run lint:fix
+```
+
 ## Available utilities enabled by default
 
 - TypeScript
 - Testing with [Jest](https://jestjs.io/) and [Tap reporter](https://www.npmjs.com/package/jest-tap-reporter)
 - TypeScript linting using eslint
-- TypeScript watch mode using ts-node-dev
+- TypeScript watch mode available
 - Formatting using Prettier
 - Pre-commit hook using Husky (will run linter, formatting and unit tests before each commit)
 
@@ -50,34 +104,31 @@ Node.js 14.17.6 or higher is recommended.
 - Sourcemaps enabled by default
 - All the eslint plugins are using the recommended defaults
 
-## Available commands
+## Publishing
 
-### Build TypeScript
+### Ensure you run build command before
 
 ```bash
-$ lerna run build
+lerna run build
 ```
 
 ### Version packages
 
 ```bash
-$ lerna version
+lerna version
 ```
 
-### Run linter
+### Publish packages
 
 ```bash
-$ npm run lint
+lerna publish [--registry=<URL>]
 ```
 
-### Run linter with auto fix
+### Fource Publish packages
 
 ```bash
-$ npm run lint:fix
+lerna publish [--registry=<URL>] [--force-publish]
 ```
 
-### Run tests with coverage report
 
-```bash
-$ npm run coverage
-```
+

@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+lerna run lint
+lerna run prettier:check
+lerna run build
