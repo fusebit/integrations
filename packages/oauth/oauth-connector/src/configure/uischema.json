@@ -1,0 +1,48 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/scope"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/clientId"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/tokenUrl"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/clientSecret",
+      "options": {
+        "format": "password"
+      }
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/authorizationUrl"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/refreshErrorLimit"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/refreshInitialBackoff"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/refreshWaitCountLimit"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/refreshBackoffIncrement"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/accessTokenExpirationBuffer"
+    }
+  ]
+}

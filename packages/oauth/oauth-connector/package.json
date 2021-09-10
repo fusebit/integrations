@@ -1,0 +1,42 @@
+{
+  "name": "@fusebit-int/oauth-connector",
+  "version": "3.0.1",
+  "description": "Fusebit OAuth connector",
+  "keywords": [
+    "Fusebit",
+    "OAuth"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "devDependencies": {
+    "@types/superagent": "^4.1.12",
+    "superagent-mock": "^4.0.0",
+    "typescript": "3.7.3"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "^4.0.0"
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "^4.0.1",
+    "superagent": "^6.1.0"
+  }
+}

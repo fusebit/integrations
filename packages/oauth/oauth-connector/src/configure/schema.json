@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "properties": {
+    "scope": {
+      "title": "Comma separated scopes to request from the OAuth server",
+      "type": "string"
+    },
+    "clientId": {
+      "title": "The client ID issued by the OAuth server",
+      "type": "string"
+    },
+    "tokenUrl": {
+      "type": "string"
+    },
+    "clientSecret": {
+      "type": "string"
+    },
+    "authorizationUrl": {
+      "type": "string"
+    },
+    "refreshErrorLimit": {
+      "type": "integer"
+    },
+    "refreshInitialBackoff": {
+      "type": "integer"
+    },
+    "refreshWaitCountLimit": {
+      "type": "integer"
+    },
+    "refreshBackoffIncrement": {
+      "type": "integer"
+    },
+    "accessTokenExpirationBuffer": {
+      "type": "integer"
+    }
+  },
+  "required": ["scope", "clientId", "clientSecret", "tokenUrl", "authorizationUrl"]
+}

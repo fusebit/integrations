@@ -1,0 +1,48 @@
+{
+  "name": "@fusebit-int/framework",
+  "version": "4.0.1",
+  "description": "> TODO: description",
+  "keywords": [
+    "fusebit"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc -b --pretty",
+    "tsc:version": "tsc --version"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "@vendia/serverless-express": "^4.3.11",
+    "http-errors": "^1.8.0",
+    "koa": "^2.13.1",
+    "node-mocks-http": "^1.10.1",
+    "statuses": "^2.0.1",
+    "superagent": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.8",
+    "@types/statuses": "^2.0.0",
+    "@types/superagent": "^4.1.12",
+    "typescript": "3.7.3"
+  }
+}

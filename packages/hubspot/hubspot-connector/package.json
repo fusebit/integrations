@@ -1,0 +1,42 @@
+{
+  "name": "@fusebit-int/hubspot-connector",
+  "version": "1.1.1",
+  "description": "> TODO: description",
+  "keywords": [
+    "Fusebit",
+    "HubSpot"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
+  "publishConfig": {
+    "registry": "http://localhost:3001/v1/account/acc-b86cb916e3f641ff/registry/default/npm/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "dependencies": {
+    "@fusebit-int/oauth-connector": "3.0.1"
+  },
+  "devDependencies": {
+    "typescript": "3.7.3"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "^4.0.0"
+  }
+}
