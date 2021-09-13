@@ -7,4 +7,4 @@ echo "Registry to publish:$PUBLISH_REGISTRY"
 lerna run lint
 lerna run prettier:check
 lerna run build
-lerna publish --registry=$PUBLISH_REGISTRY --force-publish
+lerna publish --registry=$PUBLISH_REGISTRY
