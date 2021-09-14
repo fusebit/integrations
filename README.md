@@ -104,30 +104,18 @@ lerna run lint:fix
 - Sourcemaps enabled by default
 - All the eslint plugins are using the recommended defaults
 
-## Publishing
-
-### Ensure you run build command before
+## Versioning
+Interactive prompt
+### If you want to choose from an interactive prompt use
 
 ```bash
-lerna run build
+npm run packages:version
 ```
 
-### Version packages
+### Chosee between minor, patch and major releases
 
 ```bash
-lerna version
-```
-
-### Publish packages
-
-```bash
-lerna publish [--registry=<URL>]
-```
-
-### Fource Publish packages
-
-```bash
-lerna publish [--registry=<URL>] [--force-publish]
+npm run packages:version [minor,patch,major]
 ```
 
 
