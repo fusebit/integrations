@@ -6,11 +6,12 @@ module.exports = {
       "es6": true,
       "node": true,
     },
-    "plugins": ['@typescript-eslint'],
+    "plugins": ['@typescript-eslint', 'security'],
     "extends": [
       'eslint:recommended',
       'plugin:@typescript-eslint/recommended',
-      'prettier'
+      'prettier',
+      'plugin:security/recommended'
     ],
     "rules": {
         // enable additional rules
@@ -32,17 +33,17 @@ module.exports = {
          "no-caller": "error",
          "no-bitwise": "error",
          "no-cond-assign": "error",
-         "no-multiple-empty-lines": "off",
+         "no-multiple-empty-lines": "error",
          "sort-keys": "off",
          "no-console":"warn",
-         "@typescript-eslint/no-explicit-any": "off",
+         "@typescript-eslint/no-explicit-any": "warn",
          "@typescript-eslint/explicit-module-boundary-types": "off",
          "@typescript-eslint/no-unused-vars": "warn",
          "@typescript-eslint/ban-types": "off",
          "@typescript-eslint/prefer-namespace-keyword": "off",
          "@typescript-eslint/no-namespace": "off",
          "@typescript-eslint/no-empty-interface": "off",
-         "no-async-promise-executor": "off",
+         "no-async-promise-executor": "warn",
          "no-constant-condition": "off",
          "@typescript-eslint/no-var-requires": "off",
          "@typescript-eslint/no-non-null-assertion": "off",

@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": { "rootDir": "src", "module": "CommonJS", "outDir": "libc" },
-  "include": ["src", "src/client"],
+  "include": ["src"],
   "references": []
 }

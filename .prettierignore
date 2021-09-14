@@ -73,5 +73,9 @@ libm/
 !/lib
 
 
-*.json
 *.md
+.husky
+scripts
+base-eslintrc.js
+.prettierrc.js
+package-lock.json
