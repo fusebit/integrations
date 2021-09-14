@@ -27,11 +27,12 @@
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
-    "build": "tsc -b --pretty",
+    "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
     "tsc:version": "tsc --version",
     "lint": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
+    "copy-files": "cp -r src/form libc"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
