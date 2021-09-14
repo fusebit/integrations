@@ -34,6 +34,12 @@ Available packages
 Before using, [download and install Node.js](https://nodejs.org/en/download/).
 Node.js 14.17.6 or higher is recommended.
 
+You need to install lerna globally
+
+```bash
+npm i -g lerna
+```
+
 ### Install Dependencies
 
 ```bash
@@ -74,7 +80,13 @@ lerna run lint:fix
 ### Run prettier checks
 
 ```bash
-lerna run prettier:check
+npm run prettier:check
+```
+
+### Run prettier fix
+
+```bash
+npm run prettier:fix
 ```
 
 ### Run linter
