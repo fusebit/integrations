@@ -26,7 +26,7 @@ module.exports = {
         "no-cond-assign": ["error", "always"],
   
         // disable rules from base configurations
-         "for-direction": "off",
+         "for-direction": "error",
          "max-lines": "off",
          "array-type": "off",
          "new-parens": "error",
