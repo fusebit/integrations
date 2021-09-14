@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "scope": {
+      "title": "Scope",
+      "description": "Comma separated scopes to request from your Slack app",
+      "type": "string"
+    },
+    "tokenUrl": {
+      "title": "OAuth Token URL",
+      "description": "The authentication URL to use when exchanging tokens, as per the OAuth protocol",
+      "type": "string"
+    },
+    "authorizationUrl": {
+      "title": "OAuth Authorization URL",
+      "description": "The authorization URL to use when generating authorization codes, as per the OAuth protocol",
+      "type": "string"
+    },
+    "clientId": {
+      "title": "Client ID",
+      "description": "The Client ID from your Slack app",
+      "type": "string"
+    },
+    "clientSecret": {
+      "title": "Client Secret",
+      "type": "string",
+      "description": "The Client Secret from your Slack app"
+    },
+    "refreshErrorLimit": {
+      "type": "integer"
+    },
+    "refreshInitialBackoff": {
+      "type": "integer"
+    },
+    "refreshWaitCountLimit": {
+      "type": "integer"
+    },
+    "refreshBackoffIncrement": {
+      "type": "integer"
+    },
+    "accessTokenExpirationBuffer": {
+      "type": "integer"
+    }
+  },
+  "required": ["scope", "clientId", "clientSecret"]
+}
