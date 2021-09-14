@@ -30,8 +30,8 @@ interface IConfig {
 /** The internal Fusebit request context. passed in through the lambda. */
 type RequestContext = any;
 
-/** Parameters supplied for an internal event invocation. */
-type InvokeParameters = any;
+/** Event data supplied for an internal event invocation. */
+type EventData = any;
 
 /** Placeholder interface for accessing storage. */
 interface IStorage {
@@ -43,9 +43,11 @@ interface IStorage {
 
 /** Type for the OnStartup event parameters. */
 interface IOnStartup {
-  router: Router;
-  mgr: Manager;
-  cfg: IConfig;
+  event: {
+    router: Router;
+    mgr: Manager;
+    cfg: IConfig;
+  };
 }
 
 /**
@@ -105,10 +107,7 @@ class Manager {
     // startup phase.
     this.router.use(DefaultRoutes.routes());
 
-    // Give everything a chance to be initialized - normally, the cfg object would be specialized per router
-    // object to allow for routers to have specialized configuration elements, but we will sort that out
-    // later.
-    this.invoke('startup', { mgr: this, cfg, router: this.router });
+    this.invoke('/lifecycle/startup', {});
   }
 
   /**
@@ -125,16 +124,18 @@ class Manager {
   /**
    * Used to call, RPC style, an event function mounted via `.on()`
    * @param event The name of the event to invoke.
-   * @param parameters: The set of parameters the event is expecting.
+   * @param eventData: The set of parameters the event is expecting.
+   * @param state: Existing ctx state to apply
    * @return the body of the response.
    */
-  public async invoke(event: string, parameters: InvokeParameters) {
+  public async invoke(eventName: string, eventData: EventData, state?: any) {
     const ctx = this.createRouteableContext({
       method: 'EVENT',
-      path: event,
+      path: eventName,
       request: { body: {}, rawBody: '', params: {} },
+      state,
     });
-    ctx.event = { parameters: { ...parameters, ctx } };
+    ctx.req.body = eventData;
     await this.execute(ctx);
     return ctx.body;
   }
@@ -249,7 +250,7 @@ class Manager {
             resourcePath: `/account/${fusebitCtx.accountId}/subscription/${fusebitCtx.subscriptionId}/${fusebitCtx.boundaryId}/${fusebitCtx.functionId}${fusebitCtx.path}`,
             functionAccessToken: fusebitCtx.fusebit.functionAccessToken,
           }
-        : {}),
+        : fusebitCtx.state?.params || {}),
     };
     ctx.state.fusebit = { ...fusebitCtx.fusebit, caller: fusebitCtx.caller };
     ctx.state.manager = this;

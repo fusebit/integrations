@@ -28,4 +28,15 @@ interface IOAuthToken {
   refreshErrorCount: number;
 }
 
-export { IOAuthConfig, IOAuthToken };
+interface ITags extends Record<string, string | null> {}
+
+interface IIdentityClientParams {
+  subscriptionId: string;
+  accountId: string;
+  baseUrl: string;
+  entityId: string;
+  accessToken: string;
+  createTags: (token: IOAuthToken) => ITags | undefined;
+}
+
+export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams };

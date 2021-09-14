@@ -5,6 +5,7 @@ import { callbackSuffixUrl } from './OAuthConstants';
 import IdentityClient from './IdentityClient';
 
 import { schema, uischema } from './configure';
+import { IOAuthToken, ITags } from './OAuthTypes';
 
 const connector = new Connector();
 const router = connector.router;
@@ -23,8 +24,18 @@ const sanitizeCredentials = (credentials: any): object => {
 
 router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
   if (engine) {
+    const createTags = (token: IOAuthToken): ITags | undefined => {
+      const webhookId = connector.service.getWebhookTokenId(ctx, token);
+
+      const result: ITags = {};
+      if (webhookId) {
+        result[webhookId] = null;
+        return result;
+      }
+    };
     engine.setMountUrl(ctx.state.params.baseUrl);
     ctx.state.identityClient = new IdentityClient({
+      createTags,
       accessToken: ctx.state.params.functionAccessToken,
       ...ctx.state.params,
     });
@@ -32,7 +43,8 @@ router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
   return next();
 });
 
-router.on('startup', async ({ mgr, cfg, router: rtr }: Connector.Types.IOnStartup, next: Connector.Types.Next) => {
+router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  const { config: cfg, router: rtr } = ctx.state.manager;
   // Router's already been mounted, so any further additions need to happen here on 'rtr'.
   //
   // Create the engine, now that the configuration has been loaded.

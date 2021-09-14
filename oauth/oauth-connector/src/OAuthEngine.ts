@@ -67,7 +67,7 @@ class OAuthEngine {
   protected getTokenUrl(ctx: Internal.Types.Context): string {
     // If the configured token URL is absolute, use it verbatim.
     // If it is relative, add the connector's endpoint in front of it.
-    return this.cfg.tokenUrl.match(/^https?::\/\//i)
+    return this.cfg.tokenUrl.match(/^https?:\/\//i)
       ? this.cfg.tokenUrl
       : `${ctx.state.params.endpoint}${this.cfg.tokenUrl}`;
   }

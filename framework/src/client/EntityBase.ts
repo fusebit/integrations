@@ -1,5 +1,5 @@
 /* tslint:disable no-namespace no-empty-interface max-classes-per-file */
-import { Context as RouterContext, Next as RouterNext, Router } from '../Router';
+import { Context as RouterContext, Next as RouterNext, Router as _Router } from '../Router';
 import * as Storage from '../Storage';
 import * as Middleware from '../middleware/authorize';
 import { IOnStartup as IOnStartupInterface } from '../Manager';
@@ -15,7 +15,7 @@ abstract class EntityBase {
   public abstract middleware: EntityBase.MiddlewareBase;
   public abstract response: EntityBase.ResponseBase;
 
-  public readonly router: Router = new Router();
+  public readonly router = new _Router();
 }
 
 namespace EntityBase {
@@ -43,6 +43,7 @@ namespace EntityBase {
       parentEntityId: string;
       parentEntityType: string;
     }
+    export type Router = _Router;
   }
   export abstract class ServiceBase {}
 

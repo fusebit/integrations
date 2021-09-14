@@ -7,7 +7,8 @@ const router = connector.router;
 const TOKEN_URL = 'https://api.hubapi.com/oauth/v1/token';
 const AUTHORIZATION_URL = 'https://app.hubspot.com/oauth/authorize';
 
-router.on('startup', async ({ mgr, cfg }: Connector.Types.IOnStartup, next: Connector.Types.Next) => {
+router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  const { config: cfg } = ctx.state.manager;
   cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || TOKEN_URL;
   cfg.configuration.authorizationUrl = cfg.configuration.authorizationUrl || AUTHORIZATION_URL;
   return next();

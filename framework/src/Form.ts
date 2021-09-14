@@ -46,7 +46,6 @@ interface IFormSpecification {
  * Create an HTML Form, using MaterialUI, from the supplied JSON Schema.
  */
 const Form = (spec: IFormSpecification) => {
-  console.log('example');
   const form = (spec.template || formTemplate)
     .replace('##schema##', JSON.stringify(spec.schema))
     .replace('##uischema##', JSON.stringify(spec.uiSchema))

@@ -1,5 +1,6 @@
 import { Router, Context, Next } from './Router';
 import { Manager, IOnStartup } from './Manager';
+import { IInstanceConnectorConfig } from './ConnectorManager';
 
 const router = new Router();
 
@@ -26,8 +27,21 @@ router.get('/api/health', async (ctx: Context, next: Next) => {
   }
 });
 
-router.post('/event', async (ctx: Context, next: Next) => {
-  const result = await ctx.state.manager.invoke(ctx.req.body.event, ctx.req.body.parameters);
+router.post('/event/:eventMode/:sourceEntityId/:eventType(.*)', async (ctx: Context, next: Next) => {
+  // sent event name is of format `/<componentName>/<eventType>`
+
+  if (ctx.params.eventMode === 'lifecycle') {
+    ctx.throw(400, 'Lifecycle events should not be created via the `/event` endpoint');
+  }
+
+  const component = ctx.state.manager.config.components.find(
+    (component: IInstanceConnectorConfig) => component.entityId === ctx.params.sourceEntityId
+  );
+  if (!component) {
+    return;
+  }
+  const eventName = `/${component.name}/${ctx.params.eventType}`;
+  const result = await ctx.state.manager.invoke(eventName, ctx.req.body, ctx.state);
   ctx.body = result;
 });
 

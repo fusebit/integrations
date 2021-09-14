@@ -2,29 +2,10 @@ import superagent from 'superagent';
 import { ObjectEntries } from './Utilities';
 import { Internal } from '@fusebit-int/framework';
 import Context = Internal.Types.Context;
-
-interface IOAuthToken {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  refresh_token: string;
-  scope: string;
-  expires_at: number;
-  status: string;
-  timestamp: number;
-  refreshErrorCount: number;
-}
+import { IIdentityClientParams, IOAuthToken, ITags } from './OAuthTypes';
 
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
-
-interface IParams {
-  subscriptionId: string;
-  accountId: string;
-  baseUrl: string;
-  entityId: string;
-  accessToken: string;
-}
 
 class IdentityClient {
   private readonly params: any;
@@ -33,14 +14,16 @@ class IdentityClient {
   private readonly functionUrl: URL;
   private readonly accessToken: string;
   private readonly connectorId: string;
+  private readonly createTags: (token: IOAuthToken) => ITags | undefined;
 
-  constructor(params: IParams) {
+  constructor(params: IIdentityClientParams) {
     this.params = params;
     this.functionUrl = new URL(params.baseUrl);
     this.connectorId = params.entityId;
     this.connectorUrl = `${this.functionUrl.protocol}//${this.functionUrl.host}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.connectorId}`;
     this.baseUrl = `${this.connectorUrl}/identity`;
     this.accessToken = params.accessToken;
+    this.createTags = params.createTags;
   }
 
   private cleanId = (id?: string) => {
@@ -76,7 +59,7 @@ class IdentityClient {
     const response = await superagent
       .put(`${this.connectorUrl}/session/${sessionId}`)
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ token });
+      .send({ output: { token }, tags: this.createTags(token) });
     return response.body;
   };
 
@@ -93,7 +76,7 @@ class IdentityClient {
     const response = await superagent
       .put(this.getUrl(lookup))
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ token });
+      .send({ output: { token } });
     return response.body;
   };
 
@@ -121,7 +104,7 @@ class IdentityClient {
     const response = await superagent
       .put(`${this.connectorUrl}/session/${sessionId}`)
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send(error);
+      .send({ output: error });
     return response.body;
   };
 

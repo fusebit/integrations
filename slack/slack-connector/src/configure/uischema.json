@@ -19,6 +19,20 @@
           "options": {
             "format": "password"
           }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/signingSecret",
+          "options": {
+            "format": "password"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/webhookUrl",
+          "options": {
+            "readonly": true
+          }
         }
       ]
     },

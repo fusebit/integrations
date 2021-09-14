@@ -51,15 +51,7 @@ class Router extends KoaRouter {
    * optional next parameter for event chaining support.
    */
   public on(path: any, ...middleware: any[]) {
-    this.register(
-      path,
-      ['event'],
-      // Use the parameters instead of the ctx as the first parameter, and save the result in the ctx.body
-      middleware.map((m) => async (ctx: KoaRouter.RouterContext, next: Koa.Next) => {
-        ctx.body = await m((ctx as Context).event.parameters, next);
-      }),
-      { name: path }
-    );
+    this.register(path, ['event'], middleware, { name: path });
   }
 
   /*

@@ -34,7 +34,7 @@ export const Handler = (handler: string, config: any) => {
     try {
       result = await manager.handle(ctx);
     } catch (error) {
-      console.log('ERROR:', error);
+      console.log('ERROR: ', error);
       return { body: { config, error, result, ctx } };
     }
 
