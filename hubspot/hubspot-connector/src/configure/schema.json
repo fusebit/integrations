@@ -26,6 +26,11 @@
       "type": "string",
       "description": "The Client Secret from your HubSpot app"
     },
+    "webhookUrl": {
+      "title": "Webhook Url",
+      "type": "string",
+      "description": "To enable the webhooks, provide this url to HubSpot"
+    },
     "refreshErrorLimit": {
       "type": "integer"
     },

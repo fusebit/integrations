@@ -110,3 +110,6 @@ lib/
 libc/
 libm/
 !/lib
+
+# Vim
+*.sw?
