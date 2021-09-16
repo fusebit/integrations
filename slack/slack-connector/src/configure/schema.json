@@ -34,7 +34,8 @@
     "webhookUrl": {
       "title": "Webhook Url",
       "type": "string",
-      "description": "To enable the Events API, provide this url to Slack"
+      "description": "To enable the Events API, provide this url to Slack",
+      "readOnly": true
     },
     "refreshErrorLimit": {
       "type": "integer"

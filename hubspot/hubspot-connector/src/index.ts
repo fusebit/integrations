@@ -23,6 +23,7 @@ router.get(
     ctx.body = {
       data: {
         ...ctx.state.manager.config.configuration,
+        redirectUrl: `${ctx.state.params.baseUrl}/api/callback`,
         webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
       },
       schema,

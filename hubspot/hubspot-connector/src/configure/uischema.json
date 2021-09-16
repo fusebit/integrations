@@ -22,10 +22,11 @@
         },
         {
           "type": "Control",
-          "scope": "#/properties/webhookUrl",
-          "options": {
-            "readonly": true
-          }
+          "scope": "#/properties/redirectUrl"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/webhookUrl"
         }
       ]
     },
