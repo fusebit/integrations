@@ -1,6 +1,7 @@
 import { Router, Context, Next } from './Router';
 import { Manager, IOnStartup } from './Manager';
 import { IInstanceConnectorConfig } from './ConnectorManager';
+import Connector from './client/Connector';
 
 const router = new Router();
 
@@ -27,21 +28,40 @@ router.get('/api/health', async (ctx: Context, next: Next) => {
   }
 });
 
-router.post('/event/:eventMode/:sourceEntityId/:eventType(.*)', async (ctx: Context, next: Next) => {
+router.post('/event/:eventMode', async (ctx: Context, next: Next) => {
   // sent event name is of format `/<componentName>/<eventType>`
 
   if (ctx.params.eventMode === 'lifecycle') {
     ctx.throw(400, 'Lifecycle events should not be created via the `/event` endpoint');
   }
 
-  const component = ctx.state.manager.config.components.find(
-    (component: IInstanceConnectorConfig) => component.entityId === ctx.params.sourceEntityId
-  );
-  if (!component) {
-    return;
+  // Would be nice to have Joi here...
+  if (typeof ctx.req?.body?.payload !== 'object' || typeof ctx.req.body.payload.length !== 'number') {
+    ctx.throw(400, `Missing events: ${JSON.stringify(ctx.req.body)}`);
   }
-  const eventName = `/${component.name}/${ctx.params.eventType}`;
-  const result = await ctx.state.manager.invoke(eventName, ctx.req.body, ctx.state);
+
+  const events = ctx.req.body.payload as Connector.Types.IWebhookEvents;
+
+  // Assume all of the events are from the same connector
+  const component = ctx.state.manager.config.components.find(
+    (comp: IInstanceConnectorConfig) => comp.entityId === events[0].entityId
+  );
+
+  if (!component) {
+    ctx.throw(
+      418,
+      `No component found: ${JSON.stringify(events)} ${events[0].entityId} ${JSON.stringify(
+        ctx.state.manager.config.components.map((c: any) => c.entityId)
+      )}`
+    );
+  }
+
+  const result = await Promise.all(
+    events.map(async (event: Connector.Types.IWebhookEvent) => {
+      const eventName = `/${component.name}/${ctx.params.eventMode}/${event.eventType}`;
+      return ctx.state.manager.invoke(eventName, event, ctx.state);
+    })
+  );
   ctx.body = result;
 });
 

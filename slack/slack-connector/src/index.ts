@@ -33,8 +33,12 @@ router.get(
   }
 );
 
-connector.service.setGetEventAuthId((ctx: Connector.Types.Context) => {
-  return ctx.req?.body?.authorizations?.[0]?.user_id;
+connector.service.setGetEventsFromPayload((ctx) => {
+  return [ctx.req.body];
+});
+
+connector.service.setGetAuthIdFromEvent((event) => {
+  return event.authorizations?.[0]?.user_id;
 });
 
 connector.service.setValidateWebhookEvent((ctx: Connector.Types.Context) => {
@@ -43,9 +47,7 @@ connector.service.setValidateWebhookEvent((ctx: Connector.Types.Context) => {
   const requestBody = ctx.req.body;
   const rawBody = JSON.stringify(requestBody)
     .replace(/\//g, '\\/')
-    .replace(/[\u007f-\uffff]/g, function (c) {
-      return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
-    });
+    .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
 
   const basestring = ['v0', timestampHeader, rawBody].join(':');
   const calculatedSignature = 'v0=' + crypto.createHmac('sha256', signingSecret).update(basestring).digest('hex');
@@ -65,13 +67,11 @@ connector.service.setInitializationChallenge((ctx: Connector.Types.Context) => {
   return false;
 });
 
-OAuthConnector.service.setGetTokenAuthId((token: any) => {
+OAuthConnector.service.setGetTokenAuthId(async (ctx: Connector.Types.Context, token: any) => {
   return token.bot_user_id;
 });
 
-// OPTIONAL
-connector.service.setGetWebhookEventType((ctx: Connector.Types.Context) => ctx.req.body.event.type);
-// connector.service.setCreateWebhookResponse(async (ctx: Connector.Types.Context) => {});
+connector.service.setGetWebhookEventType((event: any) => event.type);
 
 router.use(OAuthConnector.router.routes());
 
