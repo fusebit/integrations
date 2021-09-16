@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/slack-connector",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Fusebit Slack connector",
   "keywords": [
     "Fusebit",
@@ -34,11 +34,11 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^5.1.0",
+    "@fusebit-int/oauth-connector": "^5.1.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^5.1.0",
+    "@fusebit-int/framework": "^5.1.1",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
