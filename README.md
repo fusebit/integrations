@@ -29,10 +29,22 @@ Available packages
 | @fusebit-int/slack-connector      |   Slack Connector   |
 | @fusebit-int/slack-provider      |    Slack SDK Provider   |
 
+
+## Available utilities enabled by default
+
+- TypeScript
+- Testing with [Jest](https://jestjs.io/) and [Tap reporter](https://www.npmjs.com/package/jest-tap-reporter)
+- TypeScript linting using eslint
+- TypeScript watch mode available
+- Formatting using Prettier
+- Pre-commit hook using Husky (will run linter, formatting and unit tests before each commit)
+
 ## 💻 Installation
 
 Before using, [download and install Node.js](https://nodejs.org/en/download/).
 Node.js 14.17.6 or higher is recommended.
+
+This project is using [Lerna](https://github.com/lerna/lerna) to facilitate package managing and publishing.
 
 You need to install lerna globally
 
@@ -100,14 +112,7 @@ lerna run lint
 lerna run lint:fix
 ```
 
-## Available utilities enabled by default
-
-- TypeScript
-- Testing with [Jest](https://jestjs.io/) and [Tap reporter](https://www.npmjs.com/package/jest-tap-reporter)
-- TypeScript linting using eslint
-- TypeScript watch mode available
-- Formatting using Prettier
-- Pre-commit hook using Husky (will run linter, formatting and unit tests before each commit)
+Note: As you may notice, we have some scripts at lerna level (per package) or root level (regular npm scripts), this is due all packages has different versions of dev dependencies (i.e TypeScript) - this is by design.
 
 ## Conventions
 
@@ -115,6 +120,43 @@ lerna run lint:fix
 - Output directory: libc
 - Sourcemaps enabled by default
 - All the eslint plugins are using the recommended defaults
+
+
+## Publishing a package
+
+
+### Local environment
+
+If you're developing locally, you may need to publish the packages to your Fusebit NPM registry, in order to do so, please follow up the following steps:
+
+Right now we're releasing all packages under the same version, even if you're doing a change for only 1 package, that means, package publishing will update the versions and publish all the packages, we will support independent versioning in the future.
+
+## 1. Ensure all your packages are ready
+### 1.1 Linting passes
+```bash
+lerna run lint
+```
+### 1.2 Formatting passes (you need to be at the root level of the project.)
+```bash
+npm run prettier:check
+
+### 1.3 Build passes
+```bash
+lerna run build
+
+## 1.4 Bump packages version
+```bash
+lerna version < path | minor | major > --no-git-tag-version
+```
+
+If you want to skip prompts you can pass --yes argument to each command.
+## 1.5 Publish packages
+
+```bash
+lerna publish --no-git-tag-version
+```
+
+Ensure you specify --no-git-tag-version otherwise a git tag will be created
 
 ## Versioning
 Interactive prompt

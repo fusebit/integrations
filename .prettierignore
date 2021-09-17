@@ -79,3 +79,5 @@ scripts
 base-eslintrc.js
 .prettierrc.js
 package-lock.json
+# Lerna updates this file upon publishing, leading to conflicts in formatting.
+lerna.json
