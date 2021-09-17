@@ -156,6 +156,12 @@ If you want to skip prompts you can pass --yes argument to each command.
 lerna publish --no-git-tag-version
 ```
 
+or you can use:
+
+```bash
+lerna publish from-package
+```
+
 Ensure you specify --no-git-tag-version otherwise a git tag will be created
 
 ## Versioning
