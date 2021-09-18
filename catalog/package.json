@@ -1,8 +1,10 @@
 {
   "name": "@fusebit-int/catalog",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "Fusebit Example Package Catalog",
-  "keywords": ["Fusebit"],
+  "keywords": [
+    "Fusebit"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
@@ -30,12 +32,12 @@
     "globby": "^11.0.3"
   },
   "devDependencies": {
+    "@types/node": "^14.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-security": "^1.4.0",
-    "@types/node": "^14.0.0",
     "typescript": "^4.4.0"
   }
 }
