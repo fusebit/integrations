@@ -27,7 +27,7 @@
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
-    "lint": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore"
   },
   "bugs": {
