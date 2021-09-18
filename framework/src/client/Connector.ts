@@ -23,9 +23,9 @@ class Service extends EntityBase.ServiceDefault {
 
     // Event contains many different authId-associated entries - process them independently.
     const processPromise = Promise.all(
-      Object.entries(eventsByAuthId as Record<string, Connector.Types.IWebhookEvents>).map(
-        ([authId, events]: [string, Connector.Types.IWebhookEvents]) => this.processWebhook(ctx, authId, events)
-      )
+      Object.entries(
+        eventsByAuthId as Record<string, Connector.Types.IWebhookEvents>
+      ).map(([authId, events]: [string, Connector.Types.IWebhookEvents]) => this.processWebhook(ctx, authId, events))
     );
     return this.createWebhookResponse(ctx, processPromise);
   };
@@ -60,7 +60,11 @@ class Service extends EntityBase.ServiceDefault {
       // networking glitches, for example) never leave the scope of this function, as this code
       // often runs without an associated try/await/catch block.
       const response = await superagent
-        .post(`${ctx.state.params.baseUrl}/fan_out/event/webhook?tag=${encodeURIComponent(webhookEventId)}`)
+        .post(
+          `${ctx.state.params.baseUrl}/fan_out/event/webhook?tag=${encodeURIComponent(webhookEventId)}&default=${
+            ctx.state.manager.config.defaultEventHandler
+          }`
+        )
         .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
         .send({ payload: events })
         .ok((res) => true);

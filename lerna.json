@@ -1,10 +1,18 @@
 {
-  "packages": ["*/*-connector", "*/*-provider", "framework"],
+  "packages": [
+    "*/*-connector",
+    "*/*-provider",
+    "framework",
+    "catalog"
+  ],
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     }
   },
-  "version": "5.1.2"
+  "version": "5.1.1"
 }

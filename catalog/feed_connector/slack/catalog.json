@@ -1,0 +1,32 @@
+{
+  "id": "slack",
+  "name": "Slack",
+  "smallIcon": "/images/slack.svg",
+  "largeIcon": "/images/slack.svg",
+  "version": "1.0.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "slack,intro,popular"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "slackConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/slack-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

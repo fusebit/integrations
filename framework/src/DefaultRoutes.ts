@@ -11,7 +11,8 @@ const router = new Router();
 router.get('/api/health', async (ctx: Context, next: Next) => {
   try {
     await next();
-  } catch (err) {
+  } catch (error) {
+    const err: { message: string } = error as any;
     return ctx.throw(501, `Failed internal health check: ${err.message}`);
   }
 

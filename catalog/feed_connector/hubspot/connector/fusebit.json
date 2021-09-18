@@ -1,0 +1,17 @@
+{
+  "id": "<%this.id%>",
+  "tags": {},
+  "handler": "@fusebit-int/hubspot-connector",
+  "configuration": {
+    "scope": "contacts",
+    "tokenUrl": "/v2/account/<%global.consts.accountId%>/subscription/<%global.consts.subscriptionId%>/connector/<%this.id%>/proxy/hubspot/oauth/token",
+    "authorizationUrl": "/v2/account/<%global.consts.accountId%>/subscription/<%global.consts.subscriptionId%>/connector/<%this.id%>/proxy/hubspot/oauth/authorize",
+    "clientId": "<%global.consts.random%>",
+    "clientSecret": "<%global.consts.random%>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

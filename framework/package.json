@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/framework",
-  "version": "5.1.2",
+  "version": "5.1.1",
   "description": "Fusebit Official SDK",
   "keywords": [
     "fusebit"
@@ -10,13 +10,10 @@
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
   "files": [
-    "libc/*.js",
-    "libc/*.d.ts",
-    "libc/form/*.html",
-    "libc/middleware/*.js",
-    "libc/middleware/*.d.ts",
-    "libc/client/*.js",
-    "libc/client/*.d.js"
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.html",
+    "libc/**/*.json"
   ],
   "repository": {
     "type": "git",
