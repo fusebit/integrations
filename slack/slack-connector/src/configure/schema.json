@@ -32,9 +32,9 @@
       "description": "The Signing Secret from your Slack app"
     },
     "webhookUrl": {
-      "title": "Webhook Url",
+      "title": "Events API Request URL",
       "type": "string",
-      "description": "To enable the Events API, provide this url to Slack",
+      "description": "Provide this URL to Slack to enable the Events API",
       "readOnly": true
     },
     "refreshErrorLimit": {
