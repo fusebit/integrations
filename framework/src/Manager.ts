@@ -19,6 +19,7 @@ interface IConfig {
   handler: string;
   components?: IInstanceConnectorConfig[];
   configuration: any;
+  defaultEventHandler: string;
   mountUrl: string;
   schedule: {
     cron: string;
