@@ -1,10 +1,10 @@
 ###################################################################
 # Auto-created by the cicd-actions tool
-on: workflow_dispatch
+on: pull_request
 name: PR - Lint
 jobs:
-  deploy:
-    name: Deploy
+  lint:
+    name: PR Check - Lint
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
