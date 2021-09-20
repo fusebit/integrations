@@ -2,7 +2,7 @@
 set -xe
 
 npm i
-npx lerna lint
+npx lerna run lint
 npm run prettier:fix
 
 # checks if anything is changed
