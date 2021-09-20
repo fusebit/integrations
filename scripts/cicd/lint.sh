@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -xe
 
-npm i
+npm install
+npx lerna bootstrap
 npx lerna run lint
 npm run prettier:fix
 
