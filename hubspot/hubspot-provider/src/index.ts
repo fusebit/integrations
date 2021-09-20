@@ -1,3 +1,3 @@
-import HubSpotProvider from './HubSpotProvider';
+import HubspotProvider from './HubSpotProvider';
 
-export default HubSpotProvider;
+export default HubspotProvider;
