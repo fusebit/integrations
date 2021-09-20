@@ -76,7 +76,7 @@ class ConnectorManager {
    */
   public loadConnector(name: string, cfg: IInstanceConnectorConfig) {
     const Connector = require(cfg.provider).default;
-    return (cfg.instance = new Connector({ name, ...cfg }));
+    return (cfg.instance = new Connector({ ...cfg }));
   }
 
   /**
