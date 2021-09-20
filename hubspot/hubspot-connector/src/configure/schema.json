@@ -27,9 +27,16 @@
       "description": "The Client Secret from your HubSpot app"
     },
     "webhookUrl": {
-      "title": "Webhook Url",
+      "title": "Configure the HubSpot App with this webhook URL",
       "type": "string",
-      "description": "To enable the webhooks, provide this url to HubSpot"
+      "description": "Webhook Url",
+      "readOnly": true
+    },
+    "redirectUrl": {
+      "title": "Configure the HubSpot App with this redirect URL",
+      "type": "string",
+      "description": "Redirect Url",
+      "readOnly": true
     },
     "refreshErrorLimit": {
       "type": "integer"

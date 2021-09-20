@@ -23,6 +23,7 @@ router.get(
     ctx.body = {
       data: {
         ...ctx.state.manager.config.configuration,
+        redirectUrl: `${ctx.state.params.baseUrl}/api/callback`,
         webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
       },
       schema,
@@ -60,9 +61,15 @@ connector.service.setInitializationChallenge(() => false);
 
 // Query hubspot to get the hub_id (aka portalId) for this authenticated user.
 OAuthConnector.service.setGetTokenAuthId(async (ctx: Connector.Types.Context, token: any) => {
-  const meUrl = new URL(ctx.state.manager.config.configuration.tokenUrl);
-  const response = await superagent.get(`${meUrl.origin}/oauth/v1/access-tokens/${token.access_token}`);
-  return `${response.body.app_id}/${response.body.hub_id}`;
+  try {
+    const meUrl = new URL(ctx.state.manager.config.configuration.tokenUrl);
+    const response = await superagent.get(`${meUrl.origin}/oauth/v1/access-tokens/${token.access_token}`);
+    return `${response.body.app_id}/${response.body.hub_id}`;
+  } catch (error) {
+    // The tokenUrl is probably set to the proxy mode; just return, as webhooks aren't supported there
+    // anyways.
+    return;
+  }
 });
 
 connector.service.setGetWebhookEventType((event: any) => 'events');

@@ -58,48 +58,6 @@ lerna bootstrap
 lerna run build
 ```
 
-### If you want to filter command for certain package
-
-```bash
-lerna run <command> --scope=<package>
-```
-
-### Watch mode
-Navigate to the package you're working on and run
-
-```bash
-npm run dev
-```
-
-### Run linter with auto fix
-
-```bash
-lerna run lint:fix
-```
-
-### Run prettier checks
-
-```bash
-npm run prettier:check
-```
-
-### Run prettier fix
-
-```bash
-npm run prettier:fix
-```
-
-### Run linter
-
-```bash
-lerna run lint
-```
-### Run linter fix
-
-```bash
-lerna run lint:fix
-```
-
 ## Available utilities enabled by default
 
 - TypeScript
@@ -109,26 +67,17 @@ lerna run lint:fix
 - Formatting using Prettier
 - Pre-commit hook using Husky (will run linter, formatting and unit tests before each commit)
 
-## Conventions
+# Example Commands:
 
-- Source folder: src
-- Output directory: libc
-- Sourcemaps enabled by default
-- All the eslint plugins are using the recommended defaults
-
-## Versioning
-Interactive prompt
-### If you want to choose from an interactive prompt use
-
-```bash
-npm run packages:version
-```
-
-### Chosee between minor, patch and major releases
-
-```bash
-npm run packages:version [minor,patch,major]
-```
-
-
+| Command |          Description |
+| ------------ | :---------------------: |
+| `lerna run <command> --scope=<package>` | Filter a lerna command for a certain package |
+| `cd <package> && npm run dev` | Watch a particular package |
+| `lerna run lint:check` | Check for issues identified by lint |
+| `lerna run lint:fix` | Run the linter, automatically fixing identified issues |
+| `npm run prettier:check` | Check to see if all files are pretty |
+| `npm run prettier:fix` | Make all of the files pretty |
+| `lerna run packages:version` | Use an interactive prompt to select the next version |
+| `npm run packages:version [minor,patch,major]` | Automatically bump the version of all packages |
+| `npm run dev:version` | Automatically bump the prerelease version |
 
