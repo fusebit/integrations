@@ -3,7 +3,7 @@ set -xe
 
 npm ci
 npx lerna bootstrap
-./scripts/cicd/remote_ref_prettier.sh
+npm run prettier:check
 
 # checks if anything is changed
 git diff --exit-code
