@@ -2,6 +2,6 @@
 
 set -xe
 
-npm install
+npm ci
 npx lerna bootstrap
 npx lerna run build
