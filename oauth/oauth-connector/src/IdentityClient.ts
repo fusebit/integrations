@@ -14,7 +14,7 @@ class IdentityClient {
   private readonly functionUrl: URL;
   private readonly accessToken: string;
   private readonly connectorId: string;
-  private readonly createTags: (token: IOAuthToken) => ITags | undefined;
+  private readonly createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
 
   constructor(params: IIdentityClientParams) {
     this.params = params;
@@ -59,7 +59,7 @@ class IdentityClient {
     const response = await superagent
       .put(`${this.connectorUrl}/session/${sessionId}`)
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ output: { token }, tags: this.createTags(token) });
+      .send({ output: { token }, tags: await this.createTags(token) });
     return response.body;
   };
 

@@ -1,0 +1,17 @@
+{
+  "id": "<% this.id %>",
+  "tags": {},
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "hubspotConnector",
+      "skip": false,
+      "provider": "@fusebit-int/hubspot-provider",
+      "entityId": "<% global.entities.hubspotConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

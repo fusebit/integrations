@@ -36,7 +36,7 @@ interface IIdentityClientParams {
   baseUrl: string;
   entityId: string;
   accessToken: string;
-  createTags: (token: IOAuthToken) => ITags | undefined;
+  createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
 }
 
 export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams };

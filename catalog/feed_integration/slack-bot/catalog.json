@@ -1,0 +1,26 @@
+{
+  "id": "slack-bot",
+  "name": "Slack Bot",
+  "smallIcon": "/images/slack.svg",
+  "largeIcon": "/images/slack.svg",
+  "version": "1.0.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "slack,intro,popular,messaging"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "slackConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "slackIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

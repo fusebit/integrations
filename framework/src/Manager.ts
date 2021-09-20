@@ -3,7 +3,7 @@ import Koa from 'koa';
 
 import statuses from 'statuses';
 
-import httpMocks from 'node-mocks-http';
+const httpMocks = require('node-mocks-http');
 
 import { Router, Context } from './Router';
 
@@ -19,6 +19,7 @@ interface IConfig {
   handler: string;
   components?: IInstanceConnectorConfig[];
   configuration: any;
+  defaultEventHandler: string;
   mountUrl: string;
   schedule: {
     cron: string;
@@ -144,8 +145,10 @@ class Manager {
    * Execute a Koa-like context through the Router, and return the payload.
    * @param ctx A Koa-like context
    */
-  protected async execute(ctx: Context) {
-    return new Promise(async (resolve) => {
+  protected execute(ctx: Context): Promise<void> {
+    // Need to use a sub-promise here instead of an async so that the routes() handler can have a function to
+    // exit the processing with.
+    return new Promise<void>(async (resolve) => {
       try {
         const { request } = ctx;
         if (request.method === 'CRON') {
@@ -159,7 +162,8 @@ class Manager {
         if (!(ctx as any).routerPath) {
           ctx.throw(404);
         }
-      } catch (e) {
+      } catch (error) {
+        const e: { expose: boolean; status: number } = error as any;
         if (e.status !== 404) {
           console.log(`Manager::execute error: ${require('util').inspect(e)}`);
         }

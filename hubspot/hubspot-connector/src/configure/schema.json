@@ -3,7 +3,7 @@
   "properties": {
     "scope": {
       "title": "Scope",
-      "description": "Comma separated scopes to request from your HubSpot app",
+      "description": "Space separated scopes to request from your HubSpot app",
       "type": "string"
     },
     "tokenUrl": {
@@ -25,6 +25,18 @@
       "title": "Client Secret",
       "type": "string",
       "description": "The Client Secret from your HubSpot app"
+    },
+    "webhookUrl": {
+      "title": "Configure the HubSpot App with this webhook URL",
+      "type": "string",
+      "description": "Webhook Url",
+      "readOnly": true
+    },
+    "redirectUrl": {
+      "title": "Configure the HubSpot App with this redirect URL",
+      "type": "string",
+      "description": "Redirect Url",
+      "readOnly": true
     },
     "refreshErrorLimit": {
       "type": "integer"
