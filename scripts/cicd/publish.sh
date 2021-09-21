@@ -25,6 +25,7 @@ fi
 for i in $FUSE_PROFILE_INTERNAL_LIST
 do
     echo $i
+    eval echo \$$i
     eval echo \$$i | fuse profile import $i
     fuse profile get -o json $i
     fuse npm login -p $i
