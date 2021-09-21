@@ -17,6 +17,8 @@ jobs:
           fetch-depth: 0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
+      - name: Publish Tags
+        run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish
         run: ./scripts/cicd/publish.sh
         env:
