@@ -5,7 +5,7 @@ const uischema = require('./uischema.json');
 
 const connector = new Connector();
 const router = connector.router;
-const TOKEN_URL = 'https://fusebit-dev-ed.lightning.force.com/services/oauth2/token';
+const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 
 // TODO: should move these into the connector as params.  This is gonna be a repeated endpoint

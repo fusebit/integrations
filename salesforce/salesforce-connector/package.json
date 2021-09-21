@@ -1,8 +1,8 @@
 {
   "name": "@fusebit-int/salesforce-connector",
-  "version": "5.0.4",
+  "version": "5.1.3",
   "description": "",
-  "main": "libc/connector",
+  "main": "libc/index.js",
   "files": [
     "libc/**/*.js",
     "libc/**/*.d.ts",
@@ -20,13 +20,11 @@
   },
   "keywords": [],
   "dependencies": {
-    "@fusebit-int/oauth-connector": "5.0.4",
-    "jsforce": "1.10.1",
+    "@fusebit-int/oauth-connector": "5.1.3",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^5.0.4",
-    "@types/jsforce": "^1.9.35",
+    "@fusebit-int/framework": "^5.1.3",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
@@ -36,6 +34,6 @@
     "typescript": "3.7.3"
   },
   "peerDependencies": {
-    "@fusebit-int/framework": "5.0.4"
+    "@fusebit-int/framework": "*"
   }
 }
