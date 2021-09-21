@@ -24,10 +24,7 @@ fi
 
 for i in $FUSE_PROFILE_INTERNAL_LIST
 do
-    echo $i
-    eval echo \$$i
     eval echo \$$i | fuse profile import $i
-    fuse profile get -o json $i
     fuse npm login -p $i
     FUSE_PROFILE=$(fuse profile get -o json ${i})
     URL=$(echo $FUSE_PROFILE | jq -r .baseUrl)/v1/account/$(echo $FUSE_PROFILE | jq -r .account)/registry/default/npm
