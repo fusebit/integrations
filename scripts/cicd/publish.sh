@@ -29,7 +29,7 @@ do
     eval echo \$$i | fuse profile import $i
     fuse profile get -o json $i
     fuse npm login -p $i
-    FUSE_PROFILE=$(fuse profile get -o json)
+    FUSE_PROFILE=$(fuse profile get -o json ${i})
     URL=$(echo $FUSE_PROFILE | jq -r .baseUrl)/v1/account/$(echo $FUSE_PROFILE | jq -r .account)/registry/default/npm
     lerna publish from-git $URL
 done
