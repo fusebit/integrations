@@ -13,5 +13,5 @@ for i in $FUSE_PROFILE_INTERNAL_LIST
 do
     echo $i
     echo ${!i} | fuse profile import $i
-    fuse profile get -o json -p $i
+    fuse profile get -o json $i
 done
