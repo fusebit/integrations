@@ -10,7 +10,7 @@ npm i -g @fusebit/cli
 # check if publish is nessersary
 VER_WART=v
 VERSION=$(cat lerna.json | jq -r .version)
-git tag --points-at HEAD | grep ${VER_WART}-${VERSION} > /dev/null
+git tag --points-at HEAD | grep ${VER_WART}${VERSION} > /dev/null
 TAG_TEST=$?
 if [ ${TAG_TEST} -ne 0 ]; then
   echo "Not publishing ${VERSION} - HEAD is not tagged ${VER_WART}-${VERSION}"
