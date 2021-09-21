@@ -1,7 +1,7 @@
 import { Internal } from '@fusebit-int/framework';
 import jsforce from 'jsforce';
 
-type FusebitClient = jsforce.Connection & { fusebit?: any };
+type FusebitClient = jsforce.Connection & { fusebit?: { credentials: any; identity?: any } };
 
 export default class SalesforceProvider extends Internal.ProviderActivator<FusebitClient> {
   /*
