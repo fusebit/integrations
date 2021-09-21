@@ -12,6 +12,6 @@ npm i -g @fusebit/cli
 for i in $FUSE_PROFILE_INTERNAL_LIST
 do
     echo $i
-    echo ${!i} | fuse profile import $i
+    eval echo \$$i | fuse profile import $i
     fuse profile get -o json $i
 done
