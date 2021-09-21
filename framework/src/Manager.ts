@@ -162,10 +162,10 @@ class Manager {
         if (!(ctx as any).routerPath) {
           if (this.vendorError) {
             ctx.throw(
+              this.vendorError.status || this.vendorError.statusCode || 500,
               `The configured handler generated an error: ${
                 this.vendorError.stack || this.vendorError.message || 'N/A'
-              }`,
-              this.vendorError.status || this.vendorError.statusCode || 500
+              }`
             );
           }
           ctx.throw(404);
