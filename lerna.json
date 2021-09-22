@@ -1,16 +1,8 @@
 {
-  "packages": [
-    "*/*-connector",
-    "*/*-provider",
-    "framework",
-    "catalog"
-  ],
+  "packages": ["*/*-connector", "*/*-provider", "framework", "catalog", "catalog/feed_*/*"],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     }
   },
