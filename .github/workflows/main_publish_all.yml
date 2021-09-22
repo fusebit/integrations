@@ -4,8 +4,8 @@ on:
       - main
 name: CICD - Publish All
 jobs:
-  build_tree:
-    name: PR Check - Build Tree
+  publish:
+    name: CICD - Publish All Packages
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
@@ -23,9 +23,7 @@ jobs:
       - name: Publish
         run: ./scripts/cicd/publish.sh
         env:
-          FUSE_PROFILE_INTERNAL_LIST: ${{ secrets.FUSE_PROFILE_INTERNAL_LIST }}
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKIN'
           FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
-          FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}
-          FUSE_PROFILE_INTERNAL_321_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_1_API }}
