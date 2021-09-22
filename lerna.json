@@ -1,10 +1,19 @@
 {
-  "packages": ["*/*-connector", "*/*-provider", "framework", "catalog", "catalog/feed_connector/*/connector/*"],
+  "packages": [
+    "*/*-connector",
+    "*/*-provider",
+    "framework",
+    "catalog",
+    "catalog/feed_connector/*/connector/*"
+  ],
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     }
   },
-  "version": "5.1.5"
+  "version": "5.1.6"
 }
