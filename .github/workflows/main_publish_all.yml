@@ -1,5 +1,3 @@
-###################################################################
-# Auto-created by the cicd-actions tool
 on:
   push:
     branches:

@@ -3,11 +3,11 @@
 # Set standard bash debug envs
 set -x
 
-# install fusebit tools
+# Install fusebit tools
 
 npm i -g @fusebit/cli
 
-# check if publish is nessersary
+# Check if publish is necessary
 VER_WART=v
 VERSION=$(cat lerna.json | jq -r .version)
 git tag --points-at HEAD | grep ${VER_WART}${VERSION} > /dev/null
