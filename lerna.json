@@ -4,7 +4,7 @@
     "*/*-provider",
     "framework",
     "catalog",
-    "catalog/feed_connector/*/connector/*"
+    "catalog/feed_connector/*/connector"
   ],
   "command": {
     "publish": {
@@ -15,5 +15,5 @@
       "message": "chore(release): publish"
     }
   },
-  "version": "5.1.6"
+  "version": "5.1.7"
 }
