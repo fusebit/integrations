@@ -4,10 +4,10 @@ on:
       versionToPublish:
         description: 'The version to manually publish, must be a valid git tag.'
         default: 'main'
-name: CICD - Publish Special Version
+name: CICD - Publish to Production
 jobs:
-  build_tree:
-    name: CICD - Publish Special Version
+  publish_prod:
+    name: CICD - Publish to Production
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
@@ -21,11 +21,9 @@ jobs:
           ref: ${{ github.event.inputs.versionToPublish }}
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
-      - name: Publish Tags
-        run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish
-        run: ./scripts/cicd/publish.sh
+        run: ./scripts/cicd/force_publish_prod.sh
         env:
-          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_763_US_WEST_1_API'
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_321_US_WEST_1_API'
           FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}
           FUSE_PROFILE_INTERNAL_321_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_1_API }}
