@@ -1,0 +1,39 @@
+{
+  "name": "@fusebit-int/salesforce-connector",
+  "version": "5.2.0",
+  "description": "",
+  "main": "libc/index.js",
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Fusebit, Inc.",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest --colors",
+    "coverage": "jest --colors --coverage",
+    "lint": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore",
+    "clean": "rm -r -f libc; rm -r -f coverage"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@fusebit-int/oauth-connector": "^5.2.0",
+    "superagent": "6.1.0"
+  },
+  "devDependencies": {
+    "@fusebit-int/framework": "^5.2.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-security": "^1.4.0",
+    "typescript": "3.7.3"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  }
+}
