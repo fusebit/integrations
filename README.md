@@ -81,4 +81,5 @@ lerna run build
 | `npm run packages:version [minor,patch,major]` | Automatically bump the version of all packages |
 | `npm run dev:version` | Automatically bump the prerelease version |
 | `lerna clean --yes` | Clean the tree |
+| `HUSKY=0 git commit ... | Do a commit while disabling the pre-commit checks |
 
