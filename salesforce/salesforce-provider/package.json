@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/salesforce-provider",
-  "version": "5.1.3",
+  "version": "5.2.0",
   "description": "Fusebit Salesforce Provider",
   "keywords": [
     "Fusebit",
@@ -33,8 +33,8 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "devDependencies": {
+    "@fusebit-int/framework": "^5.2.0",
     "@types/jsforce": "^1.9.35",
-    "@fusebit-int/framework": "^5.1.3",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",

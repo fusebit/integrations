@@ -4,8 +4,8 @@
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "5.1.3",
-    "@fusebit-int/salesforce-provider": "5.1.3"
+    "@fusebit-int/framework": "5.2.0",
+    "@fusebit-int/salesforce-provider": "5.2.0"
   },
   "files": [
     "./integration.js",

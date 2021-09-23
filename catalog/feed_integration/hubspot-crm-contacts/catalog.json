@@ -3,7 +3,7 @@
   "name": "HubSpot Contacts sync",
   "smallIcon": "/images/hubspot.svg",
   "largeIcon": "/images/hubspot.svg",
-  "version": "1.0.0",
+  "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "hubspot,crm,sales,intro,popular"
