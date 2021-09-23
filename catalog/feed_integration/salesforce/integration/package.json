@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "5.1.3",
+    "@fusebit-int/salesforce-provider": "5.1.3"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}

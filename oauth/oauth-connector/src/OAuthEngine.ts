@@ -98,6 +98,18 @@ class OAuthEngine {
   }
 
   /**
+   * Workaround an issue with Salesforce whereby Salesforce does not return the 'expires_in' property.
+   * Assume the token has 1h of validity in this case (Salesforce default is 2h, but it is configurable).
+   * @param token The OAuth response from the authorization code exchange or refresh token exchange
+   */
+  private normalizeOAuthToken(token: IOAuthToken): IOAuthToken {
+    if (token.refresh_token && isNaN(token.expires_in)) {
+      token.expires_in = 3600;
+    }
+    return token;
+  }
+
+  /**
    * Exchanges the OAuth authorization code for the access and refresh tokens.
    * @param {string} authorizationCode The authorization_code supplied to the OAuth callback upon successful
    *                                   authorization flow.
@@ -116,7 +128,7 @@ class OAuthEngine {
     try {
       const response = await superagent.post(tokenUrl).type('form').send(params);
 
-      return response.body;
+      return this.normalizeOAuthToken(response.body);
     } catch (error) {
       throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
     }
@@ -141,7 +153,7 @@ class OAuthEngine {
       const response = await superagent.post(tokenUrl).type('form').send(params);
 
       // Use the current token if a new one isn't supplied.
-      return { refresh_token: refreshToken, ...response.body };
+      return this.normalizeOAuthToken({ refresh_token: refreshToken, ...response.body });
     } catch (error) {
       throw new Error(`Unable to connecto to tokenUrl '${tokenUrl}: ${error}`);
     }
