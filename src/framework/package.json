@@ -27,8 +27,8 @@
     "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
     "tsc:version": "tsc --version",
-    "lint:check": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore",
     "copy-files": "cp -r src/form libc"
   },
   "bugs": {

@@ -1,1 +1,1 @@
-module.exports = require('../base-eslintrc');
+module.exports = require('../../base-eslintrc');
