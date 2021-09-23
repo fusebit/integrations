@@ -129,7 +129,7 @@ router.get(callbackSuffixUrl, async (ctx: Connector.Types.Context) => {
 
   if (ctx.query.error) {
     // The OAuth exchange has errored out - send back to callback and pass those parameters along.
-    onSessionError(ctx, {
+    await onSessionError(ctx, {
       error: ctx.query.error,
       errorDescription: ctx.query.error_description || ctx.query.errorDescription,
     });
@@ -139,14 +139,14 @@ router.get(callbackSuffixUrl, async (ctx: Connector.Types.Context) => {
   const code = ctx.query.code;
 
   if (!code) {
-    onSessionError(ctx, { error: 'Missing code query parameter from OAuth server' });
+    await onSessionError(ctx, { error: 'Missing code query parameter from OAuth server' });
     return engine.redirectToCallback(ctx);
   }
 
   try {
     await engine.convertAccessCodeToToken(ctx, state, code);
   } catch (e) {
-    onSessionError(ctx, { error: `Conversion error: ${e.response?.text} - ${e.stack}` });
+    await onSessionError(ctx, { error: `Conversion error: ${e.response?.text} - ${e.stack}` });
   }
   return engine.redirectToCallback(ctx);
 });

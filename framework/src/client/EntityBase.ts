@@ -99,9 +99,12 @@ namespace EntityBase {
      * @param {Storage.IListOption} options The bucket name
      * @returns {Promise<Storage.IStorageVersionedResponseList>} A list of Storage items
      */
-    public listData: (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) => Promise<any> =
-      async (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) =>
-        Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
+    public listData: (
+      ctx: RouterContext,
+      dataKeyPrefix: string,
+      options?: Storage.IListOption
+    ) => Promise<any> = async (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) =>
+      Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /** Delete data
      * @param ctx The context object provided by the route function
