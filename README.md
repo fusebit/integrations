@@ -80,4 +80,5 @@ lerna run build
 | `lerna run packages:version` | Use an interactive prompt to select the next version |
 | `npm run packages:version [minor,patch,major]` | Automatically bump the version of all packages |
 | `npm run dev:version` | Automatically bump the prerelease version |
+| `lerna clean --yes` | Clean the tree |
 
