@@ -39,7 +39,7 @@ export interface IStorageVersionedResponseDelete {
 
 export interface IStorageClient {
   accessToken: string;
-  get: (storageSubId: string) => Promise<IStorageVersionedResponse>;
+  get: (storageSubId: string) => Promise<IStorageVersionedResponse | undefined>;
   put: (data: any, storageSubId?: string, version?: string) => Promise<IStorageVersionedResponse>;
   deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
   deleteAll: (forceRecursive: boolean) => Promise<IStorageVersionedResponseDelete>;
@@ -105,6 +105,9 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
         .get(getUrl(storageSubId))
         .set('Authorization', `Bearer ${storageClient.accessToken}`)
         .ok((res) => res.status < 300 || res.status === 404);
+      if (response.status == 404) {
+        return undefined;
+      }
       return convertItemToVersion(response.body, response.status);
     },
     put: async (data: any, storageSubId?: string, version?: string) => {
