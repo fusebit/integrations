@@ -1,5 +1,5 @@
 {
-  "packages": ["src/*/*-connector", "src/*/*-provider", "src/framework", "catalog", "functions/*"],
+  "packages": ["src/*/*-connector", "src/*/*-provider", "src/framework", "catalog", "workspace/*"],
   "command": {
     "publish": {
       "ignoreChanges": ["ignored-file", "*.md"],
