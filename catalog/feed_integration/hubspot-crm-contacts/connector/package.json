@@ -5,7 +5,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/hubspot-connector": "5.1.0",
-    "@fusebit-int/framework": "5.1.0"
+    "@fusebit-int/hubspot-connector": "5.2.0",
+    "@fusebit-int/framework": "5.2.0"
   }
 }

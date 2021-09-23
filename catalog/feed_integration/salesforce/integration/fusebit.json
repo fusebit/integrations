@@ -1,0 +1,17 @@
+{
+  "id": "<% this.id %>",
+  "tags": {},
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "salesforceConnector",
+      "skip": false,
+      "provider": "@fusebit-int/salesforce-provider",
+      "entityId": "<% global.entities.salesforceConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

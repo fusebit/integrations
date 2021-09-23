@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
+    "deploy": "fuse connector deploy <%this.name%> -d .",
+    "get": "fuse connector get <%this.name%> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/salesforce-connector": "5.2.0",
+    "@fusebit-int/framework": "5.2.0"
+  }
+}

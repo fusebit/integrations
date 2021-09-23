@@ -1,0 +1,26 @@
+{
+  "id": "salesforce",
+  "name": "Salesforce",
+  "smallIcon": "https://cdn.fusebit.io/assets/images/salesforce.svg",
+  "largeIcon": "https://cdn.fusebit.io/assets/images/salesforce.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "salesforce,crm,sales,popular"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "salesforceConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "salesforceIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

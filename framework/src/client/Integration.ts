@@ -65,7 +65,7 @@ class Tenant {
    */
   public getSdkByTenant = async (ctx: RouterContext, connectorName: string, tenantId: string) => {
     const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/instance?tag=${TENANT_TAG_NAME}=${tenantId}`)
+      .get(`${ctx.state.params.baseUrl}/instance?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     const body = response.body;
 
