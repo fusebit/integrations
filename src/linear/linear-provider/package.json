@@ -1,0 +1,47 @@
+{
+  "name": "@fusebit-int/linear-provider",
+  "version": "5.2.1",
+  "description": "Linear provider",
+  "keywords": ["Fusebit", "Linear"],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": ["libc/*.js", "libc/*.d.ts"],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  },
+  "devDependencies": {
+    "@fusebit-int/framework": "^5.2.1",
+    "@types/node": "^16.9.2",
+    "@types/request": "^2.48.7",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-security": "^1.4.0",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@linear/sdk": "^1.18.0"
+  }
+}
