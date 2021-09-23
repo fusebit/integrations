@@ -2,12 +2,18 @@
   "name": "@fusebit-int/salesforce-provider",
   "version": "5.2.1",
   "description": "Fusebit Salesforce Provider",
-  "keywords": ["Fusebit", "Salesforce"],
+  "keywords": [
+    "Fusebit",
+    "Salesforce"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"

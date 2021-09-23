@@ -2,12 +2,19 @@
   "name": "@fusebit-int/hubspot-connector",
   "version": "5.2.1",
   "description": "HubSpot Connector",
-  "keywords": ["Fusebit", "HubSpot"],
+  "keywords": [
+    "Fusebit",
+    "HubSpot"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"

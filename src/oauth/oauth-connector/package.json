@@ -2,12 +2,19 @@
   "name": "@fusebit-int/oauth-connector",
   "version": "5.2.1",
   "description": "Fusebit OAuth 2.0 connector",
-  "keywords": ["Fusebit", "OAuth"],
+  "keywords": [
+    "Fusebit",
+    "OAuth"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"

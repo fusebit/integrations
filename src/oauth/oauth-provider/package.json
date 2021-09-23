@@ -2,12 +2,18 @@
   "name": "@fusebit-int/oauth-provider",
   "version": "5.2.1",
   "description": "Fusebit OAuth 2.0 Provider",
-  "keywords": ["Fusebit", "OAuth"],
+  "keywords": [
+    "Fusebit",
+    "OAuth"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"
