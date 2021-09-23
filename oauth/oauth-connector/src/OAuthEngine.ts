@@ -3,18 +3,11 @@ import { Connector, Internal } from '@fusebit-int/framework';
 
 import { IOAuthConfig, IOAuthToken } from './OAuthTypes';
 
-import { callbackSuffixUrl } from './OAuthConstants';
 class OAuthEngine {
   public cfg: IOAuthConfig;
-  public router: Internal.Router;
 
-  constructor(cfg: IOAuthConfig, router: Internal.Router) {
+  constructor(cfg: IOAuthConfig) {
     this.cfg = cfg;
-    this.router = router;
-
-    router.on('uninstall', async (ctx: Internal.Types.Context, next: Internal.Types.Next) => {
-      return next();
-    });
   }
 
   public setMountUrl(mountUrl: string) {
@@ -56,7 +49,7 @@ class OAuthEngine {
    * @returns OAuth redirect URI
    */
   protected getRedirectUri(): string {
-    return `${this.cfg.mountUrl}${callbackSuffixUrl}`;
+    return `${this.cfg.mountUrl}/api/callback`;
   }
 
   /**
