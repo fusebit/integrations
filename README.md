@@ -1,9 +1,9 @@
-# Fusebit packages
-## 👋 Welcome to Fusebit packages
+# Fusebit Integrations
+## 👋 Welcome to Fusebit 
 
 Our product enables developers like you to quickly add integrations to an application using powerful API building blocks. It takes away the pain of developing against many disparate APIs while maintaining the flexibility and familiarity of a code-first platform. Just like Stripe solves payments for application developers, Fusebit solves integrations.
-This repository include our official integrations packages for popular services and Fusebit SDK.
-This packages are available when you create an integration, learn more about 
+This repository includes our official integrations packages for popular services and Fusebit SDK.
+These packages are available when you create an integration, learn more about 
 [integrations](https://developer.fusebit.io/docs)
 
 
@@ -82,4 +82,4 @@ lerna run build
 | `npm run dev:version` | Automatically bump the prerelease version |
 | `lerna clean --yes` | Clean the tree |
 | `HUSKY=0 git commit ... | Do a commit while disabling the pre-commit checks |
-
+| `./scripts/publishAll.sh <profile name>` | Automatically publish everything to your fusebit registry. |
