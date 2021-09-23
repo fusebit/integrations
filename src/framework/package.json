@@ -1,0 +1,58 @@
+{
+  "name": "@fusebit-int/framework",
+  "version": "5.2.1",
+  "description": "Fusebit Official SDK",
+  "keywords": [
+    "fusebit"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.html",
+    "libc/**/*.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc -b --pretty && npm run copy-files",
+    "dev": "tsc --watch --pretty",
+    "tsc:version": "tsc --version",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore",
+    "copy-files": "cp -r src/form libc"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "http-errors": "^1.8.0",
+    "koa": "^2.13.1",
+    "node-mocks-http": "^1.10.1",
+    "statuses": "^2.0.1",
+    "superagent": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/koa": "2.11.0",
+    "@types/koa__router": "^8.0.8",
+    "@types/statuses": "^2.0.0",
+    "@types/superagent": "^4.1.12",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-security": "^1.4.0",
+    "typescript": "3.7.3"
+  }
+}
