@@ -1,0 +1,29 @@
+on:
+  workflow_dispatch:
+    inputs:
+      versionToPublish:
+        description: 'The version to manually publish, must be a valid git tag.'
+        default: 'main'
+name: CICD - PRODUCTION - Specific Version
+jobs:
+  publish_prod:
+    name: CICD - PRODUCTION - Specific Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.versionToPublish }}
+      - name: Build Tree
+        run: ./scripts/cicd/build_tree.sh
+      - name: Publish
+        run: ./scripts/cicd/force_publish_prod.sh
+        env:
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_321_US_WEST_1_API'
+          FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}
+          FUSE_PROFILE_INTERNAL_321_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_1_API }}

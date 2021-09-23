@@ -10,14 +10,34 @@ class Middleware extends EntityBase.MiddlewareBase {
 }
 
 export class Service extends EntityBase.ServiceBase {
+  /** Get an authenticated SDK for the specified Connector, using a given Instance
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} instanceId The identifier of the Instance to get the associated Connector
+   * @returns {Promise<any>} Returns an authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user
+   */
   public getSdk = async (ctx: RouterContext, connectorName: string, instanceId: string) => {
     return ctx.state.manager.connectors.getByName(ctx, connectorName, instanceId);
   };
 
+  /** Get an authenticated SDK for each Connector in the list, using a given Instance
+   * @param ctx The context object provided by the route function
+   * @param {string[]} connectorNames An array of Connector names
+   * @param {string} instanceId The identifier of the Instance to get the associated Connectors
+   * @returns {Promise<any>[]} Returns an array of official Connector SDK instances
+   * already authorized with the proper credentials
+   */
   public getSdks = (ctx: RouterContext, connectorNames: string[], instanceId: string) => {
     return connectorNames.map((connectorName) => this.getSdk(ctx, connectorName, instanceId));
   };
 
+  /** Get a configured Integration with a set of identities
+   * and other values that represent a single user of the Integration.
+   * Read more: https://developer.fusebit.io/docs/fusebit-system-architecture#installation-lifecycle
+   * @param ctx The context object provided by the route function
+   * @param {string} instanceId
+   */
   public getInstance = async (ctx: RouterContext, instanceId: string): Promise<EntityBase.Types.IInstance> => {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/instance/${instanceId}`)
@@ -34,6 +54,15 @@ class Tenant {
     this.service = service;
   }
 
+  /**
+   * Get an authenticated SDK for each Connector in the list, using a given Tenant ID
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} tenantId Represents a single user of this Integration,
+   * usually corresponding to a user or account in your own system
+   * @returns Promise<any> Returns an authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user
+   */
   public getSdkByTenant = async (ctx: RouterContext, connectorName: string, tenantId: string) => {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/instance?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
