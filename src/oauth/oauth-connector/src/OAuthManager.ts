@@ -30,7 +30,7 @@ router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
     }
   };
 
-  ctx.state.engine = ctx.state.engine || new OAuthEngine(ctx.state.manager.config as IOAuthConfig);
+  ctx.state.engine = ctx.state.engine || new OAuthEngine(ctx.state.manager.config.configuration as IOAuthConfig);
   ctx.state.engine.setMountUrl(ctx.state.params.baseUrl);
   ctx.state.identityClient = new IdentityClient({
     createTags,
