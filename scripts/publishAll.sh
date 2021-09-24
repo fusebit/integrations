@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-fuse profile set $1
+set -e
+
+FUSEPROFILE=$1
+
+if [[ "${FUSEPROFILE}" != "" ]]; then
+  fuse profile set ${FUSEPROFILE}
+else
+  FUSEPROFILE=`fuse profile get -o json | jq -r ".id"`
+  echo Using current profile: ${FUSEPROFILE}
+fi
 
 fuse npm login
 
