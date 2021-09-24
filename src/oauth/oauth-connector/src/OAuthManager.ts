@@ -20,6 +20,11 @@ const sanitizeCredentials = (credentials: any): object => {
 };
 
 router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  // Placeholder until event/cron are on their own routers
+  if (ctx.method === 'EVENT') {
+    return;
+  }
+
   const createTags = async (token: IOAuthToken): Promise<ITags | undefined> => {
     const webhookId = await connector.service.getWebhookTokenId(ctx, token);
 
