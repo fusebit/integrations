@@ -13,7 +13,7 @@ usage() {
 }
 
 if [[ "${ENTITYTYPE}" == "" || "${ENTITYID}" == "" ]]; then
-  usage;
+  usage
 fi
 
 
