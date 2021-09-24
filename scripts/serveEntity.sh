@@ -35,6 +35,25 @@ echo ${NEWPACKAGE} > ${TARGETDIR}/package.json
 # Use lerna to create the symlinks for the function's node_modules directory
 lerna bootstrap
 
+if [[ ! -L "${TARGETDIR}/node_modules/@fusebit-int/framework" ]]; then
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo
+  printf "${RED}WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING${NC}\n"
+  echo
+  echo Symlinks were not properly created for 'framework'. This is likely caused
+  echo by the versions in package.json being hardcoded.
+  echo
+  echo 1. Leave this command running.
+  echo 2. Change the package.json versions to be '*' or something equally inclusive.
+  echo 3. Remove all of the internal packages: \'rm -rf ${TARGETDIR}/node_modules/@fusebit-int\'
+  echo 3. Run 'lerna bootstrap' again.
+  echo 4. Run \'ls -la ${TARGETDIR}/node_modules/@fusebit-int\' and validate that the packages
+  echo "   are symlinked."
+  echo
+  printf "${RED}WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING${NC}\n"
+fi
+
 # Include the node_modules for the entity in the search path, to aid resolution in framework of various
 # connectors and providers that are side-loaded via string-based require() statements.
 export NODE_PATH=${NODE_PATH}:${TARGETDIR}/node_modules
