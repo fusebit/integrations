@@ -50,7 +50,6 @@
     "@types/superagent": "^4.1.13"
   },
   "dependencies": {
-    "@discordjs/rest": "0.1.0-canary.0",
-    "discord-api-types": "^0.23.1"
+    "@discordjs/rest": "0.1.0-canary.0"
   }
 }
