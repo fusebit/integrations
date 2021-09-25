@@ -7,33 +7,33 @@
       "type": "string"
     },
     "tokenUrl": {
-      "title": "Linear Token URL",
+      "title": "Discord Token URL",
       "description": "The authentication URL to use when exchanging tokens, as per the OAuth protocol",
       "type": "string"
     },
     "authorizationUrl": {
-      "title": "Linear Authorization URL",
+      "title": "Discord Authorization URL",
       "description": "The authorization URL to use when generating authorization codes, as per the OAuth 2.0 protocol",
       "type": "string"
     },
     "clientId": {
       "title": "Client ID",
-      "description": "The Client ID from your Linear app",
+      "description": "The Client ID from your Discord bot",
       "type": "string"
     },
     "clientSecret": {
       "title": "Client Secret",
       "type": "string",
-      "description": "The Client Secret from your Linear app"
+      "description": "The Client Secret from your Discord bot"
     },
     "webhookUrl": {
-      "title": "Configure the Linear App with this webhook URL",
+      "title": "Configure the Discord App with this webhook URL",
       "type": "string",
       "description": "Webhook Url",
       "readOnly": true
     },
     "redirectUrl": {
-      "title": "Configure the Linear App with this redirect URL",
+      "title": "Configure the Discord App with this redirect URL",
       "type": "string",
       "description": "Redirect Url",
       "readOnly": true

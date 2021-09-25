@@ -4,8 +4,8 @@ import { schema, uischema } from './configure';
 
 const connector = new Connector();
 const router = connector.router;
-const TOKEN_URL = 'https://api.linear.app/oauth/token';
-const AUTHORIZATION_URL = 'https://linear.app/oauth/authorize';
+const TOKEN_URL = 'https://discord.com/api/oauth2/token';
+const AUTHORIZATION_URL = 'https://discord.com/api/oauth2/authorize';
 
 router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
   const { config: cfg } = ctx.state.manager;
