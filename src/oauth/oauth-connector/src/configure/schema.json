@@ -1,21 +1,53 @@
 {
   "type": "object",
   "properties": {
+    "mode": {
+      "type": "object",
+      "properties": {
+        "useProduction": {
+          "title": "Production Credentials",
+          "type": "boolean"
+        }
+      }
+    },
+    "constants": {
+      "type": "object",
+      "properties": {
+        "urls": {
+          "type": "object",
+          "properties": {
+            "callbackUrl": {
+              "title": "OAuth2 Redirect URL",
+              "type": "string",
+              "readOnly": true
+            },
+            "webhookUrl": {
+              "title": "Webhook URL",
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        }
+      }
+    },
+    "authorizationUrl": {
+      "title": "Override the OAuth2 Authorization URL",
+      "type": "string"
+    },
+    "tokenUrl": {
+      "title": "Override the OAuth2 Token Request URL",
+      "type": "string"
+    },
     "scope": {
       "title": "Comma separated scopes to request from the OAuth server",
       "type": "string"
     },
     "clientId": {
-      "title": "The client ID issued by the OAuth server",
-      "type": "string"
-    },
-    "tokenUrl": {
+      "title": "Client ID",
       "type": "string"
     },
     "clientSecret": {
-      "type": "string"
-    },
-    "authorizationUrl": {
+      "title": "Client Secret",
       "type": "string"
     },
     "refreshErrorLimit": {
@@ -34,5 +66,5 @@
       "type": "integer"
     }
   },
-  "required": ["scope", "clientId", "clientSecret", "tokenUrl", "authorizationUrl"]
+  "required": ["scope", "clientId", "clientSecret"]
 }

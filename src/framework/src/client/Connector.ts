@@ -195,8 +195,12 @@ class Connector extends EntityBase {
 }
 namespace Connector {
   export namespace Types {
+    export type Router = EntityBase.Types.Router;
     export type Context = EntityBase.Types.Context;
     export type Next = EntityBase.Types.Next;
+    export type Handler =
+      | ((ctx: Connector.Types.Context, next: Connector.Types.Next) => ReturnType<Connector.Types.Next>)
+      | ((ctx: Connector.Types.Context) => ReturnType<Connector.Types.Next> | Promise<void>);
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
     export interface IWebhookEvent {
       data: any;

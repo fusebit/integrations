@@ -1,36 +1,26 @@
 import { Connector } from '@fusebit-int/framework';
 import OAuthConnector from '@fusebit-int/oauth-connector';
-const schema = require('./schema.json');
-const uischema = require('./uischema.json');
 
-const connector = new Connector();
-const router = connector.router;
 const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 
-// TODO: should move these into the connector as params.  This is gonna be a repeated endpoint
-// `tokenUrl` and `authorizationUrl` can exist on the connector.  We already have a `startup` event handler there
-// `schema` and `uischema` can exist on the connector, with exposed setters.  The route is consistent, the schema is not
-router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-  const { config: cfg } = ctx.state.manager;
-  cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || TOKEN_URL;
-  cfg.configuration.authorizationUrl = cfg.configuration.authorizationUrl || AUTHORIZATION_URL;
-  return next();
-});
+const connector = new Connector();
+const router = connector.router;
 
-router.get(
-  '/api/configure',
-  connector.middleware.authorizeUser('connector:put'),
-  async (ctx: Connector.Types.Context) => {
-    ctx.body = {
-      data: {
-        ...ctx.state.manager.config.configuration,
-      },
-      schema,
-      uischema,
-    };
-  }
-);
+// OAuth Configuration Updates and /api/configure handling
+router.use(OAuthConnector.middleware.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, 'salesforce'));
+OAuthConnector.onConfigure(router, async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  await next();
+
+  // Adjust the configuration elements here
+  ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
+    'Salesforce Configuration';
+
+  // Adjust the data schema
+  ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Salesforce Connected App';
+  ctx.body.schema.properties.clientId.description = 'The OAuth Consumer Key from your Salesforce Connected App';
+  ctx.body.schema.properties.clientSecret.description = 'The Consumer Secret from your Salesforce Connected App';
+});
 
 router.use(OAuthConnector.router.routes());
 
