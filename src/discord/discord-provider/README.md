@@ -1,11 +1,11 @@
-# `@fusebit-int/linear-provider`
+# `@fusebit-int/discord-provider`
 
 > TODO: description
 
 ## Usage
 
 ```
-const linearProvider = require('@fusebit-int/linear-provider');
+const discordProvider = require('@fusebit-int/discord-provider');
 
 // TODO: DEMONSTRATE API
 ```

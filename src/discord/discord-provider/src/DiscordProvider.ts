@@ -1,7 +1,11 @@
 import { Internal } from '@fusebit-int/framework';
-import { REST as Client } from '@discordjs/rest';
 
-type FusebitDiscordClient = Client & { fusebit?: any };
+// DiscordJS REST client requires v16 nodejs, so placing a fake interface here for now
+class MockClient {
+  fusebit: any;
+}
+
+type FusebitDiscordClient = MockClient & { fusebit?: any };
 
 export default class DiscordProvider extends Internal.ProviderActivator<FusebitDiscordClient> {
   /*
@@ -9,7 +13,7 @@ export default class DiscordProvider extends Internal.ProviderActivator<FusebitD
    */
   protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitDiscordClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitDiscordClient = new Client({ version: '9' }).setToken(credentials.access_token);
+    const client = new MockClient();
     client.fusebit = { credentials };
     return client;
   }
