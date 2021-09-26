@@ -29,7 +29,7 @@ rm -rf ${TARGETDIR}
 fuse function get -b ${ENTITYTYPE} ${ENTITYID} -d ${TARGETDIR}
 
 # Add a 'name' to the package.json to avoid accidental 'unnamed' project confusion by lerna
-NEWPACKAGE=`cat ${TARGETDIR}/package.json | jq ".name = \"${ENTITYID}\""`
+NEWPACKAGE=`cat ${TARGETDIR}/package.json | jq ".name = \"workspace-${ENTITYTYPE}-${ENTITYID}\""`
 echo ${NEWPACKAGE} > ${TARGETDIR}/package.json
 
 # Use lerna to create the symlinks for the function's node_modules directory

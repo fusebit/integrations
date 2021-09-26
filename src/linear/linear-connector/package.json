@@ -46,7 +46,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.8.0"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
