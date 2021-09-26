@@ -1,0 +1,1 @@
+export { commonConnectorTests } from './common';

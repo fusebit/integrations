@@ -54,16 +54,18 @@ class Router extends KoaRouter {
     this.register(path, ['event'], middleware, { name: path });
   }
 
-  /*
-  // Typescript yells at me without these... I don't know why.
+  // Typescript yells for this in tests without these.
   public get(path: any, ...middleware: any[]): Router {
     return super.get(path, ...middleware) as Router;
+  }
+  public post(path: any, ...middleware: any[]): Router {
+    return super.post(path, ...middleware) as Router;
   }
   public delete(path: any, ...middleware: any[]): Router {
     return super.delete(path, ...middleware) as Router;
   }
- */
 }
+
 /** Elements that get added to the stock Koa context. */
 export interface IContext {
   /** The parameters for an event invocation. */

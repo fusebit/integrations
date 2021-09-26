@@ -1,17 +1,16 @@
 {
   "packages": [
+    "./",
     "src/*/*-connector",
     "src/*/*-provider",
     "src/framework",
     "catalog",
-    "workspace/*"
+    "workspace/*",
+    "catalog/feed_*/**"
   ],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     }
   },

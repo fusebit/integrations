@@ -82,4 +82,8 @@ lerna run build
 | `npm run dev:version` | Automatically bump the prerelease version |
 | `lerna clean --yes` | Clean the tree |
 | `HUSKY=0 git commit ... | Do a commit while disabling the pre-commit checks |
-| `./scripts/publishAll.sh <profile name>` | Automatically publish everything to your fusebit registry. |
+| `./scripts/publish_all.sh <profile name>` | Automatically publish everything to your fusebit registry. |
+| `npm run test` | Run all of the tests |
+| `npm run test oauth-connector` | Run the tests for just the `oauth-connector` package |
+| `lerna run build --scope @fusebit-int/slack-connector && npm run test slack-connector` | Build and run the
+tests for a specific package |
