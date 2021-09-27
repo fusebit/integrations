@@ -53,17 +53,6 @@ class Router extends KoaRouter {
   public on(path: any, ...middleware: any[]) {
     this.register(path, ['event'], middleware, { name: path });
   }
-
-  // Typescript yells for this in tests without these.
-  public get(path: any, ...middleware: any[]): Router {
-    return super.get(path, ...middleware) as Router;
-  }
-  public post(path: any, ...middleware: any[]): Router {
-    return super.post(path, ...middleware) as Router;
-  }
-  public delete(path: any, ...middleware: any[]): Router {
-    return super.delete(path, ...middleware) as Router;
-  }
 }
 
 /** Elements that get added to the stock Koa context. */
