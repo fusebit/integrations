@@ -26,7 +26,7 @@ connector.middleware.adjustUrlConfiguration = (
   defaultTokenUrl: string,
   defaultAuthorizationUrl: string,
   proxyKey?: string
-) => async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+) => async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
   const { config: cfg } = ctx.state.manager;
 
   cfg.configuration.constants = {
