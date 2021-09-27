@@ -24,7 +24,8 @@
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
+    "deploy": "scripts/deploy"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
