@@ -137,6 +137,6 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('Default route healthcheck returns success', async () => {});
-  it('Default route healthcheck returns failure', async () => {});
+  it.todo('Default route healthcheck returns success');
+  it.todo('Default route healthcheck returns failure');
 });
