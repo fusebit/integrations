@@ -1,0 +1,50 @@
+on:
+  pull_request:
+    types: ['closed']
+name: Bump
+jobs:
+  bump_patch:
+    if: contains(github.event.pull_request.labels.*.name, 'patch')
+    name: bump_patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./bump.sh patch
+  bump_minor:
+    if: contains(github.event.pull_request.labels.*.name, 'minor')
+    name: bump_minor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./bump.sh minor
+  bump_major:
+    if: contains(github.event.pull_request.labels.*.name, 'major')
+    name: bump_major
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./bump.sh major
