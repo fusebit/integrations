@@ -1,0 +1,57 @@
+on:
+  pull_request:
+    # GHA sadly does not offer a event trigger for merged
+    types: ['closed']
+name: Bump
+jobs:
+  bump_patch:
+    if: contains(github.event.pull_request.labels.*.name, 'semver:patch') && github.event.pull_request.merged == true
+    name: bump_patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./scripts/cicd/build_tree.sh
+      - name: Bump Patch Version
+        run: ./scripts/cicd/bump.sh patch
+  bump_minor:
+    if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
+    name: bump_minor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./scripts/cicd/build_tree.sh
+      - name: Bump Minor Version
+        run: ./scripts/cicd/bump.sh minor
+  bump_major:
+    if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
+    name: bump_major
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./scripts/cicd/build_tree.sh
+      - name: Bump Major Version
+        run: ./scripts/cicd/bump.sh major
