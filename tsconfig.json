@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "jsx": "react",
     "forceConsistentCasingInFileNames": true
   },
   "include": ["."],

@@ -15,3 +15,5 @@ jobs:
           fetch-depth: 0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
+      - name: Execute Tests
+        run: ./scripts/cicd/run_tests.sh

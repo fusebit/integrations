@@ -4,3 +4,4 @@
 lerna run lint
 npm run prettier:check
 lerna run build
+npm run test
