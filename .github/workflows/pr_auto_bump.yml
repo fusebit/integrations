@@ -25,6 +25,11 @@ jobs:
         run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
+        env:
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS'
+          FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
   bump_minor:
     if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
     name: bump_minor
@@ -46,6 +51,12 @@ jobs:
         run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
+        env:
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS'
+          FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
+
   bump_major:
     if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
     name: bump_major
@@ -67,3 +78,8 @@ jobs:
         run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
+        env:
+          FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS'
+          FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
+          FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
