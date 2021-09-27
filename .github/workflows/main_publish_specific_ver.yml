@@ -22,7 +22,7 @@ jobs:
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Publish
-        run: ./scripts/cicd/publish.sh
+        run: ./scripts/cicd/force_publish_prod.sh
         env:
           FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_321_US_WEST_1_API'
           FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}

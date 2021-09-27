@@ -21,6 +21,8 @@ jobs:
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Patch Version
         run: ./scripts/cicd/bump.sh patch
+      - name: Bump git tag
+        run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
   bump_minor:
@@ -40,6 +42,8 @@ jobs:
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Minor Version
         run: ./scripts/cicd/bump.sh minor
+      - name: Bump git tag
+        run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
   bump_major:
@@ -59,5 +63,7 @@ jobs:
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Major Version
         run: ./scripts/cicd/bump.sh major
+      - name: Bump git tag
+        run: ./scripts/cicd/tag_artifacts.sh
       - name: Publish All
         run: ./scripts/cicd/publish.sh
