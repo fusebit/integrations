@@ -5,7 +5,7 @@ on:
 name: Bump
 jobs:
   bump_patch:
-    if: contains(github.event.pull_request.labels.*.name, 'semver:patch')
+    if: contains(github.event.pull_request.labels.*.name, 'semver:patch') && github.event.pull_request.merged == 'true'
     name: bump_patch
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: Bump Patch Version
         run: ./scripts/cicd/bump.sh patch
   bump_minor:
-    if: contains(github.event.pull_request.labels.*.name, 'semver:minor')
+    if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == 'true'
     name: bump_minor
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
       - name: Bump Minor Version
         run: ./scripts/cicd/bump.sh minor
   bump_major:
-    if: contains(github.event.pull_request.labels.*.name, 'semver:major')
+    if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == 'true'
     name: bump_major
     runs-on: ubuntu-latest
     steps:
