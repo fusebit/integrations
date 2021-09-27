@@ -4,7 +4,7 @@ set -xe
 
 git pull
 git switch main
-npx lerna version $1 --yes --no-git-tag-version
+npx lerna version $1 --yes
 git config --global user.email "goat@fusebit.io"
 git config --global user.name "The GOAT"
 git add -A
