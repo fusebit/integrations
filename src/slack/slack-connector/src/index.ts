@@ -1,37 +1,41 @@
 import { Connector } from '@fusebit-int/framework';
 import OAuthConnector from '@fusebit-int/oauth-connector';
-import { schema, uischema } from './configure';
 import crypto from 'crypto';
 
-const connector = new Connector();
-const router = connector.router;
 const TOKEN_URL = 'https://slack.com/api/oauth.v2.access';
 const AUTHORIZATION_URL = 'https://slack.com/oauth/v2/authorize';
 
-// TODO: should move these into the connector as params.  This is gonna be a repeated endpoint
-// `tokenUrl` and `authorizationUrl` can exist on the connector.  We already have a `startup` event handler there
-// `schema` and `uischema` can exist on the connector, with exposed setters.  The route is consistent, the schema is not
-router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-  const { config: cfg } = ctx.state.manager;
-  cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || TOKEN_URL;
-  cfg.configuration.authorizationUrl = cfg.configuration.authorizationUrl || AUTHORIZATION_URL;
-  return next();
-});
+const connector = new Connector();
+const router = connector.router;
 
-router.get(
-  '/api/configure',
-  connector.middleware.authorizeUser('connector:put'),
-  async (ctx: Connector.Types.Context) => {
-    ctx.body = {
-      data: {
-        ...ctx.state.manager.config.configuration,
-        webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
+// OAuth Configuration Updates and /api/configure handling
+router.use(OAuthConnector.middleware.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, 'slack'));
+OAuthConnector.onConfigure(router, async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  await next();
+
+  // Adjust the ui schema and layout
+  ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
+    'Slack Configuration';
+  ctx.body.uischema.elements
+    .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
+    .elements[0].elements[1].elements.push({
+      type: 'Control',
+      scope: '#/properties/signingSecret',
+      options: {
+        format: 'password',
       },
-      schema,
-      uischema,
-    };
-  }
-);
+    });
+
+  // Adjust the data schema
+  ctx.body.schema.properties.constants.properties.urls.properties.webhookUrl.title = 'Events API Request URL';
+  ctx.body.schema.properties.scope.title = 'Bot Token Scopes (space separated)';
+  ctx.body.schema.properties.clientId.title = 'The Client ID from your Slack App';
+  ctx.body.schema.properties.clientSecret.title = 'The Client Secret from your Slack App';
+  ctx.body.schema.properties.signingSecret = {
+    title: 'Signing Secret from your Slack App',
+    type: 'string',
+  };
+});
 
 connector.service.setGetEventsFromPayload((ctx) => {
   return [ctx.req.body];

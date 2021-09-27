@@ -3,17 +3,114 @@ import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 
 import IdentityClient from './IdentityClient';
 
-import { schema, uischema } from './configure';
+import * as ConfigurationUI from './configure';
 import { IOAuthToken, ITags } from './OAuthTypes';
 
-const connector = new Connector();
+type MiddlewareAdjustUrlConfiguration = (
+  defaultTokenUrl: string,
+  defaultAuthorizationUrl: string,
+  proxyKey?: string
+) => Connector.Types.Handler;
+type HandleApiConfigure = (router: Connector.Types.Router, ...middleware: Connector.Types.Handler[]) => void;
+
+const connector = new Connector() as Connector & {
+  middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
+  onConfigure: HandleApiConfigure;
+};
 const router = connector.router;
+
+// Sneak a utility function onto the connector so that callers can make use of it.
+//
+// Note: this function is not executed in a authorized context, so take no action requiring authorization.
+connector.middleware.adjustUrlConfiguration = (
+  defaultTokenUrl: string,
+  defaultAuthorizationUrl: string,
+  proxyKey?: string
+) => async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
+  const { config: cfg } = ctx.state.manager;
+
+  cfg.configuration.constants = {
+    urls: {
+      production: {
+        tokenUrl: defaultTokenUrl,
+        authorizationUrl: defaultAuthorizationUrl,
+      },
+      ...(proxyKey
+        ? {
+            proxy: {
+              tokenUrl: `${ctx.state.params.baseUrl}/proxy/${proxyKey}/oauth/token`,
+              authorizationUrl: `${ctx.state.params.baseUrl}/proxy/${proxyKey}/oauth/authorize`,
+            },
+          }
+        : {}),
+      webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
+      callbackUrl: `${ctx.state.params.baseUrl}/api/callback`,
+    },
+  };
+
+  // Make sure there's sensible defaults for the tokenUrl and authorizationUrl, but still allow them to be
+  // overwritten if necessary.
+  if (cfg.configuration.mode?.useProduction) {
+    cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || cfg.configuration.constants.urls.production.tokenUrl;
+    cfg.configuration.authorizationUrl =
+      cfg.configuration.authorizationUrl || cfg.configuration.constants.urls.production.authorizationUrl;
+  } else if (proxyKey) {
+    cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || cfg.configuration.constants.urls.proxy.tokenUrl;
+    cfg.configuration.authorizationUrl =
+      cfg.configuration.authorizationUrl || cfg.configuration.constants.urls.proxy.authorizationUrl;
+  }
+
+  return next();
+};
+
+connector.onConfigure = (connectorRouter: Connector.Types.Router, ...middleware: Connector.Types.Handler[]) => {
+  connectorRouter.get(
+    '/api/configure',
+    connector.middleware.authorizeUser('connector:put'),
+    ...(middleware?.length > 0 ? middleware : []),
+    async (ctx: Connector.Types.Context) => {
+      ctx.body = JSON.parse(
+        JSON.stringify({
+          data: {
+            ...ctx.state.manager.config.configuration,
+          },
+          schema: ConfigurationUI.schema,
+          uischema: ConfigurationUI.uischema,
+        })
+      );
+
+      // Remove some default values so that they don't get accidentally persisted through UI configuration
+      // events.
+      const constUrls = ctx.state.manager.config.configuration.constants.urls;
+      if (
+        ctx.body.data.tokenUrl == constUrls.production.tokenUrl ||
+        ctx.body.data.tokenUrl == constUrls.proxy.tokenUrl
+      ) {
+        delete ctx.body.data.tokenUrl;
+      }
+      if (
+        ctx.body.data.authorizationUrl == constUrls.production.authorizationUrl ||
+        ctx.body.data.authorizationUrl == constUrls.proxy.authorizationUrl
+      ) {
+        delete ctx.body.data.authorizationUrl;
+      }
+    }
+  );
+};
+
+// Default Routes
+router.use(
+  connector.middleware.adjustUrlConfiguration('http://fusebit.io/token', 'http://fusebit.io/authorize', 'oauth')
+);
+
+// Likely to be overruled by a derived instance
+connector.onConfigure(router);
 
 const onSessionError = async (ctx: Connector.Types.Context, error: { error: string; errorDescription?: string }) => {
   await ctx.state.identityClient?.saveErrorToSession({ ...error }, ctx.query.state);
 };
 
-const sanitizeCredentials = (credentials: any): object => {
+const sanitizeCredentials = (credentials: { refresh_token: string }): object => {
   const result = { ...credentials };
   delete result.refresh_token;
   return result;
@@ -100,18 +197,6 @@ router.delete(
 router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
   ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
 });
-
-router.get(
-  '/api/configure',
-  connector.middleware.authorizeUser('connector:put'),
-  async (ctx: Connector.Types.Context) => {
-    ctx.body = {
-      data: ctx.state.manager.config.configuration,
-      schema,
-      uischema,
-    };
-  }
-);
 
 router.get('/api/callback', async (ctx: Connector.Types.Context) => {
   const state = ctx.query.state;

@@ -1,34 +1,26 @@
 import { Connector } from '@fusebit-int/framework';
 import OAuthConnector from '@fusebit-int/oauth-connector';
-import { schema, uischema } from './configure';
 
-const connector = new Connector();
-const router = connector.router;
 const TOKEN_URL = 'https://api.linear.app/oauth/token';
 const AUTHORIZATION_URL = 'https://linear.app/oauth/authorize';
 
-router.on('/lifecycle/startup', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-  const { config: cfg } = ctx.state.manager;
-  cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || TOKEN_URL;
-  cfg.configuration.authorizationUrl = cfg.configuration.authorizationUrl || AUTHORIZATION_URL;
-  return next();
-});
+const connector = new Connector();
+const router = connector.router;
 
-router.get(
-  '/api/configure',
-  connector.middleware.authorizeUser('connector:put'),
-  async (ctx: Connector.Types.Context) => {
-    ctx.body = {
-      data: {
-        ...ctx.state.manager.config.configuration,
-        redirectUrl: `${ctx.state.params.baseUrl}/api/callback`,
-        webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
-      },
-      schema,
-      uischema,
-    };
-  }
-);
+// OAuth Configuration Updates and /api/configure handling
+router.use(OAuthConnector.middleware.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, 'linear'));
+OAuthConnector.onConfigure(router, async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+  await next();
+
+  // Adjust the configuration elements here
+  ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
+    'Linear Configuration';
+
+  // Adjust the data schema
+  ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Linear App';
+  ctx.body.schema.properties.clientId.description = 'The Client ID from your Linear App';
+  ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Linear App';
+});
 
 /*
 connector.service.setGetEventsFromPayload((ctx) => {

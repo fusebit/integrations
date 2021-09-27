@@ -4,8 +4,6 @@
   "handler": "@fusebit-int/salesforce-connector",
   "configuration": {
     "scope": "api offline_access",
-    "tokenUrl": "/v2/account/<%global.consts.accountId%>/subscription/<%global.consts.subscriptionId%>/connector/<%this.id%>/proxy/salesforce/oauth/token",
-    "authorizationUrl": "/v2/account/<%global.consts.accountId%>/subscription/<%global.consts.subscriptionId%>/connector/<%this.id%>/proxy/salesforce/oauth/authorize",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
