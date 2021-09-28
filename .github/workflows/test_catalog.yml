@@ -1,0 +1,32 @@
+on: 'workflow_dispatch'
+name: Test Catalog Publishing
+jobs:
+  test_publish_catalog:
+    name: Test publish catalog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upgrade aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip >/dev/null
+          sudo ./aws/install --update
+          /usr/local/bin/aws --version
+          aws --version
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Tree
+        run: ./scripts/cicd/build_tree.sh
+      - name: Publish Catalog - Stage
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          AWS_REGION: us-east-1
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_STAGE_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_STAGE_MANAGE }}

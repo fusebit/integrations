@@ -10,7 +10,7 @@ echo ${AWS_PROFILE_RAW} > ~/.aws/credentials
 AWS_PROFILE=${AWS_PROFILE:=default}
 
 # -- Script --
-set -e
+set -ex
 
 cd catalog
 
