@@ -21,3 +21,10 @@ jobs:
           FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_321_US_WEST_1_API'
           FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}
           FUSE_PROFILE_INTERNAL_321_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_1_API }}
+      - name: Publish Catalog
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_MANAGE }}
