@@ -11,8 +11,7 @@ jobs:
     steps:
       - name: Upgrade aws-cli
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
-          "awscliv2.zip"
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
           sudo ./aws/install --update
           /usr/local/bin/aws --version
@@ -60,8 +59,7 @@ jobs:
     steps:
       - name: Upgrade aws-cli
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
-          "awscliv2.zip"
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
           sudo ./aws/install --update
           /usr/local/bin/aws --version
@@ -109,8 +107,7 @@ jobs:
     steps:
       - name: Upgrade aws-cli
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
-          "awscliv2.zip"
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
           sudo ./aws/install --update
           /usr/local/bin/aws --version
