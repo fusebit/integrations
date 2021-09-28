@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/slack-provider",
-  "version": "5.5.5",
+  "version": "5.5.6",
   "description": "Fusebit Slack Provider",
   "keywords": [
     "Fusebit",
@@ -33,7 +33,7 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^5.5.5",
+    "@fusebit-int/framework": "^5.5.6",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
