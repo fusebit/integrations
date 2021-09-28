@@ -5,6 +5,9 @@
   },
   "handler": "@fusebit-int/slack-connector",
   "configuration": {
+    "mode": {
+      "useProduction": false
+    },
     "scope": "chat:write users:read channels:read channels:join chat:write.public",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",

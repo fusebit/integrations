@@ -5,6 +5,9 @@
   },
   "handler": "@fusebit-int/hubspot-connector",
   "configuration": {
+    "mode": {
+      "useProduction": false
+    },
     "scope": "contacts",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
