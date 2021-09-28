@@ -29,6 +29,6 @@ export default abstract class ProviderActivator<T> {
       ctx.throw(404, `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`);
     }
 
-    return tokenResponse.body;
+    return connectorToken;
   }
 }
