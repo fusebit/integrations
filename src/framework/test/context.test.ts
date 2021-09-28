@@ -32,4 +32,37 @@ describe('Context', () => {
     expect(kctx.state.params.boundaryId).toBeUndefined();
     expect(kctx.state.params.functionId).toBeUndefined();
   });
+
+  it('cookies get passed through and back again', async () => {
+    const manager = new Manager();
+
+    const fctx = {
+      path: '/PATH',
+      method: 'GET',
+      accountId: 'accountId',
+      subscriptionId: 'subscriptionId',
+      boundaryId: 'boundaryId',
+      functionId: 'functionId',
+      baseUrl: 'baseUrl',
+      query: {
+        query1: 'query1_value',
+      },
+      headers: {
+        cookie: 'session=abcdef',
+        header1: 'header1_value',
+      },
+    };
+
+    const kctx = manager.createRouteableContext(fctx);
+    expect(kctx.header.cookie).toBe(fctx.headers.cookie);
+
+    // Set the headers a couple of different ways
+    kctx.res.setHeader('set-cookie', 'foobar=muh');
+    kctx.set('header2', 'header2_val');
+
+    // Validate that the response created by the manager contains the headers
+    const result = manager.createResponse(kctx);
+    expect(result.headers['set-cookie']).toBe('foobar=muh');
+    expect(result.headers['header2']).toBe('header2_val');
+  });
 });
