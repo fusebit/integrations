@@ -25,8 +25,8 @@ jobs:
       - name: Publish Catalog - Stage
         run: ./scripts/cicd/publish_catalog.sh
         env:
-          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
-          AWS_PROFILE: gha.321
-          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROFILE_321_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY_ID: ${{ secrets.AWS_PROFILE_321_SECRET_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: us-east-1
           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_STAGE_MANAGE }}
           CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_STAGE_MANAGE }}
