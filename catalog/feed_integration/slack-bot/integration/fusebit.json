@@ -1,6 +1,8 @@
 {
   "id": "<% this.id %>",
-  "tags": {},
+  "tags": {
+    "fusebit.service": "slack"
+  },
   "handler": "./integration",
   "components": [
     {

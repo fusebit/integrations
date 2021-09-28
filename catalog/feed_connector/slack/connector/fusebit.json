@@ -1,6 +1,8 @@
 {
   "id": "<%this.id%>",
-  "tags": {},
+  "tags": {
+    "fusebit.service": "slack"
+  },
   "handler": "@fusebit-int/slack-connector",
   "configuration": {
     "scope": "chat:write users:read channels:read channels:join chat:write.public",

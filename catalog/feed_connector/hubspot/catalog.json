@@ -8,6 +8,9 @@
   "tags": {
     "catalog": "hubspot,crm,sales,intro,popular"
   },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app"
+  },
   "configuration": {
     "schema": "config/schema.json",
     "uischema": "config/uischema.json",
