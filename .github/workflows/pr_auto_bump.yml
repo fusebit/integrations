@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upgrade aws-cli
-        run: >
+        run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
           "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upgrade aws-cli
-        run: >
+        run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
           "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upgrade aws-cli
-        run: >
+        run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
           "awscliv2.zip"
           unzip awscliv2.zip >/dev/null
