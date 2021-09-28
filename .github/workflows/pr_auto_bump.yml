@@ -30,6 +30,21 @@ jobs:
           FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
+      - name: Publish Catalog - Stage
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_STAGE_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_STAGE_MANAGE }}
+      - name: Publish Catalog - Develop
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEVELOP_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_DEVELOP_MANAGE }}
+
   bump_minor:
     if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
     name: bump_minor
@@ -56,6 +71,20 @@ jobs:
           FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_2_STAGE }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_CICD }}
           FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS: ${{ secrets.FUSE_PROFILE_INTERNAL_749_US_EAST_2_JENKINS }}
+      - name: Publish Catalog - Stage
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_STAGE_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_STAGE_MANAGE }}
+      - name: Publish Catalog - Develop
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_PROFILE_RAW: ${{ secrets.AWS_PROFILE_321 }}
+          AWS_PROFILE: gha.321
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEVELOP_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_DEVELOP_MANAGE }}
 
   bump_major:
     if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
