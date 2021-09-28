@@ -9,6 +9,14 @@ jobs:
     name: bump_patch
     runs-on: ubuntu-latest
     steps:
+      - name: Upgrade aws-cli
+        run: >
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
+          "awscliv2.zip"
+          unzip awscliv2.zip >/dev/null
+          sudo ./aws/install --update
+          /usr/local/bin/aws --version
+          aws --version
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -50,6 +58,14 @@ jobs:
     name: bump_minor
     runs-on: ubuntu-latest
     steps:
+      - name: Upgrade aws-cli
+        run: >
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
+          "awscliv2.zip"
+          unzip awscliv2.zip >/dev/null
+          sudo ./aws/install --update
+          /usr/local/bin/aws --version
+          aws --version
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -91,6 +107,14 @@ jobs:
     name: bump_major
     runs-on: ubuntu-latest
     steps:
+      - name: Upgrade aws-cli
+        run: >
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o
+          "awscliv2.zip"
+          unzip awscliv2.zip >/dev/null
+          sudo ./aws/install --update
+          /usr/local/bin/aws --version
+          aws --version
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
