@@ -5,6 +5,9 @@
   },
   "handler": "@fusebit-int/salesforce-connector",
   "configuration": {
+    "mode": {
+      "useProduction": false
+    },
     "scope": "api offline_access",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
