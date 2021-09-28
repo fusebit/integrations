@@ -1,6 +1,8 @@
 {
   "id": "<%this.id%>",
-  "tags": {},
+  "tags": {
+    "fusebit.service": "salesforce"
+  },
   "handler": "@fusebit-int/salesforce-connector",
   "configuration": {
     "scope": "api offline_access",

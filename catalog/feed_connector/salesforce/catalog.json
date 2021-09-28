@@ -8,6 +8,9 @@
   "tags": {
     "catalog": "salesforce,sfdc,crm,sales,popular"
   },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/salesforce#creating-your-own-salesforce-app"
+  },
   "configuration": {
     "schema": "config/schema.json",
     "uischema": "config/uischema.json",
