@@ -2,8 +2,6 @@ import router from './router';
 import express, { NextFunction, Request, Response } from 'express';
 
 const mountApp = (config: { integrationName: string; integrationUrl: string; fusebitJwt: string; appUrl: string }) => {
-  const appUrl: URL = new URL(config.appUrl);
-
   const mountedRouter = express();
 
   const logger = (req: Request, res: Response, next: NextFunction) => {

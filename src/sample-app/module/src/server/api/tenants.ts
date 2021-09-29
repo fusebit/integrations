@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
 
 router.post('/login', async (req, res, next) => {
@@ -18,6 +18,6 @@ router.get('/', (req, res, next) => {
     res.status(403);
   }
   res.send(req.session.tenantData || {});
-})
+});
 
 export default router;

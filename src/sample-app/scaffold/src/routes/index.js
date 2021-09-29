@@ -14,14 +14,3 @@ const SampleAppMiddleware = SampleApp({
 router.use(SampleAppMiddleware);
 
 export default router;
-
-
-const router = express.Router();
-
-router.use((req, res, next) => {
-  const integrationData = req.query.integrationData;
-  const sampleAppRouter = SampleAppMiddleware(integrationData);
-  return sampleAppRouter(req, res, next);
-});
-
-export default router;
