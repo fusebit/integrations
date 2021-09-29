@@ -15,5 +15,5 @@ fuse npm login
 
 FUSE_PROFILE=$(fuse profile get -o json ${i})
 URL=$(echo $FUSE_PROFILE | jq -r .baseUrl)/v1/account/$(echo $FUSE_PROFILE | jq -r .account)/registry/default/npm
-lerna publish from-package --registry $URL --yes --force-publish=*
+lerna publish from-package --registry $URL --yes --force-publish=@fusebit-int/sample-app
 
