@@ -12,7 +12,7 @@ router.post('/', async (req, res, next) => {
   res.send(tasks);
 
   // Post to Integration
-  const currentTenant = req.session.tenantData.tenants.find(
+  const currentTenant = req.session.tenantData.tenants?.find(
     (tenant) => tenant.tenantId === req.session.tenantData.currentTenantId
   );
   if (currentTenant.integrationInstalled && currentTenant.integrationActivated) {

@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/sample-app-scaffold",
-  "version": "5.5.7",
+  "version": "5.5.8-alpha.0",
   "private": true,
   "type": "module",
   "main": "./src/app.js",
@@ -9,7 +9,7 @@
     "dev": "nodemon .;"
   },
   "dependencies": {
-    "@fusebit-int/sample-app": "0.0.0-12",
+    "@fusebit-int/sample-app": "5.5.8-alpha.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "debug": "~2.6.9",
