@@ -1,10 +1,8 @@
 import nock from 'nock';
 import ProviderActivator from '../src/ProviderActivator';
 import { Context } from '../src/Router';
+import { accountId, ctx, endpoint, subscriptionId } from './utilities';
 
-const endpoint = 'http://somedeployment.fusebit.io';
-const accountId = 'acc-0000000000000000';
-const subscriptionId = 'sub-0000000000000000';
 const entityId = 'some-integration-123';
 const lookupKey = '9c852221-a086-4aec-bfc7-90d79b07dd8b';
 
@@ -32,16 +30,6 @@ const activator = new ProviderActivatorImpl({
 
 describe('ProviderActivator', () => {
   test('Raise exception when instance not found', async () => {
-    const ctx = {
-      state: {
-        params: {
-          endpoint,
-          accountId,
-          subscriptionId,
-        },
-      },
-      throw: jest.fn(),
-    };
     await activator.callRequestConnectorToken({
       ctx,
       lookupKey,
