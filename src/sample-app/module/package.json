@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/sample-app",
-  "version": "5.5.7",
+  "version": "5.5.8-alpha.0",
   "main": "libc/server/mount.js",
   "files": [
     "libc/**/*.js",
