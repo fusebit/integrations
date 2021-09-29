@@ -9,7 +9,7 @@ const formTemplate = fs.readFileSync(__dirname + '/form/form.html', { encoding: 
  * Programmatically specify a form to be rendered in MaterialUI, allowing a user to specify configuration
  * during an integration configuration.
  */
-interface IFormSpecification {
+export interface IFormSpecification {
   /** A schema for the data, in the JsonSchema format */
   schema: JsonSchema;
   /** The layout of the UI the form should provide the user. */
@@ -45,7 +45,7 @@ interface IFormSpecification {
 /**
  * Create an HTML Form, using MaterialUI, from the supplied JSON Schema.
  */
-const Form = (spec: IFormSpecification) => {
+export const Form = (spec: IFormSpecification) => {
   const form = (spec.template || formTemplate)
     .replace('##schema##', JSON.stringify(spec.schema))
     .replace('##uischema##', JSON.stringify(spec.uiSchema))
@@ -58,5 +58,3 @@ const Form = (spec: IFormSpecification) => {
 
   return [form, 'text/html; charset=UTF-8'];
 };
-
-export { Form, IFormSpecification };

@@ -1,17 +1,9 @@
 import { Internal } from '../src';
 const { Manager, Router } = Internal;
 
-const request = (method: string, path: string, headers?: any, query?: any, body?: any) => {
-  return { headers, method, path, query, body };
-};
+import { getIntegrationConfig, request } from './utilities';
 
-const cfg = {
-  handler: 'foo',
-  configuration: {},
-  defaultEventHandler: '',
-  mountUrl: '',
-  schedule: [],
-};
+const cfg = getIntegrationConfig();
 
 const newManager = (router: Internal.Router) => {
   const manager = new Manager();
@@ -52,7 +44,7 @@ describe('Routes', () => {
 
     const manager = newManager(router);
 
-    const result = await manager.handle(request('POST', '/hello/', undefined, undefined, { username: 'world' }));
+    const result = await manager.handle(request('POST', '/hello/', { body: { username: 'world' } }));
 
     expect(result.body).toBe('hello world');
     expect(result.status).toBe(200);
@@ -94,7 +86,7 @@ describe('Routes', () => {
 
     const manager = newManager(router);
 
-    const result = await manager.handle(request('GET', '/hello/', undefined, { qp: 'value' }));
+    const result = await manager.handle(request('GET', '/hello/', { query: { qp: 'value' } }));
 
     expect(result.body).toBe('hello value');
     expect(result.status).toBe(200);
@@ -109,7 +101,7 @@ describe('Routes', () => {
 
     const manager = newManager(router);
 
-    const result = await manager.handle(request('GET', '/hello/', { qp: 'value' }));
+    const result = await manager.handle(request('GET', '/hello/', { headers: { qp: 'value' } }));
 
     expect(result.body).toBe('hello value');
     expect(result.status).toBe(200);
@@ -131,7 +123,7 @@ describe('Routes', () => {
 
     const manager = newManager(router);
 
-    const result = await manager.handle(request('GET', '/hello/', { qp: 'value' }));
+    const result = await manager.handle(request('GET', '/hello/', { query: { qp: 'value' } }));
 
     expect(result.body).toBe('HELLO 1');
     expect(result.status).toBe(200);

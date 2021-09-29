@@ -1,14 +1,16 @@
-import { Router, Context, Next } from './Router';
-import { Manager, IOnStartup } from './Manager';
+import { HttpRouter, FusebitContext, Next } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 import Connector from './client/Connector';
 
-const router = new Router();
+import { validate } from './middleware';
+import Joi from 'joi';
+
+const router = new HttpRouter();
 
 /**
  * Annotate the health status with information on whether the vendor code loaded correctly.
  */
-router.get('/api/health', async (ctx: Context, next: Next) => {
+router.get('/api/health', async (ctx: FusebitContext, next: Next) => {
   try {
     await next();
   } catch (error) {
@@ -29,21 +31,32 @@ router.get('/api/health', async (ctx: Context, next: Next) => {
   }
 });
 
-router.post('/event/:eventMode', async (ctx: Context, next: Next) => {
+const eventValidation = {
+  params: Joi.object({ eventMode: Joi.string().not('lifecycle').required() }),
+  body: Joi.object({
+    payload: Joi.array()
+      .items(
+        Joi.object({
+          data: Joi.any().required(),
+          eventType: Joi.string().required(),
+          entityId: Joi.string().required(),
+          webhookEventId: Joi.string().required(),
+          webhookAuthId: Joi.string().required(),
+        })
+          .unknown(false)
+          .required()
+      )
+      .required()
+      .min(1)
+      .unique((a, b) => a.entityId !== b.entityId)
+      .message('All events must come from the same source'),
+  }),
+};
+
+router.post('/event/:eventMode', validate(eventValidation), async (ctx: FusebitContext, next: Next) => {
   // sent event name is of format `/<componentName>/<eventType>`
-
-  if (ctx.params.eventMode === 'lifecycle') {
-    ctx.throw(400, 'Lifecycle events should not be created via the `/event` endpoint');
-  }
-
-  // Would be nice to have Joi here...
-  if (typeof ctx.req?.body?.payload !== 'object' || typeof ctx.req.body.payload.length !== 'number') {
-    ctx.throw(400, `Missing events: ${JSON.stringify(ctx.req.body)}`);
-  }
-
   const events = ctx.req.body.payload as Connector.Types.IWebhookEvents;
 
-  // Assume all of the events are from the same connector
   const component = ctx.state.manager.config.components.find(
     (comp: IInstanceConnectorConfig) => comp.entityId === events[0].entityId
   );
@@ -60,7 +73,8 @@ router.post('/event/:eventMode', async (ctx: Context, next: Next) => {
   const result = await Promise.all(
     events.map(async (event: Connector.Types.IWebhookEvent) => {
       const eventName = `/${component.name}/${ctx.params.eventMode}/${event.eventType}`;
-      return ctx.state.manager.invoke(eventName, event, ctx.state);
+      const returnVal = await ctx.state.manager.invoke(eventName, event, ctx.state);
+      return returnVal ? returnVal : { status: 200, message: 'ok' };
     })
   );
   ctx.body = result;

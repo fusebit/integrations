@@ -1,17 +1,20 @@
 import nock from 'nock';
 import ProviderActivator from '../src/ProviderActivator';
-import { Context } from '../src/Router';
-import { accountId, ctx, endpoint, subscriptionId } from './utilities';
+import { FusebitContext } from '../src/router';
+import { Constants, getContext } from './utilities';
 
+const { endpoint, accountId, subscriptionId } = Constants;
 const entityId = 'some-integration-123';
 const lookupKey = '9c852221-a086-4aec-bfc7-90d79b07dd8b';
+
+const ctx = getContext();
 
 nock(endpoint)
   .get(`/v2/account/${accountId}/subscription/${subscriptionId}/connector/${entityId}/api/${lookupKey}/token`)
   .reply(200, {});
 
 class ProviderActivatorImpl extends ProviderActivator<boolean> {
-  protected instantiate(ctx: Context, lookupKey: string): Promise<boolean> {
+  protected instantiate(ctx: FusebitContext, lookupKey: string): Promise<boolean> {
     throw Error('Not implemented');
   }
 

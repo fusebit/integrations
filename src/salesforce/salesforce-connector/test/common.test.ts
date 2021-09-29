@@ -1,4 +1,4 @@
 import connector from '../libc';
-import { commonConnectorTests } from '../../../../test';
+import * as Foo from '../../../../test';
 
-commonConnectorTests(connector);
+Foo.commonConnectorTests(connector);

@@ -1,13 +1,30 @@
 /* tslint:disable no-namespace no-empty-interface max-classes-per-file */
-import { Context as RouterContext, Next as RouterNext, Router as _Router } from '../Router';
+import {
+  HttpContext,
+  CronContext as CronContext_,
+  EventContext as EventContext_,
+  Next as RouterNext,
+  HttpRouter as HttpRouter_,
+  CronRouter as CronRouter_,
+  EventRouter as EventRouter_,
+} from '../router';
 import * as Storage from '../Storage';
-import * as Middleware from '../middleware/authorize';
+import * as Middleware from '../middleware';
+
+import { Form } from '../Form';
+
 import { IOnStartup as IOnStartupInterface } from '../Manager';
 
-type ContextType = RouterContext;
+type ContextType = HttpContext;
 type NextType = RouterNext;
 
 abstract class EntityBase {
+  constructor() {
+    this.router = new HttpRouter_();
+    this.cron = new CronRouter_(this.router);
+    this.event = new EventRouter_(this.router);
+  }
+
   public readonly events = {};
 
   public abstract service: EntityBase.ServiceBase;
@@ -15,12 +32,16 @@ abstract class EntityBase {
   public abstract middleware: EntityBase.MiddlewareBase;
   public abstract response: EntityBase.ResponseBase;
 
-  public readonly router = new _Router();
+  public readonly router: HttpRouter_;
+  public readonly cron: CronRouter_;
+  public readonly event: EventRouter_;
 }
 
 namespace EntityBase {
   export namespace Types {
     export type Context = ContextType;
+    export type EventContext = EventContext_;
+    export type CronContext = CronContext_;
     export type Next = NextType;
     export interface IOnStartup extends IOnStartupInterface {}
     export interface IInstanceResponse {
@@ -43,7 +64,7 @@ namespace EntityBase {
       parentEntityId: string;
       parentEntityType: string;
     }
-    export type Router = _Router;
+    export type Router = HttpRouter_;
   }
   export abstract class ServiceBase {}
 
@@ -66,22 +87,16 @@ namespace EntityBase {
      * @param {string} data Any valid JSON
      * @returns {Promise<any>}
      */
-    public setData: (ctx: RouterContext, dataKey: string, data: any) => Promise<any> = async (
-      ctx: RouterContext,
-      dataKey: string,
-      data: any,
-      version?: string
-    ) => Storage.createStorage(ctx.state.params).put(data, dataKey, version);
+    public setData = (ctx: ContextType, dataKey: string, data: any, version?: string): Promise<any> =>
+      Storage.createStorage(ctx.state.params).put(data, dataKey, version);
 
     /** Get saved data
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
      * @returns {Promise<any>}
      */
-    public getData: (ctx: RouterContext, dataKey: string) => Promise<any> = async (
-      ctx: RouterContext,
-      dataKey: string
-    ) => Storage.createStorage(ctx.state.params).get(dataKey);
+    public getData = (ctx: ContextType, dataKey: string): Promise<any> =>
+      Storage.createStorage(ctx.state.params).get(dataKey);
 
     /** A listing operation query data stored in an artifact known as a Bucket (Buckets are
      * collections of keys where you can store related data). Read more at
@@ -99,11 +114,7 @@ namespace EntityBase {
      * @param {Storage.IListOption} options The bucket name
      * @returns {Promise<Storage.IStorageVersionedResponseList>} A list of Storage items
      */
-    public listData: (
-      ctx: RouterContext,
-      dataKeyPrefix: string,
-      options?: Storage.IListOption
-    ) => Promise<any> = async (ctx: RouterContext, dataKeyPrefix: string, options?: Storage.IListOption) =>
+    public listData = (ctx: ContextType, dataKeyPrefix: string, options?: Storage.IListOption): Promise<any> =>
       Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /** Delete data
@@ -112,11 +123,8 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the stored data
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deleteData: (ctx: RouterContext, dataKey: string, version?: string) => Promise<any> = async (
-      ctx: RouterContext,
-      dataKey: string,
-      version?: string
-    ) => Storage.createStorage(ctx.state.params).delete(dataKey, version);
+    public deleteData = (ctx: ContextType, dataKey: string, version?: string): Promise<any> =>
+      Storage.createStorage(ctx.state.params).delete(dataKey, version);
 
     /** Delete data stored in an artifact known as a Bucket
      * (This function will remove a collection of keys stored under the specified Bucket).
@@ -125,11 +133,8 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the Bucket
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deletePrefixedData: (ctx: RouterContext, dataKeyPrefix: string, version?: string) => Promise<any> = (
-      ctx: RouterContext,
-      dataKeyPrefix: string,
-      version?: string
-    ) => Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
+    public deletePrefixedData = (ctx: ContextType, dataKeyPrefix: string, version?: string): Promise<any> =>
+      Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
 
     /** Recursively delete all storage objects in the Fusebit subscription.
      * @param ctx The context object provided by the route function
@@ -137,21 +142,16 @@ namespace EntityBase {
      * otherwise it will throw an error
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deleteAllData: (ctx: RouterContext, forceDelete: boolean) => Promise<any> = (ctx, forceDelete) =>
+    public deleteAllData = (ctx: ContextType, forceDelete: boolean): Promise<any> =>
       Storage.createStorage(ctx.state.params).deleteAll(forceDelete);
   }
+
   export abstract class MiddlewareBase {
     public authorizeUser = Middleware.authorize;
-    public loadTenant: (tags: string) => (ctx: RouterContext, next: RouterNext) => Promise<any> = (tags: string) => {
-      return async (ctx: RouterContext, next: RouterNext) => {
-        return undefined; // Todo
-      };
-    };
-    public loadConnector?: (name: string) => (ctx: RouterContext, next: RouterNext) => Promise<any>;
+    public validate = Middleware.validate;
   }
   export abstract class ResponseBase {
-    public createJsonForm: undefined; // TODO
-    public createError: undefined; // TODO
+    public createJsonForm = Form;
   }
 
   export class ServiceDefault extends ServiceBase {}
@@ -159,4 +159,5 @@ namespace EntityBase {
   export class MiddlewareDefault extends MiddlewareBase {}
   export class ResponseDefault extends ResponseBase {}
 }
+
 export default EntityBase;
