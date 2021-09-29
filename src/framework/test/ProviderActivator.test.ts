@@ -13,9 +13,6 @@ nock(endpoint)
   .reply(200, {});
 
 class ProviderActivatorImpl extends ProviderActivator<boolean> {
-  ctx!: Context;
-  lookupKey!: string;
-
   protected instantiate(ctx: Context, lookupKey: string): Promise<boolean> {
     throw Error('Not implemented');
   }
