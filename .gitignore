@@ -111,6 +111,9 @@ libc/
 libm/
 !/lib
 
+# Built Webpack library
+dist/
+
 # Vim
 *.sw?
 

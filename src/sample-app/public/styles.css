@@ -1,0 +1,64 @@
+.center-text {
+    text-align: center;
+}
+
+body {
+    margin: 0px;
+}
+
+.navigation-drawer {
+    background-color: #1F2937;
+    color: white;
+    height: 100vh;
+}
+
+.navigation-drawer-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.container-buffer {
+    padding: 20px;
+    row-gap: 20px;
+}
+
+.integration-media {
+    margin: 5px;
+    height: 140px;
+    background-size: contain;
+}
+
+.integration-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.null-pointer {
+    pointer-events: none;
+}
+
+.full-pointer {
+    pointer-events: auto;
+}
+
+.center-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.big-icon {
+    height: 48px;
+    width: 48px;
+}
+
+.full-height {
+    height: 100%;
+}
