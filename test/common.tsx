@@ -42,21 +42,21 @@ export const cfg = {
 
 export const commonConnectorTests = (connector: { router: Internal.Router }) => {
   describe('Connector', () => {
-    it('validate connector can be loaded', async () => {
+    test('validate connector can be loaded', async () => {
       const manager = new Manager();
       manager.setup(cfg, connector.router, undefined);
       const result = await manager.handle(request('GET', '/api/health'));
       expect(result.status).toBe(200);
     });
 
-    it('validate configure can be loaded', async () => {
+    test('validate configure can be loaded', async () => {
       const manager = new Manager();
       manager.setup(cfg, connector.router, undefined);
       const result = await manager.handle(request('GET', '/api/configure'));
       expect(result.status).toBe(200);
     });
 
-    it('validate configure generates valid jsonforms', async () => {
+    test('validate configure generates valid jsonforms', async () => {
       const manager = new Manager();
       manager.setup(cfg, connector.router, undefined);
       const result = await manager.handle(request('GET', '/api/configure'));
