@@ -1,11 +1,11 @@
 {
   "name": "@fusebit-int/sample-app",
   "version": "5.5.7",
-  "main": "build/server/IntegrationMount.js",
+  "main": "libc/server/mount.js",
   "files": [
-    "build/**/*.js",
-    "build/**/*.d.ts",
-    "build/**/*.json",
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json",
     "dist/**/*.js",
     "dist/**/*.html"
   ],
@@ -13,7 +13,7 @@
     "build": "tsc && copyfiles public/**/* libc && webpack;",
     "listen": "copyfiles public/**/* libc; tsc -w  & webpack --mode development --watch --progress;",
     "dev-hot": "npm run build && (npm run listen & npm run dev);",
-    "clean": "rm -rf build & rm -rf dist"
+    "clean": "rm -rf libc & rm -rf dist"
   },
   "dependencies": {
     "@emotion/react": "11.4.1",
