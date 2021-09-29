@@ -2,7 +2,7 @@ import { Internal } from '../src';
 const { Manager } = Internal;
 
 describe('Context', () => {
-  it('validate routable contexts have correct values', async () => {
+  test('validate routable contexts have correct values', async () => {
     const manager = new Manager();
 
     const fctx = {
@@ -33,7 +33,7 @@ describe('Context', () => {
     expect(kctx.state.params.functionId).toBeUndefined();
   });
 
-  it('cookies get passed through and back again', async () => {
+  test('cookies get passed through and back again', async () => {
     const manager = new Manager();
 
     const fctx = {

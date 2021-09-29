@@ -17,7 +17,7 @@ export class Service extends EntityBase.ServiceBase {
    * @returns {Promise<any>} Returns an authenticated SDK you would use to interact with the
    * Connector service on behalf of your user
    */
-  public getSdk = async (ctx: RouterContext, connectorName: string, instanceId: string) => {
+  public getSdk = (ctx: RouterContext, connectorName: string, instanceId: string) => {
     return ctx.state.manager.connectors.getByName(ctx, connectorName, instanceId);
   };
 

@@ -21,7 +21,7 @@ const newManager = (router: Internal.Router) => {
 };
 
 describe('Routes', () => {
-  it('do routes work', async () => {
+  test('do routes work', async () => {
     const router = new Router();
     router.get('/hello/:username', async (ctx: Internal.Types.Context) => {
       ctx.body = `hello${ctx.params.username}`;
@@ -35,7 +35,7 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('unknown requests return 404', async () => {
+  test('unknown requests return 404', async () => {
     const router = new Router();
     const manager = newManager(router);
 
@@ -44,7 +44,7 @@ describe('Routes', () => {
     expect(result.status).toBe(404);
   });
 
-  it('post accesses parameters in ctx.request.body', async () => {
+  test('post accesses parameters in ctx.request.body', async () => {
     const router = new Router();
     router.post('/hello/', async (ctx: Internal.Types.Context) => {
       ctx.body = `hello ${ctx.req.body.username}`;
@@ -58,7 +58,7 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('path with trailing slash does not match route', async () => {
+  test('path with trailing slash does not match route', async () => {
     const router = new Router();
     router.get('/hello/', async (ctx: Internal.Types.Context) => {
       ctx.body = 'hello';
@@ -72,7 +72,7 @@ describe('Routes', () => {
     expect(result.status).toBe(404);
   });
 
-  it('path without trailing slash still matches route', async () => {
+  test('path without trailing slash still matches route', async () => {
     const router = new Router();
     router.get('/hello', async (ctx: Internal.Types.Context) => {
       ctx.body = 'hello';
@@ -86,7 +86,7 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('demonstrate a query string', async () => {
+  test('demonstrate a query string', async () => {
     const router = new Router();
     router.get('/hello', async (ctx: Internal.Types.Context) => {
       ctx.body = `hello ${ctx.query.qp}`;
@@ -100,7 +100,7 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('demonstrate accessing headers', async () => {
+  test('demonstrate accessing headers', async () => {
     const router = new Router();
     router.get('/hello', async (ctx: Internal.Types.Context) => {
       expect(ctx.headers.qp).toBe('value');
@@ -115,7 +115,7 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
-  it('demonstrate middleware', async () => {
+  test('demonstrate middleware', async () => {
     const router = new Router();
     router.get(
       '/hello',

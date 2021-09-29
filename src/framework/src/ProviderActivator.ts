@@ -22,6 +22,13 @@ export default abstract class ProviderActivator<T> {
       .get(`${baseUrl}${tokenPath}`)
       .set('Authorization', `Bearer ${params.functionAccessToken}`);
 
-    return tokenResponse.body;
+    const connectorToken = tokenResponse.body;
+    const isEmpty = !connectorToken || Object.keys(connectorToken).length === 0;
+
+    if (isEmpty) {
+      ctx.throw(404, `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`);
+    }
+
+    return connectorToken;
   }
 }
