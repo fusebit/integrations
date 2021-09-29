@@ -117,3 +117,6 @@ libm/
 # Debris in the workspace directory
 workspace/integration-*
 workspace/connector-*
+
+# Jetbrains
+.idea

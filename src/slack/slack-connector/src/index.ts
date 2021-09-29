@@ -72,7 +72,7 @@ connector.service.setInitializationChallenge((ctx: Connector.Types.Context) => {
 });
 
 OAuthConnector.service.setGetTokenAuthId(async (ctx: Connector.Types.Context, token: any) => {
-  return token.bot_user_id;
+  return token.authed_user.id;
 });
 
 connector.service.setGetWebhookEventType((event: any) => event.type);
