@@ -4,7 +4,7 @@
     "src/*/*-connector",
     "src/*/*-provider",
     "src/framework",
-    "src/sample-app/*",
+    "src/sample-app/module",
     "catalog",
     "workspace/*",
     "catalog/feed_*/**"
