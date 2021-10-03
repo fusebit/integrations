@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Set standard bash debug envs
-set -x
+set -ex
 
 # Install fusebit tools
 
