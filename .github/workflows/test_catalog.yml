@@ -1,8 +1,8 @@
 on: 'workflow_dispatch'
-name: Test Catalog Publishing
+name: Manual - Test Catalog Publishing
 jobs:
   test_publish_catalog:
-    name: Test publish catalog
+    name: Manual - Test Catalog Publishing
     runs-on: ubuntu-latest
     steps:
       - name: Upgrade aws-cli

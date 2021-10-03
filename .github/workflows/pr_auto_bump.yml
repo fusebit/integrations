@@ -2,7 +2,7 @@ on:
   pull_request:
     # GHA sadly does not offer a event trigger for merged
     types: ['closed']
-name: Bump
+name: CICD - Bump and Publish
 jobs:
   bump_patch:
     if: contains(github.event.pull_request.labels.*.name, 'semver:patch') && github.event.pull_request.merged == true

@@ -1,8 +1,8 @@
 on: pull_request
-name: PR - Build Tree
+name: PR - Does the tree build?
 jobs:
   build_tree:
-    name: PR Check - Build Tree
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js

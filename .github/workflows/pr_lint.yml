@@ -1,8 +1,8 @@
 on: pull_request
-name: PR - Lint
+name: PR - Does it pass lint?
 jobs:
   lint:
-    name: PR Check - Lint
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js

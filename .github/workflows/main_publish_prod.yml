@@ -1,8 +1,8 @@
 on: 'workflow_dispatch'
-name: CICD - PRODUCTION - Publish
+name: CICD - PROD - Publish
 jobs:
   publish_prod:
-    name: CICD - PRODUCTION - Publish
+    name: CICD - PROD - Publish
     runs-on: ubuntu-latest
     steps:
       - name: Upgrade aws-cli

@@ -1,4 +1,4 @@
-name: Pull Request Labels
+name: PR - Required labels present?
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]

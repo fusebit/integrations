@@ -4,10 +4,10 @@ on:
       versionToPublish:
         description: 'The version to manually publish, must be a valid git tag.'
         default: 'main'
-name: CICD - PRODUCTION - Specific Version
+name: CICD - PROD - Specific Version
 jobs:
   publish_prod:
-    name: CICD - PRODUCTION - Specific Version
+    name: CICD - PROD - Specific Version
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
