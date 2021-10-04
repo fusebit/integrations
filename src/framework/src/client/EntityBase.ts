@@ -79,17 +79,22 @@ namespace EntityBase {
      * @param {string} dataKey Represents a reference to your data that you will use in further
      * operations like read, delete and update
      * @param {string} data Any valid JSON
-     * @returns {Promise<any>}
+     * @returns {Promise<Storage.IStorageVersionedResponse>}
      */
-    public setData = (ctx: ContextType, dataKey: string, data: any, version?: string): Promise<any> =>
+    public setData = (
+      ctx: ContextType,
+      dataKey: string,
+      data: any,
+      version?: string
+    ): Promise<Storage.IStorageVersionedResponse> =>
       Storage.createStorage(ctx.state.params).put(data, dataKey, version);
 
     /** Get saved data
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
-     * @returns {Promise<any>}
+     * @returns {Promise<Storage.IStorageVersionedResponse>}
      */
-    public getData = (ctx: ContextType, dataKey: string): Promise<any> =>
+    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageVersionedResponse | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
 
     /** A listing operation query data stored in an artifact known as a Bucket (Buckets are
@@ -108,7 +113,11 @@ namespace EntityBase {
      * @param {Storage.IListOption} options The bucket name
      * @returns {Promise<Storage.IStorageVersionedResponseList>} A list of Storage items
      */
-    public listData = (ctx: ContextType, dataKeyPrefix: string, options?: Storage.IListOption): Promise<any> =>
+    public listData = (
+      ctx: ContextType,
+      dataKeyPrefix: string,
+      options?: Storage.IListOption
+    ): Promise<Storage.IStorageVersionedResponseList> =>
       Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /** Delete data
@@ -117,7 +126,11 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the stored data
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deleteData = (ctx: ContextType, dataKey: string, version?: string): Promise<any> =>
+    public deleteData = (
+      ctx: ContextType,
+      dataKey: string,
+      version?: string
+    ): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).delete(dataKey, version);
 
     /** Delete data stored in an artifact known as a Bucket
@@ -127,7 +140,11 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the Bucket
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deletePrefixedData = (ctx: ContextType, dataKeyPrefix: string, version?: string): Promise<any> =>
+    public deletePrefixedData = (
+      ctx: ContextType,
+      dataKeyPrefix: string,
+      version?: string
+    ): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
 
     /** Recursively delete all storage objects in the Fusebit subscription.
@@ -136,7 +153,7 @@ namespace EntityBase {
      * otherwise it will throw an error
      * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
      */
-    public deleteAllData = (ctx: ContextType, forceDelete: boolean): Promise<any> =>
+    public deleteAllData = (ctx: ContextType, forceDelete: boolean): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).deleteAll(forceDelete);
   }
 

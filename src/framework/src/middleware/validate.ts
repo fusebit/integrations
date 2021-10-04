@@ -42,20 +42,30 @@ export const validate = (options: IValidationOptions) => {
       if (options.body) {
         Joi.attempt(ctx.req.body, options.body);
       }
+    } catch (err) {
+      const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
+      ctx.throw(400, `Body validation failed at ${detail.path.join('.')}: ${detail.message}`);
+    }
 
+    try {
       if (options.query) {
         Joi.attempt(ctx.query, options.query);
       }
+    } catch (err) {
+      const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
+      ctx.throw(400, `Query validation failed at ${detail.path.join('.')}: ${detail.message}`);
+    }
 
+    try {
       if (options.params) {
         Joi.attempt(ctx.params, options.params);
       }
-
-      return next();
     } catch (err) {
       const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
-      ctx.throw(400, `${detail.path.join('.')}: ${detail.message}`);
+      ctx.throw(400, `Params validation failed at ${detail.path.join('.')}: ${detail.message}`);
     }
+
+    return next();
   };
 };
 
