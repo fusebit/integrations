@@ -3,7 +3,7 @@ import { IInstanceConnectorConfig } from './ConnectorManager';
 import Connector from './client/Connector';
 
 import { validate } from './middleware';
-import Joi from 'joi';
+import { schema as eventSchema } from './validation/event';
 
 const router = new HttpRouter();
 
@@ -31,29 +31,7 @@ router.get('/api/health', async (ctx: FusebitContext, next: Next) => {
   }
 });
 
-const eventValidation = {
-  params: Joi.object({ eventMode: Joi.string().not('lifecycle').required() }),
-  body: Joi.object({
-    payload: Joi.array()
-      .items(
-        Joi.object({
-          data: Joi.any().required(),
-          eventType: Joi.string().required(),
-          entityId: Joi.string().required(),
-          webhookEventId: Joi.string().required(),
-          webhookAuthId: Joi.string().required(),
-        })
-          .unknown(false)
-          .required()
-      )
-      .required()
-      .min(1)
-      .unique((a, b) => a.entityId !== b.entityId)
-      .message('All events must come from the same source'),
-  }),
-};
-
-router.post('/event/:eventMode', validate(eventValidation), async (ctx: FusebitContext, next: Next) => {
+router.post('/event/:eventMode', validate(eventSchema), async (ctx: FusebitContext) => {
   // sent event name is of format `/<componentName>/<eventType>`
   const events = ctx.req.body.payload as Connector.Types.IWebhookEvents;
 
@@ -65,7 +43,7 @@ router.post('/event/:eventMode', validate(eventValidation), async (ctx: FusebitC
     ctx.throw(
       418,
       `No component found: ${JSON.stringify(events)} ${events[0].entityId} ${JSON.stringify(
-        ctx.state.manager.config.components.map((c: any) => c.entityId)
+        ctx.state.manager.config.components.map((comp: IInstanceConnectorConfig) => comp.entityId)
       )}`
     );
   }

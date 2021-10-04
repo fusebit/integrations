@@ -14,8 +14,6 @@ describe('Routers', () => {
     test('Event router routes events', async () => {
       const integration = new Integration();
 
-      // XXX Why is this Internal.Types instead of Integration.Types? Integration.Types complains about using a
-      // type like a namespace...
       const handler = jest.fn(async (ctx: Internal.Types.EventContext) => {
         expect(ctx).toMatchObject({ originalUrl: 'some_event' });
       });

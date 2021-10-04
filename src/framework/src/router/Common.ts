@@ -22,10 +22,13 @@ export type FusebitContext = IFusebitContext;
 /** The type of the next parameter on routes and event handlers. */
 export type Next = Koa.Next;
 
+/** The type of a Koa-style handler function in Fusebit. */
 export type FusebitHandler = (ctx: FusebitContext, next: Next) => ReturnType<Next>;
 
 /**
  * FusebitRouter
+ *
+ * The FusebitRouter is exposed as an HttpRouter on an entity.
  */
 export class FusebitRouter extends KoaRouter {
   constructor() {

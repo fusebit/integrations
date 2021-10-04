@@ -1,5 +1,6 @@
-import { FusebitContext, Next } from '../router';
 import Joi from 'joi';
+
+import { FusebitContext, Next } from '../router';
 
 /**
  * Specify a Joi schema for each of the parts of the request that requires validation.
@@ -32,7 +33,7 @@ export interface IValidationOptions {
  *   );
  *```
  *
- * The validate function includes the `joi` module for convienence in specification of the validation rules.
+ * Note: The `validate` function includes a `joi` member to allow callers to easily specify validation rules.
  * See the [Joi](https://joi.dev/api/?v=17.4.2) documentation for more details.
  */
 export const validate = (options: IValidationOptions) => {
