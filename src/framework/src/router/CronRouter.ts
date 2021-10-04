@@ -2,6 +2,11 @@ import { FusebitContext, FusebitRouter, Next } from './Common';
 
 export type CronContext = FusebitContext;
 export type CronHandler = (ctx: CronContext, next: Next) => ReturnType<Next>;
+type CronRegistrationArray = [CronHandler | string, ...CronHandler[]];
+
+const isString = (entry: CronHandler | string): entry is string => {
+  return typeof entry === 'string';
+};
 
 /**
  * CronRouter
@@ -25,7 +30,11 @@ export class CronRouter {
    * @param name the name of the cron schedule
    * @param middleware handle the Koa request
    */
-  public on(name: string, ...middleware: CronHandler[]) {
-    this.router.register(name, ['cron'], middleware, { name });
+  public on(...middleware: CronRegistrationArray) {
+    if (isString(middleware[0])) {
+      this.router.register(middleware[0], ['cron'], middleware.slice(1) as CronHandler[], { name: middleware[0] });
+    } else {
+      this.router.register('(.*)', ['cron'], middleware as CronHandler[], { name: 'cron-wildcard' });
+    }
   }
 }
