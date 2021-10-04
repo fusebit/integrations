@@ -19,12 +19,6 @@ type ContextType = HttpContext;
 type NextType = RouterNext;
 
 abstract class EntityBase {
-  constructor() {
-    this.router = new HttpRouter_();
-    this.cron = new CronRouter_(this.router);
-    this.event = new EventRouter_(this.router);
-  }
-
   public readonly events = {};
 
   public abstract service: EntityBase.ServiceBase;
@@ -32,9 +26,9 @@ abstract class EntityBase {
   public abstract middleware: EntityBase.MiddlewareBase;
   public abstract response: EntityBase.ResponseBase;
 
-  public readonly router: HttpRouter_;
-  public readonly cron: CronRouter_;
-  public readonly event: EventRouter_;
+  public readonly router = new HttpRouter_();
+  public readonly cron = new CronRouter_(this.router);
+  public readonly event = new EventRouter_(this.router);
 }
 
 namespace EntityBase {
