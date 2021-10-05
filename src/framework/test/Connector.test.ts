@@ -50,14 +50,14 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent dispatches events to fan-out', async () => {
     const ctx = getContext();
-    ctx.state.manager = { config: { defaultEventHandler: false } };
-    ctx.state.params.entityId = Constants.connectorId;
+    ctx.state!.manager = { config: { defaultEventHandler: false } };
+    ctx.state!.params.entityId = Constants.connectorId;
 
     // Define the events.
     const events = ['e1', 'e2', 'e3'];
 
     // Create mocked endpoints for each event.
-    const scope = nock(ctx.state.params.baseUrl);
+    const scope = nock(ctx.state!.params.baseUrl);
     events.forEach((event) =>
       scope
         .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
