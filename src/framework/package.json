@@ -29,7 +29,9 @@
     "tsc:version": "tsc --version",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore",
-    "copy-files": "cp -r src/form libc"
+    "copy-files": "cp -r src/form libc",
+    "docs:generate": "node docs-tool build fusebit-int-framework",
+    "docs:lint": "node docs-tool lint"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
@@ -52,6 +54,7 @@
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
+    "documentation": "^13.2.5",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-security": "^1.4.0",
