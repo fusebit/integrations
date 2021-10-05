@@ -1,5 +1,4 @@
-import { HttpRouter, FusebitContext } from './router';
-import { Next } from './Router';
+import { HttpRouter, FusebitContext, Next } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 import Connector from './client/Connector';
 
