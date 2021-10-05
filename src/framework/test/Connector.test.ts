@@ -1,5 +1,6 @@
+import nock from 'nock';
 import Connector from '../src/client/Connector';
-import { getContext } from './utilities';
+import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
   test('service.handleWebhookEvent raises exception when validateWebhookEvent is not overwritten', () => {
@@ -44,5 +45,39 @@ describe('Connector', () => {
       expect(ctx.throw).toBeCalledTimes(1);
       expect(ctx.throw).toBeCalledWith(500, 'Event location configuration missing. Required for webhook processing.');
     }
+  });
+
+  test('service.handleWebhookEvent dispatches events to fan-out', async () => {
+    const ctx = getContext(true);
+    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.params.entityId = Constants.connectorId;
+
+    // Define the events.
+    const events = ['e1', 'e2', 'e3'];
+
+    // Create mocked endpoints for each event.
+    const scope = nock(ctx.state.params.baseUrl);
+    events.forEach((event) =>
+      scope
+        .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
+        .reply(200, event)
+    );
+
+    // Create the connector.
+    const connector = new Connector();
+
+    // Mock some methods on service.
+    connector.service.setValidateWebhookEvent(() => true);
+    connector.service.setInitializationChallenge(() => false);
+    connector.service.setGetEventsFromPayload(() => events);
+    connector.service.setGetAuthIdFromEvent((event) => event);
+    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => processPromise);
+
+    // Trigger the handler.
+    await connector.service.handleWebhookEvent(ctx as any);
+
+    // Check results.
+    expect(scope.isDone()).toBe(true);
+    expect(scope.pendingMocks()).toEqual([]);
   });
 });

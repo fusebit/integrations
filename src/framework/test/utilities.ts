@@ -35,6 +35,7 @@ export const getContext: any = (throwError?: boolean) => ({
       endpoint: Constants.endpoint,
       accountId: Constants.accountId,
       subscriptionId: Constants.subscriptionId,
+      baseUrl: Constants.endpoint,
     },
   },
   throw: throwError
