@@ -14,5 +14,8 @@
   "files": [
     "./integration.js",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^27.2.4"
+  }
 }

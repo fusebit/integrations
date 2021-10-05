@@ -23,7 +23,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
+    "test": "jest --config=../../jest.config.ts",
     "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
     "tsc:version": "tsc --version",
@@ -54,6 +54,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-security": "^1.4.0",
+    "jest": "^27.2.4",
     "typescript": "^3.8.0"
   }
 }

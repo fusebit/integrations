@@ -15,7 +15,6 @@
     "@types/react-test-renderer": "^17.0.1",
     "babel-jest": "^27.2.2",
     "husky": "^7.0.0",
-    "jest": "^27.2.2",
     "lerna": "^4.0.0",
     "nock": "^13.1.3",
     "prettier": "2.0.5",
@@ -34,7 +33,6 @@
     "prettier:fix": "git ls-tree -r `git branch --show-current` --name-only | grep -E \"\\.[tj]?sx?$|\\.yaml$|\\.json$\" | grep -v assets | grep -v lerna.json | xargs -P 1 prettier --write",
     "prettier:check": "git ls-tree -r `git branch --show-current` --name-only | grep -E \"\\.[tj]?sx?$|\\.yaml$|\\.json$\" | grep -v assets | grep -v lerna.json | xargs -P 1 -I \"{}\" sh -c '[ -f {} ] && echo {} || true' | xargs prettier --check",
     "serve:integration": "./scripts/serve_entity.sh integration",
-    "serve:connector": "./scripts/serve_entity.sh connector",
-    "test": "jest"
+    "serve:connector": "./scripts/serve_entity.sh connector"
   }
 }
