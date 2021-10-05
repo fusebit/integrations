@@ -1,9 +1,9 @@
 import superagent from 'superagent';
-import { Context } from './Router';
+import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 
 export default abstract class ProviderActivator<T> {
-  protected abstract instantiate(ctx: Context, lookupKey: string): Promise<T>;
+  protected abstract instantiate(ctx: FusebitContext, lookupKey: string): Promise<T>;
 
   public config: IInstanceConnectorConfig;
   constructor(cfg: IInstanceConnectorConfig) {
@@ -14,7 +14,7 @@ export default abstract class ProviderActivator<T> {
    * Request credentials to communicate with specified connector.
    * @returns Promise<string>
    */
-  protected async requestConnectorToken({ ctx, lookupKey }: { ctx: Context; lookupKey: string }): Promise<any> {
+  protected async requestConnectorToken({ ctx, lookupKey }: { ctx: FusebitContext; lookupKey: string }): Promise<any> {
     const tokenPath = `/api/${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;

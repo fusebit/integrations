@@ -1,5 +1,4 @@
-import Koa from 'koa';
-import { Context, Next } from '../Router';
+import { FusebitContext, Next } from '../router';
 
 interface IAccessEntry {
   resource: string;
@@ -48,7 +47,7 @@ function doesAccessEntryAuthorize(accessEntry: IAccessEntry, action: string, res
 }
 
 export const authorize = (action: string) => {
-  return async (ctx: Context, next: Next) => {
+  return async (ctx: FusebitContext, next: Next) => {
     const resource = normalizeResource(ctx.state.params.resourcePath);
     const allowEntries = ctx.state.fusebit?.caller?.permissions?.allow || [];
 

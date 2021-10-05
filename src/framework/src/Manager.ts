@@ -5,7 +5,7 @@ import statuses from 'statuses';
 
 const httpMocks = require('node-mocks-http');
 
-import { Router, Context } from './Router';
+import { FusebitRouter, FusebitContext } from './router';
 
 import { ConnectorManager, IInstanceConnectorConfig } from './ConnectorManager';
 
@@ -45,7 +45,7 @@ interface IStorage {
 /** Type for the OnStartup event parameters. */
 interface IOnStartup {
   event: {
-    router: Router;
+    router: FusebitRouter;
     mgr: Manager;
     cfg: IConfig;
   };
@@ -68,7 +68,7 @@ class Manager {
   public app: Koa;
 
   /** @private Route requests and events to specific endpoint handlers. */
-  public router: Router;
+  public router: FusebitRouter;
 
   /** @public Store the configuration as passed in for other consumers. */
   public config!: IConfig;
@@ -79,12 +79,12 @@ class Manager {
   /** Create a new Manager, using the supplied storage interface as a persistance backend. */
   constructor() {
     this.app = new Koa();
-    this.router = new Router();
+    this.router = new FusebitRouter();
     this.connectors = new ConnectorManager();
   }
 
   /** Configure the Manager with the vendor object and error, if any. */
-  public setup(cfg: IConfig, vendor?: Router, vendorError?: VendorModuleError) {
+  public setup(cfg: IConfig, vendor?: FusebitRouter, vendorError?: VendorModuleError) {
     this.config = cfg;
 
     // Load the configuration for the integrations
@@ -136,16 +136,22 @@ class Manager {
       request: { body: {}, rawBody: '', params: {} },
       state,
     });
+
+    ctx.event = {
+      eventType: eventData?.eventType || 'internal',
+      eventSourceId: eventData?.entityId,
+      eventSourceType: eventData?.entityId ? 'connector' : 'integration',
+    };
     ctx.req.body = eventData;
     await this.execute(ctx);
     return ctx.body;
   }
 
   /**
-   * Execute a Koa-like context through the Router, and return the payload.
+   * Execute a Koa-like context through the FusebitRouter, and return the payload.
    * @param ctx A Koa-like context
    */
-  protected execute(ctx: Context): Promise<void> {
+  protected execute(ctx: FusebitContext): Promise<void> {
     // Need to use a sub-promise here instead of an async so that the routes() handler can have a function to
     // exit the processing with.
     return new Promise<void>(async (resolve) => {
@@ -173,7 +179,8 @@ class Manager {
       } catch (error) {
         const e: { expose: boolean; status: number } = error as any;
         if (e.status !== 404) {
-          console.log(`Manager::execute error: ${require('util').inspect(e)}`);
+          // TODO replace with a systemtic upgrade to the logging scheme
+          // console.log(`Manager::execute error: ${require('util').inspect(e)}`);
         }
         e.expose = true;
         this.onError(ctx, e);
@@ -189,7 +196,7 @@ class Manager {
   }
 
   /** Derived from the Koa.context.onerror implementation - do intelligent things when errors happen. */
-  protected onError(ctx: Context, err: any) {
+  protected onError(ctx: FusebitContext, err: any) {
     if (err == null) {
       return;
     }
@@ -227,11 +234,11 @@ class Manager {
     const message = err.expose ? err.message : `${statusCode}`;
     ctx.status = err.status = statusCode;
     ctx.length = Buffer.byteLength(message);
-    ctx.body = { status: err.status, message };
+    ctx.body = { status: err.status, message, details: err.details };
   }
 
   /** Convert from a Fusebit function context into a routable context. */
-  public createRouteableContext(fusebitCtx: RequestContext): Context {
+  public createRouteableContext(fusebitCtx: RequestContext): FusebitContext {
     const req = httpMocks.createRequest({
       url: fusebitCtx.path,
       method: fusebitCtx.method,
@@ -274,7 +281,7 @@ class Manager {
   }
 
   /** Convert the routable context into a response that the Fusebit function expects. */
-  public createResponse(ctx: Context) {
+  public createResponse(ctx: FusebitContext) {
     const result = {
       body: ctx.body,
       headers: ctx.response.header,
@@ -286,4 +293,4 @@ class Manager {
   }
 }
 
-export { Manager, IStorage, IOnStartup };
+export { Manager, IStorage, IOnStartup, IConfig };

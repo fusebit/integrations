@@ -1,5 +1,13 @@
-import { Router as RouterType, Context as ContextType, Next as NextType } from './Router';
-import { Manager as Manager_, IOnStartup as IOnStartupInterface } from './Manager';
+import {
+  FusebitRouter as Router_,
+  CronRouter as CronRouter_,
+  EventRouter as EventRouter_,
+  FusebitContext as Context_,
+  CronContext as CronContext_,
+  EventContext as EventContext_,
+  Next as NextType,
+} from './router';
+import { Manager as Manager_, IOnStartup as IOnStartup_, IConfig as IConfig_ } from './Manager';
 import { ConnectorManager as ConnectorManager_ } from './ConnectorManager';
 import * as Storage_ from './Storage';
 import { Form as Form_ } from './Form';
@@ -11,7 +19,7 @@ import { Connector, Integration } from './client/index';
 // Objects
 const Internal = {
   Handler: Handler_,
-  Router: RouterType,
+  Router: Router_,
   Form: Form_,
   ConnectorManager: ConnectorManager_,
   Manager: Manager_,
@@ -21,7 +29,9 @@ const Internal = {
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
 module Internal {
-  export type Router = RouterType;
+  export type Router = Router_;
+  export type CronRouter = CronRouter_;
+  export type EventRouter = EventRouter_;
   export type Handler = typeof Handler_;
   export type Form = typeof Form_;
   export type ConnectorManager = typeof ConnectorManager_;
@@ -30,9 +40,12 @@ module Internal {
   export type Storage = typeof Storage_;
   export type ProviderActivator = typeof ProviderActivator_;
   export namespace Types {
-    export type Context = ContextType;
+    export type Context = Context_;
+    export type CronContext = CronContext_;
+    export type EventContext = EventContext_;
     export type Next = NextType;
-    export interface IOnStartup extends IOnStartupInterface {}
+    export interface IConfig extends IConfig_ {}
+    export interface IOnStartup extends IOnStartup_ {}
   }
 }
 

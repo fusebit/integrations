@@ -1,23 +1,21 @@
 /* tslint:disable:max-classes-per-file no-empty-interface no-namespace */
 import EntityBase from './EntityBase';
-import { Context as RouterContext, Next as RouterNext } from '../Router';
+import { FusebitContext } from '../router';
 import superagent from 'superagent';
 
 const TENANT_TAG_NAME = 'fusebit.tenantId';
 
-class Middleware extends EntityBase.MiddlewareBase {
-  public loadConnector = (name: string) => async (ctx: RouterContext, next: RouterNext) => undefined; // TODO
-}
+class Middleware extends EntityBase.MiddlewareBase {}
 
 export class Service extends EntityBase.ServiceBase {
   /** Get an authenticated SDK for the specified Connector, using a given Instance
-   * @param ctx The context object provided by the route function
+   * @param {FusebitContext} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
    * @param {string} instanceId The identifier of the Instance to get the associated Connector
    * @returns {Promise<any>} Returns an authenticated SDK you would use to interact with the
    * Connector service on behalf of your user
    */
-  public getSdk = (ctx: RouterContext, connectorName: string, instanceId: string) => {
+  public getSdk = (ctx: FusebitContext, connectorName: string, instanceId: string) => {
     return ctx.state.manager.connectors.getByName(ctx, connectorName, instanceId);
   };
 
@@ -28,7 +26,7 @@ export class Service extends EntityBase.ServiceBase {
    * @returns {Promise<any>[]} Returns an array of official Connector SDK instances
    * already authorized with the proper credentials
    */
-  public getSdks = (ctx: RouterContext, connectorNames: string[], instanceId: string) => {
+  public getSdks = (ctx: FusebitContext, connectorNames: string[], instanceId: string) => {
     return connectorNames.map((connectorName) => this.getSdk(ctx, connectorName, instanceId));
   };
 
@@ -38,7 +36,7 @@ export class Service extends EntityBase.ServiceBase {
    * @param ctx The context object provided by the route function
    * @param {string} instanceId
    */
-  public getInstance = async (ctx: RouterContext, instanceId: string): Promise<EntityBase.Types.IInstance> => {
+  public getInstance = async (ctx: FusebitContext, instanceId: string): Promise<EntityBase.Types.IInstance> => {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/instance/${instanceId}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
@@ -63,7 +61,7 @@ class Tenant {
    * @returns Promise<any> Returns an authenticated SDK you would use to interact with the
    * Connector service on behalf of your user
    */
-  public getSdkByTenant = async (ctx: RouterContext, connectorName: string, tenantId: string) => {
+  public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/instance?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
@@ -84,6 +82,8 @@ class Tenant {
 namespace Integration {
   export namespace Types {
     export type Context = EntityBase.Types.Context;
+    export type EventContext = EntityBase.Types.EventContext;
+    export type CronContext = EntityBase.Types.CronContext;
     export type Next = EntityBase.Types.Next;
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
     export interface IInstance extends EntityBase.Types.IInstance {}

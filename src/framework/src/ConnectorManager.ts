@@ -1,4 +1,4 @@
-import { Context } from './Router';
+import { FusebitContext } from './router';
 import { Service } from './client/Integration';
 import { EntityType } from './schema';
 
@@ -87,10 +87,10 @@ class ConnectorManager {
    * multiple calls and endpoints.
    *
    * @param name Connector name
-   * @param instanceId A function that converts a Context into a unique string that the connector can use as a
+   * @param instanceId A function that converts a FusebitContext into a unique string that the connector can use as a
    * key to look up identities.
    */
-  public async getByName(ctx: Context, name: string, instanceId: string): Promise<any> {
+  public async getByName(ctx: FusebitContext, name: string, instanceId: string): Promise<any> {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(
@@ -114,7 +114,7 @@ class ConnectorManager {
     return client;
   }
 
-  public getByNames(ctx: Context, names: string[], instanceId: string): Record<string, any> {
+  public getByNames(ctx: FusebitContext, names: string[], instanceId: string): Record<string, any> {
     return names.reduce<Record<string, any>>((acc, cur) => {
       acc[cur] = this.getByName(ctx, cur, instanceId);
       return acc;
