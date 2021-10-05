@@ -4,7 +4,7 @@ import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
   test('service.handleWebhookEvent raises exception when validateWebhookEvent is not overwritten', async () => {
-    const ctx = getContext(true);
+    const ctx = getContext();
     try {
       const connector = new Connector();
       await connector.service.handleWebhookEvent(ctx as any);
@@ -19,7 +19,7 @@ describe('Connector', () => {
   });
 
   test('service.handleWebhookEvent returns 200 on valid challenge', async () => {
-    const ctx = getContext(true);
+    const ctx = getContext();
     const connector = new Connector();
     const mockedValidateWebhookEvent = jest.fn(() => true);
     const mockedInitializationChallenge = jest.fn(() => true);
@@ -32,7 +32,7 @@ describe('Connector', () => {
   });
 
   test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', async () => {
-    const ctx = getContext(true);
+    const ctx = getContext();
     try {
       const connector = new Connector();
       const mockedValidateWebhookEvent = jest.fn(() => true);
@@ -48,7 +48,7 @@ describe('Connector', () => {
   });
 
   test('service.handleWebhookEvent dispatches events to fan-out', async () => {
-    const ctx = getContext(true);
+    const ctx = getContext();
     ctx.state.manager = { config: { defaultEventHandler: false } };
     ctx.state.params.entityId = Constants.connectorId;
 

@@ -29,7 +29,7 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
   schedule: [],
 });
 
-export const getContext: any = (throwError?: boolean) => ({
+export const getContext: any = () => ({
   state: {
     params: {
       endpoint: Constants.endpoint,
@@ -38,11 +38,9 @@ export const getContext: any = (throwError?: boolean) => ({
       baseUrl: Constants.endpoint,
     },
   },
-  throw: throwError
-    ? jest.fn(() => {
-        throw new Error();
-      })
-    : jest.fn(),
+  throw: jest.fn(() => {
+    throw new Error();
+  }),
 });
 
 export const request = (method: string, path: string, options?: { headers?: any; query?: any; body?: any }) => {
