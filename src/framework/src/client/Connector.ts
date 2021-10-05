@@ -149,7 +149,7 @@ class Service extends EntityBase.ServiceDefault {
   };
 
   private getEventsFromPayload = (ctx: Connector.Types.Context): any[] | void => {
-    ctx.throw(500, 'Event location configuration missing.  Required for webhook processing.');
+    ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   };
 
   private getAuthIdFromEvent = (event: any): string | void => {

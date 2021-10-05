@@ -29,7 +29,7 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
   schedule: [],
 });
 
-export const getContext = (throwError?: boolean) => ({
+export const getContext: any = (throwError?: boolean) => ({
   state: {
     params: {
       endpoint: Constants.endpoint,
