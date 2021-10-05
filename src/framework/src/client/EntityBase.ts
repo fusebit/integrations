@@ -92,7 +92,7 @@ namespace EntityBase {
     /** Get saved data
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
-     * @returns {Promise<Storage.IStorageVersionedResponse>}
+     * @returns {Promise<Storage.IStorageVersionedResponse | undefined>}
      */
     public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageVersionedResponse | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
