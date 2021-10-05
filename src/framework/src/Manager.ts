@@ -234,7 +234,7 @@ class Manager {
     const message = err.expose ? err.message : `${statusCode}`;
     ctx.status = err.status = statusCode;
     ctx.length = Buffer.byteLength(message);
-    ctx.body = { status: err.status, message };
+    ctx.body = { status: err.status, message, details: err.details };
   }
 
   /** Convert from a Fusebit function context into a routable context. */

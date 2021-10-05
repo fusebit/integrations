@@ -38,13 +38,13 @@ export interface IValidationOptions {
  */
 export const validate = (options: IValidationOptions) => {
   return async (ctx: FusebitContext, next: Next) => {
+    const errors: { location: string; details: Joi.ValidationError[] }[] = [];
     try {
       if (options.body) {
         Joi.attempt(ctx.req.body, options.body);
       }
     } catch (err) {
-      const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
-      ctx.throw(400, `Body validation failed at ${detail.path.join('.')}: ${detail.message}`);
+      errors.push({ location: 'body', details: (err as any).details });
     }
 
     try {
@@ -52,8 +52,7 @@ export const validate = (options: IValidationOptions) => {
         Joi.attempt(ctx.query, options.query);
       }
     } catch (err) {
-      const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
-      ctx.throw(400, `Query validation failed at ${detail.path.join('.')}: ${detail.message}`);
+      errors.push({ location: 'query', details: (err as any).details });
     }
 
     try {
@@ -61,8 +60,11 @@ export const validate = (options: IValidationOptions) => {
         Joi.attempt(ctx.params, options.params);
       }
     } catch (err) {
-      const detail = (err as { details: { path: string[]; message: string }[] }).details[0];
-      ctx.throw(400, `Params validation failed at ${detail.path.join('.')}: ${detail.message}`);
+      errors.push({ location: 'params', details: (err as any).details });
+    }
+
+    if (errors.length > 0) {
+      ctx.throw(400, 'Validation failure', { details: errors });
     }
 
     return next();
