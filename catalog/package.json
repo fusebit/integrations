@@ -19,7 +19,6 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
