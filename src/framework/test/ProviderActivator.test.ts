@@ -18,8 +18,8 @@ class ProviderActivatorImpl extends ProviderActivator<boolean> {
     throw Error('Not implemented');
   }
 
-  callRequestConnectorToken(params: { ctx: any; lookupKey: string }): Promise<any> {
-    return this.requestConnectorToken(params);
+  callRequestConnectorToken(params: { ctx: Partial<FusebitContext>; lookupKey: string }): Promise<any> {
+    return this.requestConnectorToken(params as { ctx: FusebitContext; lookupKey: string });
   }
 }
 

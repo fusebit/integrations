@@ -1,5 +1,6 @@
 import nock from 'nock';
 import Connector from '../src/client/Connector';
+import { FusebitContext } from '../src/router';
 import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
@@ -7,7 +8,7 @@ describe('Connector', () => {
     const ctx = getContext();
     try {
       const connector = new Connector();
-      await connector.service.handleWebhookEvent(ctx as any);
+      await connector.service.handleWebhookEvent(ctx as FusebitContext);
       fail('should have raised exception');
     } catch (err) {
       expect(ctx.throw).toBeCalledTimes(1);
@@ -25,7 +26,7 @@ describe('Connector', () => {
     const mockedInitializationChallenge = jest.fn(() => true);
     connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
     connector.service.setInitializationChallenge(mockedInitializationChallenge);
-    await connector.service.handleWebhookEvent(ctx as any);
+    await connector.service.handleWebhookEvent(ctx as FusebitContext);
     expect(ctx.status).toBe(200);
     expect(mockedValidateWebhookEvent).toBeCalledTimes(1);
     expect(mockedInitializationChallenge).toBeCalledTimes(1);
@@ -39,7 +40,7 @@ describe('Connector', () => {
       const mockedInitializationChallenge = jest.fn(() => false);
       connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
       connector.service.setInitializationChallenge(mockedInitializationChallenge);
-      await connector.service.handleWebhookEvent(ctx as any);
+      await connector.service.handleWebhookEvent(ctx as FusebitContext);
       fail('should have raised exception');
     } catch (err) {
       expect(ctx.throw).toBeCalledTimes(1);
@@ -74,7 +75,7 @@ describe('Connector', () => {
     connector.service.setCreateWebhookResponse(async (ctx, processPromise) => processPromise);
 
     // Trigger the handler.
-    await connector.service.handleWebhookEvent(ctx as any);
+    await connector.service.handleWebhookEvent(ctx as FusebitContext);
 
     // Check results.
     expect(scope.isDone()).toBe(true);

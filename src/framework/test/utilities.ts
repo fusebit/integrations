@@ -1,4 +1,5 @@
 import { Internal } from '../src';
+import { FusebitContext } from '../src/router';
 
 export const Constants = {
   endpoint: 'http://somedeployment.fusebit.io',
@@ -29,7 +30,7 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
   schedule: [],
 });
 
-export const getContext: any = () => ({
+export const getContext: () => Partial<FusebitContext> = () => ({
   state: {
     params: {
       endpoint: Constants.endpoint,
