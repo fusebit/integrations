@@ -27,7 +27,7 @@ export class CronRouter {
    *
    * The response is discarded, outside of analytics and event reporting.
    *
-   * @param name the name of the cron schedule
+   * @param [name] the name of the cron schedule
    * @param middleware handle the Koa request
    */
   public on(...middleware: CronRegistrationArray) {

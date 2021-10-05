@@ -10,7 +10,7 @@ const fusebitMethods = ['CRON', 'EVENT'];
 /** Elements that get added to the stock Koa context. */
 export interface IFusebitContext extends KoaRouter.RouterContext {
   /** Special context provided by Fusebit. */
-  fusebit?: any; // Optional to keep typescript from yelling.
+  fusebit?: any; // Optional to keep TypeScript from yelling.
 
   /** Add `body` to the req. */
   req: IncomingMessage & { body?: any };
