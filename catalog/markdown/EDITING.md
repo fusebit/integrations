@@ -1,4 +1,5 @@
 # Editing Integration code
+
 1. Ensure you have a recent version of [Node.js](https://nodejs.org) on your system and then run
 
 `npm i -g @fusebit/cli`
