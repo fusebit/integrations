@@ -10,8 +10,5 @@
   "dependencies": {
     "@fusebit-int/framework": "^5.7.0",
     "@fusebit-int/slack-connector": "^5.7.0"
-  },
-  "devDependencies": {
-    "jest": "^27.2.4"
   }
 }
