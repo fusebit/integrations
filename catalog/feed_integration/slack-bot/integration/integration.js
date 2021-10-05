@@ -46,7 +46,7 @@ router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('
 });
 
 // This event handler responds to messages in channels that the bot has access to
-router.on('/:componentName/message', async (ctx) => {
+integration.event.on('/:componentName/message', async (ctx) => {
   const slackClient = await integration.service.getSdk(ctx, ctx.params.componentName, ctx.req.body.instanceIds[0]);
 
   const messagingUser = ctx.req.body.data.event.user;
