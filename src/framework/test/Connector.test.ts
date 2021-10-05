@@ -3,11 +3,11 @@ import Connector from '../src/client/Connector';
 import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
-  test('service.handleWebhookEvent raises exception when validateWebhookEvent is not overwritten', () => {
+  test('service.handleWebhookEvent raises exception when validateWebhookEvent is not overwritten', async () => {
     const ctx = getContext(true);
     try {
       const connector = new Connector();
-      connector.service.handleWebhookEvent(ctx as any);
+      await connector.service.handleWebhookEvent(ctx as any);
       fail('should have raised exception');
     } catch (err) {
       expect(ctx.throw).toBeCalledTimes(1);
@@ -18,20 +18,20 @@ describe('Connector', () => {
     }
   });
 
-  test('service.handleWebhookEvent returns 200 on valid challenge', () => {
+  test('service.handleWebhookEvent returns 200 on valid challenge', async () => {
     const ctx = getContext(true);
     const connector = new Connector();
     const mockedValidateWebhookEvent = jest.fn(() => true);
     const mockedInitializationChallenge = jest.fn(() => true);
     connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
     connector.service.setInitializationChallenge(mockedInitializationChallenge);
-    connector.service.handleWebhookEvent(ctx as any);
+    await connector.service.handleWebhookEvent(ctx as any);
     expect(ctx.status).toBe(200);
     expect(mockedValidateWebhookEvent).toBeCalledTimes(1);
     expect(mockedInitializationChallenge).toBeCalledTimes(1);
   });
 
-  test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', () => {
+  test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', async () => {
     const ctx = getContext(true);
     try {
       const connector = new Connector();
@@ -39,7 +39,7 @@ describe('Connector', () => {
       const mockedInitializationChallenge = jest.fn(() => false);
       connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
       connector.service.setInitializationChallenge(mockedInitializationChallenge);
-      connector.service.handleWebhookEvent(ctx as any);
+      await connector.service.handleWebhookEvent(ctx as any);
       fail('should have raised exception');
     } catch (err) {
       expect(ctx.throw).toBeCalledTimes(1);
@@ -79,5 +79,6 @@ describe('Connector', () => {
     // Check results.
     expect(scope.isDone()).toBe(true);
     expect(scope.pendingMocks()).toEqual([]);
+    expect(ctx.throw).not.toBeCalled();
   });
 });
