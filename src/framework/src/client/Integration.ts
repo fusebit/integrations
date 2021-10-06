@@ -5,8 +5,17 @@ import superagent from 'superagent';
 
 const TENANT_TAG_NAME = 'fusebit.tenantId';
 
+/**
+ * @class Middleware
+ * @augments MiddlewareBase
+ * @ignore
+ */
 class Middleware extends EntityBase.MiddlewareBase {}
 
+/**
+ * @class
+ * @alias integration.service
+ */
 export class Service extends EntityBase.ServiceBase {
   /**
    * Get an authenticated SDK for the specified Connector, using a given Install
@@ -48,7 +57,14 @@ export class Service extends EntityBase.ServiceBase {
   };
 }
 
+/**
+ * @class
+ * @alias integration.tenant
+ */
 class Tenant {
+  /**
+   * @ignore
+   */
   public service: Service;
 
   constructor(service: Service) {
@@ -82,7 +98,15 @@ class Tenant {
   };
 }
 
+/**
+ * Integration
+ * @namespace
+ */
 namespace Integration {
+  /**
+   * Types
+   * @namespace
+   */
   export namespace Types {
     export type Context = EntityBase.Types.Context;
     export type EventContext = EntityBase.Types.EventContext;
@@ -92,10 +116,35 @@ namespace Integration {
     export interface IInstall extends EntityBase.Types.IInstall {}
   }
 }
+/**
+ * @class Integration
+ * @augments EntityBase
+ * @ignore
+ *
+ */
 export default class Integration extends EntityBase {
+  /**
+   * @memberof Service
+   * @ignore
+   */
   public service = new Service();
+  /**
+   * @memberof Middleware
+   * @instance
+   */
   public middleware = new Middleware();
+  /**
+   * @ignore
+   */
   public storage = new EntityBase.StorageDefault();
+  /**
+   * @memberof Tenant
+   * @ignore
+   */
   public tenant = new Tenant(this.service);
+  /**
+   * @memberof ResponseDefault
+   * @ignore
+   */
   public response = new EntityBase.ResponseDefault();
 }

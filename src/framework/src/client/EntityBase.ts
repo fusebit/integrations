@@ -18,6 +18,10 @@ import { IOnStartup as IOnStartupInterface } from '../Manager';
 type ContextType = HttpContext;
 type NextType = RouterNext;
 
+/**
+ * @class EntityBase
+ * @ignore
+ */
 abstract class EntityBase {
   public readonly events = {};
 
@@ -31,6 +35,9 @@ abstract class EntityBase {
   public readonly event = new EventRouter_(this.router);
 }
 
+/**
+ * @ignore
+ */
 namespace EntityBase {
   export namespace Types {
     export type Context = ContextType;
@@ -60,14 +67,20 @@ namespace EntityBase {
     }
     export type Router = HttpRouter_;
   }
+  /**
+   * @class ServiceBase
+   * @ignore
+   */
   export abstract class ServiceBase {}
 
+  /**
+   * @alias integration.storage
+   */
   export abstract class StorageBase {
     /**
      * Save any data in JSON format up to ~400Kb in size.
      *
      * @example
-     * ```
      * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
      *    // By convention we use / symbol to represent a bucket, but you can use any name you want.
      *    const bucketName = '/my-bucket/';
@@ -76,7 +89,6 @@ namespace EntityBase {
      *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`, data);
      *    ctx.body = result;
      * });
-     * ```
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Represents a reference to your data that you will use in further
      * operations like read, delete and update
@@ -107,13 +119,11 @@ namespace EntityBase {
      * collections of keys where you can store related data). Read more at
      * https://developer.fusebit.io/docs/integration-programming-model#listing-data
      * @example
-     * ```
      * router.get('/api/tenant/:tenantId/my-bucket', async (ctx) => {
      *        const bucketName = '/my-bucket/';
      *        const result = await integration.storage.listData(ctx, bucketName);
      *        ctx.body = result;
      * });
-     * ```
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {Storage.IListOption} options The bucket name
@@ -169,17 +179,41 @@ namespace EntityBase {
       Storage.createStorage(ctx.state.params).deleteAll(forceDelete);
   }
 
+  /**
+   * @class MiddlewareBase
+   */
   export abstract class MiddlewareBase {
     public authorizeUser = Middleware.authorize;
     public validate = Middleware.validate;
   }
+  /**
+   * @class ResponseBase
+   * @ignore
+   */
   export abstract class ResponseBase {
     public createJsonForm = Form;
   }
 
+  /**
+   * @class ServiceDefault
+   * @ignore
+   */
   export class ServiceDefault extends ServiceBase {}
+  /**
+   * @class StorageDefault
+   * @ignore
+   *
+   */
   export class StorageDefault extends StorageBase {}
+  /**
+   * @class MiddlewareDefault
+   * @ignore
+   */
   export class MiddlewareDefault extends MiddlewareBase {}
+  /**
+   * @class ResponseDefault
+   * @ignore
+   */
   export class ResponseDefault extends ResponseBase {}
 }
 
