@@ -46,14 +46,14 @@ router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('
 });
 
 // This event handler responds to messages in channels that the bot has access to
-integration.event.on('/:componentName/message', async (ctx) => {
+integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
   const slackClient = await integration.service.getSdk(ctx, ctx.params.componentName, ctx.req.body.instanceIds[0]);
 
   const messagingUser = ctx.req.body.data.event.user;
   const authorizedListeningUser = ctx.req.body.data.authorizations[0].user_id;
 
   if (messagingUser === authorizedListeningUser) {
-    console.log('no recursive response');
+    console.log('Skipping to avoid recursive response (i.e., infinite loop).');
     return;
   }
 

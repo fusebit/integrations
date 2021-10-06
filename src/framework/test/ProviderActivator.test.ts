@@ -18,8 +18,8 @@ class ProviderActivatorImpl extends ProviderActivator<boolean> {
     throw Error('Not implemented');
   }
 
-  callRequestConnectorToken(params: { ctx: any; lookupKey: string }): Promise<any> {
-    return this.requestConnectorToken(params);
+  callRequestConnectorToken(params: { ctx: Partial<FusebitContext>; lookupKey: string }): Promise<any> {
+    return this.requestConnectorToken(params as { ctx: FusebitContext; lookupKey: string });
   }
 }
 
@@ -33,14 +33,18 @@ const activator = new ProviderActivatorImpl({
 
 describe('ProviderActivator', () => {
   test('Raise exception when instance not found', async () => {
-    await activator.callRequestConnectorToken({
-      ctx,
-      lookupKey,
-    });
-    expect(ctx.throw).toHaveBeenCalledTimes(1);
-    expect(ctx.throw).toHaveBeenCalledWith(
-      404,
-      `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`
-    );
+    try {
+      await activator.callRequestConnectorToken({
+        ctx,
+        lookupKey,
+      });
+      fail('an exception should have been raised');
+    } catch (err) {
+      expect(ctx.throw).toHaveBeenCalledTimes(1);
+      expect(ctx.throw).toHaveBeenCalledWith(
+        404,
+        `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`
+      );
+    }
   });
 });

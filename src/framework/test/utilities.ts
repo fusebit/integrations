@@ -1,4 +1,5 @@
 import { Internal } from '../src';
+import { FusebitContext } from '../src/router';
 
 export const Constants = {
   endpoint: 'http://somedeployment.fusebit.io',
@@ -29,16 +30,20 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
   schedule: [],
 });
 
-export const getContext = () => ({
-  state: {
-    params: {
-      endpoint: Constants.endpoint,
-      accountId: Constants.accountId,
-      subscriptionId: Constants.subscriptionId,
+export const getContext: () => FusebitContext = () =>
+  (({
+    state: {
+      params: {
+        endpoint: Constants.endpoint,
+        accountId: Constants.accountId,
+        subscriptionId: Constants.subscriptionId,
+        baseUrl: Constants.endpoint,
+      },
     },
-  },
-  throw: jest.fn(),
-});
+    throw: jest.fn(() => {
+      throw new Error();
+    }),
+  } as unknown) as FusebitContext);
 
 export const request = (method: string, path: string, options?: { headers?: any; query?: any; body?: any }) => {
   return { method, path, ...options };

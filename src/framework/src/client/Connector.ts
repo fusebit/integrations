@@ -4,21 +4,21 @@ import superagent from 'superagent';
 
 class Service extends EntityBase.ServiceDefault {
   public handleWebhookEvent = async (ctx: EntityBase.Types.Context) => {
-    const eventsByAuthId = this.getEventsByAuthId(ctx);
-    const isChallenge = this.initializationChallenge(ctx);
-
-    if (!eventsByAuthId && !isChallenge) {
-      ctx.throw(400, `webhooks not implemented for connector ${ctx.state.params.entityId}`);
-    }
-
     const isValid = this.validateWebhookEvent(ctx);
+
     if (!isValid) {
-      ctx.throw(400, `webhook event failed validation for connector ${ctx.state.params.entityId}`);
+      ctx.throw(400, `Webhook event failed validation for connector ${ctx.state.params.entityId}`);
     }
 
+    const isChallenge = this.initializationChallenge(ctx);
     if (isChallenge) {
       ctx.status = 200;
       return;
+    }
+
+    const eventsByAuthId = this.getEventsByAuthId(ctx);
+    if (!eventsByAuthId) {
+      ctx.throw(400, `Webhooks not implemented for connector ${ctx.state.params.entityId}`);
     }
 
     // Event contains many different authId-associated entries - process them independently.
@@ -149,7 +149,7 @@ class Service extends EntityBase.ServiceDefault {
   };
 
   private getEventsFromPayload = (ctx: Connector.Types.Context): any[] | void => {
-    ctx.throw(500, 'Event location configuration missing.  Required for webhook processing.');
+    ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   };
 
   private getAuthIdFromEvent = (event: any): string | void => {
