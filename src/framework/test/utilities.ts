@@ -30,19 +30,20 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
   schedule: [],
 });
 
-export const getContext: () => Partial<FusebitContext> = () => ({
-  state: {
-    params: {
-      endpoint: Constants.endpoint,
-      accountId: Constants.accountId,
-      subscriptionId: Constants.subscriptionId,
-      baseUrl: Constants.endpoint,
+export const getContext: () => FusebitContext = () =>
+  (({
+    state: {
+      params: {
+        endpoint: Constants.endpoint,
+        accountId: Constants.accountId,
+        subscriptionId: Constants.subscriptionId,
+        baseUrl: Constants.endpoint,
+      },
     },
-  },
-  throw: jest.fn(() => {
-    throw new Error();
-  }),
-});
+    throw: jest.fn(() => {
+      throw new Error();
+    }),
+  } as unknown) as FusebitContext);
 
 export const request = (method: string, path: string, options?: { headers?: any; query?: any; body?: any }) => {
   return { method, path, ...options };
