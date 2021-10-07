@@ -2,7 +2,18 @@
 import EntityBase from './EntityBase';
 import superagent from 'superagent';
 
+/**
+ * @class
+ * @alias connector.service
+ * @augments EntityBase.ServiceBase
+ */
 class Service extends EntityBase.ServiceDefault {
+  /**
+   * Handles an event triggered by a connector Webhook
+   * @param ctx The context object provided by the route function
+   * @throws Will throw an error if webhooks are not implemented for the provided Connector.
+   * @returns {Promise<void>}
+   */
   public handleWebhookEvent = async (ctx: EntityBase.Types.Context) => {
     const isValid = this.validateWebhookEvent(ctx);
 
@@ -30,6 +41,13 @@ class Service extends EntityBase.ServiceDefault {
     return this.createWebhookResponse(ctx, processPromise);
   };
 
+  /**
+   * Creates a new Webhook event
+   * @param ctx The context object provided by the route function
+   * @param {any} event
+   * @param {string} webhookAuthId
+   * @returns {Connector.Types.IWebhookEvent}
+   */
   public createWebhookEvent = (
     ctx: Connector.Types.Context,
     event: any,
@@ -47,6 +65,13 @@ class Service extends EntityBase.ServiceDefault {
     };
   };
 
+  /**
+   * Handles a Webhook event
+   * @param ctx The context object provided by the route function
+   * @param {string} webhookAuthId
+   * @param {any[]} eventsData
+   * @returns {Promise<superagent.Response | void>}
+   */
   public processWebhook = async (
     ctx: Connector.Types.Context,
     webhookAuthId: string,
@@ -181,6 +206,11 @@ class Service extends EntityBase.ServiceDefault {
   };
 }
 
+/**
+ * @class Connector
+ * @augments EntityBase
+ * @ignore
+ */
 class Connector extends EntityBase {
   constructor() {
     super();
@@ -188,9 +218,21 @@ class Connector extends EntityBase {
       await this.service.handleWebhookEvent(ctx);
     });
   }
+  /**
+   * @ignore
+   */
   public service = new Service();
+  /**
+   * @ignore
+   */
   public middleware = new EntityBase.MiddlewareDefault();
+  /**
+   * @ignore
+   */
   public storage = new EntityBase.StorageDefault();
+  /**
+   * @ignore
+   */
   public response = new EntityBase.ResponseDefault();
 }
 namespace Connector {

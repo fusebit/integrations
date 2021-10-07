@@ -29,6 +29,7 @@ export type FusebitHandler = (ctx: FusebitContext, next: Next) => ReturnType<Nex
  * FusebitRouter
  *
  * The FusebitRouter is exposed as an HttpRouter on an entity.
+ * @ignore
  */
 export class FusebitRouter extends KoaRouter {
   constructor() {

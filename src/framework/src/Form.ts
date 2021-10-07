@@ -44,6 +44,7 @@ export interface IFormSpecification {
 
 /**
  * Create an HTML Form, using MaterialUI, from the supplied JSON Schema.
+ * @param {IFormSpecification} spec
  */
 export const Form = (spec: IFormSpecification) => {
   const form = (spec.template || formTemplate)

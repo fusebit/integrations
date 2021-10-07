@@ -11,8 +11,8 @@ const isString = (entry: CronHandler | string): entry is string => {
 /**
  * CronRouter
  *
- * A CronRouter extends the normal HTTP-style router to enable capturing specific events generated through a
- * cron trigger, as specified in the fusebit.json of the entity.
+ * A CronRouter extends the normal HTTP-style router to enable capturing specific events generated
+ * through a cron trigger, as specified in the fusebit.json of the entity.
  */
 export class CronRouter {
   private readonly router: FusebitRouter;
@@ -28,7 +28,7 @@ export class CronRouter {
    * The response is discarded, outside of analytics and event reporting.
    *
    * @param [name] the name of the cron schedule
-   * @param middleware handle the Koa request
+   * @param {any} middleware Koa request handler
    */
   public on(...middleware: CronRegistrationArray) {
     if (isString(middleware[0])) {

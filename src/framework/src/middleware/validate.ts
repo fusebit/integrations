@@ -13,28 +13,8 @@ export interface IValidationOptions {
   query?: Joi.Schema;
   params?: Joi.Schema;
 }
-
 /**
- * validate
- *
- * Middleware that can be used to perform input and parameter validation, using Joi, on handlers.
- *
- * For example:
- *
- * ```js
- *   const integration = new Integration();
- *   const Joi = integration.middleware.validate.joi;
- *
- *   integration.router.get('/api/example',
- *     integration.middleware.validate({query: Joi.object({ aKey: Joi.string().required() }) }),
- *     async (ctx) => {
- *       ctx.body = { result: ctx.query.aKey };
- *     }
- *   );
- *```
- *
- * Note: The `validate` function includes a `joi` member to allow callers to easily specify validation rules.
- * See the [Joi](https://joi.dev/api/?v=17.4.2) documentation for more details.
+ * @ignore
  */
 export const validate = (options: IValidationOptions) => {
   return async (ctx: FusebitContext, next: Next) => {

@@ -9,7 +9,7 @@ module.exports = `
 
 .markdown-body a[href]
 {
-    color: red;
+    color: #fb3108;
 }
 
 .markdown-body h2~h3+ul, .markdown-body h4+ul {
@@ -27,7 +27,9 @@ module.exports = `
     overflow: hidden;
     font-size: 14px;
     padding-left:1em;
+    margin-left:1em;
     list-style:none;
+    border-left: solid 10px #607d8b;
 }
 
 .markdown-body h2~h3+ul li:not(:last-child), h4+ul li:not(:last-child) {
@@ -61,6 +63,50 @@ module.exports = `
     overflow: hidden;
     list-style:none;
     padding-left:1em;
+    margin-left:1em;
+    border-left: solid 10px #009688;
+}
+
+.markdown-body p {
+    display:inherit!important;
+}
+
+.note {
+    border-left: solid 5px #00bcd4;
+    display: block;
+    padding-left: 1em;
+    font-style: normal;
+    background: var(--lightGray);
+}
+
+.heading-2 + * {
+    margin-left:10px;
+}
+
+.extends {
+    background-color: #673ab736;
+    max-width: 300px;
+    border-radius:10px;
+    text-align:center;
+    padding-left:5px;
+    margin-left:22px;
+    position:relative;
+}
+
+.extends::before {
+    content: ' ';
+    height:29px;
+    width:20px;
+    border-bottom: dashed 1px #9c27b0;
+    border-left:dashed 1px #9c27b0;
+    bottom: 14px;
+    left:-21px;
+    position:absolute;
+    display:block;
+}
+
+pre, .parameters, .examples {
+    margin-left:20px;
 }
 
 </style>
