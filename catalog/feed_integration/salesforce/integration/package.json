@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-salesforce-integration",
-  "version": "5.7.0",
+  "version": "6.0.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^5.7.0",
-    "@fusebit-int/salesforce-provider": "^5.7.0"
+    "@fusebit-int/framework": "^6.0.0",
+    "@fusebit-int/salesforce-provider": "^6.0.0"
   },
   "files": [
     "./integration.js",

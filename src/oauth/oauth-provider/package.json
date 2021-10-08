@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-provider",
-  "version": "5.7.0",
+  "version": "6.0.0",
   "description": "Fusebit OAuth 2.0 Provider",
   "keywords": [
     "Fusebit",
@@ -33,7 +33,7 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^5.7.0",
+    "@fusebit-int/framework": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
