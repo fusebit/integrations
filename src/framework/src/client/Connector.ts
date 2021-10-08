@@ -77,13 +77,13 @@ class Service extends EntityBase.ServiceDefault {
     }
   };
 
-  // Convert a webhook event into the key attached to instances by getWebhookTokenId
+  // Convert a webhook event into the key attached to installs by getWebhookTokenId
   public getWebhookLookupId(ctx: Connector.Types.Context, authId: string): string {
     const connectorId = ctx.state.params.entityId;
     return ['webhook', connectorId, authId].join('/');
   }
 
-  // Convert an OAuth token into the key used to look up matching instances for a webhook.
+  // Convert an OAuth token into the key used to look up matching installs for a webhook.
   public getWebhookTokenId = async (ctx: Connector.Types.Context, token: any): Promise<string> => {
     const authId = await this.getTokenAuthId(ctx, token);
     const connectorId = ctx.state.params.entityId;

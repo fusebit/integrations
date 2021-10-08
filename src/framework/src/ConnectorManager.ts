@@ -87,10 +87,10 @@ class ConnectorManager {
    * multiple calls and endpoints.
    *
    * @param name Connector name
-   * @param instanceId A function that converts a FusebitContext into a unique string that the connector can use as a
-   * key to look up identities.
+   * @param {string} installId The unique id of the tenant Install that should be used to determine the
+   * appropriate connector identity to populate into the sdk.
    */
-  public async getByName(ctx: FusebitContext, name: string, instanceId: string): Promise<any> {
+  public async getByName(ctx: FusebitContext, name: string, installId: string): Promise<any> {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(
@@ -102,9 +102,9 @@ class ConnectorManager {
     const inst = cfg.instance ? cfg.instance : this.loadConnector(name, cfg);
 
     const service = new Service();
-    const instance = await service.getInstance(ctx, instanceId);
+    const install = await service.getInstall(ctx, installId);
 
-    const identity = instance.data[name];
+    const identity = install.data[name];
     if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
       ctx.throw(404);
     }
@@ -114,9 +114,9 @@ class ConnectorManager {
     return client;
   }
 
-  public getByNames(ctx: FusebitContext, names: string[], instanceId: string): Record<string, any> {
+  public getByNames(ctx: FusebitContext, names: string[], installId: string): Record<string, any> {
     return names.reduce<Record<string, any>>((acc, cur) => {
-      acc[cur] = this.getByName(ctx, cur, instanceId);
+      acc[cur] = this.getByName(ctx, cur, installId);
       return acc;
     }, {});
   }

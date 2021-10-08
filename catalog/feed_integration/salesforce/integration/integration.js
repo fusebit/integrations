@@ -19,7 +19,7 @@ const integration = new Integration();
 const router = integration.router;
 
 // The sample test endpoint of this integration gets all contacts stored in the Salesforce account associated with your tenant.
-router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('instance:get'), async (ctx) => {
+router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Salesforce client pre-configured with credentials necessary to communicate with your tenant's Salesforce account.
   // For the Salesforce SDK documentation, see https://jsforce.github.io/.
   const salesforceClient = await integration.tenant.getSdkByTenant(ctx, 'salesforceConnector', ctx.params.tenantId);

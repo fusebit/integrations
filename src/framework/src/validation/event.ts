@@ -11,7 +11,7 @@ export const schema = {
           entityId: Joi.string().required(),
           webhookEventId: Joi.string().required(),
           webhookAuthId: Joi.string().required(),
-          instanceIds: Joi.array().items(Joi.string()),
+          installIds: Joi.array().items(Joi.string()),
         })
           .unknown(false)
           .required()

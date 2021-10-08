@@ -8,37 +8,40 @@ const TENANT_TAG_NAME = 'fusebit.tenantId';
 class Middleware extends EntityBase.MiddlewareBase {}
 
 export class Service extends EntityBase.ServiceBase {
-  /** Get an authenticated SDK for the specified Connector, using a given Instance
+  /**
+   * Get an authenticated SDK for the specified Connector, using a given Install
    * @param {FusebitContext} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
-   * @param {string} instanceId The identifier of the Instance to get the associated Connector
+   * @param {string} installId The identifier of the Install to get the associated Connector
    * @returns {Promise<any>} Returns an authenticated SDK you would use to interact with the
    * Connector service on behalf of your user
    */
-  public getSdk = (ctx: FusebitContext, connectorName: string, instanceId: string) => {
-    return ctx.state.manager.connectors.getByName(ctx, connectorName, instanceId);
+  public getSdk = (ctx: FusebitContext, connectorName: string, installId: string) => {
+    return ctx.state.manager.connectors.getByName(ctx, connectorName, installId);
   };
 
-  /** Get an authenticated SDK for each Connector in the list, using a given Instance
+  /**
+   * Get an authenticated SDK for each Connector in the list, using a given Install
    * @param ctx The context object provided by the route function
    * @param {string[]} connectorNames An array of Connector names
-   * @param {string} instanceId The identifier of the Instance to get the associated Connectors
-   * @returns {Promise<any>[]} Returns an array of official Connector SDK instances
-   * already authorized with the proper credentials
+   * @param {string} installId The identifier of the Install to get the associated Connectors
+   * @returns {Promise<any>[]} Returns an array of official Connector SDK instances already authorized with
+   * the proper credentials
    */
-  public getSdks = (ctx: FusebitContext, connectorNames: string[], instanceId: string) => {
-    return connectorNames.map((connectorName) => this.getSdk(ctx, connectorName, instanceId));
+  public getSdks = (ctx: FusebitContext, connectorNames: string[], installId: string) => {
+    return connectorNames.map((connectorName) => this.getSdk(ctx, connectorName, installId));
   };
 
-  /** Get a configured Integration with a set of identities
+  /**
+   * Get a configured Integration with a set of identities
    * and other values that represent a single user of the Integration.
    * Read more: https://developer.fusebit.io/docs/fusebit-system-architecture#installation-lifecycle
    * @param ctx The context object provided by the route function
-   * @param {string} instanceId
+   * @param {string} installId
    */
-  public getInstance = async (ctx: FusebitContext, instanceId: string): Promise<EntityBase.Types.IInstance> => {
+  public getInstall = async (ctx: FusebitContext, installId: string): Promise<EntityBase.Types.IInstall> => {
     const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/instance/${instanceId}`)
+      .get(`${ctx.state.params.baseUrl}/install/${installId}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     const body = response.body;
     return body;
@@ -63,16 +66,16 @@ class Tenant {
    */
   public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
     const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/instance?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
+      .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     const body = response.body;
 
     if (body.items.length === 0) {
-      ctx.throw(404, `Cannot find an Integration Instance associated with tenant ${tenantId}`);
+      ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
     }
 
     if (body.items.length > 1) {
-      ctx.throw(400, `Too many Integration Instances found with tenant ${tenantId}`);
+      ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
 
     return this.service.getSdk(ctx, connectorName, body.items[0].id);
@@ -86,7 +89,7 @@ namespace Integration {
     export type CronContext = EntityBase.Types.CronContext;
     export type Next = EntityBase.Types.Next;
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
-    export interface IInstance extends EntityBase.Types.IInstance {}
+    export interface IInstall extends EntityBase.Types.IInstall {}
   }
 }
 export default class Integration extends EntityBase {
