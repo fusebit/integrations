@@ -63,7 +63,9 @@ namespace EntityBase {
   export abstract class ServiceBase {}
 
   export abstract class StorageBase {
-    /** Save any data in JSON format up to ~400Kb in size.
+    /**
+     * Save any data in JSON format up to ~400Kb in size.
+     *
      * @example
      * ```
      * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
@@ -89,7 +91,9 @@ namespace EntityBase {
     ): Promise<Storage.IStorageVersionedResponse> =>
       Storage.createStorage(ctx.state.params).put(data, dataKey, version);
 
-    /** Get saved data
+    /**
+     * Get saved data
+     *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
      * @returns {Promise<Storage.IStorageVersionedResponse | undefined>}
@@ -97,7 +101,9 @@ namespace EntityBase {
     public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageVersionedResponse | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
 
-    /** A listing operation query data stored in an artifact known as a Bucket (Buckets are
+    /**
+     * A listing operation query data stored in an artifact known as a Bucket (Buckets are
+     *
      * collections of keys where you can store related data). Read more at
      * https://developer.fusebit.io/docs/integration-programming-model#listing-data
      * @example
@@ -120,7 +126,9 @@ namespace EntityBase {
     ): Promise<Storage.IStorageVersionedResponseList> =>
       Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
-    /** Delete data
+    /**
+     * Delete data
+     *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Reference the key name used for storing the data
      * @param {string=} version Delete a specific version of the stored data
@@ -133,7 +141,9 @@ namespace EntityBase {
     ): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).delete(dataKey, version);
 
-    /** Delete data stored in an artifact known as a Bucket
+    /**
+     * Delete data stored in an artifact known as a Bucket
+     *
      * (This function will remove a collection of keys stored under the specified Bucket).
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
@@ -147,7 +157,9 @@ namespace EntityBase {
     ): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
 
-    /** Recursively delete all storage objects in the Fusebit subscription.
+    /**
+     * Recursively delete all storage objects in the Fusebit subscription.
+     *
      * @param ctx The context object provided by the route function
      * @param {boolean} forceDelete You need to force a delete (set to true),
      * otherwise it will throw an error

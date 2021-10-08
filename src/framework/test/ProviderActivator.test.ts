@@ -32,7 +32,7 @@ const activator = new ProviderActivatorImpl({
 });
 
 describe('ProviderActivator', () => {
-  test('Raise exception when install not found', async () => {
+  test('Raise exception when Install not found', async () => {
     try {
       await activator.callRequestConnectorToken({
         ctx,

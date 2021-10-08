@@ -87,7 +87,7 @@ class ConnectorManager {
    * multiple calls and endpoints.
    *
    * @param name Connector name
-   * @param {string} installId The unique id of the tenant install that should be used to determine the
+   * @param {string} installId The unique id of the tenant Install that should be used to determine the
    * appropriate connector identity to populate into the sdk.
    */
   public async getByName(ctx: FusebitContext, name: string, installId: string): Promise<any> {

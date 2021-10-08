@@ -9,10 +9,10 @@ class Middleware extends EntityBase.MiddlewareBase {}
 
 export class Service extends EntityBase.ServiceBase {
   /**
-   * Get an authenticated SDK for the specified Connector, using a given install
+   * Get an authenticated SDK for the specified Connector, using a given Install
    * @param {FusebitContext} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
-   * @param {string} installId The identifier of the install to get the associated Connector
+   * @param {string} installId The identifier of the Install to get the associated Connector
    * @returns {Promise<any>} Returns an authenticated SDK you would use to interact with the
    * Connector service on behalf of your user
    */
@@ -21,10 +21,10 @@ export class Service extends EntityBase.ServiceBase {
   };
 
   /**
-   * Get an authenticated SDK for each Connector in the list, using a given install
+   * Get an authenticated SDK for each Connector in the list, using a given Install
    * @param ctx The context object provided by the route function
    * @param {string[]} connectorNames An array of Connector names
-   * @param {string} installId The identifier of the install to get the associated Connectors
+   * @param {string} installId The identifier of the Install to get the associated Connectors
    * @returns {Promise<any>[]} Returns an array of official Connector SDK instances already authorized with
    * the proper credentials
    */
@@ -71,11 +71,11 @@ class Tenant {
     const body = response.body;
 
     if (body.items.length === 0) {
-      ctx.throw(404, `Cannot find an Integration install associated with tenant ${tenantId}`);
+      ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
     }
 
     if (body.items.length > 1) {
-      ctx.throw(400, `Too many Integration installs found with tenant ${tenantId}`);
+      ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
 
     return this.service.getSdk(ctx, connectorName, body.items[0].id);
