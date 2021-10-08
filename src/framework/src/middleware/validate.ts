@@ -13,9 +13,6 @@ export interface IValidationOptions {
   query?: Joi.Schema;
   params?: Joi.Schema;
 }
-/**
- * @ignore
- */
 export const validate = (options: IValidationOptions) => {
   return async (ctx: FusebitContext, next: Next) => {
     const errors: { location: string; details: Joi.ValidationError[] }[] = [];
@@ -53,5 +50,6 @@ export const validate = (options: IValidationOptions) => {
 
 /**
  * The Joi module to use when specifying the validation criteria.
+ * @private
  */
 validate.joi = Joi;

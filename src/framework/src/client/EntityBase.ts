@@ -19,8 +19,7 @@ type ContextType = HttpContext;
 type NextType = RouterNext;
 
 /**
- * @class EntityBase
- * @ignore
+ * @private
  */
 abstract class EntityBase {
   public readonly events = {};
@@ -35,9 +34,6 @@ abstract class EntityBase {
   public readonly event = new EventRouter_(this.router);
 }
 
-/**
- * @ignore
- */
 namespace EntityBase {
   export namespace Types {
     export type Context = ContextType;
@@ -68,8 +64,7 @@ namespace EntityBase {
     export type Router = HttpRouter_;
   }
   /**
-   * @class ServiceBase
-   * @ignore
+   * @private
    */
   export abstract class ServiceBase {}
 
@@ -180,39 +175,65 @@ namespace EntityBase {
   }
 
   /**
-   * @class MiddlewareBase
+   * @alias integration.middleware
    */
   export abstract class MiddlewareBase {
+    /**
+     * Usually, the routes you define in an integration require protection against unauthorized access.
+     * This function restricts access to users authenticated in Fusebit with the specified permission.
+     * @param {string} action Name of the action to authorize
+     * @alias authorize
+     * @throws {Error} With 403 code, meaning access to the requested resource is forbidden.
+     * @example
+     *    router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('instance:get'), async (ctx) => {
+     *        // Implement your code here
+     *    });
+     * @returns {Promise<any>}
+     */
     public authorizeUser = Middleware.authorize;
+    /**
+     * Middleware that can be used to perform input and parameter validation, using Joi, on handlers.
+     *
+     * Note: The validate function includes a joi member to allow callers to easily specify validation rules.
+     *
+     * See the [Joi](https://joi.dev/api/?v=17.4.2) documentation for more details.
+     *
+     * @alias validate
+     * @example
+     *   const integration = new Integration();
+     *   const Joi = integration.middleware.validate.joi;
+     *
+     *   integration.router.get('/api/example',
+     *     integration.middleware.validate({query: Joi.object({ aKey: Joi.string().required() }) }),
+     *     async (ctx) => {
+     *       ctx.body = { result: ctx.query.aKey };
+     *     }
+     *   );
+     * @returns {<Promise<any>>}
+     */
     public validate = Middleware.validate;
   }
   /**
-   * @class ResponseBase
-   * @ignore
+   * @private
    */
   export abstract class ResponseBase {
     public createJsonForm = Form;
   }
 
   /**
-   * @class ServiceDefault
-   * @ignore
+   * @private
    */
   export class ServiceDefault extends ServiceBase {}
   /**
-   * @class StorageDefault
-   * @ignore
-   *
+   * @private
    */
   export class StorageDefault extends StorageBase {}
   /**
-   * @class MiddlewareDefault
-   * @ignore
+   * @private
    */
   export class MiddlewareDefault extends MiddlewareBase {}
   /**
-   * @class ResponseDefault
-   * @ignore
+   * @private
    */
   export class ResponseDefault extends ResponseBase {}
 }

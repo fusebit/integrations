@@ -16,7 +16,9 @@ export interface IFusebitContext extends KoaRouter.RouterContext {
   req: IncomingMessage & { body?: any };
 }
 
-/** The general purpose type for ctx parameters on routes and events. */
+/**
+ * The general purpose type for ctx parameters on routes and events.
+ */
 export type FusebitContext = IFusebitContext;
 
 /** The type of the next parameter on routes and event handlers. */
@@ -26,10 +28,8 @@ export type Next = Koa.Next;
 export type FusebitHandler = (ctx: FusebitContext, next: Next) => ReturnType<Next>;
 
 /**
- * FusebitRouter
- *
  * The FusebitRouter is exposed as an HttpRouter on an entity.
- * @ignore
+ * @augments KoaRouter
  */
 export class FusebitRouter extends KoaRouter {
   constructor() {

@@ -10,7 +10,6 @@ export interface EventContext extends FusebitContext {
 export type EventHandler = (ctx: EventContext, next: Next) => ReturnType<Next>;
 
 /**
- * @class EventRouter
  *
  * An EventRouter is used to capture events coming from both internal components as well as external
  * components, such as WebHook events from a connector.
@@ -27,6 +26,7 @@ export class EventRouter {
    *
    * Each event is invoked with the set of parameters as an object in the first parameter, followed by an
    * optional next parameter for event chaining support.
+   * @name EventRouter.on
    * @param {string} path
    * @param {EventHandler[]} middleware
    */

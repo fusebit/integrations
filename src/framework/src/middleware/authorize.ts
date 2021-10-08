@@ -46,9 +46,6 @@ function doesAccessEntryAuthorize(accessEntry: IAccessEntry, action: string, res
   return actionAuth && resourceAuth;
 }
 
-/**
- * @ignore
- */
 export const authorize = (action: string) => {
   return async (ctx: FusebitContext, next: Next) => {
     const resource = normalizeResource(ctx.state.params.resourcePath);

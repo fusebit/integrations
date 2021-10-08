@@ -209,7 +209,6 @@ class Service extends EntityBase.ServiceDefault {
 /**
  * @class Connector
  * @augments EntityBase
- * @ignore
  */
 class Connector extends EntityBase {
   constructor() {
@@ -218,21 +217,9 @@ class Connector extends EntityBase {
       await this.service.handleWebhookEvent(ctx);
     });
   }
-  /**
-   * @ignore
-   */
   public service = new Service();
-  /**
-   * @ignore
-   */
   public middleware = new EntityBase.MiddlewareDefault();
-  /**
-   * @ignore
-   */
   public storage = new EntityBase.StorageDefault();
-  /**
-   * @ignore
-   */
   public response = new EntityBase.ResponseDefault();
 }
 namespace Connector {
