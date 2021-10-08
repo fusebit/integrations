@@ -38,18 +38,18 @@ namespace EntityBase {
     export type CronContext = CronContext_;
     export type Next = NextType;
     export interface IOnStartup extends IOnStartupInterface {}
-    export interface IInstanceResponse {
-      items: IInstance[];
+    export interface IInstallResponse {
+      items: IInstall[];
       total: number;
     }
-    export interface IInstance {
+    export interface IInstall {
       id: string;
       tags: Record<string, string>;
-      data: Record<string, IInstanceData | Record<string, any>>;
+      data: Record<string, IInstallData | Record<string, any>>;
       expires?: string;
       version?: string;
     }
-    export interface IInstanceData {
+    export interface IInstallData {
       tags: Record<string, string>;
       entityId: string;
       entityType: string;

@@ -26,7 +26,7 @@ export default abstract class ProviderActivator<T> {
     const isEmpty = !connectorToken || Object.keys(connectorToken).length === 0;
 
     if (isEmpty) {
-      ctx.throw(404, `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`);
+      ctx.throw(404, `Cannot find Integration Install '${lookupKey}'. Has the tenant authorized this integration?`);
     }
 
     return connectorToken;

@@ -19,7 +19,7 @@ const integration = new Integration();
 const router = integration.router;
 
 // The sample test endpoint of this integration sends a Direct Message to the Slack user associated with your tenant.
-router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('instance:get'), async (ctx) => {
+router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Slack client pre-configured with credentials necessary to communicate with your tenant's Slack workspace.
   // For the Slack SDK documentation, see https://slack.dev/node-slack-sdk/web-api.
   const slackClient = await integration.tenant.getSdkByTenant(ctx, 'slackConnector', ctx.params.tenantId);
@@ -37,7 +37,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 // This endpoint lists Slack users of the workspace associated with your tenant.
-router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('instance:get'), async (ctx) => {
+router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const slackClient = await integration.tenant.getSdkByTenant(ctx, 'slackConnector', ctx.params.tenantId);
 
   const result = await slackClient.users.list();
@@ -47,7 +47,7 @@ router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('
 
 // This event handler responds to messages in channels that the bot has access to
 integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
-  const slackClient = await integration.service.getSdk(ctx, ctx.params.componentName, ctx.req.body.instanceIds[0]);
+  const slackClient = await integration.service.getSdk(ctx, ctx.params.componentName, ctx.req.body.installIds[0]);
 
   const messagingUser = ctx.req.body.data.event.user;
   const authorizedListeningUser = ctx.req.body.data.authorizations[0].user_id;

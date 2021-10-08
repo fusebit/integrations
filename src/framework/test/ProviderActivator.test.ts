@@ -32,7 +32,7 @@ const activator = new ProviderActivatorImpl({
 });
 
 describe('ProviderActivator', () => {
-  test('Raise exception when instance not found', async () => {
+  test('Raise exception when install not found', async () => {
     try {
       await activator.callRequestConnectorToken({
         ctx,
@@ -43,7 +43,7 @@ describe('ProviderActivator', () => {
       expect(ctx.throw).toHaveBeenCalledTimes(1);
       expect(ctx.throw).toHaveBeenCalledWith(
         404,
-        `Cannot find Integration Instance ${lookupKey}. Has the tenant authorized this integration?`
+        `Cannot find Integration Install '${lookupKey}'. Has the tenant authorized this integration?`
       );
     }
   });

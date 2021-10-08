@@ -3,7 +3,7 @@ export enum EntityType {
   connector = 'connector',
   operation = 'operation',
   storage = 'storage',
-  instance = 'instance',
+  install = 'install',
   identity = 'identity',
   session = 'session',
 }
