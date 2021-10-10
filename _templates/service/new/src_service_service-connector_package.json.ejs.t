@@ -19,7 +19,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --config=../../../jest.config.ts",
+    "test": "jest --config=../../../jest.config.ts --roots ${PWD}",
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",

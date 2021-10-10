@@ -12,7 +12,7 @@
   "author": "Fusebit, Inc.",
   "scripts": {
     "build": "tsc -b",
-    "test": "jest --config=../../../jest.config.ts",
+    "test": "jest --config=../../../jest.config.ts --roots ${PWD}",
     "coverage": "jest --colors --coverage",
     "lint": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
