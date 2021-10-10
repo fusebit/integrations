@@ -1,0 +1,48 @@
+---
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.json
+---
+{
+  "name": "@fusebit-int/<%= name.toLowerCase() %>-provider",
+  "version": "6.0.0",
+  "description": "Fusebit <%= h.capitalize(name) %> Provider",
+  "keywords": ["Fusebit", "Slack"],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": ["libc/*.js", "libc/*.d.ts"],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/packages.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/packages/issues"
+  },
+  "devDependencies": {
+    "@fusebit-int/framework": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^27.2.4",
+    "typescript": "^3.8.0"
+  },
+  "dependencies": {
+    "<%= provider.package %>": "<%= provider.semver %>"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  }
+}
