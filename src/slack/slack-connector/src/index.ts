@@ -71,7 +71,7 @@ connector.service.setInitializationChallenge((ctx: Connector.Types.Context) => {
   return false;
 });
 
-OAuthConnector.service.setGetTokenAuthId(async (ctx: Connector.Types.Context, token: any) => {
+connector.service.setGetTokenAuthId(async (ctx: Connector.Types.Context, token: any) => {
   return token.bot_user_id;
 });
 
