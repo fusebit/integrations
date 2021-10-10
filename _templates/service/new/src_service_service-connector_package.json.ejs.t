@@ -42,7 +42,8 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
-    "typescript": "^3.8.0"
+    "typescript": "^3.8.0",
+    "ts-jest": "^27.0.5"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"

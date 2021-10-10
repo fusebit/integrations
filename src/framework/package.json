@@ -23,7 +23,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --config=../../jest.config.ts --roots ${PWD}",
+    "test": "jest --config=./jest.config.ts",
     "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
     "tsc:version": "tsc --version",
@@ -41,7 +41,8 @@
     "koa": "^2.13.1",
     "node-mocks-http": "^1.10.1",
     "statuses": "^2.0.1",
-    "superagent": "^6.1.0"
+    "superagent": "^6.1.0",
+    "ts-jest": "^27.0.5"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.83",
