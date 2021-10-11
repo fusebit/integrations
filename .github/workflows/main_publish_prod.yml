@@ -5,7 +5,7 @@ jobs:
     name: Manual - PROD - Publish
     runs-on: ubuntu-latest
     steps:
-      - name: Install AWS CLI V2
+      - name: Upgrade aws-cli
         run: ./scripts/cicd/install_awscli.sh
       - name: Use Node.js
         uses: actions/setup-node@v1

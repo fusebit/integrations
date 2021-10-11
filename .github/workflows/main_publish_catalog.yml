@@ -10,6 +10,8 @@ jobs:
     name: Manual - PROD - Catalog Only - Specific Version
     runs-on: ubuntu-latest
     steps:
+      - name: Upgrade aws-cli
+        run: ./scripts/cicd/install_awscli.sh
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
