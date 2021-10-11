@@ -1,4 +1,4 @@
-on:
+on: 'workflow_dispatch'
 name: Manual - PROD - SDK Docs
 jobs:
   publish_prod:
