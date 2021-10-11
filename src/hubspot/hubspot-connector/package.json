@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/hubspot-connector",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "description": "HubSpot Connector",
   "keywords": [
     "Fusebit",
@@ -34,11 +34,11 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^6.0.1",
+    "@fusebit-int/oauth-connector": "^6.1.0",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.0.1",
+    "@fusebit-int/framework": "^6.1.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
@@ -47,8 +47,8 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
-    "typescript": "^3.8.0",
-    "ts-jest": "^27.0.5"
+    "ts-jest": "^27.0.5",
+    "typescript": "^3.8.0"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"

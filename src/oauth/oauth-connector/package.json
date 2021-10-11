@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-connector",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "description": "Fusebit OAuth 2.0 connector",
   "keywords": [
     "Fusebit",
@@ -34,7 +34,7 @@
     "url": "https://github.com/fusebit/packages/issues"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.0.1",
+    "@fusebit-int/framework": "^6.1.0",
     "@types/koa": "2.11.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
@@ -44,8 +44,8 @@
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
     "superagent-mock": "^4.0.0",
-    "typescript": "^3.8.0",
-    "ts-jest": "^27.0.5"
+    "ts-jest": "^27.0.5",
+    "typescript": "^3.8.0"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
