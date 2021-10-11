@@ -1,0 +1,22 @@
+on:
+name: Manual - PROD - Generate and deploy SDK Docs to readme.com
+jobs:
+  publish_prod:
+    name: Manual - PROD - Generate and deploy SDK Docs to readme.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build docs
+        run: ./scripts/cicd/build_docs.sh
+      - name: Publish docs
+        run: ./scripts/cicd/publish_docs.sh
+        env:
+          README_API_KEY: ${{ secrets.README_API_KEY }}
+          README_HIDDEN: ${{ secrets.README_HIDDEN }}
