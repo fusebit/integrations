@@ -9,6 +9,8 @@ jobs:
     name: bump_patch
     runs-on: ubuntu-latest
     steps:
+      - name: Install AWS CLI V2
+        run: ./scripts/cicd/install_awscli.sh
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -52,6 +54,8 @@ jobs:
     name: bump_minor
     runs-on: ubuntu-latest
     steps:
+      - name: Install AWS CLI V2
+        run: ./scripts/cicd/install_awscli.sh
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -95,6 +99,8 @@ jobs:
     name: bump_major
     runs-on: ubuntu-latest
     steps:
+      - name: Install AWS CLI V2
+        run: ./scripts/cicd/install_awscli.sh
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
