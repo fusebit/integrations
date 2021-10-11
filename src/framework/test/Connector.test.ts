@@ -72,7 +72,9 @@ describe('Connector', () => {
     connector.service.setInitializationChallenge(() => false);
     connector.service.setGetEventsFromPayload(() => events);
     connector.service.setGetAuthIdFromEvent((event) => event);
-    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => processPromise);
+    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
+      await processPromise;
+    });
 
     // Trigger the handler.
     await connector.service.handleWebhookEvent(ctx);
