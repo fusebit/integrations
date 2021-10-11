@@ -1,0 +1,25 @@
+{
+  "name": "publish-docs",
+  "version": "1.0.0",
+  "description": "Fusebit Docs publishing and generation tool",
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "scripts": {
+    "build": "tsc -b --pretty && npm run copy-files",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore",
+    "copy-files": "cp -r src/themes libc",
+    "docs:generate": "node . build fusebit-int-framework",
+    "docs:lint": "node . lint"
+  },
+  "dependencies": {
+    "documentation": "^13.2.5",
+    "superagent": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/superagent": "^4.1.13"
+  }
+}
