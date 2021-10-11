@@ -1,9 +1,4 @@
 on:
-  workflow_dispatch:
-    inputs:
-      publish:
-        description: '¿Generated docs are not publicly available?'
-        default: 'true'
 name: Manual - PROD - SDK Docs
 jobs:
   publish_prod:
@@ -19,9 +14,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build docs
-        run: ./scripts/cicd/build_docs.sh
+        run: ./scripts/cicd/build_tree.sh
       - name: Publish docs
         run: ./scripts/cicd/publish_docs.sh
         env:
           README_API_KEY: ${{ secrets.README_COM_API_KEY }}
-          README_HIDDEN: ${{ github.event.inputs.publish }}
+          README_HIDDEN: false
