@@ -58,8 +58,8 @@ jobs:
       - name: Publish Docs
         run: ./scripts/cicd/publish_docs.sh
         env:
-          README_API_KEY: ${{ secrets.README_API_KEY }}
-          README_HIDDEN: ${{ secrets.README_HIDDEN }}
+          README_API_KEY: ${{ secrets.README_COM_API_KEY }}
+          README_HIDDEN: false
 
   bump_minor:
     if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
@@ -115,8 +115,8 @@ jobs:
       - name: Publish Docs
         run: ./scripts/cicd/publish_docs.sh
         env:
-          README_API_KEY: ${{ secrets.README_API_KEY }}
-          README_HIDDEN: ${{ secrets.README_HIDDEN }}
+          README_API_KEY: ${{ secrets.README_COM_API_KEY }}
+          README_HIDDEN: false
 
   bump_major:
     if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
@@ -172,5 +172,5 @@ jobs:
       - name: Publish Docs
         run: ./scripts/cicd/publish_docs.sh
         env:
-          README_API_KEY: ${{ secrets.README_API_KEY }}
-          README_HIDDEN: ${{ secrets.README_HIDDEN }}
+          README_API_KEY: ${{ secrets.README_COM_API_KEY }}
+          README_HIDDEN: false
