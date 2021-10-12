@@ -96,12 +96,10 @@ describe('Connector', () => {
 
     // Create mocked endpoints for each event.
     const scope = nock(ctx.state.params.baseUrl);
-    events.forEach((event) =>
-      scope
-        .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
-        .delay(responseDelay)
-        .reply(200, event)
-    );
+    scope
+      .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${events[0]}`, (body) => true)
+      .delay(responseDelay)
+      .reply(200, events[0]);
 
     // Create the connector.
     const connector = new Connector();
