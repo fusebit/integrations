@@ -50,14 +50,14 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent dispatches events to fan-out', async () => {
     const ctx = getContext();
-    ctx.state!.manager = { config: { defaultEventHandler: false } };
-    ctx.state!.params.entityId = Constants.connectorId;
+    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.params.entityId = Constants.connectorId;
 
     // Define the events.
     const events = ['e1', 'e2', 'e3'];
 
     // Create mocked endpoints for each event.
-    const scope = nock(ctx.state!.params.baseUrl);
+    const scope = nock(ctx.state.params.baseUrl);
     events.forEach((event) =>
       scope
         .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
@@ -78,6 +78,62 @@ describe('Connector', () => {
 
     // Trigger the handler.
     await connector.service.handleWebhookEvent(ctx);
+
+    // Check results.
+    expect(scope.isDone()).toBe(true);
+    expect(scope.pendingMocks()).toEqual([]);
+    expect(ctx.throw).not.toBeCalled();
+  });
+
+  test.only('fanoutEvent closes on write complete', async () => {
+    const responseDelay = 200;
+    const ctx = getContext();
+    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.params.entityId = Constants.connectorId;
+
+    // Define the events.
+    const events = ['e1'];
+
+    // Create mocked endpoints for each event.
+    const scope = nock(ctx.state.params.baseUrl);
+    events.forEach((event) =>
+      scope
+        .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
+        .delay(responseDelay)
+        .reply(200, event)
+    );
+
+    // Create the connector.
+    const connector = new Connector();
+
+    // Mock some methods on service.
+    connector.service.setValidateWebhookEvent(() => true);
+    connector.service.setInitializationChallenge(() => false);
+    connector.service.setGetEventsFromPayload(() => events);
+    connector.service.setGetAuthIdFromEvent((event) => event);
+    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
+      await processPromise;
+    });
+
+    // Create a Promise we can wait on.
+    let writeResolve: () => void = jest.fn();
+    const writePromise = new Promise((resolve) => (writeResolve = resolve));
+
+    // Delay long enough for writeResolve to get set
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
+    // Call the fanout
+    const fanOutPromise = connector.service.fanoutEvent(ctx, 'e1', ['e1'], writeResolve);
+
+    // Wait for the write to complete
+    await writePromise;
+
+    // Make sure that the fanout promise itself completes after the nock delay
+    const before = Date.now();
+    await fanOutPromise;
+    const after = Date.now();
+
+    expect(after - before).toBeGreaterThan(responseDelay / 2);
 
     // Check results.
     expect(scope.isDone()).toBe(true);

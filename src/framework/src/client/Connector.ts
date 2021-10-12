@@ -43,7 +43,7 @@ class Service extends EntityBase.ServiceDefault {
     return this.createWebhookResponse(ctx, responsePromises.response);
   };
 
-  // Dispatch the events to processWebhook, pivoted by the authId specified for each webhook.
+  // Dispatch the events to fanoutEvent, pivoted by the authId specified for each webhook.
   //
   // Return a Promise indicating the headers and body have been sent to for all of the events, but not that
   // the remote side has finished processing.  The Promise resolves into an object that contains a Promise
@@ -63,7 +63,7 @@ class Service extends EntityBase.ServiceDefault {
     // Collect the Promises for each of the superagent requests.
     const responsePromises: Promise<FanOutStatus>[] = [];
 
-    // For each request, generate a new Promise in requestWritePromises that processWebhook resolves when the request is
+    // For each request, generate a new Promise in requestWritePromises that fanoutEvent resolves when the request is
     // fully written.  Guarantee that all of the Promises are created prior to the subsequent await
     // Promise.all() via the setImmediate.
     const requestWritePromises = Object.entries(eventsByAuthId).map(
@@ -73,7 +73,7 @@ class Service extends EntityBase.ServiceDefault {
           // executed.
           setImmediate(() => {
             // The function promise resolves when the response is completed.
-            responsePromises.push(this.processWebhook(ctx, authId, events, requestWriteResolve));
+            responsePromises.push(this.fanoutEvent(ctx, authId, events, requestWriteResolve));
           })
         )
     );
@@ -116,7 +116,7 @@ class Service extends EntityBase.ServiceDefault {
    * @param {any[]} eventsData
    * @returns {Promise<superagent.Response | void>}
    */
-  public processWebhook = async (
+  public fanoutEvent = async (
     ctx: Connector.Types.Context,
     webhookAuthId: string,
     eventsData: any[],
