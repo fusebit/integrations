@@ -2,17 +2,22 @@
 import EntityBase from './EntityBase';
 import superagent from 'superagent';
 
+import { FanoutRequest } from './FanoutRequest';
+
+/**
+ * @ignore
+ *
+ * Utility function protecting against errors in assumptions around Promise execution sequencing.
+ */
+const writeSequencingBug = () => {
+  throw new Error('Sequencing');
+};
+
 /**
  * @class
  * @alias connector.service
  * @augments EntityBase.ServiceBase
  */
-type FanOutStatus = [void, superagent.Response] | void;
-
-// Typescript really doesn't like this deep reference.
-const isRequestWritten = (request: superagent.Request): boolean =>
-  ((request as unknown) as { req: { writableFinished: boolean } })?.req?.writableFinished ? true : false;
-
 class Service extends EntityBase.ServiceDefault {
   /**
    * Handles an event triggered by a connector Webhook
@@ -40,49 +45,44 @@ class Service extends EntityBase.ServiceDefault {
 
     const responsePromises = await this.requestAll(ctx, eventsByAuthId);
 
+    // Let the createWebhookResponse function decide if it wants to wait for fanout responses
     return this.createWebhookResponse(ctx, responsePromises.response);
   };
 
-  // Dispatch the events to fanoutEvent, pivoted by the authId specified for each webhook.
-  //
-  // Return a Promise indicating the headers and body have been sent to for all of the events, but not that
-  // the remote side has finished processing.  The Promise resolves into an object that contains a Promise
-  // which can be waited on to capture the responses for all of the events.
-  //
-  // This allows the caller to guarantee that the events have been dispatched out and promptly return to the
-  // webhook whatever response is necessary, while retaining the option to wait for the completion of all of
-  // the events (if there's no outstanding speed requirement, or that's not a concern) to process the
-  // responses as needed in generating the result for the originating webhook response.
-  //
-  // This is somewhat awkward because the lambda framework will freeze computation randomly - but sometimes
-  // immediately - after the lambda returns a response to an event.
+  /**
+   * @ignore
+   * Perform each fanout request, blocking until all of the requests have been sent to prevent Lambda from
+   * freezing the process prior to a successful dispatch.
+   */
   public requestAll = async (
     ctx: Connector.Types.Context,
     eventsByAuthId: Record<string, Connector.Types.IWebhookEvents>
-  ): Promise<{ response: Promise<FanOutStatus[]> }> => {
-    // Collect the Promises for each of the superagent requests.
-    const responsePromises: Promise<FanOutStatus>[] = [];
+  ): Promise<{ response: Promise<superagent.Response[]> }> => {
+    const writePromises: Promise<void>[] = [];
 
-    // For each request, generate a new Promise in requestWritePromises that fanoutEvent resolves when the request is
-    // fully written.  Guarantee that all of the Promises are created prior to the subsequent await
-    // Promise.all() via the setImmediate.
-    const requestWritePromises = Object.entries(eventsByAuthId).map(
-      ([authId, events]) =>
-        new Promise<void>((requestWriteResolve) =>
-          // Defer, so that the requestWriteResolve are all inside the Promise.all before they get
-          // executed.
-          setImmediate(() => {
-            // The function promise resolves when the response is completed.
-            responsePromises.push(this.fanoutEvent(ctx, authId, events, requestWriteResolve));
-          })
-        )
-    );
+    // Create a handler FanoutRequest object, tracking each outbound request.
+    const fanoutRequests: FanoutRequest[] = Object.entries(eventsByAuthId).map(([authId, events]) => {
+      const webhookEventId = this.getWebhookLookupId(ctx, authId);
+      const webhookEvents = events.map((eventData) => this.createWebhookEvent(ctx, eventData, authId));
 
-    // Wait for all of the writes to complete.
-    await Promise.all(requestWritePromises);
+      // Create a Promise and save the resolve function for tracking that the request has been written
+      let writeCompleted: () => void = writeSequencingBug;
+      writePromises.push(new Promise<void>((resolve) => (writeCompleted = resolve)));
+
+      return new FanoutRequest(ctx, webhookEventId, webhookEvents, writeCompleted);
+    });
+
+    // Wrap all of the writePromises in a Promise.all() for safety before invoking the HTTP requests
+    const requestPromise = Promise.all(writePromises);
+
+    // Perform all of the HTTP requests, wrapping the calls in a Promise.all() for safety
+    const responsePromise = Promise.all(fanoutRequests.map((request) => request.request()));
+
+    // Make sure all of the requests have been written, hopefully out the wire.
+    await requestPromise;
 
     // Return the response promises in an object so that they don't get auto-resolved by the caller.
-    return { response: Promise.all(responsePromises) };
+    return { response: responsePromise };
   };
 
   /**
@@ -94,71 +94,19 @@ class Service extends EntityBase.ServiceDefault {
    */
   public createWebhookEvent = (
     ctx: Connector.Types.Context,
-    event: any,
+    eventData: any,
     webhookAuthId: string
   ): Connector.Types.IWebhookEvent => {
     const webhookEventId = this.getWebhookLookupId(ctx, webhookAuthId);
-    const webhookEventType = this.getWebhookEventType(event);
+    const webhookEventType = this.getWebhookEventType(eventData);
 
     return {
-      data: event,
+      data: eventData,
       eventType: webhookEventType,
       entityId: ctx.state.params.entityId,
       webhookEventId,
       webhookAuthId,
     };
-  };
-
-  /**
-   * Handles a Webhook event
-   * @param ctx The context object provided by the route function
-   * @param {string} webhookAuthId
-   * @param {any[]} eventsData
-   * @returns {Promise<superagent.Response | void>}
-   */
-  public fanoutEvent = async (
-    ctx: Connector.Types.Context,
-    webhookAuthId: string,
-    eventsData: any[],
-    requestWriteFinished: () => void
-  ): Promise<FanOutStatus> => {
-    try {
-      const events = eventsData.map((eventData) => this.createWebhookEvent(ctx, eventData, webhookAuthId));
-      const webhookEventId = this.getWebhookLookupId(ctx, webhookAuthId);
-
-      const url = new URL(`${ctx.state.params.baseUrl}/fan_out/event/webhook`);
-      url.searchParams.set('tag', webhookEventId);
-      if (ctx.state.manager.config.defaultEventHandler) {
-        url.searchParams.set('default', ctx.state.manager.config.defaultEventHandler);
-      }
-
-      // Errors caught by the Promise.all below.
-      const request = superagent
-        .post(url.toString())
-        .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
-        .send({ payload: events })
-        .ok(() => true);
-
-      return Promise.all([
-        // Wait for the request to be finished writing out of the network stack before (in the calling stack)
-        // returning back a status to the Webhook caller.
-        new Promise<void>((localWriteFinished) => {
-          const waitForDrain = (): void => {
-            setTimeout(
-              () => (isRequestWritten(request) ? (requestWriteFinished(), localWriteFinished()) : waitForDrain()),
-              5
-            );
-          };
-          waitForDrain();
-        }),
-
-        // Wait on the request - this is necessary to trigger superagent to actually send the request.
-        request,
-      ]);
-    } catch (e) {
-      console.log('Error processing event:');
-      console.log(e);
-    }
   };
 
   // Convert a webhook event into the key attached to installs by getWebhookTokenId
@@ -199,7 +147,7 @@ class Service extends EntityBase.ServiceDefault {
   // createWebhookResponse sets any necessary response elements that the service expects in the webhook
   // response, while the webhook is being processed in the other promise.
   public setCreateWebhookResponse = (
-    handler: (ctx: Connector.Types.Context, processPromise?: Promise<FanOutStatus[]>) => Promise<void>
+    handler: (ctx: Connector.Types.Context, processPromise?: Promise<superagent.Response[]>) => Promise<void>
   ) => {
     this.createWebhookResponse = handler;
   };
@@ -246,7 +194,7 @@ class Service extends EntityBase.ServiceDefault {
 
   private createWebhookResponse = async (
     ctx: Connector.Types.Context,
-    processPromise?: Promise<FanOutStatus[]>
+    processPromise?: Promise<superagent.Response[]>
   ): Promise<void> => {
     // No special response generated by default
   };

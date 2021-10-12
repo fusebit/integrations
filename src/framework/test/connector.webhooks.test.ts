@@ -1,5 +1,6 @@
 import nock from 'nock';
 import Connector from '../src/client/Connector';
+import { FanoutRequest } from '../src/client/FanoutRequest';
 import { FusebitContext } from '../src/router';
 import { Constants, getContext } from './utilities';
 
@@ -115,22 +116,24 @@ describe('Connector', () => {
       await processPromise;
     });
 
+    const webhookEvents = events.map((eventData) => connector.service.createWebhookEvent(ctx, eventData, 'e1'));
+    const webhookEventId = connector.service.getWebhookLookupId(ctx, 'e1');
+
     // Create a Promise we can wait on.
     let writeResolve: () => void = jest.fn();
     const writePromise = new Promise((resolve) => (writeResolve = resolve));
 
-    // Delay long enough for writeResolve to get set
-    await new Promise((resolve) => setTimeout(resolve, 5));
-
     // Call the fanout
-    const fanOutPromise = connector.service.fanoutEvent(ctx, 'e1', ['e1'], writeResolve);
+    const fanoutRequest = new FanoutRequest(ctx, webhookEventId, webhookEvents, writeResolve);
+
+    const fanoutPromise = fanoutRequest.request();
 
     // Wait for the write to complete
     await writePromise;
 
     // Make sure that the fanout promise itself completes after the nock delay
     const before = Date.now();
-    await fanOutPromise;
+    await fanoutPromise;
     const after = Date.now();
 
     expect(after - before).toBeGreaterThan(responseDelay / 2);
