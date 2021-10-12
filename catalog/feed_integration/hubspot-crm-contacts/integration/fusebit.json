@@ -1,7 +1,7 @@
 {
   "id": "<% this.id %>",
   "tags": {
-    "fusebit.service": "hubspot"
+    "fusebit.service": "HubSpot"
   },
   "handler": "./integration",
   "components": [
