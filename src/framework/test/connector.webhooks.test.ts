@@ -85,7 +85,7 @@ describe('Connector', () => {
     expect(ctx.throw).not.toBeCalled();
   });
 
-  test.only('fanoutEvent closes on write complete', async () => {
+  test('fanoutEvent closes on write complete', async () => {
     const responseDelay = 200;
     const ctx = getContext();
     ctx.state.manager = { config: { defaultEventHandler: false } };
