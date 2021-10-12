@@ -1,7 +1,7 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "slack"
+    "fusebit.service": "Slack"
   },
   "handler": "@fusebit-int/slack-connector",
   "configuration": {

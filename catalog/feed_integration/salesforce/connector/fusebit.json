@@ -1,7 +1,7 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "salesforce"
+    "fusebit.service": "Salesforce"
   },
   "handler": "@fusebit-int/salesforce-connector",
   "configuration": {
