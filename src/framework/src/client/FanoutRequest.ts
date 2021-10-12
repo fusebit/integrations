@@ -3,7 +3,7 @@ import Connector from './Connector';
 
 // Check the writableFinished flag to determine if the request has been sent down the wire.
 const isRequestWritten = (request: superagent.Request): boolean =>
-  (request as any).req?.writableFinished ? true : false;
+  (request as any).req?.writableFinished || (request as any).req?.destroyed || (request as any).req?.aborted;
 
 // Every 5ms, check to see if superagent has finished writing the request down the wire, calling
 // onWriteCompleted when done.
@@ -50,7 +50,7 @@ export class FanoutRequest {
     const request = this.makeRequest();
 
     // Start the drain monitor
-    waitForDrain(request, () => this.writeCompleted());
+    waitForDrain(request, this.writeCompleted);
 
     // Guarantee that it's protected within a Promise.all() by enforcing the await here.
     return (await Promise.all([request]))[0];
