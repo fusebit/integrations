@@ -86,9 +86,10 @@ class Service extends EntityBase.ServiceDefault {
   };
 
   /**
-   * Creates a new Webhook event
+   * Creates a new Webhook event from an opaque eventData
+   *
    * @param ctx The context object provided by the route function
-   * @param {any} event
+   * @param {any} eventData
    * @param {string} webhookAuthId
    * @returns {Connector.Types.IWebhookEvent}
    */
