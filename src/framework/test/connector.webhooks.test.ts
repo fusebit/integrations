@@ -1,6 +1,6 @@
 import nock from 'nock';
 import Connector from '../src/client/Connector';
-import { FusebitContext } from '../src/router';
+import { makeFanoutRequester } from '../src/client/FanoutRequest';
 import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
@@ -50,14 +50,14 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent dispatches events to fan-out', async () => {
     const ctx = getContext();
-    ctx.state!.manager = { config: { defaultEventHandler: false } };
-    ctx.state!.params.entityId = Constants.connectorId;
+    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.params.entityId = Constants.connectorId;
 
     // Define the events.
     const events = ['e1', 'e2', 'e3'];
 
     // Create mocked endpoints for each event.
-    const scope = nock(ctx.state!.params.baseUrl);
+    const scope = nock(ctx.state.params.baseUrl);
     events.forEach((event) =>
       scope
         .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${event}`, (body) => true)
@@ -72,10 +72,68 @@ describe('Connector', () => {
     connector.service.setInitializationChallenge(() => false);
     connector.service.setGetEventsFromPayload(() => events);
     connector.service.setGetAuthIdFromEvent((event) => event);
-    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => processPromise);
+    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
+      await processPromise;
+    });
 
     // Trigger the handler.
     await connector.service.handleWebhookEvent(ctx);
+
+    // Check results.
+    expect(scope.isDone()).toBe(true);
+    expect(scope.pendingMocks()).toEqual([]);
+    expect(ctx.throw).not.toBeCalled();
+  });
+
+  test('fanoutEvent closes on write complete', async () => {
+    const responseDelay = 200;
+    const ctx = getContext();
+    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.params.entityId = Constants.connectorId;
+
+    // Define the events.
+    const events = ['e1'];
+
+    // Create mocked endpoints for each event.
+    const scope = nock(ctx.state.params.baseUrl);
+    scope
+      .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${events[0]}`, (body) => true)
+      .delay(responseDelay)
+      .reply(200, events[0]);
+
+    // Create the connector.
+    const connector = new Connector();
+
+    // Mock some methods on service.
+    connector.service.setValidateWebhookEvent(() => true);
+    connector.service.setInitializationChallenge(() => false);
+    connector.service.setGetEventsFromPayload(() => events);
+    connector.service.setGetAuthIdFromEvent((event) => event);
+    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
+      await processPromise;
+    });
+
+    const webhookEvents = events.map((eventData) => connector.service.createWebhookEvent(ctx, eventData, 'e1'));
+    const webhookEventId = connector.service.getWebhookLookupId(ctx, 'e1');
+
+    // Create a Promise we can wait on.
+    let writeResolve: () => void = jest.fn();
+    const writePromise = new Promise((resolve) => (writeResolve = resolve));
+
+    // Call the fanout
+    const fanoutRequest = makeFanoutRequester(ctx, webhookEventId, webhookEvents, writeResolve);
+
+    const fanoutPromise = fanoutRequest();
+
+    // Wait for the write to complete
+    await writePromise;
+
+    // Make sure that the fanout promise itself completes after the nock delay
+    const before = Date.now();
+    await fanoutPromise;
+    const after = Date.now();
+
+    expect(after - before).toBeGreaterThan(responseDelay / 2);
 
     // Check results.
     expect(scope.isDone()).toBe(true);
