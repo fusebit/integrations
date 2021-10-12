@@ -2,7 +2,7 @@
 import EntityBase from './EntityBase';
 import superagent from 'superagent';
 
-import { FanoutRequest } from './FanoutRequest';
+import { makeFanoutRequester, FanoutRequest } from './FanoutRequest';
 
 type FanoutResponse = PromiseSettledResult<superagent.Response>[];
 
@@ -51,11 +51,8 @@ class Service extends EntityBase.ServiceDefault {
     return this.createWebhookResponse(ctx, responsePromises.response);
   };
 
-  /**
-   * @ignore
-   * Perform each fanout request, blocking until all of the requests have been sent to prevent Lambda from
-   * freezing the process prior to a successful dispatch.
-   */
+  // Perform each fanout request, blocking until all of the requests have been sent to prevent Lambda from
+  // freezing the process prior to a successful dispatch.
   public requestAll = async (
     ctx: Connector.Types.Context,
     eventsByAuthId: Record<string, Connector.Types.IWebhookEvents>
@@ -71,14 +68,14 @@ class Service extends EntityBase.ServiceDefault {
       let writeCompleted: () => void = writeSequencingBug;
       writePromises.push(new Promise<void>((resolve) => (writeCompleted = resolve)));
 
-      return new FanoutRequest(ctx, webhookEventId, webhookEvents, writeCompleted);
+      return makeFanoutRequester(ctx, webhookEventId, webhookEvents, writeCompleted);
     });
 
     // Wrap all of the writePromises in a Promise.all() for safety before invoking the HTTP requests
     const requestPromise = Promise.all(writePromises);
 
     // Perform all of the HTTP requests, wrapping the calls in a Promise.all() for safety
-    const responsePromise = Promise.allSettled(fanoutRequests.map((request) => request.request()));
+    const responsePromise = Promise.allSettled(fanoutRequests.map((request) => request()));
 
     // Make sure all of the requests have been written, hopefully out the wire.
     await requestPromise;

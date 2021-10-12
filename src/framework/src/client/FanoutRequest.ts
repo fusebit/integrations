@@ -11,33 +11,33 @@ const waitForDrain = (request: superagent.Request, onWriteCompleted: () => void)
   setTimeout(() => (isRequestWritten(request) ? onWriteCompleted() : waitForDrain(request, onWriteCompleted)), 5);
 };
 
+export type FanoutRequest = () => Promise<superagent.Response>;
+
 /**
  * @ignore
  *
- * Utility class to help out with the fanout request, making sure it's dispatched down the wire before the
+ * Utility function to help out with the fanout request, making sure it's dispatched down the wire before the
  * Lambda gets suspended.
  */
-export class FanoutRequest {
-  public constructor(
-    private ctx: Connector.Types.Context,
-    private webhookEventId: string,
-    private webhookEvents: Connector.Types.IWebhookEvents,
-    private writeCompleted: () => void
-  ) {}
-
+export const makeFanoutRequester = (
+  ctx: Connector.Types.Context,
+  webhookEventId: string,
+  webhookEvents: Connector.Types.IWebhookEvents,
+  writeCompleted: () => void
+) => {
   // Create the actual Superagent.request object
-  protected makeRequest = () => {
-    const url = new URL(`${this.ctx.state.params.baseUrl}/fan_out/event/webhook`);
-    url.searchParams.set('tag', this.webhookEventId);
-    if (this.ctx.state.manager.config.defaultEventHandler) {
-      url.searchParams.set('default', this.ctx.state.manager.config.defaultEventHandler);
+  const makeRequest = () => {
+    const url = new URL(`${ctx.state.params.baseUrl}/fan_out/event/webhook`);
+    url.searchParams.set('tag', webhookEventId);
+    if (ctx.state.manager.config.defaultEventHandler) {
+      url.searchParams.set('default', ctx.state.manager.config.defaultEventHandler);
     }
 
     // Errors caught by the Promise.all below, where the request is actually started.
     return superagent
       .post(url.toString())
-      .set('Authorization', `Bearer ${this.ctx.state.params.functionAccessToken}`)
-      .send({ payload: this.webhookEvents })
+      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
+      .send({ payload: webhookEvents })
       .ok(() => true);
   };
 
@@ -45,14 +45,23 @@ export class FanoutRequest {
   //
   // Superagent is odd, here, in that the request object doesn't actually start the request until either
   // await or .end() is called on it, which allows the object to be creaetd above but not risk an exception.
-  public request = async (): Promise<superagent.Response> => {
-    // Create the request object in superagent
-    const request = this.makeRequest();
+  return async (): Promise<superagent.Response> => {
+    let request: superagent.Request | undefined;
+    try {
+      // Create the request object in superagent
+      request = makeRequest();
 
-    // Start the drain monitor
-    waitForDrain(request, this.writeCompleted);
+      // Start the drain monitor
+      waitForDrain(request, writeCompleted);
 
-    // Guarantee that it's protected within a Promise.all() by enforcing the await here.
-    return (await Promise.all([request]))[0];
+      // Guarantee that it's protected within a Promise.all() by enforcing the await here.
+      return request;
+    } catch (err) {
+      if (request) {
+        request.abort();
+      }
+      writeCompleted();
+      throw err;
+    }
   };
-}
+};

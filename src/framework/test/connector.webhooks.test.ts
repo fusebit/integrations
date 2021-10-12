@@ -1,7 +1,6 @@
 import nock from 'nock';
 import Connector from '../src/client/Connector';
-import { FanoutRequest } from '../src/client/FanoutRequest';
-import { FusebitContext } from '../src/router';
+import { makeFanoutRequester } from '../src/client/FanoutRequest';
 import { Constants, getContext } from './utilities';
 
 describe('Connector', () => {
@@ -124,9 +123,9 @@ describe('Connector', () => {
     const writePromise = new Promise((resolve) => (writeResolve = resolve));
 
     // Call the fanout
-    const fanoutRequest = new FanoutRequest(ctx, webhookEventId, webhookEvents, writeResolve);
+    const fanoutRequest = makeFanoutRequester(ctx, webhookEventId, webhookEvents, writeResolve);
 
-    const fanoutPromise = fanoutRequest.request();
+    const fanoutPromise = fanoutRequest();
 
     // Wait for the write to complete
     await writePromise;
