@@ -85,19 +85,19 @@ const createCatalogEntry = async (dirName: string) => {
   const imports = await loadImports();
   const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json')).toString('utf8'));
 
-  if (catalog.description[0] === '#') {
+  if (catalog.description.startsWith('#')) {
     catalog.description = generateMarkdown(
-      `${dirName}/catalog.json/${catalog.description.split('#')[1]}`,
-      fs.readFileSync(join(dirName, catalog.description.split('#')[1])).toString(),
+      `${dirName}/catalog.json/${catalog.description.slice(1)}`,
+      fs.readFileSync(join(dirName, catalog.description.slice(1))).toString(),
       false,
       imports
     );
   }
 
   for (const fileEntry of ['smallIcon', 'largeIcon']) {
-    if (catalog[fileEntry][0] === '#') {
-      const fn = catalog[fileEntry].split('#')[1];
-      catalog[fileEntry] = fs.readFileSync(fn[0] !== '/' ? join(dirName, fn) : join('.', fn)).toString();
+    if (catalog[fileEntry].startsWith('#')) {
+      const fn = catalog[fileEntry].slice(1);
+      catalog[fileEntry] = fs.readFileSync(fn.startsWith('/') ? join('.', fn) : join(dirName, fn)).toString();
     }
   }
 
@@ -105,7 +105,7 @@ const createCatalogEntry = async (dirName: string) => {
     // Load the entities
     await Promise.all(
       Object.entries(catalog.configuration.entities as Record<string, { entityType: string; path: string }>).map(
-        async ([name, entityDef]: [string, { entityType: string; path: string }]) => {
+        async ([name, entityDef]) => {
           catalog.configuration.entities[name] = await loadDirectory(join(dirName, entityDef.path), {
             entityType: entityDef.entityType,
             data: { configuration: {}, files: {} },
@@ -118,15 +118,16 @@ const createCatalogEntry = async (dirName: string) => {
     let entityName: string;
     let entity: { data: { files: Record<string, string> } };
 
-    for ([entityName, entity] of Object.entries(
+    Object.entries(
       catalog.configuration.entities as Record<string, { data: { files: Record<string, string> } }>
-    )) {
-      for (const [fileName, file] of Object.entries(entity.data.files)) {
+    ).forEach(([entityName, entity]) => {
+      Object.entries(entity.data.files).forEach(([fileName, file]) => {
+        // For each markdown file, regenerate it.
         if (fileName.match(/\.md$/)) {
           entity.data.files[fileName] = generateMarkdown(`${dirName}/${entityName}/${fileName}`, file, false, imports);
         }
-      }
-    }
+      });
+    });
   }
 
   if (catalog.configuration?.schema) {
