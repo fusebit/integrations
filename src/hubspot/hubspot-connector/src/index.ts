@@ -8,17 +8,17 @@ const AUTHORIZATION_URL = 'https://app.hubspot.com/oauth/authorize';
 const SERVICE_NAME = 'HubSpot';
 
 class Service extends OAuthConnector.Service {
-  public getEventsFromPayload(ctx: Connector.Types.Context) {
+  protected getEventsFromPayload(ctx: Connector.Types.Context) {
     return ctx.req.body || [];
   }
 
-  public getAuthIdFromEvent(event: any) {
+  protected getAuthIdFromEvent(event: any) {
     return `${event.appId}/${event.portalId}`;
   }
 
   // HubSpot has a very straightforward auth scheme; there's a slightly more complicated v2 variant, but it's
   // not in use at this time for webhooks.
-  public validateWebhookEvent(ctx: Connector.Types.Context) {
+  protected validateWebhookEvent(ctx: Connector.Types.Context) {
     if (ctx.req.headers['x-hubspot-signature-version'] !== 'v1') {
       ctx.throw(400, { message: `Unsupported signature version: ${ctx.req.headers['x-hubspot-signature-version']}` });
     }
@@ -33,12 +33,12 @@ class Service extends OAuthConnector.Service {
   }
 
   // HubSpot doesn't have any challenge messages
-  public initializationChallenge(ctx: Connector.Types.Context) {
+  protected initializationChallenge(ctx: Connector.Types.Context) {
     return false;
   }
 
   // Query hubspot to get the hub_id (aka portalId) for this authenticated user.
-  public async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
     try {
       const meUrl = new URL(ctx.state.manager.config.configuration.tokenUrl);
       const response = await superagent.get(`${meUrl.origin}/oauth/v1/access-tokens/${token.access_token}`);
@@ -50,7 +50,7 @@ class Service extends OAuthConnector.Service {
     }
   }
 
-  public getWebhookEventType(event: any) {
+  protected getWebhookEventType(event: any) {
     return 'events';
   }
 }

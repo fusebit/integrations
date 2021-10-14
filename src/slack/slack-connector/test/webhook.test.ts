@@ -6,58 +6,58 @@ import { Constants } from '../../../framework/test/utilities';
 
 import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
 
-const sampleCtx = {
+const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
 };
 
 describe('Slack Webhook Events', () => {
   test('Validate: getEventsFromPayload', async () => {
-    const service = new ServiceConnector.Service();
+    const service: any = new ServiceConnector.Service();
 
-    expect(service.getEventsFromPayload(sampleCtx as any)).toEqual([sampleEvent]);
+    expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
 
   test('Validate: getAuthIdFromEvent', async () => {
-    const service = new ServiceConnector.Service();
+    const service: any = new ServiceConnector.Service();
 
     expect(service.getAuthIdFromEvent(sampleEvent)).toBe(sampleEvent.authorizations[0].user_id);
   });
 
   test('Validate: validateWebhookEvent', async () => {
-    const service = new ServiceConnector.Service();
-    expect(service.validateWebhookEvent(sampleCtx as any)).toBeTruthy();
+    const service: any = new ServiceConnector.Service();
+    expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
   });
 
   test('Validate: initializationChallenge false', async () => {
-    const service = new ServiceConnector.Service();
-    expect(service.initializationChallenge(sampleCtx as any)).toBeFalsy();
+    const service: any = new ServiceConnector.Service();
+    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test('Validate: initializationChallenge true', async () => {
-    const service = new ServiceConnector.Service();
+    const service: any = new ServiceConnector.Service();
     const ctx = JSON.parse(JSON.stringify(sampleCtx));
-    (ctx.req.body as any).challenge = 'a challenge';
-    expect(service.initializationChallenge(ctx as any)).toBeTruthy();
+    ctx.req.body.challenge = 'a challenge';
+    expect(service.initializationChallenge(ctx)).toBeTruthy();
   });
 
   test('Validate: getTokenAuthId', async () => {
-    const service = new ServiceConnector.Service();
-    expect(service.getTokenAuthId(sampleCtx as any, { bot_user_id: 'userid' })).resolves.toBe('userid');
+    const service: any = new ServiceConnector.Service();
+    expect(service.getTokenAuthId(sampleCtx, { bot_user_id: 'userid' })).resolves.toBe('userid');
   });
 
   test('Validate: getWebhookEventType', async () => {
-    const service = new ServiceConnector.Service();
+    const service: any = new ServiceConnector.Service();
     expect(service.getWebhookEventType({ type: 'eventType' })).toBe('eventType');
   });
 
   test('Validate: Event to Fanout', async () => {
     const ctx = getContext();
     ctx.state = { ...ctx.state, ...sampleCtx.state };
-    ctx.req = sampleCtx.req as any;
+    ctx.req = sampleCtx.req;
 
-    const connector = new ServiceConnector();
-    const eventAuthId = (connector.service as any).getAuthIdFromEvent(sampleEvent);
+    const connector: any = new ServiceConnector();
+    const eventAuthId = connector.service.getAuthIdFromEvent(sampleEvent);
     // Create mocked endpoints for each event.
     const scope = nock(ctx.state.params.baseUrl);
     scope

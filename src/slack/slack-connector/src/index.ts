@@ -7,15 +7,15 @@ const AUTHORIZATION_URL = 'https://slack.com/oauth/v2/authorize';
 const SERVICE_NAME = 'Slack';
 
 class Service extends OAuthConnector.Service {
-  public getEventsFromPayload(ctx: Connector.Types.Context) {
+  protected getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
   }
 
-  public getAuthIdFromEvent(event: any) {
+  protected getAuthIdFromEvent(event: any) {
     return event.authorizations?.[0]?.user_id;
   }
 
-  public validateWebhookEvent(ctx: Connector.Types.Context) {
+  protected validateWebhookEvent(ctx: Connector.Types.Context) {
     const signingSecret = ctx.state.manager.config.configuration.signingSecret;
     const timestampHeader = ctx.req.headers['x-slack-request-timestamp'];
     const requestBody = ctx.req.body;
@@ -33,7 +33,7 @@ class Service extends OAuthConnector.Service {
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
 
-  public initializationChallenge(ctx: Connector.Types.Context) {
+  protected initializationChallenge(ctx: Connector.Types.Context) {
     if (ctx.req.body.challenge) {
       ctx.body = { challenge: ctx.req.body.challenge };
       return true;
@@ -41,11 +41,11 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  public async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
     return token.bot_user_id;
   }
 
-  public getWebhookEventType(event: any) {
+  protected getWebhookEventType(event: any) {
     return event.type;
   }
 }
