@@ -63,10 +63,9 @@ class ServiceConnector extends OAuthConnector {
 
   public constructor() {
     super();
-    const router = this.router;
 
     // Update the configuration that OAuthConnector primes with service specific things
-    router.get('/api/configure', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the ui schema and layout
       ctx.body.uischema.elements.find(
         (element: { label: string }) => element.label == 'OAuth2 Configuration'

@@ -12,9 +12,8 @@ class ServiceConnector extends OAuthConnector {
 
   public constructor() {
     super();
-    const router = this.router;
 
-    router.get('/api/configure', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Linear Configuration';
@@ -50,3 +49,4 @@ connector.service.setGetWebhookEventType((event: any) => 'events');
 const connector = new ServiceConnector();
 
 export default connector;
+export { ServiceConnector };

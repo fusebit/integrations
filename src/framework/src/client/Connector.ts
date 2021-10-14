@@ -177,20 +177,21 @@ class Service extends EntityBase.ServiceDefault {
  * @augments EntityBase
  */
 class Connector extends EntityBase {
-  protected createService() {
-    return new Connector.Service();
-  }
+  static Service = Service;
 
   constructor() {
     super();
-    this.service = this.createService();
 
     this.router.post('/api/fusebit_webhook_event', async (ctx: Connector.Types.Context) => {
       await this.service.handleWebhookEvent(ctx);
     });
   }
-  static Service = Service;
-  public service: Service;
+
+  protected createService() {
+    return new Connector.Service();
+  }
+
+  public service = this.createService();
   public middleware = new EntityBase.MiddlewareDefault();
   public storage = new EntityBase.StorageDefault();
   public response = new EntityBase.ResponseDefault();

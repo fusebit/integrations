@@ -12,10 +12,7 @@ type MiddlewareAdjustUrlConfiguration = (
   proxyKey?: string
 ) => Connector.Types.Handler;
 
-class OAuthService extends Connector.Service {}
-
 class OAuthConnector extends Connector {
-  static Service = OAuthService;
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
 
   protected sanitizeCredentials(credentials: { refresh_token: string }): object {
@@ -73,13 +70,12 @@ class OAuthConnector extends Connector {
 
   constructor() {
     super();
-    const router = this.router;
 
     // Adjust the configuration
-    router.use(this.addUrlConfigurationAdjustment());
+    this.router.use(this.addUrlConfigurationAdjustment());
 
     // Adjust the configuration and create an identityClient to manipulate the OAuth state
-    router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+    this.router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       // Placeholder until event/cron are on their own routers
       if (ctx.method === 'EVENT') {
         return;
@@ -107,7 +103,7 @@ class OAuthConnector extends Connector {
     });
 
     // Internal Endpoints
-    router.get(
+    this.router.get(
       '/api/configure',
       this.middleware.authorizeUser('connector:put'),
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
@@ -140,7 +136,7 @@ class OAuthConnector extends Connector {
       }
     );
 
-    router.get(
+    this.router.get(
       '/api/:lookupKey/health',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
@@ -151,7 +147,7 @@ class OAuthConnector extends Connector {
       }
     );
 
-    router.get(
+    this.router.get(
       '/api/session/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
@@ -168,7 +164,7 @@ class OAuthConnector extends Connector {
       }
     );
 
-    router.get(
+    this.router.get(
       '/api/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
@@ -183,7 +179,7 @@ class OAuthConnector extends Connector {
       }
     );
 
-    router.delete(
+    this.router.delete(
       '/api/:lookupKey',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
@@ -192,11 +188,11 @@ class OAuthConnector extends Connector {
     );
 
     // OAuth Flow Endpoints
-    router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
       ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
     });
 
-    router.get('/api/callback', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
       const state = ctx.query.state;
 
       if (!state) {
