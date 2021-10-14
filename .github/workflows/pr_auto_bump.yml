@@ -94,8 +94,6 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEVELOP_MANAGE }}
           CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_DEVELOP_MANAGE }}
-      - name: Build Docs
-        run: ./scripts/cicd/build_docs.sh
       - name: Publish Docs
         run: ./scripts/cicd/publish_docs.sh
         env:
@@ -144,8 +142,6 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEVELOP_MANAGE }}
           CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_DEVELOP_MANAGE }}
-      - name: Build Docs
-        run: ./scripts/cicd/build_docs.sh
       - name: Publish Docs
         run: ./scripts/cicd/publish_docs.sh
         env:
