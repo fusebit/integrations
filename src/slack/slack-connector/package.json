@@ -2,19 +2,12 @@
   "name": "@fusebit-int/slack-connector",
   "version": "6.2.0",
   "description": "Fusebit Slack connector",
-  "keywords": [
-    "Fusebit",
-    "Slack"
-  ],
+  "keywords": ["Fusebit", "Slack"],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": [
-    "libc/**/*.js",
-    "libc/**/*.d.ts",
-    "libc/**/*.json"
-  ],
+  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/packages.git"

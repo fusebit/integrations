@@ -21,11 +21,22 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent returns 200 on valid challenge', async () => {
     const ctx = getContext();
-    const connector = new Connector();
     const mockedValidateWebhookEvent = jest.fn(() => true);
     const mockedInitializationChallenge = jest.fn(() => true);
-    connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
-    connector.service.setInitializationChallenge(mockedInitializationChallenge);
+
+    class TestService extends Connector.Service {
+      protected validateWebhookEvent = mockedValidateWebhookEvent;
+      protected initializationChallenge = mockedInitializationChallenge;
+    }
+
+    class TestConnector extends Connector {
+      protected createService() {
+        return new TestService();
+      }
+    }
+
+    const connector = new TestConnector();
+
     await connector.service.handleWebhookEvent(ctx);
     expect(ctx.status).toBe(200);
     expect(mockedValidateWebhookEvent).toBeCalledTimes(1);
@@ -35,11 +46,21 @@ describe('Connector', () => {
   test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', async () => {
     const ctx = getContext();
     try {
-      const connector = new Connector();
       const mockedValidateWebhookEvent = jest.fn(() => true);
       const mockedInitializationChallenge = jest.fn(() => false);
-      connector.service.setValidateWebhookEvent(mockedValidateWebhookEvent);
-      connector.service.setInitializationChallenge(mockedInitializationChallenge);
+
+      class TestService extends Connector.Service {
+        protected validateWebhookEvent = mockedValidateWebhookEvent;
+        protected initializationChallenge = mockedInitializationChallenge;
+      }
+
+      class TestConnector extends Connector {
+        protected createService() {
+          return new TestService();
+        }
+      }
+
+      const connector = new TestConnector();
       await connector.service.handleWebhookEvent(ctx);
       fail('should have raised exception');
     } catch (err) {
@@ -65,16 +86,28 @@ describe('Connector', () => {
     );
 
     // Create the connector.
-    const connector = new Connector();
+    class TestService extends Connector.Service {
+      protected validateWebhookEvent = () => true;
+      protected initializationChallenge = () => false;
+      protected getEventsFromPayload = () => events;
+      protected getAuthIdFromEvent = (event: any) => event;
+      protected createWebhookResponse = async (
+        ctx: Connector.Types.Context,
+        processPromise?: Promise<Connector.Types.FanoutResponse>
+      ) => {
+        await processPromise;
+      };
+    }
+
+    class TestConnector extends Connector {
+      protected createService() {
+        return new TestService();
+      }
+    }
+
+    const connector = new TestConnector();
 
     // Mock some methods on service.
-    connector.service.setValidateWebhookEvent(() => true);
-    connector.service.setInitializationChallenge(() => false);
-    connector.service.setGetEventsFromPayload(() => events);
-    connector.service.setGetAuthIdFromEvent((event) => event);
-    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
-      await processPromise;
-    });
 
     // Trigger the handler.
     await connector.service.handleWebhookEvent(ctx);
@@ -101,17 +134,28 @@ describe('Connector', () => {
       .delay(responseDelay)
       .reply(200, events[0]);
 
-    // Create the connector.
-    const connector = new Connector();
-
     // Mock some methods on service.
-    connector.service.setValidateWebhookEvent(() => true);
-    connector.service.setInitializationChallenge(() => false);
-    connector.service.setGetEventsFromPayload(() => events);
-    connector.service.setGetAuthIdFromEvent((event) => event);
-    connector.service.setCreateWebhookResponse(async (ctx, processPromise) => {
-      await processPromise;
-    });
+    // Create the connector.
+    class TestService extends Connector.Service {
+      protected validateWebhookEvent = () => true;
+      protected initializationChallenge = () => false;
+      protected getEventsFromPayload = () => events;
+      protected getAuthIdFromEvent = (event: any) => event;
+      protected createWebhookResponse = async (
+        ctx: Connector.Types.Context,
+        processPromise?: Promise<Connector.Types.FanoutResponse>
+      ) => {
+        await processPromise;
+      };
+    }
+
+    class TestConnector extends Connector {
+      protected createService() {
+        return new TestService();
+      }
+    }
+
+    const connector = new TestConnector();
 
     const webhookEvents = events.map((eventData) => connector.service.createWebhookEvent(ctx, eventData, 'e1'));
     const webhookEventId = connector.service.getWebhookLookupId(ctx, 'e1');
