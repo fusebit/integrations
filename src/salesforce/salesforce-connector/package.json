@@ -1,24 +1,38 @@
 {
   "name": "@fusebit-int/salesforce-connector",
   "version": "6.2.0",
-  "description": "",
+  "description": "Fusebit Salesforce connector",
+  "keywords": [
+    "Fusebit",
+    "Salesforce"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
   "files": [
     "libc/**/*.js",
     "libc/**/*.d.ts",
     "libc/**/*.json"
   ],
-  "license": "SEE LICENSE IN LICENSE",
-  "author": "Fusebit, Inc.",
-  "scripts": {
-    "build": "tsc -b",
-    "test": "jest --config=./jest.config.ts",
-    "coverage": "jest --colors --coverage",
-    "lint": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
-    "clean": "rm -r -f libc; rm -r -f coverage"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/integrations.git"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "jest --config=./jest.config.ts",
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/integrations/issues"
+  },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^6.2.0",
     "superagent": "6.1.0"

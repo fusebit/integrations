@@ -58,7 +58,7 @@ integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
   }
 
   const text = ctx.req.body.data.event.text;
-  slackClient.chat.postMessage({
+  await slackClient.chat.postMessage({
     text: `I'm responding via a webhook.  I was alerted when <@${messagingUser}> sent the message: \n\n "${text}"`,
     channel: ctx.req.body.data.event.channel,
   });

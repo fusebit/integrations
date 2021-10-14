@@ -4,7 +4,7 @@ import superagent from 'superagent';
 
 import { makeFanoutRequester, FanoutRequest } from './FanoutRequest';
 
-type FanoutResponse = PromiseSettledResult<superagent.Response>[];
+type FanoutResponse_ = PromiseSettledResult<superagent.Response>[];
 
 /**
  * @ignore
@@ -27,7 +27,7 @@ class Service extends EntityBase.ServiceDefault {
    * @throws Will throw an error if webhooks are not implemented for the provided Connector.
    * @returns {Promise<void>}
    */
-  public handleWebhookEvent = async (ctx: EntityBase.Types.Context) => {
+  public async handleWebhookEvent(ctx: EntityBase.Types.Context) {
     const isValid = this.validateWebhookEvent(ctx);
 
     if (!isValid) {
@@ -49,14 +49,14 @@ class Service extends EntityBase.ServiceDefault {
 
     // Let the createWebhookResponse function decide if it wants to wait for fanout responses
     return this.createWebhookResponse(ctx, responsePromises.response);
-  };
+  }
 
   // Perform each fanout request, blocking until all of the requests have been sent to prevent Lambda from
   // freezing the process prior to a successful dispatch.
-  public requestAll = async (
+  public async requestAll(
     ctx: Connector.Types.Context,
     eventsByAuthId: Record<string, Connector.Types.IWebhookEvents>
-  ): Promise<{ response: Promise<FanoutResponse> }> => {
+  ): Promise<{ response: Promise<FanoutResponse_> }> {
     const writePromises: Promise<void>[] = [];
 
     // Create a handler FanoutRequest object, tracking each outbound request.
@@ -82,7 +82,7 @@ class Service extends EntityBase.ServiceDefault {
 
     // Return the response promises in an object so that they don't get auto-resolved by the caller.
     return { response: responsePromise };
-  };
+  }
 
   /**
    * Creates a new Webhook event from an opaque eventData
@@ -92,11 +92,11 @@ class Service extends EntityBase.ServiceDefault {
    * @param {string} webhookAuthId
    * @returns {Connector.Types.IWebhookEvent}
    */
-  public createWebhookEvent = (
+  public createWebhookEvent(
     ctx: Connector.Types.Context,
     eventData: any,
     webhookAuthId: string
-  ): Connector.Types.IWebhookEvent => {
+  ): Connector.Types.IWebhookEvent {
     const webhookEventId = this.getWebhookLookupId(ctx, webhookAuthId);
     const webhookEventType = this.getWebhookEventType(eventData);
 
@@ -107,7 +107,7 @@ class Service extends EntityBase.ServiceDefault {
       webhookEventId,
       webhookAuthId,
     };
-  };
+  }
 
   // Convert a webhook event into the key attached to installs by getWebhookTokenId
   public getWebhookLookupId(ctx: Connector.Types.Context, authId: string): string {
@@ -116,55 +116,14 @@ class Service extends EntityBase.ServiceDefault {
   }
 
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
-  public getWebhookTokenId = async (ctx: Connector.Types.Context, token: any): Promise<string> => {
+  public async getWebhookTokenId(ctx: Connector.Types.Context, token: any): Promise<string> {
     const authId = await this.getTokenAuthId(ctx, token);
     const connectorId = ctx.state.params.entityId;
     return ['webhook', connectorId, authId].join('/');
-  };
-
-  // Setters allow for individual Connectors to easily apply unique values if need be
-  public setGetEventsFromPayload = (handler: (ctx: Connector.Types.Context) => any[] | void) => {
-    this.getEventsFromPayload = handler;
-  };
-
-  // Figure out which authentication id matches the supplied event, and thus which identity
-  public setGetAuthIdFromEvent = (handler: (event: any) => string | void) => {
-    this.getAuthIdFromEvent = handler;
-  };
-
-  // initializationChallenge returns true if the event is a security challenge by the remote service, and not
-  // an actual event to be sent onwards to an integration.
-  public setInitializationChallenge = (handler: (ctx: Connector.Types.Context) => boolean) => {
-    this.initializationChallenge = handler;
-  };
-
-  // getTokenAuthId takes an authentication token and extracts out the authId, to match against future
-  // events.
-  public setGetTokenAuthId = (handler: (ctx: Connector.Types.Context, token: any) => Promise<string | void>): void => {
-    this.getTokenAuthId = handler;
-  };
-
-  // createWebhookResponse sets any necessary response elements that the service expects in the webhook
-  // response, while the webhook is being processed in the other promise.
-  public setCreateWebhookResponse = (
-    handler: (ctx: Connector.Types.Context, processPromise?: Promise<FanoutResponse>) => Promise<void>
-  ) => {
-    this.createWebhookResponse = handler;
-  };
-
-  // validateWebhookEvent validates the integrity of the event, usually via some cryptographic hash.
-  public setValidateWebhookEvent = (handler: (ctx: Connector.Types.Context) => boolean) => {
-    this.validateWebhookEvent = handler;
-  };
-
-  // getWebhookEventType returns a string that can becomes part of the event path, and is used to filter for
-  // different webhooks in the integration.
-  public setGetWebhookEventType = (handler: (event: any) => string) => {
-    this.getWebhookEventType = handler;
-  };
+  }
 
   // Default configuration functions
-  private getEventsByAuthId = (ctx: Connector.Types.Context): Record<string, Connector.Types.IWebhookEvents> | void => {
+  protected getEventsByAuthId(ctx: Connector.Types.Context): Record<string, Connector.Types.IWebhookEvents> | void {
     const events = this.getEventsFromPayload(ctx);
     if (!events) {
       ctx.throw(500, 'No Events found on payload.');
@@ -178,39 +137,39 @@ class Service extends EntityBase.ServiceDefault {
       (acc[authId] = acc[authId] || []).push(event);
       return acc;
     }, {});
-  };
+  }
 
-  private getEventsFromPayload = (ctx: Connector.Types.Context): any[] | void => {
+  protected getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
-  };
+  }
 
-  private getAuthIdFromEvent = (event: any): string | void => {
+  protected getAuthIdFromEvent(event: any): string | void {
     return;
-  };
+  }
 
-  private getTokenAuthId = async (ctx: Connector.Types.Context, token: any): Promise<string | void> => {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
     // No throw here.  This is called in the auth flow and needs to continue regardless of success
-  };
+  }
 
-  private createWebhookResponse = async (
+  protected async createWebhookResponse(
     ctx: Connector.Types.Context,
-    processPromise?: Promise<FanoutResponse>
-  ): Promise<void> => {
+    processPromise?: Promise<FanoutResponse_>
+  ): Promise<void> {
     // No special response generated by default
-  };
+  }
 
-  private validateWebhookEvent = (ctx: Connector.Types.Context): boolean => {
+  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
     ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
-  };
+  }
 
-  private getWebhookEventType = (event: any): string => {
+  protected getWebhookEventType(event: any): string {
     // No known event type
     return '';
-  };
+  }
 
-  private initializationChallenge = (ctx: Connector.Types.Context): boolean => {
+  protected initializationChallenge(ctx: Connector.Types.Context): boolean {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
-  };
+  }
 }
 
 /**
@@ -218,17 +177,26 @@ class Service extends EntityBase.ServiceDefault {
  * @augments EntityBase
  */
 class Connector extends EntityBase {
+  static Service = Service;
+
   constructor() {
     super();
+
     this.router.post('/api/fusebit_webhook_event', async (ctx: Connector.Types.Context) => {
       await this.service.handleWebhookEvent(ctx);
     });
   }
-  public service = new Service();
+
+  protected createService() {
+    return new Connector.Service();
+  }
+
+  public service = this.createService();
   public middleware = new EntityBase.MiddlewareDefault();
   public storage = new EntityBase.StorageDefault();
   public response = new EntityBase.ResponseDefault();
 }
+
 namespace Connector {
   export namespace Types {
     export type Router = EntityBase.Types.Router;
@@ -238,6 +206,7 @@ namespace Connector {
       ctx: Connector.Types.Context,
       next: Connector.Types.Next
     ) => ReturnType<Connector.Types.Next>;
+    export type FanoutResponse = FanoutResponse_;
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
     export interface IWebhookEvent {
       data: any;
