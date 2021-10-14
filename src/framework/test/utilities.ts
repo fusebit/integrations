@@ -38,6 +38,7 @@ export const getContext: () => FusebitContext = () =>
         accountId: Constants.accountId,
         subscriptionId: Constants.subscriptionId,
         baseUrl: Constants.endpoint,
+        entityId: Constants.connectorId,
       },
     },
     throw: jest.fn(() => {

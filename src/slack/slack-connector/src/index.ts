@@ -97,3 +97,4 @@ class ServiceConnector extends OAuthConnector {
 const connector = new ServiceConnector();
 
 export default connector;
+export { ServiceConnector };
