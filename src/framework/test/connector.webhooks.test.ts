@@ -87,16 +87,24 @@ describe('Connector', () => {
 
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent = () => true;
-      protected initializationChallenge = () => false;
-      protected getEventsFromPayload = () => events;
-      protected getAuthIdFromEvent = (event: any) => event;
-      protected createWebhookResponse = async (
+      protected validateWebhookEvent() {
+        return true;
+      }
+      protected initializationChallenge() {
+        return false;
+      }
+      protected getEventsFromPayload() {
+        return events;
+      }
+      protected getAuthIdFromEvent(event: any) {
+        return event;
+      }
+      protected async createWebhookResponse(
         ctx: Connector.Types.Context,
         processPromise?: Promise<Connector.Types.FanoutResponse>
-      ) => {
+      ) {
         await processPromise;
-      };
+      }
     }
 
     class TestConnector extends Connector {
@@ -137,16 +145,24 @@ describe('Connector', () => {
     // Mock some methods on service.
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent = () => true;
-      protected initializationChallenge = () => false;
-      protected getEventsFromPayload = () => events;
-      protected getAuthIdFromEvent = (event: any) => event;
-      protected createWebhookResponse = async (
+      protected validateWebhookEvent() {
+        return true;
+      }
+      protected initializationChallenge() {
+        return false;
+      }
+      protected getEventsFromPayload() {
+        return events;
+      }
+      protected getAuthIdFromEvent(event: any) {
+        return event;
+      }
+      protected async createWebhookResponse(
         ctx: Connector.Types.Context,
         processPromise?: Promise<Connector.Types.FanoutResponse>
-      ) => {
+      ) {
         await processPromise;
-      };
+      }
     }
 
     class TestConnector extends Connector {
