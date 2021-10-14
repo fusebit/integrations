@@ -6,8 +6,9 @@ const AUTHORIZATION_URL = 'https://linear.app/oauth/authorize';
 const SERVICE_NAME = 'Linear';
 
 class ServiceConnector extends OAuthConnector {
-  protected addUrlConfigurationAdjustment = (): Connector.Types.Handler =>
-    this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  }
 
   public constructor() {
     super();

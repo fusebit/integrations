@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:fusebit/packages.git"
+    "url": "git@github.com:fusebit/integrations.git"
   },
   "engines": {
     "node": ">=14"
@@ -31,7 +31,7 @@
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
   },
   "bugs": {
-    "url": "https://github.com/fusebit/packages/issues"
+    "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^6.2.0",

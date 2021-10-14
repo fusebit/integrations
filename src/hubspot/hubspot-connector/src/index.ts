@@ -62,8 +62,9 @@ class ServiceConnector extends OAuthConnector {
     return new ServiceConnector.Service();
   }
 
-  protected addUrlConfigurationAdjustment = (): Connector.Types.Handler =>
-    this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  }
 
   constructor() {
     super();

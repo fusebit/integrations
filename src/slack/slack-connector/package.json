@@ -2,15 +2,22 @@
   "name": "@fusebit-int/slack-connector",
   "version": "6.2.0",
   "description": "Fusebit Slack connector",
-  "keywords": ["Fusebit", "Slack"],
+  "keywords": [
+    "Fusebit",
+    "Slack"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:fusebit/packages.git"
+    "url": "git@github.com:fusebit/integrations.git"
   },
   "engines": {
     "node": ">=14"
@@ -24,7 +31,7 @@
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
   },
   "bugs": {
-    "url": "https://github.com/fusebit/packages/issues"
+    "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^6.2.0",
