@@ -30,6 +30,7 @@ module.exports = [
     choices: [
       { name: 'tokenUrl', message: 'Token Exchange URL' },
       { name: 'authorizationUrl', message: 'Authorization URL' },
+      { name: 'revokeUrl', message: 'Revocation URL' },
     ],
     validate: requireAllValues,
   },

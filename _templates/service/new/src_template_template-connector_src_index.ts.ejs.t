@@ -6,6 +6,7 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 const TOKEN_URL = '<%= connector.tokenUrl %>';
 const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
+const REVOCATION_URL = '<%= connector.revokeUrl %>';
 const SERVICE_NAME = '<%= h.capitalize(name) %>';
 
 class ServiceConnector extends OAuthConnector {
