@@ -21,12 +21,11 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
     | { files: string[]; dependencies?: Record<string, string>; devDependencies?: Record<string, string> }
     | undefined;
   try {
-    const buffer = fs.readFileSync(join(cwd, 'package.json'));
     const pack: {
       files: string[];
       dependencies: Record<string, string>;
       devDependencies: Record<string, string>;
-    } = JSON.parse(buffer.toString());
+    } = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), 'utf8'));
 
     // Adjust versions in pack dependencies
     Object.keys(pack.dependencies || {}).forEach(
@@ -50,14 +49,13 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
   });
   await Promise.all(
     files.map(async (filename: string) => {
-      entitySpec.data.files[filename] = fs.readFileSync(join(cwd, filename)).toString();
+      entitySpec.data.files[filename] = fs.readFileSync(join(cwd, filename), 'utf8');
     })
   );
 
   // Load fusebit.json, if any.
   try {
-    const buffer = fs.readFileSync(join(cwd, FusebitMetadataFile));
-    const config = JSON.parse(buffer.toString());
+    const config = JSON.parse(fs.readFileSync(join(cwd, FusebitMetadataFile), 'utf8'));
 
     // Copy over the metadata values
     entitySpec.id = config.id;
@@ -83,7 +81,7 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
 
 const createCatalogEntry = async (dirName: string) => {
   const imports = await loadImports();
-  const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json')).toString('utf8'));
+  const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json'), 'utf8'));
 
   if (catalog.description.startsWith('#')) {
     catalog.description = generateMarkdown(
@@ -132,11 +130,9 @@ const createCatalogEntry = async (dirName: string) => {
 
   if (catalog.configuration?.schema) {
     // Load the schema, uischema, and data
-    catalog.configuration.schema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.schema)).toString());
-    catalog.configuration.uischema = JSON.parse(
-      fs.readFileSync(join(dirName, catalog.configuration.uischema)).toString()
-    );
-    catalog.configuration.data = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.data)).toString());
+    catalog.configuration.schema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.schema), 'utf8'));
+    catalog.configuration.uischema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.uischema), 'utf8'));
+    catalog.configuration.data = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.data), 'utf8'));
   }
   return catalog;
 };
