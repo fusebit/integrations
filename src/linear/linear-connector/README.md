@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const hubspotConnector = require('@fusebit-int/linear-connector');
+const linearConnector = require('@fusebit-int/linear-connector');
 
 // TODO: DEMONSTRATE API
 ```

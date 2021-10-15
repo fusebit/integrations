@@ -8,7 +8,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/README.md
 ## Usage
 
 ```
-const connector = require('@fusebit-int/<%= name.toLowerCase() %>-connector');
+const <%= name.toLowerCase() %>Connector = require('@fusebit-int/<%= name.toLowerCase() %>-connector');
 
 // TODO: DEMONSTRATE API
 ```

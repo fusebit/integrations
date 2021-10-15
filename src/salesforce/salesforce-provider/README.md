@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const provider = require('@fusebit-int/salesforce-provider');
+const salesforceProvider = require('@fusebit-int/salesforce-provider');
 
 // TODO: DEMONSTRATE API
 ```
