@@ -21,12 +21,11 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
     | { files: string[]; dependencies?: Record<string, string>; devDependencies?: Record<string, string> }
     | undefined;
   try {
-    const buffer = fs.readFileSync(join(cwd, 'package.json'));
     const pack: {
       files: string[];
       dependencies: Record<string, string>;
       devDependencies: Record<string, string>;
-    } = JSON.parse(buffer.toString());
+    } = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), 'utf8'));
 
     // Adjust versions in pack dependencies
     Object.keys(pack.dependencies || {}).forEach(
@@ -50,14 +49,13 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
   });
   await Promise.all(
     files.map(async (filename: string) => {
-      entitySpec.data.files[filename] = fs.readFileSync(join(cwd, filename)).toString();
+      entitySpec.data.files[filename] = fs.readFileSync(join(cwd, filename), 'utf8');
     })
   );
 
   // Load fusebit.json, if any.
   try {
-    const buffer = fs.readFileSync(join(cwd, FusebitMetadataFile));
-    const config = JSON.parse(buffer.toString());
+    const config = JSON.parse(fs.readFileSync(join(cwd, FusebitMetadataFile), 'utf8'));
 
     // Copy over the metadata values
     entitySpec.id = config.id;
@@ -83,50 +81,59 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
 
 const createCatalogEntry = async (dirName: string) => {
   const imports = await loadImports();
-  const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json')).toString('utf8'));
+  const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json'), 'utf8'));
 
-  if (catalog.description[0] === '#') {
+  if (catalog.description.startsWith('#')) {
     catalog.description = generateMarkdown(
-      `${dirName}/catalog.json/${catalog.description.split('#')[1]}`,
-      fs.readFileSync(join(dirName, catalog.description.split('#')[1])).toString(),
+      `${dirName}/catalog.json/${catalog.description.slice(1)}`,
+      fs.readFileSync(join(dirName, catalog.description.slice(1))).toString(),
       false,
       imports
     );
   }
 
-  // Load the entities
-  await Promise.all(
-    Object.entries(catalog.configuration.entities as Record<string, { entityType: string; path: string }>).map(
-      async ([name, entityDef]: [string, { entityType: string; path: string }]) => {
-        catalog.configuration.entities[name] = await loadDirectory(join(dirName, entityDef.path), {
-          entityType: entityDef.entityType,
-          data: { configuration: {}, files: {} },
-        });
-      }
-    )
-  );
-
-  // Parse any markdown in the entities
-  let entityName: string;
-  let entity: { data: { files: Record<string, string> } };
-
-  for ([entityName, entity] of Object.entries(
-    catalog.configuration.entities as Record<string, { data: { files: Record<string, string> } }>
-  )) {
-    for (const [fileName, file] of Object.entries(entity.data.files)) {
-      if (fileName.match(/\.md$/)) {
-        entity.data.files[fileName] = generateMarkdown(`${dirName}/${entityName}/${fileName}`, file, false, imports);
-      }
+  for (const fileEntry of ['smallIcon', 'largeIcon']) {
+    if (catalog[fileEntry].startsWith('#')) {
+      const fn = catalog[fileEntry].slice(1);
+      catalog[fileEntry] = fs.readFileSync(fn.startsWith('/') ? join('.', fn) : join(dirName, fn)).toString();
     }
   }
 
-  // Load the schema, uischema, and data
-  catalog.configuration.schema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.schema)).toString());
-  catalog.configuration.uischema = JSON.parse(
-    fs.readFileSync(join(dirName, catalog.configuration.uischema)).toString()
-  );
-  catalog.configuration.data = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.data)).toString());
+  if (catalog.configuration?.entities) {
+    // Load the entities
+    await Promise.all(
+      Object.entries(catalog.configuration.entities as Record<string, { entityType: string; path: string }>).map(
+        async ([name, entityDef]) => {
+          catalog.configuration.entities[name] = await loadDirectory(join(dirName, entityDef.path), {
+            entityType: entityDef.entityType,
+            data: { configuration: {}, files: {} },
+          });
+        }
+      )
+    );
 
+    // Parse any markdown in the entities
+    let entityName: string;
+    let entity: { data: { files: Record<string, string> } };
+
+    Object.entries(
+      catalog.configuration.entities as Record<string, { data: { files: Record<string, string> } }>
+    ).forEach(([entityName, entity]) => {
+      Object.entries(entity.data.files).forEach(([fileName, file]) => {
+        // For each markdown file, regenerate it.
+        if (fileName.match(/\.md$/)) {
+          entity.data.files[fileName] = generateMarkdown(`${dirName}/${entityName}/${fileName}`, file, false, imports);
+        }
+      });
+    });
+  }
+
+  if (catalog.configuration?.schema) {
+    // Load the schema, uischema, and data
+    catalog.configuration.schema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.schema), 'utf8'));
+    catalog.configuration.uischema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.uischema), 'utf8'));
+    catalog.configuration.data = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.data), 'utf8'));
+  }
   return catalog;
 };
 

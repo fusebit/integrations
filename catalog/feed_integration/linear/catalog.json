@@ -1,0 +1,16 @@
+{
+  "id": "linear-ph",
+  "name": "Linear",
+  "smallIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linear.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "linear,tracker"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/linear#creating-your-own-linear-app"
+  },
+  "configuration": {}
+}
