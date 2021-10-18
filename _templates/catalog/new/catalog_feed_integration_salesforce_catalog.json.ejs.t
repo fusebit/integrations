@@ -4,8 +4,8 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/catalog.json
 {
   "id": "<%= name.toLowerCase() %>",
   "name": "<%= h.capitalize(name) %>",
-  "smallIcon": "https://cdn.fusebit.io/assets/images/<%= name.toLowerCase() %>.svg",
-  "largeIcon": "https://cdn.fusebit.io/assets/images/<%= name.toLowerCase() %>.svg",
+  "smallIcon": "#/assets/<%= name.toLowerCase() %>.svg",
+  "largeIcon": "#/assets/<%= name.toLowerCase() %>.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
