@@ -1,16 +1,29 @@
 {
-  "id": "linear-ph",
+  "id": "linear",
   "name": "Linear",
   "smallIcon": "#/assets/linear.svg",
   "largeIcon": "#/assets/linear.svg",
   "version": "5.2.0",
   "description": "#README.md",
-  "outOfPlan": true,
   "tags": {
-    "catalog": "linear,tracker"
+    "catalog": "linear,crm,sales,popular"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/linear#creating-your-own-linear-app"
   },
-  "configuration": {}
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "linearConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "linearIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
 }
