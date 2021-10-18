@@ -2,12 +2,18 @@
   "name": "@fusebit-int/linear-provider",
   "version": "6.3.0",
   "description": "Linear provider",
-  "keywords": ["Fusebit", "Linear"],
+  "keywords": [
+    "Fusebit",
+    "Linear"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
