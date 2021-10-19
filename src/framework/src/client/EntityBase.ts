@@ -163,17 +163,6 @@ namespace EntityBase {
       version?: string
     ): Promise<Storage.IStorageVersionedResponseDelete> =>
       Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
-
-    /**
-     * Recursively delete all storage objects in the Fusebit subscription.
-     *
-     * @param ctx The context object provided by the route function
-     * @param {boolean} forceDelete You need to force a delete (set to true),
-     * otherwise it will throw an error
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
-     */
-    public deleteAllData = (ctx: ContextType, forceDelete: boolean): Promise<Storage.IStorageVersionedResponseDelete> =>
-      Storage.createStorage(ctx.state.params).deleteAll(forceDelete);
   }
 
   /**
