@@ -77,13 +77,32 @@ namespace EntityBase {
      *
      * @example
      * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
-     *    // By convention we use / symbol to represent a bucket, but you can use any name you want.
      *    const bucketName = '/my-bucket/';
      *    const key = 'colors';
      *    const data = ['green', 'blue'];
-     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`, data);
+     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`, { data });
      *    ctx.body = result;
      * });
+     *
+     * @example
+     * Storing temporary data that expires at specific date
+     *
+     * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
+     *    const bucketName = '/my-bucket/';
+     *    const key = 'colors';
+     *    const expirationDate = new Date();
+     *    expirationDate.setDate(expirationDate.getDate() + 1);
+     *    const data = ['green', 'blue'];
+     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`,
+     *      {
+     *        data,
+     *        expires: expirationDate.toISOString()
+     *      });
+     *
+     *    ctx.body = result;
+     * });
+     *
+     *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Represents a reference to your data that you will use in further
      * operations like read, delete and update
@@ -97,7 +116,7 @@ namespace EntityBase {
     public setData = (
       ctx: ContextType,
       dataKey: string,
-      body: Storage.IStorageBody
+      body: Storage.IStorageBucket
     ): Promise<Storage.IStorageVersionedResponse> => Storage.createStorage(ctx.state.params).put(body, dataKey);
 
     /**

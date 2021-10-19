@@ -18,11 +18,15 @@ export interface IStorageResponseList {
 
 export interface IStorageResponseDelete {}
 
-export interface IStorageVersionedResponse {
-  storageId: string;
+export interface IStorageBucket {
   data?: any;
   version?: string;
   tags?: Record<string, string>;
+  expires?: string;
+}
+
+export interface IStorageVersionedResponse extends Omit<IStorageBucket, 'expires'> {
+  storageId: string;
   status: number;
 }
 
@@ -40,7 +44,7 @@ export interface IStorageVersionedResponseDelete {
 export interface IStorageClient {
   accessToken: string;
   get: (storageSubId: string) => Promise<IStorageVersionedResponse | undefined>;
-  put: (body: IStorageBody, storageSubId?: string) => Promise<IStorageVersionedResponse>;
+  put: (body: IStorageBucket, storageSubId?: string) => Promise<IStorageVersionedResponse>;
   deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
   deleteAll: (forceRecursive: boolean) => Promise<IStorageVersionedResponseDelete>;
   delete: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
@@ -59,9 +63,10 @@ export interface IStorageParam {
   storageIdPrefix?: string;
 }
 
-export interface IStorageBody {
-  data: any;
+export interface IStorageBucket {
+  data?: any;
   version?: string;
+  tags?: Record<string, string>;
   expires?: string;
 }
 
@@ -116,7 +121,7 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
       }
       return convertItemToVersion(response.body, response.status);
     },
-    put: async (body: IStorageBody, storageSubId?: string) => {
+    put: async (body: IStorageBucket, storageSubId?: string) => {
       storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
       if (!storageSubId && !storageIdPrefix) {
         throw new Error(
