@@ -87,16 +87,18 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Represents a reference to your data that you will use in further
      * operations like read, delete and update
-     * @param {string} data Any valid JSON
+     * @property {object} body Represents the storage data and metadata
+     * @property {string} body.data Any valid JSON with the data you want to store
+     * @property {string} [body.version] Version coming from the original getData in order
+     * to prevent conflicts when multiple writers may attempt to write at the same time
+     * @property {string} [body.expires] Expiration date (YYYY-MM-DD HH:MI:SS) for the data
      * @returns {Promise<Storage.IStorageVersionedResponse>}
      */
     public setData = (
       ctx: ContextType,
       dataKey: string,
-      data: any,
-      version?: string
-    ): Promise<Storage.IStorageVersionedResponse> =>
-      Storage.createStorage(ctx.state.params).put(data, dataKey, version);
+      body: Storage.IStorageBody
+    ): Promise<Storage.IStorageVersionedResponse> => Storage.createStorage(ctx.state.params).put(body, dataKey);
 
     /**
      * Get saved data

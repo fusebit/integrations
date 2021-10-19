@@ -40,7 +40,7 @@ export interface IStorageVersionedResponseDelete {
 export interface IStorageClient {
   accessToken: string;
   get: (storageSubId: string) => Promise<IStorageVersionedResponse | undefined>;
-  put: (data: any, storageSubId?: string, version?: string) => Promise<IStorageVersionedResponse>;
+  put: (body: IStorageBody, storageSubId?: string) => Promise<IStorageVersionedResponse>;
   deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
   deleteAll: (forceRecursive: boolean) => Promise<IStorageVersionedResponseDelete>;
   delete: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
@@ -57,6 +57,12 @@ export interface IStorageParam {
   subscriptionId: string;
   functionAccessToken: string;
   storageIdPrefix?: string;
+}
+
+export interface IStorageBody {
+  data: any;
+  version?: string;
+  expires?: string;
 }
 
 export const createStorage = (params: IStorageParam): IStorageClient => {
@@ -110,7 +116,7 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
       }
       return convertItemToVersion(response.body, response.status);
     },
-    put: async (data: any, storageSubId?: string, version?: string) => {
+    put: async (body: IStorageBody, storageSubId?: string) => {
       storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
       if (!storageSubId && !storageIdPrefix) {
         throw new Error(
@@ -118,10 +124,10 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
         );
       }
       const request = superagent.put(getUrl(storageSubId)).set('Authorization', `Bearer ${storageClient.accessToken}`);
-      if (version) {
-        request.set('If-Match', version);
+      if (body.version) {
+        request.set('If-Match', body.version);
       }
-      const response = await request.send({ data, etag: version });
+      const response = await request.send({ data: body.data, etag: body.version, expires: body.expires });
       return convertItemToVersion(response.body, response.status);
     },
     deleteAll: async (forceRecursive?: boolean) => {
