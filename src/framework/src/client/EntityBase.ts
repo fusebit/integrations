@@ -143,14 +143,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {Storage.IListOption} options The bucket name
-     * @returns {Promise<Storage.IStorageBucketListResponse>} A list of Storage items
+     * @returns {Promise<Storage.IStorageBucketList>} A list of Storage items
      */
     public listData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       options?: Storage.IListOption
-    ): Promise<Storage.IStorageBucketListResponse> =>
-      Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
+    ): Promise<Storage.IStorageBucketList> => Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /**
      * Delete data

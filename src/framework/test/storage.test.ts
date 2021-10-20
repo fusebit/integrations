@@ -1,26 +1,69 @@
+import superagent from 'superagent';
 import {
   convertItemToVersion,
   convertListToVersion,
+  createStorage,
   IStorageBucketItem,
+  IStorageBucketItemParams,
   IStorageBucketItemRawResponse,
-  IStorageBucketListResponse,
+  IStorageBucketList,
+  IStorageClient,
   IStorageListRawResponse,
 } from '../src/Storage';
 import { randomChars } from './utilities';
 
-describe('Storage SDK Test suite', () => {
-  const createStorageBucketItem = (storageId: string): IStorageBucketItemRawResponse => {
-    const bucketItemRawResponse: IStorageBucketItemRawResponse = {
-      storageId: `integration/boundary-id/${storageId}`,
-      etag: randomChars(),
-      data: randomChars(),
-      expires: new Date().toISOString(),
-      tags: {
-        test: randomChars(),
-      },
-    };
-    return bucketItemRawResponse;
+jest.mock('superagent');
+
+const createStorageBucketItem = (storageId: string): IStorageBucketItemRawResponse => {
+  const bucketItemRawResponse: IStorageBucketItemRawResponse = {
+    storageId: `integration/boundary-id/${storageId}`,
+    etag: randomChars(),
+    data: randomChars(),
+    expires: new Date().toISOString(),
+    tags: {
+      test: randomChars(),
+    },
   };
+  return bucketItemRawResponse;
+};
+
+describe('Storage SDK Test suite', () => {
+  describe('SDK Methods', () => {
+    test('It should allow to put data with expected parameters', () => {
+      const putMock = jest.fn();
+      const setMock = jest.fn();
+      const sendMock = jest.fn();
+      const storageId = randomChars();
+      const bucketItemRawResponse = createStorageBucketItem(storageId);
+      sendMock.mockReturnValue(bucketItemRawResponse);
+      setMock.mockReturnValue({
+        send: sendMock,
+        set: setMock,
+      });
+      putMock.mockReturnValue({
+        set: setMock,
+      });
+      superagent.put = putMock;
+
+      const createdStorage: IStorageClient = createStorage({
+        baseUrl: `https://${randomChars()}.com/api`,
+        accountId: randomChars(),
+        subscriptionId: randomChars(),
+        functionAccessToken: randomChars(),
+      });
+
+      const body: IStorageBucketItemParams = {
+        data: randomChars(),
+        version: randomChars(),
+        expires: new Date().toISOString(),
+      };
+
+      createdStorage.put(body, 'bucket');
+
+      expect(sendMock).toBeCalledTimes(1);
+      expect(sendMock).toHaveBeenLastCalledWith({ data: body.data, etag: body.version, expires: body.expires });
+    });
+  });
   test('It should map properly a bucket item to the expected response', () => {
     const status = 200;
     const storageId = randomChars();
@@ -47,7 +90,7 @@ describe('Storage SDK Test suite', () => {
         total: 1,
       };
 
-      const expectedResponse: IStorageBucketListResponse = {
+      const expectedResponse: IStorageBucketList = {
         items: [
           {
             tags: bucketItem.tags,
@@ -87,7 +130,7 @@ describe('Storage SDK Test suite', () => {
           tags: item.tags,
         };
       });
-      const expectedResponse: IStorageBucketListResponse = {
+      const expectedResponse: IStorageBucketList = {
         items: bucketItemsResponse,
         total: bucketItemsResponse.length,
         status,

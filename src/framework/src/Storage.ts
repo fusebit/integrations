@@ -23,7 +23,7 @@ export interface IStorageBucketItem extends Omit<IStorageBucketItemRawResponse, 
   status: number;
 }
 
-export interface IStorageBucketListResponse {
+export interface IStorageBucketList {
   items: Omit<IStorageBucketItem, 'status'>[];
   total: number;
   status: number;
@@ -43,7 +43,7 @@ export interface IStorageClient {
   deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
   deleteAll: (forceRecursive: boolean) => Promise<IStorageBucketResponseDelete>;
   delete: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
-  list: (storageSubId: string, options?: IListOption) => Promise<IStorageBucketListResponse>;
+  list: (storageSubId: string, options?: IListOption) => Promise<IStorageBucketList>;
 }
 export interface IListOption {
   count?: number;
@@ -69,8 +69,8 @@ export const convertItemToVersion = (body: IStorageBucketItemRawResponse, status
   return versionResponse;
 };
 
-export const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketListResponse => {
-  const versionResponse: IStorageBucketListResponse = {
+export const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketList => {
+  const versionResponse: IStorageBucketList = {
     items: body.items.map((item) => ({
       tags: item.tags,
       version: item.etag,
