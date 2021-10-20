@@ -11,10 +11,11 @@ class FusebitAtlassianClient {
   constructor(fusebit: IFusebitCredentials) {
     this.fusebit = fusebit;
   }
-  public getAccessibleResources(): Promise<superagent.Response> {
-    return superagent
+  public async getAccessibleResources(): Promise<superagent.Response> {
+    const response = await superagent
       .get('https://api.atlassian.com/oauth/token/accessible-resources')
       .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+    return response.body;
   }
 
   public jira(...options: any): JiraClient {
