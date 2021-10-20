@@ -63,6 +63,7 @@ describe('Storage SDK Test suite', () => {
       expect(requestNock.pendingMocks()).toEqual([]);
     });
   });
+
   test('It should map properly a bucket item to the expected response', () => {
     const status = 200;
     const storageId = randomChars();
