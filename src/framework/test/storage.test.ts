@@ -29,7 +29,6 @@ describe('Storage SDK Test suite', () => {
   describe('SDK Methods', () => {
     test('It should allow to put data with expected parameters', async () => {
       const ctx = getContext();
-      const responseDelay = 200;
       const storageId = randomChars();
       const bucketItemRawResponse = createStorageBucketItem(storageId);
       const { data, etag, expires } = bucketItemRawResponse;
@@ -48,12 +47,9 @@ describe('Storage SDK Test suite', () => {
         functionAccessToken: randomChars(),
       });
 
-      requestNock
-        .put(`/storage/${storageId}`, (body) => body)
-        .delay(responseDelay)
-        .reply(200, bucketItemRawResponse);
+      requestNock.put(`/storage/${storageId}`, (body) => body).reply(200, bucketItemRawResponse);
 
-      requestNock.get(`/storage/${storageId}`).delay(responseDelay).reply(200, bucketItemRawResponse);
+      requestNock.get(`/storage/${storageId}`).reply(200, bucketItemRawResponse);
 
       const getBucketItemResponse: IStorageBucketItem | undefined = await createdStorage.get(storageId);
       expect(getBucketItemResponse?.status).toStrictEqual(200);
