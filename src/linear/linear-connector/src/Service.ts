@@ -3,7 +3,7 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
+    return ctx.req.body;
   }
 
   protected getAuthIdFromEvent(event: any): string {
@@ -11,11 +11,14 @@ class Service extends OAuthConnector.Service {
   }
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
-    ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
+    // Linear does not implement HMAC based webhook source validation.
+    // Best to assume all webhooks are legit for now.
+    return true;
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
-    ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
+    // Linear does not implement initialization challenge besides that the endpoint returns 200.
+    return false;
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
@@ -23,7 +26,7 @@ class Service extends OAuthConnector.Service {
   }
 
   protected getWebhookEventType(event: any): string {
-    return '';
+    return event.action;
   }
 }
 
