@@ -111,22 +111,22 @@ namespace EntityBase {
      * @property {string} [body.version] Version coming from the original getData in order
      * to prevent conflicts when multiple writers may attempt to write at the same time
      * @property {string} [body.expires] Expiration date (YYYY-MM-DD HH:MI:SS) for the data
-     * @returns {Promise<Storage.IStorageVersionedResponse>}
+     * @returns {Promise<Storage.IStorageBucketResponse>}
      */
     public setData = (
       ctx: ContextType,
       dataKey: string,
       body: Storage.IStorageBucket
-    ): Promise<Storage.IStorageVersionedResponse> => Storage.createStorage(ctx.state.params).put(body, dataKey);
+    ): Promise<Storage.IStorageBucketResponse> => Storage.createStorage(ctx.state.params).put(body, dataKey);
 
     /**
      * Get saved data
      *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
-     * @returns {Promise<Storage.IStorageVersionedResponse | undefined>}
+     * @returns {Promise<Storage.IStorageBucketResponse | undefined>}
      */
-    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageVersionedResponse | undefined> =>
+    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageBucketResponse | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
 
     /**
@@ -143,13 +143,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {Storage.IListOption} options The bucket name
-     * @returns {Promise<Storage.IStorageVersionedResponseList>} A list of Storage items
+     * @returns {Promise<Storage.IStorageBucketResponseList>} A list of Storage items
      */
     public listData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       options?: Storage.IListOption
-    ): Promise<Storage.IStorageVersionedResponseList> =>
+    ): Promise<Storage.IStorageBucketResponseList> =>
       Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /**
@@ -158,13 +158,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Reference the key name used for storing the data
      * @param {string=} version Delete a specific version of the stored data
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
+     * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deleteData = (
       ctx: ContextType,
       dataKey: string,
       version?: string
-    ): Promise<Storage.IStorageVersionedResponseDelete> =>
+    ): Promise<Storage.IStorageBucketResponseDelete> =>
       Storage.createStorage(ctx.state.params).delete(dataKey, version);
 
     /**
@@ -174,13 +174,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {string=} version Delete a specific version of the Bucket
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
+     * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deletePrefixedData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       version?: string
-    ): Promise<Storage.IStorageVersionedResponseDelete> =>
+    ): Promise<Storage.IStorageBucketResponseDelete> =>
       Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
   }
 
