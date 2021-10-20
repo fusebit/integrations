@@ -36,7 +36,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   ctx.body = { message: `Successfully sent a message to Slack user ${slackUserId}!` };
 });
 
-// The postMessage endpoint of this integration is designed to receive messages from the Sample App and notify the Slack user associated with your tenant.
+// The postMessage endpoint of this integration is designed to take the body of a post request and forward it as a slack message
 router.post('/api/postMessage/:tenantId', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Slack client pre-configured with credentials necessary to communicate with your tenant's Slack workspace.
   // For the Slack SDK documentation, see https://slack.dev/node-slack-sdk/web-api.
@@ -45,12 +45,9 @@ router.post('/api/postMessage/:tenantId', integration.middleware.authorizeUser('
   // Get the Slack user ID associated with your tenant
   const slackUserId = slackClient.fusebit.credentials.authed_user.id;
 
-  // Get the task details from the request body
-  const { name, description } = ctx.req.body;
-
   // Send a Direct Message to the Slack user
   const result = await slackClient.chat.postMessage({
-    text: `A task has been created within the Sample App. \n\n Task Name: ${name} \n Task Description: ${description}`,
+    text: ctx.req.body.message,
     channel: slackUserId,
   });
 
