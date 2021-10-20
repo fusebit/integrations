@@ -76,7 +76,7 @@ class IdentityClient {
     const response = await superagent
       .put(this.getUrl(lookup))
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ output: { token } });
+      .send({ data: { token } });
     return response.body;
   };
 
