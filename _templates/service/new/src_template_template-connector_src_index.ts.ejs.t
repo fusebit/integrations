@@ -4,12 +4,20 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/src/index.
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+import { Service } from './Service';
+
 const TOKEN_URL = '<%= connector.tokenUrl %>';
 const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
 const REVOCATION_URL = '<%= connector.revokeUrl %>';
 const SERVICE_NAME = '<%= h.capitalize(name) %>';
 
 class ServiceConnector extends OAuthConnector {
+  static Service = Service;
+
+  protected createService() {
+    return new ServiceConnector.Service();
+  }
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
   }
