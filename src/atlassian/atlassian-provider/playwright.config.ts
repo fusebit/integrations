@@ -58,7 +58,8 @@ declare namespace PlaywrightTest {
 }
 
 const config: PlaywrightTestConfig = {
-  testDir: 'pw_test',
+  timeout: 180000,
+  testDir: 'play',
 };
 
 export default config;
