@@ -3,45 +3,47 @@ import superagent from 'superagent';
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
-export interface IStorageResponseList {
-  items: IStorageBucketResponse[];
+export interface IStorageBucketItemRawResponse {
+  storageId: string;
+  etag: string;
+  expires?: string;
+  tags?: Record<string, string>;
+  data?: any;
+}
+export interface IStorageListRawResponse {
+  items: Omit<IStorageBucketItemRawResponse, 'data'>[];
   total: number;
-  next: string;
+  next?: string;
 }
 
 export interface IStorageResponseDelete {}
 
-export interface IStorageBucket {
-  data?: any;
+export interface IStorageBucketItem extends Omit<IStorageBucketItemRawResponse, 'etag'> {
   version?: string;
-  tags?: Record<string, string>;
-  expires?: string;
-}
-
-export interface IStorageBucketResponse extends IStorageBucket {
-  storageId: string;
   status: number;
 }
 
-export interface IStorageBucketResponseList {
-  items: Omit<IStorageBucketResponse, 'status'>[];
+export interface IStorageBucketListResponse {
+  items: Omit<IStorageBucketItem, 'status'>[];
   total: number;
   status: number;
-  next: string;
+  next?: string;
 }
 
 export interface IStorageBucketResponseDelete {
   status: number;
 }
 
+export interface IStorageBucketItemParams extends Omit<IStorageBucketItem, 'storageId' | 'status'> {}
+
 export interface IStorageClient {
   accessToken: string;
-  get: (storageSubId: string) => Promise<IStorageBucketResponse | undefined>;
-  put: (body: IStorageBucket, storageSubId?: string) => Promise<IStorageBucketResponse>;
+  get: (storageSubId: string) => Promise<IStorageBucketItem | undefined>;
+  put: (body: IStorageBucketItemParams, storageSubId?: string) => Promise<IStorageBucketItem>;
   deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
   deleteAll: (forceRecursive: boolean) => Promise<IStorageBucketResponseDelete>;
   delete: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
-  list: (storageSubId: string, options?: IListOption) => Promise<IStorageBucketResponseList>;
+  list: (storageSubId: string, options?: IListOption) => Promise<IStorageBucketListResponse>;
 }
 export interface IListOption {
   count?: number;
@@ -55,14 +57,6 @@ export interface IStorageParam {
   functionAccessToken: string;
   storageIdPrefix?: string;
 }
-
-export interface IStorageBucket {
-  data?: any;
-  version?: string;
-  tags?: Record<string, string>;
-  expires?: string;
-}
-
 export const createStorage = (params: IStorageParam): IStorageClient => {
   const storageIdPrefix = params.storageIdPrefix ? removeLeadingSlash(removeTrailingSlash(params.storageIdPrefix)) : '';
   const functionUrl = new URL(params.baseUrl);
@@ -70,22 +64,22 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
     params.subscriptionId
   }/storage${storageIdPrefix ? '/' + storageIdPrefix : ''}`;
 
-  const convertItemToVersion = (body: IStorageBucketResponse, status: number) => {
-    const versionResponse: IStorageBucketResponse = {
+  const convertItemToVersion = (body: IStorageBucketItemRawResponse, status: number) => {
+    const versionResponse: IStorageBucketItem = {
       storageId: body.storageId.split('/').slice(2).join('/'),
       data: body.data,
       tags: body.tags,
-      version: body.version,
+      version: body.etag,
       status,
     };
     return versionResponse;
   };
 
-  const convertListToVersion = (body: IStorageResponseList, status: number) => {
-    const versionResponse: IStorageBucketResponseList = {
+  const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketListResponse => {
+    const versionResponse: IStorageBucketListResponse = {
       items: body.items.map((item) => ({
         tags: item.tags,
-        version: item.version,
+        version: item.etag,
         storageId: item.storageId.split('/').slice(2).join('/'),
         expires: item.expires,
       })),
@@ -114,7 +108,7 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
       }
       return convertItemToVersion(response.body, response.status);
     },
-    put: async (body: IStorageBucket, storageSubId?: string) => {
+    put: async (body: IStorageBucketItemParams, storageSubId?: string) => {
       storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
       if (!storageSubId && !storageIdPrefix) {
         throw new Error(

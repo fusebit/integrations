@@ -116,8 +116,8 @@ namespace EntityBase {
     public setData = (
       ctx: ContextType,
       dataKey: string,
-      body: Storage.IStorageBucket
-    ): Promise<Storage.IStorageBucketResponse> => Storage.createStorage(ctx.state.params).put(body, dataKey);
+      body: Storage.IStorageBucketItemParams
+    ): Promise<Storage.IStorageBucketItem> => Storage.createStorage(ctx.state.params).put(body, dataKey);
 
     /**
      * Get saved data
@@ -126,7 +126,7 @@ namespace EntityBase {
      * @param {string} dataKey The key name used for referencing the stored data
      * @returns {Promise<Storage.IStorageBucketResponse | undefined>}
      */
-    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageBucketResponse | undefined> =>
+    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageBucketItem | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
 
     /**
@@ -143,13 +143,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {Storage.IListOption} options The bucket name
-     * @returns {Promise<Storage.IStorageBucketResponseList>} A list of Storage items
+     * @returns {Promise<Storage.IStorageBucketListResponse>} A list of Storage items
      */
     public listData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       options?: Storage.IListOption
-    ): Promise<Storage.IStorageBucketResponseList> =>
+    ): Promise<Storage.IStorageBucketListResponse> =>
       Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /**
