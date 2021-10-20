@@ -57,38 +57,38 @@ export interface IStorageParam {
   functionAccessToken: string;
   storageIdPrefix?: string;
 }
+
+export const convertItemToVersion = (body: IStorageBucketItemRawResponse, status: number): IStorageBucketItem => {
+  const versionResponse: IStorageBucketItem = {
+    storageId: body.storageId.split('/').slice(2).join('/'),
+    data: body.data,
+    tags: body.tags,
+    version: body.etag,
+    status,
+  };
+  return versionResponse;
+};
+
+export const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketListResponse => {
+  const versionResponse: IStorageBucketListResponse = {
+    items: body.items.map((item) => ({
+      tags: item.tags,
+      version: item.etag,
+      storageId: item.storageId.split('/').slice(2).join('/'),
+      expires: item.expires,
+    })),
+    total: body.total,
+    next: body.next,
+    status,
+  };
+  return versionResponse;
+};
 export const createStorage = (params: IStorageParam): IStorageClient => {
   const storageIdPrefix = params.storageIdPrefix ? removeLeadingSlash(removeTrailingSlash(params.storageIdPrefix)) : '';
   const functionUrl = new URL(params.baseUrl);
   const storageBaseUrl = `${functionUrl.protocol}//${functionUrl.host}/v1/account/${params.accountId}/subscription/${
     params.subscriptionId
   }/storage${storageIdPrefix ? '/' + storageIdPrefix : ''}`;
-
-  const convertItemToVersion = (body: IStorageBucketItemRawResponse, status: number) => {
-    const versionResponse: IStorageBucketItem = {
-      storageId: body.storageId.split('/').slice(2).join('/'),
-      data: body.data,
-      tags: body.tags,
-      version: body.etag,
-      status,
-    };
-    return versionResponse;
-  };
-
-  const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketListResponse => {
-    const versionResponse: IStorageBucketListResponse = {
-      items: body.items.map((item) => ({
-        tags: item.tags,
-        version: item.etag,
-        storageId: item.storageId.split('/').slice(2).join('/'),
-        expires: item.expires,
-      })),
-      total: body.total,
-      next: body.next,
-      status,
-    };
-    return versionResponse;
-  };
 
   const getUrl = (storageSubId: string) => {
     storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
