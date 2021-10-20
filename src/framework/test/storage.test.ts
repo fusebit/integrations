@@ -1,4 +1,4 @@
-import superagent from 'superagent';
+import nock from 'nock';
 import {
   convertItemToVersion,
   convertListToVersion,
@@ -10,9 +10,7 @@ import {
   IStorageClient,
   IStorageListRawResponse,
 } from '../src/Storage';
-import { randomChars } from './utilities';
-
-jest.mock('superagent');
+import { getContext, randomChars } from './utilities';
 
 const createStorageBucketItem = (storageId: string): IStorageBucketItemRawResponse => {
   const bucketItemRawResponse: IStorageBucketItemRawResponse = {
@@ -29,39 +27,44 @@ const createStorageBucketItem = (storageId: string): IStorageBucketItemRawRespon
 
 describe('Storage SDK Test suite', () => {
   describe('SDK Methods', () => {
-    test('It should allow to put data with expected parameters', () => {
-      const putMock = jest.fn();
-      const setMock = jest.fn();
-      const sendMock = jest.fn();
+    test('It should allow to put data with expected parameters', async () => {
+      const ctx = getContext();
+      const responseDelay = 200;
       const storageId = randomChars();
       const bucketItemRawResponse = createStorageBucketItem(storageId);
-      sendMock.mockReturnValue(bucketItemRawResponse);
-      setMock.mockReturnValue({
-        send: sendMock,
-        set: setMock,
-      });
-      putMock.mockReturnValue({
-        set: setMock,
-      });
-      superagent.put = putMock;
-
+      const { data, etag, expires } = bucketItemRawResponse;
+      const body: IStorageBucketItemParams = {
+        data,
+        version: etag,
+        expires,
+      };
+      const requestNock = nock(
+        `${ctx.state.params.baseUrl}/v1/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}`
+      );
       const createdStorage: IStorageClient = createStorage({
-        baseUrl: `https://${randomChars()}.com/api`,
-        accountId: randomChars(),
-        subscriptionId: randomChars(),
+        baseUrl: ctx.state.params.baseUrl,
+        accountId: ctx.state.params.accountId,
+        subscriptionId: ctx.state.params.subscriptionId,
         functionAccessToken: randomChars(),
       });
 
-      const body: IStorageBucketItemParams = {
-        data: randomChars(),
-        version: randomChars(),
-        expires: new Date().toISOString(),
-      };
+      requestNock
+        .put(`/storage/${storageId}`, (body) => body)
+        .delay(responseDelay)
+        .reply(200, bucketItemRawResponse);
 
-      createdStorage.put(body, 'bucket');
+      requestNock.get(`/storage/${storageId}`).delay(responseDelay).reply(200, bucketItemRawResponse);
 
-      expect(sendMock).toBeCalledTimes(1);
-      expect(sendMock).toHaveBeenLastCalledWith({ data: body.data, etag: body.version, expires: body.expires });
+      const getBucketItemResponse: IStorageBucketItem | undefined = await createdStorage.get(storageId);
+      expect(getBucketItemResponse?.status).toStrictEqual(200);
+
+      if (getBucketItemResponse) {
+        const savedBucketItemResponse: IStorageBucketItem = await createdStorage.put(getBucketItemResponse, storageId);
+        expect(savedBucketItemResponse).toStrictEqual(getBucketItemResponse);
+      }
+
+      expect(requestNock.isDone()).toBe(true);
+      expect(requestNock.pendingMocks()).toEqual([]);
     });
   });
   test('It should map properly a bucket item to the expected response', () => {

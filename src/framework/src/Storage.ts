@@ -10,6 +10,7 @@ export interface IStorageBucketItemRawResponse {
   tags?: Record<string, string>;
   data?: any;
 }
+
 export interface IStorageListRawResponse {
   items: Omit<IStorageBucketItemRawResponse, 'data'>[];
   total: number;
@@ -83,6 +84,7 @@ export const convertListToVersion = (body: IStorageListRawResponse, status: numb
   };
   return versionResponse;
 };
+
 export const createStorage = (params: IStorageParam): IStorageClient => {
   const storageIdPrefix = params.storageIdPrefix ? removeLeadingSlash(removeTrailingSlash(params.storageIdPrefix)) : '';
   const functionUrl = new URL(params.baseUrl);
