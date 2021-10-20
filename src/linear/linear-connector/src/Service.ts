@@ -1,13 +1,14 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
+import superagent from 'superagent';
 
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    return ctx.req.body;
+    return [ctx.req.body];
   }
 
   protected getAuthIdFromEvent(event: any): string {
-    return '';
+    return event.organizationId;
   }
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
@@ -22,7 +23,13 @@ class Service extends OAuthConnector.Service {
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
-    return '';
+    console.log('invoked');
+    const query = { query: '{ organization { id } }' };
+    const data = await superagent
+      .post('https://api.linear.app/graphql')
+      .set('Authorization', `Bearer ${token.access_token}`)
+      .send(query);
+    return data.body.data.organization.id;
   }
 
   protected getWebhookEventType(event: any): string {

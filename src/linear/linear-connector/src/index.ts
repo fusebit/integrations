@@ -1,14 +1,22 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+import { Service } from './Service';
+
 const TOKEN_URL = 'https://api.linear.app/oauth/token';
 const AUTHORIZATION_URL = 'https://linear.app/oauth/authorize';
 const REVOCATION_URL = 'https://api.linear.app/oauth/revoke';
 const SERVICE_NAME = 'Linear';
 
 class ServiceConnector extends OAuthConnector {
+  static Service = Service;
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  }
+
+  protected createService() {
+    return new ServiceConnector.Service();
   }
 
   public constructor() {

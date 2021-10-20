@@ -62,6 +62,7 @@ class Service extends EntityBase.ServiceDefault {
     // Create a handler FanoutRequest object, tracking each outbound request.
     const fanoutRequests: FanoutRequest[] = Object.entries(eventsByAuthId).map(([authId, events]) => {
       const webhookEventId = this.getWebhookLookupId(ctx, authId);
+      console.log(webhookEventId);
       const webhookEvents = events.map((eventData) => this.createWebhookEvent(ctx, eventData, authId));
 
       // Create a Promise and save the resolve function for tracking that the request has been written
