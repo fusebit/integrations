@@ -8,6 +8,7 @@ export interface IStorageResponse {
   data: any;
   etag: string;
   tags: Record<string, string>;
+  expires?: string;
 }
 
 export interface IStorageResponseList {
@@ -95,6 +96,7 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
         tags: item.tags,
         version: item.etag,
         storageId: item.storageId.split('/').slice(2).join('/'),
+        expires: item.expires,
       })),
       total: body.total,
       next: body.next,
