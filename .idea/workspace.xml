@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e8959244-84f4-4953-bd3d-aaed9561255e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/catalog.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/connector/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/connector/fusebit.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/connector/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/fusebit.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/integration.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/common.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/sampleData.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/webhook.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog/feed_integration/slack-bot/integration/integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/catalog/feed_integration/slack-bot/integration/integration.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1yn3GCzgkDyqKW3c4yBpyvq508c" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="TEXT" />
+    <property name="javascript.nodejs.core.library.configured.version" value="14.17.2" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.17.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/catalog/feed_integration/asana/integration" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/catalog/feed_integration/asana/integration" />
+      <recent name="$PROJECT_DIR$/catalog/feed_integration/asana/connector" />
+      <recent name="$PROJECT_DIR$/catalog/feed_connector/asana" />
+      <recent name="$PROJECT_DIR$/catalog/feed_connector/asana/connector" />
+      <recent name="$PROJECT_DIR$/src/asana/asana-connector" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/sample-app/module" />
+      <recent name="$PROJECT_DIR$/src/sample-app/module/src" />
+      <recent name="$PROJECT_DIR$/src/sample-app/module/src/server/data" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Hot SA Module">
+    <configuration name="Sample App Integration" type="NodeJSConfigurationType" application-parameters="function serve -b integration sample-app-integration -d ." path-to-js-file="$PROJECT_DIR$/../q5/cli/fusebit-cli/libc/index.js" working-dir="$PROJECT_DIR$/src/sample-app/sample-app-integration-function">
+      <method v="2" />
+    </configuration>
+    <configuration name="jwt_test.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/sample-app/module/src/jwt_test.js" working-dir="$PROJECT_DIR$/src/sample-app/module/src">
+      <method v="2" />
+    </configuration>
+    <configuration name="Sample App Integration" type="RUN_ANYTHING_CONFIGURATION" factoryName="RunAnythingFactory">
+      <option name="arguments" value="function serve -b integration sample-app-integration -d ." />
+      <option name="command" value="fuse" />
+      <option name="inputText" value="" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/src/sample-app/sample-app-integration-function" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Hot SA Module" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/src/sample-app/module/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev-hot" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="Sample App Scaffold" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/src/sample-app/scaffold/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.Sample App Integration" />
+      <item itemvalue="Node.js.jwt_test.js" />
+      <item itemvalue="npm.Sample App Scaffold" />
+      <item itemvalue="npm.Hot SA Module" />
+      <item itemvalue="Run Command.Sample App Integration" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.jwt_test.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e8959244-84f4-4953-bd3d-aaed9561255e" name="Default Changelist" comment="" />
+      <created>1632873428574</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1632873428574</updated>
+      <workItem from="1632873430337" duration="1941000" />
+      <workItem from="1632876073659" duration="67459000" />
+      <workItem from="1633565242625" duration="6403000" />
+      <workItem from="1634142783473" duration="16018000" />
+      <workItem from="1634274631769" duration="1947000" />
+      <workItem from="1634322167474" duration="1914000" />
+      <workItem from="1634587608153" duration="18000" />
+      <workItem from="1634587640011" duration="2141000" />
+      <workItem from="1634589879228" duration="10077000" />
+      <workItem from="1634687332663" duration="10973000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/integration/integration.js</url>
+          <line>10</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/user.ts</url>
+          <line>9</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/task.ts</url>
+          <line>11</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/integration.ts</url>
+          <line>23</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/integration.ts</url>
+          <line>44</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/integration.ts</url>
+          <line>7</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/libc/server/api/user.js</url>
+          <line>30</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/data/dao.ts</url>
+          <line>28</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/router.ts</url>
+          <line>38</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/user.ts</url>
+          <line>23</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/user.ts</url>
+          <line>42</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/user.ts</url>
+          <line>44</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/user.ts</url>
+          <line>30</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/sample-app/module/src/server/api/integration.ts</url>
+          <line>38</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/framework/libc/Handler.js</url>
+          <line>12</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="js.build_tools.npm">
+        <watch expression="DataKeyMap" language="TypeScript" />
+        <watch expression="req.path" language="TypeScript" />
+        <watch expression="this.req.path" language="TypeScript" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

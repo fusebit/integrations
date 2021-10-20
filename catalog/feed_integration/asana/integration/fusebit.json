@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Asana"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "asanaConnector",
+      "skip": false,
+      "provider": "@fusebit-int/asana-provider",
+      "entityId": "asana-connector",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
