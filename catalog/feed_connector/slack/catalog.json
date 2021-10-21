@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "slack,intro,popular"
+    "catalog": "Messaging"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app"
