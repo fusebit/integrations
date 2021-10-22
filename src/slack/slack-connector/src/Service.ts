@@ -12,7 +12,7 @@ class Service extends OAuthConnector.Service {
     return event.authorizations?.[0]?.user_id;
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context) {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
     const signingSecret = ctx.state.manager.config.configuration.signingSecret;
     const timestampHeader = ctx.req.headers['x-slack-request-timestamp'];
     const requestBody = ctx.req.body;
@@ -30,7 +30,7 @@ class Service extends OAuthConnector.Service {
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
 
-  protected initializationChallenge(ctx: Connector.Types.Context) {
+  protected async initializationChallenge(ctx: Connector.Types.Context) {
     if (ctx.req.body.challenge) {
       ctx.body = { challenge: ctx.req.body.challenge };
       return true;
