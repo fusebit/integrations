@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/asana-connector",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "description": "Asana Connector",
   "keywords": ["Fusebit", "Asana"],
   "author": "Fusebit, Inc",
@@ -31,7 +31,7 @@
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": "6.3.1",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

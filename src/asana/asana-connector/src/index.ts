@@ -8,9 +8,10 @@ const REVOCATION_URL = 'https://app.asana.com/-/oauth_revoke';
 const SERVICE_NAME = 'Asana';
 
 class ServiceConnector extends OAuthConnector {
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
-    // TODO
-    return (ctx, next) => next();
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL);
+    // TODO: Proxy
     //return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
   }
 
@@ -27,9 +28,43 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Asana App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Asana App';
     });
+
+    const createWebhookSecretKey = (webhookId: string) => {
+      return ['webhook', 'secret', webhookId].join('/');
+    }
+    const createWebhookCreateExpiryKey = (webhookId: string) => {
+      return ['webhook','create_expiry', webhookId].join('/');
+    }
+
+    this.router.post(`/api/fusebit_webhook_event/:webhookId`,
+      async (ctx, next) => {
+        const webhookSecretKey = createWebhookSecretKey(ctx.params.webhookId);
+        const webhookCreatedExpiryKey =  createWebhookCreateExpiryKey(ctx.params.webhookId);
+        ctx.fusebit = {
+          ...ctx.fusebit,
+          setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, secret),
+          getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
+          getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey)
+        }
+        await next();
+      },
+      async (ctx: Connector.Types.Context) => {
+        try {
+          await this.service.handleWebhookEvent(ctx);
+        } catch (e: any) {
+          ctx.throw(e.message);
+        }
+      });
+    this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx, next) => {
+      const createdTime = (new Date()).getTime();
+      const ttlSeconds = 60;
+      const expiryTime = createdTime + ttlSeconds * 1000;
+      await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), expiryTime);
+      ctx.body = {createdTime};
+    })
   }
 
-  // TODO: missing in hygen?
+  // TODO: missing in hygen script? Wasn't auto created
   static Service = Service;
   protected createService() {
     return new ServiceConnector.Service();

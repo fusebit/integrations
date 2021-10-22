@@ -2,19 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8959244-84f4-4953-bd3d-aaed9561255e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/catalog.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_connector/asana/connector/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/connector/fusebit.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/connector/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/fusebit.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/integration.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/common.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/sampleData.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/asana/asana-connector/test/webhook.test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalog/feed_integration/slack-bot/integration/integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/catalog/feed_integration/slack-bot/integration/integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/catalog/feed_integration/asana/integration/integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-connector/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-connector/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-connector/src/Service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-connector/src/Service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-connector/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-connector/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-provider/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-provider/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-provider/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-provider/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/asana/asana-provider/src/AsanaProvider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/asana/asana-provider/src/AsanaProvider.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/framework/src/ConnectorManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/framework/src/ConnectorManager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/framework/src/ProviderActivator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/framework/src/ProviderActivator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/framework/src/client/Connector.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/framework/src/client/Connector.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +124,6 @@
       <item itemvalue="Node.js.jwt_test.js" />
       <item itemvalue="npm.Sample App Scaffold" />
       <item itemvalue="npm.Hot SA Module" />
-      <item itemvalue="Run Command.Sample App Integration" />
     </list>
     <recent_temporary>
       <list>
@@ -151,6 +149,8 @@
       <workItem from="1634587640011" duration="2141000" />
       <workItem from="1634589879228" duration="10077000" />
       <workItem from="1634687332663" duration="10973000" />
+      <workItem from="1634902176730" duration="9499000" />
+      <workItem from="1634912169464" duration="6190000" />
     </task>
     <servers />
   </component>
@@ -286,6 +286,16 @@
           <url>file://$PROJECT_DIR$/src/framework/libc/Handler.js</url>
           <line>12</line>
           <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/asana/asana-provider/src/AsanaProvider.ts</url>
+          <line>21</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/asana/asana-connector/src/Service.ts</url>
+          <line>57</line>
+          <option name="timeStamp" value="46" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

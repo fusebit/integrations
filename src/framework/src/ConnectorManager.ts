@@ -108,7 +108,7 @@ class ConnectorManager {
     if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
       ctx.throw(404);
     }
-    const client = await inst.instantiate(ctx, identity.entityId);
+    const client = await inst.instantiate(ctx, identity.entityId, installId);
     client.fusebit = client.fusebit || {};
     client.fusebit.identity = identity;
     return client;
