@@ -49,3 +49,7 @@ export const getContext: () => FusebitContext = () =>
 export const request = (method: string, path: string, options?: { headers?: any; query?: any; body?: any }) => {
   return { method, path, ...options };
 };
+
+export const randomChars = (): string => {
+  return Math.random().toString().substring(2);
+};

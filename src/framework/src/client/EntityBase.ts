@@ -77,35 +77,57 @@ namespace EntityBase {
      *
      * @example
      * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
-     *    // By convention we use / symbol to represent a bucket, but you can use any name you want.
      *    const bucketName = '/my-bucket/';
      *    const key = 'colors';
      *    const data = ['green', 'blue'];
-     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`, data);
+     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`, { data });
      *    ctx.body = result;
      * });
+     *
+     * @example
+     * Storing temporary data that expires at specific date:
+     *
+     * router.post('/api/tenant/:tenantId/colors', async (ctx) => {
+     *    const bucketName = '/my-bucket/';
+     *    const key = 'colors';
+     *    const expirationDate = new Date();
+     *    expirationDate.setDate(expirationDate.getDate() + 1);
+     *    const data = ['green', 'blue'];
+     *    const result = await integration.storage.setData(ctx, `${bucketName}${key}`,
+     *      {
+     *        data,
+     *        expires: expirationDate.toISOString()
+     *      });
+     *
+     *    ctx.body = result;
+     * });
+     *
+     *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Represents a reference to your data that you will use in further
      * operations like read, delete and update
-     * @param {string} data Any valid JSON
-     * @returns {Promise<Storage.IStorageVersionedResponse>}
+     * @property {Storage.IStorageBucketItemParams} body Represents the storage data and metadata
+     * @property {string} body.data Any valid JSON with the data you want to store
+     * @property {string} [body.version] Version coming from the original getData in order
+     * to prevent conflicts when multiple writers may attempt to write at the same time
+     * @property {string} [body.expires] Set an expiration date (ISO 8601 format) for your data
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString} for further information.
+     * @returns {Promise<Storage.IStorageBucketResponse>}
      */
     public setData = (
       ctx: ContextType,
       dataKey: string,
-      data: any,
-      version?: string
-    ): Promise<Storage.IStorageVersionedResponse> =>
-      Storage.createStorage(ctx.state.params).put(data, dataKey, version);
+      body: Storage.IStorageBucketItemParams
+    ): Promise<Storage.IStorageBucketItem> => Storage.createStorage(ctx.state.params).put(body, dataKey);
 
     /**
      * Get saved data
      *
      * @param ctx The context object provided by the route function
      * @param {string} dataKey The key name used for referencing the stored data
-     * @returns {Promise<Storage.IStorageVersionedResponse | undefined>}
+     * @returns {Promise<Storage.IStorageBucketResponse | undefined>}
      */
-    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageVersionedResponse | undefined> =>
+    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageBucketItem | undefined> =>
       Storage.createStorage(ctx.state.params).get(dataKey);
 
     /**
@@ -122,14 +144,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {Storage.IListOption} options The bucket name
-     * @returns {Promise<Storage.IStorageVersionedResponseList>} A list of Storage items
+     * @returns {Promise<Storage.IStorageBucketList>} A list of Storage items
      */
     public listData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       options?: Storage.IListOption
-    ): Promise<Storage.IStorageVersionedResponseList> =>
-      Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
+    ): Promise<Storage.IStorageBucketList> => Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
 
     /**
      * Delete data
@@ -137,13 +158,13 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKey Reference the key name used for storing the data
      * @param {string=} version Delete a specific version of the stored data
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
+     * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deleteData = (
       ctx: ContextType,
       dataKey: string,
       version?: string
-    ): Promise<Storage.IStorageVersionedResponseDelete> =>
+    ): Promise<Storage.IStorageBucketResponseDelete> =>
       Storage.createStorage(ctx.state.params).delete(dataKey, version);
 
     /**
@@ -153,25 +174,14 @@ namespace EntityBase {
      * @param ctx The context object provided by the route function
      * @param {string} dataKeyPrefix The bucket name
      * @param {string=} version Delete a specific version of the Bucket
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
+     * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deletePrefixedData = (
       ctx: ContextType,
       dataKeyPrefix: string,
       version?: string
-    ): Promise<Storage.IStorageVersionedResponseDelete> =>
+    ): Promise<Storage.IStorageBucketResponseDelete> =>
       Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
-
-    /**
-     * Recursively delete all storage objects in the Fusebit subscription.
-     *
-     * @param ctx The context object provided by the route function
-     * @param {boolean} forceDelete You need to force a delete (set to true),
-     * otherwise it will throw an error
-     * @returns {Promise<Storage.IStorageVersionedResponseDelete>}
-     */
-    public deleteAllData = (ctx: ContextType, forceDelete: boolean): Promise<Storage.IStorageVersionedResponseDelete> =>
-      Storage.createStorage(ctx.state.params).deleteAll(forceDelete);
   }
 
   /**

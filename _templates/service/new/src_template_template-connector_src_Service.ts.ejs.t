@@ -9,7 +9,7 @@ class Service extends OAuthConnector.Service {
     ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   }
 
-  protected getAuthIdFromEvent(event: any): string {
+  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
     return '';
   }
 
