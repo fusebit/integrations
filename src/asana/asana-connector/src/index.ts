@@ -1,6 +1,6 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-import {Service} from "./Service";
+import { Service } from './Service';
 
 const TOKEN_URL = 'https://app.asana.com/-/oauth_token';
 const AUTHORIZATION_URL = 'https://app.asana.com/-/oauth_authorize';
@@ -8,7 +8,6 @@ const REVOCATION_URL = 'https://app.asana.com/-/oauth_revoke';
 const SERVICE_NAME = 'Asana';
 
 class ServiceConnector extends OAuthConnector {
-
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL);
     // TODO: Proxy
@@ -31,21 +30,22 @@ class ServiceConnector extends OAuthConnector {
 
     const createWebhookSecretKey = (webhookId: string) => {
       return ['webhook', 'secret', webhookId].join('/');
-    }
+    };
     const createWebhookCreateExpiryKey = (webhookId: string) => {
-      return ['webhook','create_expiry', webhookId].join('/');
-    }
+      return ['webhook', 'create_expiry', webhookId].join('/');
+    };
 
-    this.router.post(`/api/fusebit_webhook_event/:webhookId`,
+    this.router.post(
+      `/api/fusebit_webhook_event/:webhookId`,
       async (ctx, next) => {
         const webhookSecretKey = createWebhookSecretKey(ctx.params.webhookId);
-        const webhookCreatedExpiryKey =  createWebhookCreateExpiryKey(ctx.params.webhookId);
+        const webhookCreatedExpiryKey = createWebhookCreateExpiryKey(ctx.params.webhookId);
         ctx.fusebit = {
           ...ctx.fusebit,
           setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, secret),
           getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
-          getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey)
-        }
+          getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey),
+        };
         await next();
       },
       async (ctx: Connector.Types.Context) => {
@@ -54,14 +54,15 @@ class ServiceConnector extends OAuthConnector {
         } catch (e: any) {
           ctx.throw(e.message);
         }
-      });
+      }
+    );
     this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx, next) => {
-      const createdTime = (new Date()).getTime();
+      const createdTime = new Date().getTime();
       const ttlSeconds = 60;
       const expiryTime = createdTime + ttlSeconds * 1000;
       await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), expiryTime);
-      ctx.body = {createdTime};
-    })
+      ctx.body = { createdTime };
+    });
   }
 
   // TODO: missing in hygen script? Wasn't auto created

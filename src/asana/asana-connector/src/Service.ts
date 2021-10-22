@@ -1,6 +1,6 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-import crypto from "crypto";
+import crypto from 'crypto';
 
 interface Event extends Record<string, any> {
   installId: string;
@@ -26,8 +26,8 @@ class Service extends OAuthConnector.Service {
     // TODO: we should move this into the base service.  It's a useful piece of code that we're already starting to duplicate
     const requestBody = ctx.req.body;
     const rawBody = JSON.stringify(requestBody)
-        .replace(/\//g, '\\/')
-        .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
+      .replace(/\//g, '\\/')
+      .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
 
     const calculatedSignature = crypto.createHmac('sha256', signingSecret).update(rawBody).digest('hex');
 
@@ -43,7 +43,6 @@ class Service extends OAuthConnector.Service {
     if (!secret) {
       return false;
     }
-
 
     const webhookChallengeExpiryTime = await ctx.fusebit.getWebhookCreateExpiry();
     if (!webhookChallengeExpiryTime) {

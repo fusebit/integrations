@@ -1,43 +1,45 @@
-export const sampleEvent = [{
-  "action": "changed",
-  "change": {
-    "action": "changed",
-    "added_value": {
-      "gid": "12345",
-      "resource_type": "user"
+export const sampleEvent = [
+  {
+    action: 'changed',
+    change: {
+      action: 'changed',
+      added_value: {
+        gid: '12345',
+        resource_type: 'user',
+      },
+      field: 'assignee',
+      new_value: {
+        gid: '12345',
+        resource_type: 'user',
+      },
+      removed_value: {
+        gid: '12345',
+        resource_type: 'user',
+      },
     },
-    "field": "assignee",
-    "new_value": {
-      "gid": "12345",
-      "resource_type": "user"
+    created_at: '2012-02-22T02:06:58.147Z',
+    parent: {
+      gid: '12345',
+      resource_type: 'task',
+      name: 'Bug Task',
     },
-    "removed_value": {
-      "gid": "12345",
-      "resource_type": "user"
-    }
+    resource: {
+      gid: '12345',
+      resource_type: 'task',
+      name: 'Bug Task',
+    },
+    type: 'task',
+    user: {
+      gid: '12345',
+      resource_type: 'user',
+      name: 'Greg Sanchez',
+    },
   },
-  "created_at": "2012-02-22T02:06:58.147Z",
-  "parent": {
-    "gid": "12345",
-    "resource_type": "task",
-    "name": "Bug Task"
-  },
-  "resource": {
-    "gid": "12345",
-    "resource_type": "task",
-    "name": "Bug Task"
-  },
-  "type": "task",
-  "user": {
-    "gid": "12345",
-    "resource_type": "user",
-    "name": "Greg Sanchez"
-  }
-}];
+];
 
 export const sampleHeaders = {
   'X-HOOK-SIGNATURE': 'TODO: Signing secret',
-  'X-HOOK-SECRET': 'b537207f20cbfa02357cf448134da559e8bd39d61597dcd5631b8012eae53e81'
+  'X-HOOK-SECRET': 'b537207f20cbfa02357cf448134da559e8bd39d61597dcd5631b8012eae53e81',
 };
 
 export const sampleConfig = {
