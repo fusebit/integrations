@@ -1,4 +1,4 @@
-export const sampleEvent = [
+export const sampleEvent =
   {
     action: 'changed',
     change: {
@@ -34,8 +34,8 @@ export const sampleEvent = [
       resource_type: 'user',
       name: 'Greg Sanchez',
     },
-  },
-];
+    webhookId: 'random-guid'
+  };
 
 export const sampleHeaders = {
   'X-HOOK-SIGNATURE': 'TODO: Signing secret',

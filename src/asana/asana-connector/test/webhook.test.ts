@@ -21,7 +21,7 @@ describe('Slack Webhook Events', () => {
   test('Validate: getAuthIdFromEvent', async () => {
     const service: any = new ServiceConnector.Service();
 
-    expect(service.getAuthIdFromEvent(sampleEvent)).toBe(sampleEvent.authorizations[0].user_id);
+    expect(service.getAuthIdFromEvent(sampleEvent)).toBe(sampleEvent.webhookId);
   });
 
   test('Validate: validateWebhookEvent', async () => {
