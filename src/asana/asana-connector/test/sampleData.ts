@@ -1,41 +1,40 @@
-export const sampleEvent =
-  {
+export const sampleEvent = {
+  action: 'changed',
+  change: {
     action: 'changed',
-    change: {
-      action: 'changed',
-      added_value: {
-        gid: '12345',
-        resource_type: 'user',
-      },
-      field: 'assignee',
-      new_value: {
-        gid: '12345',
-        resource_type: 'user',
-      },
-      removed_value: {
-        gid: '12345',
-        resource_type: 'user',
-      },
-    },
-    created_at: '2012-02-22T02:06:58.147Z',
-    parent: {
-      gid: '12345',
-      resource_type: 'task',
-      name: 'Bug Task',
-    },
-    resource: {
-      gid: '12345',
-      resource_type: 'task',
-      name: 'Bug Task',
-    },
-    type: 'task',
-    user: {
+    added_value: {
       gid: '12345',
       resource_type: 'user',
-      name: 'Greg Sanchez',
     },
-    webhookId: 'random-guid'
-  };
+    field: 'assignee',
+    new_value: {
+      gid: '12345',
+      resource_type: 'user',
+    },
+    removed_value: {
+      gid: '12345',
+      resource_type: 'user',
+    },
+  },
+  created_at: '2012-02-22T02:06:58.147Z',
+  parent: {
+    gid: '12345',
+    resource_type: 'task',
+    name: 'Bug Task',
+  },
+  resource: {
+    gid: '12345',
+    resource_type: 'task',
+    name: 'Bug Task',
+  },
+  type: 'task',
+  user: {
+    gid: '12345',
+    resource_type: 'user',
+    name: 'Greg Sanchez',
+  },
+  webhookId: 'random-guid',
+};
 
 export const sampleHeaders = {
   'X-HOOK-SIGNATURE': 'TODO: Signing secret',
