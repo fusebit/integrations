@@ -178,7 +178,7 @@ describe('Connector', () => {
 
     // Create a Promise we can wait on.
     let writeResolve: () => void = jest.fn();
-    const writePromise = new Promise((resolve) => (writeResolve = resolve.bind(this, null)));
+    const writePromise = new Promise((resolve) => (writeResolve = resolve.bind(null, null)));
 
     // Call the fanout
     const fanoutRequest = makeFanoutRequester(ctx, webhookEventId, webhookEvents, writeResolve);
