@@ -13,8 +13,9 @@ class Service extends OAuthConnector.Service {
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
     // Linear does not implement HMAC based webhook source validation.
-    // Best to assume all webhooks are legit for now.
-    return true;
+    // However, Linear does provide the IPs that they use to send webhooks, so we will whitelist based on them for now.
+    const originIp = ctx.req.headers['x-forwarded-for'];
+    return originIp === '35.231.147.226' || originIp === '35.243.134.228';
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
@@ -23,7 +24,6 @@ class Service extends OAuthConnector.Service {
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
-    console.log('invoked');
     const query = { query: '{ organization { id } }' };
     const data = await superagent
       .post('https://api.linear.app/graphql')

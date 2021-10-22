@@ -130,6 +130,7 @@ class Manager {
    * @return the body of the response.
    */
   public async invoke(eventName: string, eventData: EventData, state?: any) {
+    console.log(eventName);
     const ctx = this.createRouteableContext({
       method: 'EVENT',
       path: eventName,
