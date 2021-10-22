@@ -51,7 +51,7 @@ class ServiceConnector extends OAuthConnector {
       async (ctx: Connector.Types.Context) => {
         try {
           await this.service.handleWebhookEvent(ctx);
-        } catch (e: any) {
+        } catch (e) {
           ctx.throw(e.message);
         }
       }
