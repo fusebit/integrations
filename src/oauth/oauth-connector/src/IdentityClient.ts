@@ -73,11 +73,16 @@ class IdentityClient {
 
   public updateToken = async (token: IOAuthToken, lookup: string) => {
     lookup = this.cleanId(lookup);
-    const response = await superagent
-      .put(this.getUrl(lookup))
-      .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ output: { token } });
-    return response.body;
+    try {
+      const response = await superagent
+        .put(this.getUrl(lookup))
+        .set('Authorization', `Bearer ${this.accessToken}`)
+        .send({ output: { token } });
+      return response.body;
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   };
 
   public delete = async (identityId: string) => {

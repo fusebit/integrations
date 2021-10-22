@@ -58,7 +58,7 @@ export const fusebitRequest = async (
     .send(payload);
 };
 
-const waitForOperation = async (account: IAccount, url: string) => {
+export const waitForOperation = async (account: IAccount, url: string) => {
   const startTime = Date.now();
   let response: superagent.Request;
   do {
@@ -68,6 +68,13 @@ const waitForOperation = async (account: IAccount, url: string) => {
     }
   } while (startTime + MAX_WAIT_MS > Date.now());
   return response;
+};
+
+export const postAndWait = async (account: IAccount, entityPath: string, payload: any) => {
+  let response = await fusebitRequest(account, RequestMethod.post, entityPath, payload);
+  expect(response).toBeHttp({ statusCode: 202 });
+
+  return waitForOperation(account, entityPath);
 };
 
 export const putAndWait = async (account: IAccount, entityPath: string, payload: any) => {

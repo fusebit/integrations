@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 import { test, expect } from '@playwright/test';
 
 import {
@@ -5,9 +7,10 @@ import {
   getAccount,
   createSession,
   commitSession,
-  updateIntegrationConnector,
+  waitForOperation,
   fusebitRequest,
   RequestMethod,
+  postAndWait,
 } from './sdk';
 import { startHttpServer, waitForExpress } from './server';
 
@@ -20,63 +23,48 @@ test.beforeAll(async () => {
 // const DEVELOPER_CONSOLE_LINK =
 //   'https://developer.atlassian.com/console/myapps/d639ce0f-f387-45d1-8421-e6d3dc6288c7/authorization/auth-code-grant';
 
-const OAUTH_USERNAME = 'benn+atlassian1@fusebit.io';
-const OAUTH_PASSWORD = 'W*.Kor.UN4M4CjKvN.sJ7DjrD';
+// Load the secrets from the environment
+const { OAUTH_USERNAME, OAUTH_PASSWORD, SECRET_CLIENTID, SECRET_CLIENTSECRET } = process.env;
+
+// A variety of constants used in this test
 const TOKEN_URL = 'https://auth.atlassian.com/oauth/token';
 const AUTHORIZATION_URL = 'https://auth.atlassian.com/authorize';
-const SECRET_CLIENTID = 'QylxmNLwv8rwLHAFoPqCiY6oO2TWPbJT';
-const SECRET_CLIENTSECRET = 'cVBtaOXclf2-H4CZTyqfzwriBpBwlTXOAi1YJdsZl0yJw9uN0-hzztuIUQr988Ci';
-const OAUTH_AUDIENCE = 'api.atlassian.com';
-
-/*
-const INTEGRATION_ID = 'test-oauth-6369-int';
-const CONNECTOR_ID = 'test-oauth-6369-con';
-*/
+const OAUTH_AUDIENCE = 'api.atlassian.com'; // Required otherwise Atlassian OAuth just sorta fails during login
+const PACKAGE_CONNECTOR = '@fusebit-int/atlassian-connector';
+const PACKAGE_PROVIDER = '@fusebit-int/atlassian-provider';
 const INTEGRATION_ID = 'atlassian-test-integration';
 const CONNECTOR_ID = 'atlassian-test-connector';
 
 const integrationId = INTEGRATION_ID;
 const connectorId = CONNECTOR_ID;
 
-const PACKAGE_CONNECTOR = '@fusebit-int/atlassian-connector';
-const PACKAGE_PROVIDER = '@fusebit-int/atlassian-provider';
-
 const OAUTH_SCOPES = [
   'read:jira-user',
   'read:jira-work',
+  'manage:jira-webhook',
   'read:me',
   'read:confluence-content.summary',
-  'offline_access' /* XXX should move to connector */,
+  'offline_access',
 ].join(' ');
 
-const makeIntegration = (id: string, conId: string) => ({
-  id,
+const makeIntegration = () => ({
+  id: integrationId,
   data: {
     componentTags: {},
     configuration: {},
 
     handler: './integration',
-    components: [{ name: conId, entityType: 'connector', entityId: conId, dependsOn: [], provider: PACKAGE_PROVIDER }],
+    components: [
+      { name: connectorId, entityType: 'connector', entityId: connectorId, dependsOn: [], provider: PACKAGE_PROVIDER },
+    ],
     files: {
-      'integration.js': [
-        "const { Integration } = require('@fusebit-int/framework');",
-        '',
-        'const integration = new Integration();',
-        'const router = integration.router;',
-        '',
-        "router.get('/api/do/:installationId', async (ctx) => {",
-        `  const sdk = await integration.service.getSdk(ctx, '${conId}', ctx.params.installationId);`,
-        '  ctx.body = await sdk.getAccessibleResources();',
-        '});',
-        "router.get('/api/token/', async (ctx) => { ctx.body = ctx.state.params.functionAccessToken; });",
-        'module.exports = integration;',
-      ].join('\n'),
+      'integration.js': fs.readFileSync('./play/mock/oauth-login.js', 'utf8'),
     },
   },
 });
 
-const makeConnector = (id: string) => ({
-  id,
+const makeConnector = () => ({
+  id: connectorId,
   data: {
     handler: PACKAGE_CONNECTOR,
     configuration: {
@@ -91,15 +79,40 @@ const makeConnector = (id: string) => ({
   },
 });
 
+const ensureEntities = async () => {
+  const tasks = [];
+
+  const recreateIntegration = async () => {
+    let result = await fusebitRequest(account, RequestMethod.delete, `/integration/${integrationId}`);
+    result = await waitForOperation(account, `/integration/${integrationId}`);
+    expect(result).toBeHttp({ statusCode: 404 });
+    result = await postAndWait(account, `/integration/${integrationId}`, makeIntegration());
+    expect(result).toBeHttp({ statusCode: 200 });
+  };
+
+  const recreateConnector = async () => {
+    await fusebitRequest(account, RequestMethod.delete, `/connector/${connectorId}`);
+    let result = await waitForOperation(account, `/connector/${connectorId}`);
+    expect(result).toBeHttp({ statusCode: 404 });
+    result = await postAndWait(account, `/connector/${connectorId}`, makeConnector());
+    expect(result).toBeHttp({ statusCode: 200 });
+  };
+
+  // await Promise.all([recreateIntegration(), recreateConnector()]);
+};
+
+test.beforeAll(async () => {
+  console.log(`Before all...`);
+  await ensureEntities();
+  console.log(`after all...`);
+});
+
 test('basic test', async ({ page }) => {
   const server = await startHttpServer(0);
   const localUrl = `http://localhost:${server.port}`;
 
   const called = waitForExpress();
   server.app.use(called);
-
-  // Update the integration to use the current code and configuration
-  await updateIntegrationConnector(account, makeIntegration(integrationId, connectorId), makeConnector(connectorId));
 
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, integrationId, `${localUrl}/oauthTest`);
@@ -136,14 +149,26 @@ test('basic test', async ({ page }) => {
   expect(response.body.length).toBeGreaterThan(0);
   expect(response.body[0]).toHaveProperty('id');
 
+  console.log(`Installation id: ${installationId}`);
+  console.log(JSON.stringify(response.body, null, 2));
+
   // Open questions:
-  //  * Atlassian only supports a single url; establish a known endpoint and use it, in series, with all of
-  //  the tests (no parallel since can't update test code) OR once the identity is established, then iterate
-  //  over a bunch of tests in parallel, that's fine too.
-  //    * Create the integration and then open up the developer console link and make sure the page has the
-  //    right url in it?
-  //  * Make a note somewhere that the big fix was supplying the audience parameter, without that none of it
-  //  worked.
   //  * How do we use the latest code in the repo instead of only what was published historically?
-  //  * Also also, how do we store secrets for these tests in a way that makes sense?
+  //    * Duh - serve it in a temporary directory.  Don't even need to do the push in that case, just need to
+  //      make sure the connector and integration have been created.
+  //
+  //  * https://developer.atlassian.com/cloud/jira/platform/webhooks/
+  //  * https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-webhooks/
+  //    * This is the worst of both worlds: a dynamic registration that needs to occur on each customer,
+  //      authenticated using a jwt signed with the app secret.
+  //    * Easy option: add an endpoint to the connector that returns a 200 if the secret is valid.
+  //  * Also, the webhooks expire every 30 days... so maybe register them and start returning a warning health
+  //    value when they get close to expiring?
+  //  * Plausible API extensions returned from the provider:
+  //
+  //  * Note: a lot of these apparently require read:jira-work, manage:jira-webhook - add them to the required
+  //    list in the connector?
+  /*
+
+*/
 }, 180000);

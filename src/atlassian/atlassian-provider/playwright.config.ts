@@ -1,5 +1,24 @@
 import { expect, PlaywrightTestConfig } from '@playwright/test';
+import * as dotenv from 'dotenv';
+
 import superagent from 'superagent';
+
+const cfg = dotenv.config({ path: '.env.playwright' });
+if (cfg.error) {
+  const msg = [
+    '',
+    'ERROR: Missing .env.playwright file!',
+    '',
+    'Create a .env.playwright file, using this as the template:',
+    '',
+    `OAUTH_USERNAME='username-for-oauth-login'`,
+    `OAUTH_PASSWORD='password-for-oauth-login'`,
+    `SECRET_CLIENTID='oauth-app-clientid'`,
+    `SECRET_CLIENTSECRET='oauth-app-clientsecret'`,
+    '',
+  ].join('\n');
+  throw msg;
+}
 
 interface IToBeHttp {
   statusCode?: number | number[];

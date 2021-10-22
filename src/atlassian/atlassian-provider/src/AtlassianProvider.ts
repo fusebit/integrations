@@ -2,15 +2,22 @@ import { Internal } from '@fusebit-int/framework';
 import JiraClient from 'jira-client';
 import superagent from 'superagent';
 
+import { Webhook } from './Webhook';
+
 interface IFusebitCredentials {
   credentials: { access_token: string };
+  lookupKey: string;
 }
-class FusebitAtlassianClient {
-  public fusebit: IFusebitCredentials;
 
-  constructor(fusebit: IFusebitCredentials) {
+class AtlassianClient {
+  public fusebit: IFusebitCredentials;
+  public webhook: Webhook;
+
+  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
     this.fusebit = fusebit;
+    this.webhook = new Webhook(ctx, this);
   }
+
   public async getAccessibleResources(): Promise<superagent.Response> {
     const response = await superagent
       .get('https://api.atlassian.com/oauth/token/accessible-resources')
@@ -23,13 +30,15 @@ class FusebitAtlassianClient {
   }
 }
 
-export default class AtlassianProvider extends Internal.ProviderActivator<FusebitAtlassianClient> {
+export default class AtlassianProvider extends Internal.ProviderActivator<AtlassianClient> {
   /*
    * This function will create an authorized wrapper for a variety of Atlassian clients.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitAtlassianClient> {
+  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<AtlassianClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitAtlassianClient = new FusebitAtlassianClient({ credentials });
+    const client: AtlassianClient = new AtlassianClient(ctx, { credentials, lookupKey });
     return client;
   }
 }
+
+export { AtlassianClient, Webhook as AtlassianWebhook };

@@ -19,6 +19,16 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Service Configuration';
 
+      // Make sure offline_access and the scopes necessary for configuring the webhooks are present
+      ctx.body.data.configuration.scope = [
+        ...new Set([
+          ...ctx.body.data.configuration.scope.split(' '),
+          'offline_access',
+          'read:jira-work',
+          'manage:jira-webhook',
+        ]),
+      ].join(' ');
+
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Atlassian App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Atlassian App';
