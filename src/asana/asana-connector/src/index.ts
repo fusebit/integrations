@@ -51,8 +51,9 @@ class ServiceConnector extends OAuthConnector {
       async (ctx: Connector.Types.Context) => {
         try {
           await this.service.handleWebhookEvent(ctx);
-        } catch (e: any) {
-          ctx.throw(e.message);
+        } catch (e) {
+          // This is a problem.  Prettier demands no typing, ts demands typing.
+          ctx.throw((e as any).message);
         }
       }
     );
