@@ -35,10 +35,12 @@
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^7.1.1",
+    "jsonwebtoken": "^8.5.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {
     "@fusebit-int/framework": "^7.1.1",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

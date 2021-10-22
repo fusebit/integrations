@@ -12,9 +12,11 @@ interface IFusebitCredentials {
 class AtlassianClient {
   public fusebit: IFusebitCredentials;
   public webhook: Webhook;
+  public connectorId: string;
 
-  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
+  constructor(ctx: Internal.Types.Context, connectorId: string, fusebit: IFusebitCredentials) {
     this.fusebit = fusebit;
+    this.connectorId = connectorId;
     this.webhook = new Webhook(ctx, this);
   }
 
@@ -36,7 +38,7 @@ export default class AtlassianProvider extends Internal.ProviderActivator<Atlass
    */
   protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<AtlassianClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: AtlassianClient = new AtlassianClient(ctx, { credentials, lookupKey });
+    const client: AtlassianClient = new AtlassianClient(ctx, this.config.entityId, { credentials, lookupKey });
     return client;
   }
 }

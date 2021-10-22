@@ -1,3 +1,5 @@
+import * as jwt from 'jsonwebtoken';
+
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
@@ -33,6 +35,21 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Atlassian App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Atlassian App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Atlassian App';
+    });
+
+    this.router.post('/api/verify', async (ctx: Connector.Types.Context) => {
+      try {
+        console.log(
+          'body',
+          ctx.req.body.authorization,
+          'clientSecret',
+          ctx.state.manager.config.configuration.clientSecret
+        );
+        jwt.verify(ctx.req.body.authorization, ctx.state.manager.config.configuration.clientSecret);
+      } catch (err) {
+        console.log(err);
+        ctx.throw(403, 'Invalid authorization provided');
+      }
     });
   }
 }
