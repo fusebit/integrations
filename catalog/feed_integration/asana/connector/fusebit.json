@@ -1,14 +1,14 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "Slack"
+    "fusebit.service": "Asana"
   },
-  "handler": "@fusebit-int/slack-connector",
+  "handler": "@fusebit-int/asana-connector",
   "configuration": {
     "mode": {
       "useProduction": false
     },
-    "scope": "chat:write users:read channels:read channels:join chat:write.public",
+    "scope": "",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,

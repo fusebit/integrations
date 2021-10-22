@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-slack-bot-connector",
+  "name": "@fusebit-int/catalog-feed-integration-asana-connector",
   "version": "6.3.1",
   "private": true,
   "scripts": {
