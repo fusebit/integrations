@@ -98,13 +98,13 @@ const ensureEntities = async () => {
     expect(result).toBeHttp({ statusCode: 200 });
   };
 
-  // await Promise.all([recreateIntegration(), recreateConnector()]);
+  await Promise.all([recreateIntegration(), recreateConnector()]);
 };
 
 test.beforeAll(async () => {
-  console.log(`Before all...`);
+  console.log('Setting up entties...');
   await ensureEntities();
-  console.log(`after all...`);
+  console.log('... complete.');
 });
 
 test('basic test', async ({ page }) => {

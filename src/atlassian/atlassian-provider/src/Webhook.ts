@@ -46,8 +46,6 @@ export class Webhook {
         const params = ctx.state.params;
         const verifyUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${ctx.params.connectorId}/api/verify`;
 
-        console.log(`verifyUrl: ${verifyUrl}`);
-
         if (!ctx.req.headers.authorization) {
           ctx.throw(403, 'Invalid authorization');
         }
