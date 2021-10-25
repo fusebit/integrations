@@ -1,6 +1,7 @@
 {
   "id": "linear",
   "name": "Linear",
+  "outOfPlan": true,
   "smallIcon": "#/assets/linear.svg",
   "largeIcon": "#/assets/linear.svg",
   "version": "5.2.0",
