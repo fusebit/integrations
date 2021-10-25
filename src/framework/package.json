@@ -57,6 +57,5 @@
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
     "typescript": "^3.8.0"
-  },
-  "gitHead": "4380a86acf737e652ca87b1f0d2d662de9914135"
+  }
 }

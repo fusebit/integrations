@@ -21,19 +21,26 @@ const router = integration.router;
 // The sample test endpoint of this integration gets all contacts stored in the Linear account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Linear client pre-configured with credentials necessary to communicate with your tenant's Linear account.
-  // For the Linear SDK documentation, see https://jsforce.github.io/.
+  // For the Linear SDK documentation, see https://developers.linear.app/docs/sdk/getting-started.
   const linearClient = await integration.tenant.getSdkByTenant(ctx, 'linearConnector', ctx.params.tenantId);
 
-  ctx.body = {
-    messasge: 'Successfully loaded contacts from SFDC',
-  };
+  // List all the Linear issues assigned to me.
+  const me = await linearClient.viewer;
+  const issues = await me.assignedIssues();
+  if (!issues.nodes.length) {
+    ctx.body = {
+      message: 'You have no issues!',
+    };
+    return;
+  } else {
+    ctx.body = {
+      message: 'You have issues:',
+    };
+    issues.nodes.map((issue) => {
+      ctx.body.message += `\n > ${issue.title}`;
+    });
+    return;
+  }
 });
-
-// This endpoint lists all Linear issues given a team.
-router.get(
-  '/api/tenant/:tenantId/team/:team/issues',
-  integration.middleware.authorizeUser('install:get'),
-  async (ctx) => {}
-);
 
 module.exports = integration;

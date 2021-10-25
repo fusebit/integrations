@@ -48,6 +48,5 @@
   },
   "dependencies": {
     "@hubspot/api-client": "^4.1.0"
-  },
-  "gitHead": "4380a86acf737e652ca87b1f0d2d662de9914135"
+  }
 }
