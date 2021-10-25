@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "linear,crm,sales,popular"
+    "catalog": "linear,tracker"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/linear#creating-your-own-linear-app"
