@@ -159,7 +159,6 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
       return { status: response.status };
     },
     list: async (storageSubId: string, { count, next }: IListOption = {}) => {
-      console.log(`storage.list: ${getUrl(storageSubId)}/*`);
       const response = await superagent
         .get(`${getUrl(storageSubId)}/*`)
         .query(count && !isNaN(count) ? { count } : { count: 5 })
