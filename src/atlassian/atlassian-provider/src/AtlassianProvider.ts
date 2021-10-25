@@ -7,28 +7,62 @@ import { Webhook } from './Webhook';
 interface IFusebitCredentials {
   credentials: { access_token: string };
   lookupKey: string;
+  connectorId: string;
 }
+
+interface IAtlassianMe {
+  account_type: string;
+  account_id: string;
+  email: string;
+  name: string;
+  picture: string;
+  account_status: string;
+  nickname: string;
+  zoneinfo: string;
+  locale: string;
+  extended_profile: Record<string, string>;
+}
+
+interface IAtlassianAccessibleResource {
+  id: string;
+  url: string;
+  name: string;
+  scopes: string[];
+  avatarUrl: string;
+}
+
+type IAtlassianAccessibleResources = IAtlassianAccessibleResource[];
 
 class AtlassianClient {
   public fusebit: IFusebitCredentials;
   public webhook: Webhook;
-  public connectorId: string;
 
-  constructor(ctx: Internal.Types.Context, connectorId: string, fusebit: IFusebitCredentials) {
+  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
     this.fusebit = fusebit;
-    this.connectorId = connectorId;
     this.webhook = new Webhook(ctx, this);
   }
 
-  public async getAccessibleResources(): Promise<superagent.Response> {
+  public async getAccessibleResources(): Promise<IAtlassianAccessibleResources> {
     const response = await superagent
       .get('https://api.atlassian.com/oauth/token/accessible-resources')
       .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
     return response.body;
   }
 
-  public jira(...options: any): JiraClient {
-    return new JiraClient({ ...options, bearer: this.fusebit.credentials.access_token });
+  public async me(): Promise<IAtlassianMe> {
+    const response = await superagent
+      .get('https://api.atlassian.com/me')
+      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+    return response.body;
+  }
+
+  public jira(cloudId: string, ...options: any): JiraClient {
+    return new JiraClient({
+      ...options,
+      protocol: 'https',
+      host: `api.atlassian.com/ex/jira/${cloudId}`,
+      bearer: this.fusebit.credentials.access_token,
+    });
   }
 }
 
@@ -38,7 +72,11 @@ export default class AtlassianProvider extends Internal.ProviderActivator<Atlass
    */
   protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<AtlassianClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: AtlassianClient = new AtlassianClient(ctx, this.config.entityId, { credentials, lookupKey });
+    const client: AtlassianClient = new AtlassianClient(ctx, {
+      credentials,
+      lookupKey,
+      connectorId: this.config.entityId,
+    });
     return client;
   }
 }

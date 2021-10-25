@@ -1,14 +1,16 @@
 import express from 'express';
 import { test } from '@playwright/test';
 
-export const startHttpServer = async (port: number) => {
+export const startHttpServer = async () => {
   const app = express();
 
   const service = await new Promise((resolve) => {
-    const svc = app.listen(port, () => resolve(svc));
+    const svc = app.listen(0, () => resolve(svc));
   });
 
-  return { app, service, port: service.address().port };
+  const port = service.address().port;
+
+  return { app, service, port, url: `http://localhost:${port}` };
 };
 
 type WaitableMock = Function & {

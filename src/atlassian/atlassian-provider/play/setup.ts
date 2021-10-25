@@ -1,46 +1,95 @@
-import superagent from 'superagent';
+import * as fs from 'fs';
 
-export interface IToBeHttp {
-  statusCode?: number | number[];
-}
+import { expect } from '@playwright/test';
 
-function toBeHttp(response: superagent.Response, { statusCode }: IToBeHttp) {
-  let keyValueMsg = '';
-  try {
-    if (statusCode) {
-      if (typeof statusCode === 'object') {
-        expect(statusCode).toContain(response.status);
-      } else {
-        expect(response.status).toEqual(statusCode);
-      }
-    }
-  } catch (err) {
-    const msg = `${err.message} ${keyValueMsg}\n\nfailing request:\n${
-      response.status
-    } ${response.request?.method.toUpperCase()} ${response.request?.url} - headers: ${JSON.stringify(
-      response.headers,
-      null,
-      2
-    )} - data: ${JSON.stringify(response.data, null, 2)}`;
-    return { message: () => msg, pass: false };
-  }
-  return { message: () => '', pass: true };
-}
+import { IAccount, waitForOperation, fusebitRequest, RequestMethod, postAndWait } from './sdk';
 
-declare global {
-  namespace jest {
-    interface Matchers<R, T> {
-      toBeHttp: ({ statusCode }: IToBeHttp) => R;
-    }
-  }
-}
+// const DEVELOPER_CONSOLE_LINK =
+//   'https://developer.atlassian.com/console/myapps/d639ce0f-f387-45d1-8421-e6d3dc6288c7/authorization/auth-code-grant';
 
-const matchers = {
-  toBeHttp,
+// Load the secrets from the environment
+export const {
+  OAUTH_USERNAME,
+  OAUTH_PASSWORD,
+  SECRET_CLIENTID,
+  SECRET_CLIENTSECRET,
+  INTEGRATION_ID,
+  CONNECTOR_ID,
+} = process.env;
+
+// A variety of constants used for testing this component.
+export const TOKEN_URL = 'https://auth.atlassian.com/oauth/token';
+export const AUTHORIZATION_URL = 'https://auth.atlassian.com/authorize';
+export const OAUTH_AUDIENCE = 'api.atlassian.com'; // Required otherwise Atlassian OAuth just sorta fails during login
+
+export const PACKAGE_CONNECTOR = '@fusebit-int/atlassian-connector';
+export const PACKAGE_PROVIDER = '@fusebit-int/atlassian-provider';
+
+export const OAUTH_SCOPES = [
+  'read:jira-user',
+  'read:jira-work',
+  'write:jira-work',
+  'manage:jira-webhook',
+  'read:me',
+  'read:confluence-content.summary',
+  'offline_access',
+].join(' ');
+
+const makeIntegration = () => ({
+  id: INTEGRATION_ID,
+  data: {
+    componentTags: {},
+    configuration: {},
+
+    handler: './integration',
+    components: [
+      {
+        name: CONNECTOR_ID,
+        entityType: 'connector',
+        entityId: CONNECTOR_ID,
+        dependsOn: [],
+        provider: PACKAGE_PROVIDER,
+      },
+    ],
+    files: {
+      'integration.js': fs.readFileSync('./play/mock/oauth-login.js', 'utf8'),
+      'package.json': JSON.stringify({ dependencies: { superagent: '*' } }),
+    },
+  },
+});
+
+const makeConnector = () => ({
+  id: CONNECTOR_ID,
+  data: {
+    handler: PACKAGE_CONNECTOR,
+    configuration: {
+      scope: OAUTH_SCOPES,
+      authorizationUrl: AUTHORIZATION_URL,
+      tokenUrl: TOKEN_URL,
+      clientId: SECRET_CLIENTID,
+      clientSecret: SECRET_CLIENTSECRET,
+      audience: OAUTH_AUDIENCE,
+      extraParams: 'prompt=consent',
+    },
+  },
+});
+
+export const ensureEntities = async (account: IAccount) => {
+  const recreateIntegration = async () => {
+    let result = await fusebitRequest(account, RequestMethod.delete, `/integration/${INTEGRATION_ID}`);
+    result = await waitForOperation(account, `/integration/${INTEGRATION_ID}`);
+    expect(result).toBeHttp({ statusCode: 404 });
+    result = await postAndWait(account, `/integration/${INTEGRATION_ID}`, makeIntegration());
+    expect(result).toBeHttp({ statusCode: 200 });
+  };
+
+  const recreateConnector = async () => {
+    await fusebitRequest(account, RequestMethod.delete, `/connector/${CONNECTOR_ID}`);
+    let result = await waitForOperation(account, `/connector/${CONNECTOR_ID}`);
+    expect(result).toBeHttp({ statusCode: 404 });
+    result = await postAndWait(account, `/connector/${CONNECTOR_ID}`, makeConnector());
+    expect(result).toBeHttp({ statusCode: 200 });
+  };
+
+  await Promise.all([recreateIntegration(), recreateConnector()]);
 };
-
-// Load in the enhancements to expect
-const jestExpect = (global as any).expect;
-if (jestExpect !== undefined) {
-  jestExpect.extend(matchers);
-}

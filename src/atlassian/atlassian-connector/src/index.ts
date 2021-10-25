@@ -3,12 +3,20 @@ import * as jwt from 'jsonwebtoken';
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+import { Service } from './Service';
+
 const TOKEN_URL = 'https://auth.atlassian.com/oauth/token';
 const AUTHORIZATION_URL = 'https://auth.atlassian.com/authorize';
 const REVOCATION_URL = 'https://auth.atlassian.com/oauth/revoke';
 const SERVICE_NAME = 'Atlassian';
 
 class ServiceConnector extends OAuthConnector {
+  static Service = Service;
+
+  protected createService() {
+    return new ServiceConnector.Service();
+  }
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
   }
@@ -22,6 +30,10 @@ class ServiceConnector extends OAuthConnector {
         'Service Configuration';
 
       // Make sure offline_access and the scopes necessary for configuring the webhooks are present
+      if (!ctx.body.data.configuration) {
+        ctx.body.data.configuration = { scope: '' };
+      }
+
       ctx.body.data.configuration.scope = [
         ...new Set([
           ...ctx.body.data.configuration.scope.split(' '),
@@ -35,21 +47,6 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Atlassian App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Atlassian App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Atlassian App';
-    });
-
-    this.router.post('/api/verify', async (ctx: Connector.Types.Context) => {
-      try {
-        console.log(
-          'body',
-          ctx.req.body.authorization,
-          'clientSecret',
-          ctx.state.manager.config.configuration.clientSecret
-        );
-        jwt.verify(ctx.req.body.authorization, ctx.state.manager.config.configuration.clientSecret);
-      } catch (err) {
-        console.log(err);
-        ctx.throw(403, 'Invalid authorization provided');
-      }
     });
   }
 }

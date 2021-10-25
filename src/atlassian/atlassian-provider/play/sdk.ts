@@ -45,11 +45,14 @@ export const fusebitRequest = async (
   account: IAccount,
   method: RequestMethod,
   url: string,
-  payload: any = {}
+  payload: any = {},
+  options?: { version: 1 | 2 }
 ): superagent.Request => {
   const fullUrl = url.startsWith('http')
     ? url
-    : `${account.baseUrl}/v2/account/${account.accountId}/subscription/${account.subscriptionId}${url}`;
+    : `${account.baseUrl}/v${options?.version || 2}/account/${account.accountId}/subscription/${
+        account.subscriptionId
+      }${url}`;
   return superagent[method](fullUrl)
     .set('authorization', `Bearer ${account.accessToken}`)
     .set('user-agent', account.userAgent)

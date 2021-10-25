@@ -11,11 +11,16 @@ if (cfg.error) {
     '',
     'Create a .env.playwright file, using this as the template:',
     '',
-    `OAUTH_USERNAME='username-for-oauth-login'`,
-    `OAUTH_PASSWORD='password-for-oauth-login'`,
-    `SECRET_CLIENTID='oauth-app-clientid'`,
-    `SECRET_CLIENTSECRET='oauth-app-clientsecret'`,
+    `OAUTH_USERNAME='username-for-testuser-oauth-login'`,
+    `OAUTH_PASSWORD='password-for-testuser-oauth-login'`,
+    `SECRET_CLIENTID='oauth-test-app-clientid'`,
+    `SECRET_CLIENTSECRET='oauth-test-app-clientsecret'`,
+    `INTEGRATION_ID='reusable-oauth-integration-id'`,
+    `CONNECTOR_ID='reusable-oauth-connector-id'`,
     '',
+    'Many systems require a consistent and predictable id for webhooks, callback',
+    "urls, etc.  Choose an integration id and a connector id that won't conflict",
+    'with other automated tests.',
   ].join('\n');
   throw msg;
 }

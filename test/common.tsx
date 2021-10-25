@@ -53,7 +53,6 @@ export const commonConnectorTests = (connector: { router: Internal.Router }) => 
       const manager = new Manager();
       manager.setup(cfg, connector.router, undefined);
       const result = await manager.handle(request('GET', '/api/configure'));
-      console.log(result);
       expect(result.status).toBe(200);
     });
 
@@ -61,7 +60,6 @@ export const commonConnectorTests = (connector: { router: Internal.Router }) => 
       const manager = new Manager();
       manager.setup(cfg, connector.router, undefined);
       const result = await manager.handle(request('GET', '/api/configure'));
-      console.log(result);
       expect(result.status).toBe(200);
 
       const component = renderer.create(
