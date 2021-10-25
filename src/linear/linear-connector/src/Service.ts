@@ -14,8 +14,15 @@ class Service extends OAuthConnector.Service {
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
     // Linear does not implement HMAC based webhook source validation.
     // However, Linear does provide the IPs that they use to send webhooks, so we will whitelist based on them for now.
-    const originIp = ctx.req.headers['x-forwarded-for'];
-    return originIp === '35.231.147.226' || originIp === '35.243.134.228';
+    const originIp = ctx.req.headers['x-forwarded-for'] as string | undefined;
+    if (!originIp) {
+      return false;
+    }
+    let allowedIps: string[] = ['35.231.147.226', '35.243.134.228'];
+    if (ctx.state.manager.config.configuration.allowedIps) {
+      allowedIps = ctx.state.manager.config.configuration.allowedIps as string[];
+    }
+    return allowedIps.includes(originIp);
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
