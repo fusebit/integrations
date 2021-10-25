@@ -7,7 +7,7 @@ class Service extends OAuthConnector.Service {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(event: any): string {
+  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
     return event.organizationId;
   }
 
