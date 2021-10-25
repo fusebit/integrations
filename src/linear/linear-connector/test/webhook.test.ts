@@ -20,6 +20,18 @@ const sampleCtx: any = {
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
 };
 
+const badCtx: any = {
+  req: {
+    headers: {
+      // Linear utilizes IP based whitelisting. there isn't a easy way to get a request
+      // legitimately from Linear with the XFF IP, so forcefully inserting this header.
+      'x-forwarded-for': '2.4.3.1',
+    },
+    body: sampleEvent,
+  },
+  state: { manager: { config: { configuration: sampleConfig.configuration } } },
+};
+
 describe('Linear Webhook Events', () => {
   test('Validate: getEventsFromPayload', async () => {
     const service: any = new ServiceConnector.Service();
@@ -31,9 +43,14 @@ describe('Linear Webhook Events', () => {
     expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(sampleEvent.organizationId);
   });
 
-  test('Validate: validateWebhookEvent', async () => {
+  test('Validate: validateWebhookEvent true', async () => {
     const service: any = new ServiceConnector.Service();
     expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+  });
+
+  test('Validate: validateWebhookEvent false', async () => {
+    const service: any = new ServiceConnector.Service();
+    expect(service.validateWebhookEvent(badCtx)).toBeFalsy();
   });
 
   // Linear does not implement initializationChallenge.
