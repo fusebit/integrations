@@ -37,7 +37,6 @@ class OAuthEngine {
 
     const query = `${params.toString()}${this.cfg.extraParams ? `&${this.cfg.extraParams}` : ''}`;
 
-    console.log(`getAuthorizationUrl: ${query}`);
     // If the configured authorization URL is absolute, use it verbatim.
     // If it is relative, add the connector's endpoint in front of it.
     return this.cfg.authorizationUrl.match(/^https?:\/\//i)
