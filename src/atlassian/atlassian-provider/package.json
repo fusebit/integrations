@@ -2,12 +2,18 @@
   "name": "@fusebit-int/atlassian-provider",
   "version": "7.1.1",
   "description": "Jira provider",
-  "keywords": ["Fusebit", "Jira"],
+  "keywords": [
+    "Fusebit",
+    "Jira"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"

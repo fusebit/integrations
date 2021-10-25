@@ -187,8 +187,6 @@
     "timeZone": "America/Los_Angeles",
     "accountType": "atlassian"
   },
-  "matchedWebhookIds": [
-    14
-  ],
+  "matchedWebhookIds": [14],
   "timestamp": 1634883157035
 }
