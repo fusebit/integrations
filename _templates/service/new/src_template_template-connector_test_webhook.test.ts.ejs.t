@@ -1,10 +1,11 @@
+---
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/test/webhook.test.ts
+---
 import nock from 'nock';
 import { ServiceConnector } from '../src';
 
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
-
-import { sampleEvent, sampleHeaders, sampleConfig, sampleMe } from './sampleData';
 
 const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
@@ -12,34 +13,34 @@ const sampleCtx: any = {
   throw: jest.fn(),
 };
 
-describe('Atlassian Webhook Events', () => {
-  test('Validate: getEventsFromPayload', async () => {
+describe('<%= h.capitalize(name) %> Webhook Events', () => {
+  test.todo('Validate: getEventsFromPayload', async () => {
     const service: any = new ServiceConnector.Service();
 
     expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
 
-  test('Validate: getAuthIdFromEvent', async () => {
+  test.todo('Validate: getAuthIdFromEvent', async () => {
     const service: any = new ServiceConnector.Service();
 
     expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.user.accountId);
   });
 
-  test('Validate: validateWebhookEvent', async () => {
+  test.todo('Validate: validateWebhookEvent', async () => {
     const service: any = new ServiceConnector.Service();
     expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 
-  test('Validate: initializationChallenge false', async () => {
+  test.todo('Validate: initializationChallenge false', async () => {
     const service: any = new ServiceConnector.Service();
     expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
-  test('Validate: getTokenAuthId', async () => {
+  test.todo('Validate: getTokenAuthId', async () => {
     const service: any = new ServiceConnector.Service();
 
-    const scope = nock('https://api.atlassian.com');
+    const scope = nock('https://api.<%= name.toLowerCase() %>.com');
     scope.matchHeader('authorization', 'Bearer sample_access_token').get(`/me`).reply(200, sampleMe);
 
     expect(service.getTokenAuthId(sampleCtx, { access_token: 'sample_access_token' })).resolves.toBe(
