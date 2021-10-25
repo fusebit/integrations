@@ -4,7 +4,7 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import { Service } from './Service';
 
 const TOKEN_URL = 'https://www.reddit.com/api/v1/access_token';
-const AUTHORIZATION_URL = 'https://www.reddit.com/api/v1/authorize';
+const AUTHORIZATION_URL = 'https://www.reddit.com/api/v1/authorize.compact';
 const REVOCATION_URL = 'https://www.reddit.com/api/v1/revoke_token';
 const SERVICE_NAME = 'Reddit';
 

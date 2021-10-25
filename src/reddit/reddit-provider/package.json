@@ -1,13 +1,19 @@
 {
   "name": "@fusebit-int/reddit-provider",
-  "version": "6.3.0",
+  "version": "7.1.1",
   "description": "Reddit provider",
-  "keywords": ["Fusebit", "Reddit"],
+  "keywords": [
+    "Fusebit",
+    "Reddit"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
@@ -29,9 +35,10 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": "^7.1.1",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
+    "@types/snoowrap": "^1.19.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
@@ -42,6 +49,6 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "reddit": "7.1.1"
+    "snoowrap": "1.23.0"
   }
 }

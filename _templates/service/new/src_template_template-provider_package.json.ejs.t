@@ -3,7 +3,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-provider",
-  "version": "6.3.0",
+  "version": "7.1.1",
   "description": "<%= h.capitalize(name) %> provider",
   "keywords": ["Fusebit", "<%= h.capitalize(name) %>"],
   "author": "Fusebit, Inc",
@@ -32,7 +32,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": "^7.1.1",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",

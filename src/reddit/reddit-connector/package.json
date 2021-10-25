@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/reddit-connector",
-  "version": "6.3.0",
+  "version": "7.1.1",
   "description": "Reddit Connector",
   "keywords": ["Fusebit", "Reddit"],
   "author": "Fusebit, Inc",
@@ -27,11 +27,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^6.3.0",
+    "@fusebit-int/oauth-connector": "^7.1.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": "^7.1.1",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

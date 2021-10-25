@@ -3,7 +3,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-connector",
-  "version": "6.3.0",
+  "version": "7.1.1",
   "description": "<%= h.capitalize(name) %> Connector",
   "keywords": ["Fusebit", "<%= h.capitalize(name) %>"],
   "author": "Fusebit, Inc",
@@ -30,11 +30,11 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^6.3.0",
+    "@fusebit-int/oauth-connector": "^7.1.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": "^7.1.1",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

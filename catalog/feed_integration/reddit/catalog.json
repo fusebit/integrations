@@ -1,0 +1,29 @@
+{
+  "id": "reddit-bot",
+  "name": "Reddit Bot",
+  "smallIcon": "/images/reddit.svg",
+  "largeIcon": "/images/reddit.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "reddit,intro,popular,messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/reddit#creating-your-own-reddit-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "redditConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "redditIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
