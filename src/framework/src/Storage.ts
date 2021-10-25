@@ -3,48 +3,48 @@ import superagent from 'superagent';
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
-export interface IStorageResponse {
+export interface IStorageBucketItemRawResponse {
   storageId: string;
-  data: any;
   etag: string;
-  tags: Record<string, string>;
+  expires?: string;
+  tags?: Record<string, string>;
+  data?: any;
 }
 
-export interface IStorageResponseList {
-  items: IStorageResponse[];
+export interface IStorageListRawResponse {
+  items: Omit<IStorageBucketItemRawResponse, 'data'>[];
   total: number;
-  next: string;
+  next?: string;
 }
 
 export interface IStorageResponseDelete {}
 
-export interface IStorageVersionedResponse {
-  storageId: string;
-  data?: any;
+export interface IStorageBucketItem extends Omit<IStorageBucketItemRawResponse, 'etag'> {
   version?: string;
-  tags?: Record<string, string>;
   status: number;
 }
 
-export interface IStorageVersionedResponseList {
-  items: Omit<IStorageVersionedResponse, 'status'>[];
+export interface IStorageBucketList {
+  items: Omit<IStorageBucketItem, 'status'>[];
   total: number;
   status: number;
-  next: string;
+  next?: string;
 }
 
-export interface IStorageVersionedResponseDelete {
+export interface IStorageBucketResponseDelete {
   status: number;
 }
+
+export interface IStorageBucketItemParams extends Omit<IStorageBucketItem, 'storageId' | 'status'> {}
 
 export interface IStorageClient {
   accessToken: string;
-  get: (storageSubId: string) => Promise<IStorageVersionedResponse | undefined>;
-  put: (data: any, storageSubId?: string, version?: string) => Promise<IStorageVersionedResponse>;
-  deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
-  deleteAll: (forceRecursive: boolean) => Promise<IStorageVersionedResponseDelete>;
-  delete: (storageSubId: string, version?: string) => Promise<IStorageVersionedResponseDelete>;
-  list: (storageSubId: string, options?: IListOption) => Promise<IStorageVersionedResponseList>;
+  get: (storageSubId: string) => Promise<IStorageBucketItem | undefined>;
+  put: (body: IStorageBucketItemParams, storageSubId?: string) => Promise<IStorageBucketItem>;
+  deletePrefixed: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
+  deleteAll: (forceRecursive: boolean) => Promise<IStorageBucketResponseDelete>;
+  delete: (storageSubId: string, version?: string) => Promise<IStorageBucketResponseDelete>;
+  list: (storageSubId: string, options?: IListOption) => Promise<IStorageBucketList>;
 }
 export interface IListOption {
   count?: number;
@@ -59,38 +59,38 @@ export interface IStorageParam {
   storageIdPrefix?: string;
 }
 
+export const convertItemToVersion = (body: IStorageBucketItemRawResponse, status: number): IStorageBucketItem => {
+  const versionResponse: IStorageBucketItem = {
+    storageId: body.storageId.split('/').slice(2).join('/'),
+    data: body.data,
+    tags: body.tags,
+    version: body.etag,
+    status,
+  };
+  return versionResponse;
+};
+
+export const convertListToVersion = (body: IStorageListRawResponse, status: number): IStorageBucketList => {
+  const versionResponse: IStorageBucketList = {
+    items: body.items.map((item) => ({
+      tags: item.tags,
+      version: item.etag,
+      storageId: item.storageId.split('/').slice(2).join('/'),
+      expires: item.expires,
+    })),
+    total: body.total,
+    next: body.next,
+    status,
+  };
+  return versionResponse;
+};
+
 export const createStorage = (params: IStorageParam): IStorageClient => {
   const storageIdPrefix = params.storageIdPrefix ? removeLeadingSlash(removeTrailingSlash(params.storageIdPrefix)) : '';
   const functionUrl = new URL(params.baseUrl);
   const storageBaseUrl = `${functionUrl.protocol}//${functionUrl.host}/v1/account/${params.accountId}/subscription/${
     params.subscriptionId
   }/storage${storageIdPrefix ? '/' + storageIdPrefix : ''}`;
-
-  const convertItemToVersion = (body: IStorageResponse, status: number) => {
-    const versionResponse: IStorageVersionedResponse = {
-      storageId: body.storageId.split('/').slice(2).join('/'),
-      data: body.data,
-      tags: body.tags,
-      version: body.etag,
-      status,
-    };
-    return versionResponse;
-  };
-
-  const convertListToVersion = (body: IStorageResponseList, status: number) => {
-    const versionResponse: IStorageVersionedResponseList = {
-      items: body.items.map((item) => ({
-        data: item.data,
-        tags: item.tags,
-        version: item.etag,
-        storageId: item.storageId.split('/').slice(2).join('/'),
-      })),
-      total: body.total,
-      next: body.next,
-      status,
-    };
-    return versionResponse;
-  };
 
   const getUrl = (storageSubId: string) => {
     storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
@@ -110,7 +110,7 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
       }
       return convertItemToVersion(response.body, response.status);
     },
-    put: async (data: any, storageSubId?: string, version?: string) => {
+    put: async (body: IStorageBucketItemParams, storageSubId?: string) => {
       storageSubId = storageSubId ? removeTrailingSlash(removeLeadingSlash(storageSubId)) : '';
       if (!storageSubId && !storageIdPrefix) {
         throw new Error(
@@ -118,10 +118,10 @@ export const createStorage = (params: IStorageParam): IStorageClient => {
         );
       }
       const request = superagent.put(getUrl(storageSubId)).set('Authorization', `Bearer ${storageClient.accessToken}`);
-      if (version) {
-        request.set('If-Match', version);
+      if (body.version) {
+        request.set('If-Match', body.version);
       }
-      const response = await request.send({ data, etag: version });
+      const response = await request.send({ data: body.data, etag: body.version, expires: body.expires });
       return convertItemToVersion(response.body, response.status);
     },
     deleteAll: async (forceRecursive?: boolean) => {

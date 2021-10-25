@@ -96,7 +96,7 @@ describe('Connector', () => {
       protected getEventsFromPayload() {
         return events;
       }
-      protected getAuthIdFromEvent(event: any) {
+      protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
         return event;
       }
       protected async createWebhookResponse(
