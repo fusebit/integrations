@@ -12,7 +12,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/integration/fusebit.json
       "name": "<%= name.toLowerCase() %>Connector",
       "skip": false,
       "provider": "@fusebit-int/<%= name.toLowerCase() %>-provider",
-      "entityId": "<%% global.entities.<%= name.toLowerCase() %>Connector.id %>",
+      "entityId": "<%% global.entities.<%= name.toLowerCase() %>Connector.id %%>",
       "dependsOn": [],
       "entityType": "connector"
     }
