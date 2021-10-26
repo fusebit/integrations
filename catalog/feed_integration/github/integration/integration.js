@@ -42,9 +42,7 @@ router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
   ctx.body = data;
 });
 
-/* Subscribe to events
-Read more about Webhooks here https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads
-*/
+// Subscribe to events
 integration.event.on('/github/webhook/issue_comment.created', async (ctx) => {
   const {
     data: { comment },

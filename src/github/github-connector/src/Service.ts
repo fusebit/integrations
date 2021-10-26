@@ -21,8 +21,9 @@ class Service extends OAuthConnector.Service {
     if (payload && signatureHeader) {
       const requestBody = JSON.stringify(payload);
       const signatureBuffer = Buffer.from(signatureHeader);
-      const sign = `${'sha256'}=${crypto
-        .createHmac('sha256', ctx.state.manager.config.configuration.signingSecret)
+      const signingAlgorithm = 'sha256';
+      const sign = `${signingAlgorithm}=${crypto
+        .createHmac(signingAlgorithm, ctx.state.manager.config.configuration.signingSecret)
         .update(requestBody)
         .digest('hex')}`;
       const verificationBuffer = Buffer.from(sign);

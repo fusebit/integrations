@@ -5,7 +5,6 @@ import { Service } from './Service';
 
 const TOKEN_URL = 'https://github.com/login/oauth/access_token';
 const AUTHORIZATION_URL = 'https://github.com/login/oauth/authorize';
-const REVOCATION_URL = 'https://github.com/login/oauth/grant';
 const SERVICE_NAME = 'GitHub';
 
 class ServiceConnector extends OAuthConnector {
@@ -37,9 +36,9 @@ class ServiceConnector extends OAuthConnector {
           },
         });
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your GitHub App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your GitHub App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your GitHub App';
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.signingSecret = {
         title: `Signing Secret from your ${SERVICE_NAME} App`,

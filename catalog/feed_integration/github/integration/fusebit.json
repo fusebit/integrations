@@ -9,7 +9,7 @@
       "name": "githubConnector",
       "skip": false,
       "provider": "@fusebit-int/github-provider",
-      "entityId": "<% global.entities.githubConnector.id ",
+      "entityId": "<% global.entities.githubConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }
