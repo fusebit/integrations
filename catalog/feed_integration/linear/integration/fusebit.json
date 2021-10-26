@@ -9,7 +9,7 @@
       "name": "linearConnector",
       "skip": false,
       "provider": "@fusebit-int/linear-provider",
-      "entityId": "<% global.entities.linearConnector.id ",
+      "entityId": "<% global.entities.linearConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }
