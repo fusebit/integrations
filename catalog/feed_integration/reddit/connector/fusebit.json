@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "identity mysubreddits",
+    "scope": "identity edit flair history modconfig modflair modlog modposts modwiki mysubreddits privatemessages read report save submit subscribe vote wikiedit wikiread",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
