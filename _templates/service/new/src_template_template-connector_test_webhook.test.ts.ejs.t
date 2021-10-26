@@ -13,43 +13,48 @@ const sampleCtx: any = {
   throw: jest.fn(),
 };
 
+const sampleAccessToken = 'sample_access_token';
+
 describe('<%= h.capitalize(name) %> Webhook Events', () => {
   test.todo('Validate: getEventsFromPayload', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
 
     expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
 
   test.todo('Validate: getAuthIdFromEvent', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
 
     expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.user.accountId);
   });
 
   test.todo('Validate: validateWebhookEvent', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
+
     expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 
   test.todo('Validate: initializationChallenge false', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
+
     expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test.todo('Validate: getTokenAuthId', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
 
     const scope = nock('https://api.<%= name.toLowerCase() %>.com');
-    scope.matchHeader('authorization', 'Bearer sample_access_token').get(`/me`).reply(200, sampleMe);
+    scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get(`/me`).reply(200, sampleMe);
 
-    expect(service.getTokenAuthId(sampleCtx, { access_token: 'sample_access_token' })).resolves.toBe(
+    expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(
       '616e378a5800630069f43cb6'
     );
   });
 
   test('Validate: getWebhookEventType', async () => {
-    const service: any = new ServiceConnector.Service();
+    const service: any = new ServiceConnector().service;
+
     expect(service.getWebhookEventType(sampleEvent)).toBe(sampleEvent.webhookEvent);
   });
 
