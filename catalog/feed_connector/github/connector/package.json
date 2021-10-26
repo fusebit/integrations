@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-connector-github-connector",
+  "version": "7.1.1",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
+    "deploy": "fuse connector deploy <%this.name%> -d .",
+    "get": "fuse connector get <%this.name%> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "^7.1.1",
+    "@fusebit-int/github-connector": "^7.1.1"
+  }
+}
