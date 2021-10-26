@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "api offline_access",
+    "scope": "user repo",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
