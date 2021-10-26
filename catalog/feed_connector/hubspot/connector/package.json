@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-hubspot-connector",
-  "version": "7.2.2",
+  "version": "7.3.0",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.2.2",
-    "@fusebit-int/hubspot-connector": "^7.2.2"
+    "@fusebit-int/framework": "^7.3.0",
+    "@fusebit-int/hubspot-connector": "^7.3.0"
   }
 }
