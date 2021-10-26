@@ -176,6 +176,11 @@ const loadCatalog = async (dirName: string) => {
     process.exit(-1);
   }
   const feedDirectory = process.argv[2];
-  const entries = await loadCatalog(feedDirectory);
-  console.log(JSON.stringify(entries, null, 2));
+  try {
+    const entries = await loadCatalog(feedDirectory);
+    console.log(JSON.stringify(entries, null, 2));
+  } catch (error) {
+    process.stderr.write(`${error}\n`);
+    process.exit(-1);
+  }
 })();

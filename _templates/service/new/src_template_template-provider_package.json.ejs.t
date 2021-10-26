@@ -32,7 +32,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^6.3.0",
+    "@fusebit-int/framework": ">6.3.0",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",

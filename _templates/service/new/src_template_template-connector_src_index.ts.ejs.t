@@ -28,7 +28,7 @@ class ServiceConnector extends OAuthConnector {
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
-        'Service Configuration';
+        '<%= h.capitalize(name) %> Configuration';
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your <%= h.capitalize(name) %> App';

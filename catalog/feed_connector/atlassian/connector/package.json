@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-connector-atlassian-connector",
+  "version": "7.2.0",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
+    "deploy": "fuse connector deploy <%this.name%> -d .",
+    "get": "fuse connector get <%this.name%> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">0.0.0",
+    "@fusebit-int/atlassian-connector": ">0.0.0"
+  }
+}

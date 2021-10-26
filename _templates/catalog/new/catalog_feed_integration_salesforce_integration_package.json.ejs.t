@@ -10,8 +10,8 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/integration/package.json
     "get": "fuse integration get <%% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^6.3.1",
-    "@fusebit-int/<%= name.toLowerCase() %>-provider": "^6.3.1"
+    "@fusebit-int/framework": ">0.0.0",
+    "@fusebit-int/<%= name.toLowerCase() %>-provider": ">0.0.0"
   },
   "files": [
     "./integration.js",

@@ -1,0 +1,35 @@
+{
+  "id": "atlassian",
+  "name": "Atlassian",
+  "smallIcon": "#/assets/atlassian.svg",
+  "largeIcon": "#/assets/atlassian.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Issues"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/atlassian#creating-your-own-atlassian-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "atlassianConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/atlassian-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
