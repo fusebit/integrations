@@ -44,7 +44,8 @@ class Service extends OAuthConnector.Service {
     const installationsResponse = await superagent
       .get('https://api.github.com/user/installations')
       .set('User-Agent', `fusebit/${ctx.state.params.entityId}`)
-      .set('Authorization', `Bearer ${token.access_token}`);
+      .set('Authorization', `Bearer ${token.access_token}`)
+      .set('Accept', 'application/vnd.github.v3+json');
     const { total_count, installations } = installationsResponse.body;
 
     if (total_count) {

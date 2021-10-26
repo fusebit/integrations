@@ -5,6 +5,7 @@ import { Service } from './Service';
 
 const TOKEN_URL = 'https://github.com/login/oauth/access_token';
 const AUTHORIZATION_URL = 'https://github.com/login/oauth/authorize';
+const REVOCATION_URL = 'https://api.github.com/applications/CLIENT_ID/token';
 const SERVICE_NAME = 'GitHub';
 
 class ServiceConnector extends OAuthConnector {
@@ -23,8 +24,9 @@ class ServiceConnector extends OAuthConnector {
 
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
-      ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
-        'Service Configuration';
+      ctx.body.uischema.elements.find(
+        (element: { label: string }) => element.label == 'OAuth2 Configuration'
+      ).label = `${SERVICE_NAME} Configuration`;
       // Adjust the ui schema and layout
       ctx.body.uischema.elements
         .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
