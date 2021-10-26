@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "hubspot,crm,sales,intro,popular"
+    "catalog": "CRM"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app"
