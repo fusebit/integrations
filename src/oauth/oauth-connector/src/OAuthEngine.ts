@@ -119,7 +119,7 @@ class OAuthEngine {
 
     const tokenUrl = this.getTokenUrl(ctx);
     try {
-      const response = await superagent.post(tokenUrl).type('form').send(params);
+      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
 
       return this.normalizeOAuthToken(response.body);
     } catch (error) {
@@ -143,7 +143,7 @@ class OAuthEngine {
 
     const tokenUrl = this.getTokenUrl(ctx);
     try {
-      const response = await superagent.post(tokenUrl).type('form').send(params);
+      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
 
       // Use the current token if a new one isn't supplied.
       return this.normalizeOAuthToken({ refresh_token: refreshToken, ...response.body });
