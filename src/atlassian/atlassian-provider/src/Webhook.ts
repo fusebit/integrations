@@ -41,17 +41,12 @@ export class Webhook {
   }
 
   public async register(cloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> {
-    console.log(`Starting registration...: ${cloudId}`);
-    console.log(`  ${this.getAtlassianUrl(cloudId)}`);
-    console.log(`  ${this.getInboundUrl()}`);
     const response = await superagent
       .post(this.getAtlassianUrl(cloudId))
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
       .send({ webhooks, url: this.getInboundUrl() });
-
-    console.log(`Webhook register response: `, response.body);
 
     return response.body;
   }

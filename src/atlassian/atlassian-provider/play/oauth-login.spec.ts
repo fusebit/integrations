@@ -135,7 +135,7 @@ const waitForWebhook = async () => {
   let cnt: number;
   for (cnt = 10; cnt > 0; cnt--) {
     // Get the contents of the webhook storage and validate if it's what the test is looking for.
-    let response = await fusebitRequest(
+    const response = await fusebitRequest(
       account,
       RequestMethod.get,
       `/storage/integration/${Constants.INTEGRATION_ID}/test/atlassianProvider/webhook/*`,

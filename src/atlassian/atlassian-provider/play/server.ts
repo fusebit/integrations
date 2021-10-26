@@ -1,5 +1,4 @@
 import express from 'express';
-import { test } from '@playwright/test';
 
 export const startHttpServer = async () => {
   const app = express();

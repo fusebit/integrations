@@ -1,5 +1,3 @@
-import * as jwt from 'jsonwebtoken';
-
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 

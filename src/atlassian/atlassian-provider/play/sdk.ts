@@ -74,14 +74,14 @@ export const waitForOperation = async (account: IAccount, url: string) => {
 };
 
 export const postAndWait = async (account: IAccount, entityPath: string, payload: any) => {
-  let response = await fusebitRequest(account, RequestMethod.post, entityPath, payload);
+  const response = await fusebitRequest(account, RequestMethod.post, entityPath, payload);
   expect(response).toBeHttp({ statusCode: 202 });
 
   return waitForOperation(account, entityPath);
 };
 
 export const putAndWait = async (account: IAccount, entityPath: string, payload: any) => {
-  let response = await fusebitRequest(account, RequestMethod.put, entityPath, payload);
+  const response = await fusebitRequest(account, RequestMethod.put, entityPath, payload);
   expect(response).toBeHttp({ statusCode: 200 });
 
   return waitForOperation(account, entityPath);
@@ -118,11 +118,11 @@ export const updateIntegrationConnector = async (account: IAccount, integrationE
     expect(response).toBeHttp({ statusCode: 200, data: { operationState: { status: 'success' } } });
   };
 
-  const results = await Promise.all([putIntegration(), putConnector()]);
+  return Promise.all([putIntegration(), putConnector()]);
 };
 
 export const logPage = async (page: Page) => {
-  await page.route(`**`, (route, request) => {
+  await page.route('**', (route, request) => {
     console.log(request.url());
     route.continue();
     // _resolve();
