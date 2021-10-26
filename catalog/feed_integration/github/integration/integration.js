@@ -25,15 +25,30 @@ router.post('/api/tenant/:tenantId/test', async (ctx) => {
   ctx.body = data;
 });
 
-// You can use GitHub standard RESTful API from the SDK (read more at https://docs.github.com/en/rest)
-router.get('/api/tenant/:tenantId/:org/repos', async (ctx) => {
-  const github = await integration.tenant.getSdkByTenant(ctx, 'github', ctx.params.tenantId);
-  ctx.body = await github.request(`GET /orgs/${ctx.params.org}/repos`);
+// List repository issues
+router.get('/api/tenant/:tenantId/:org/:repo/issues', async (ctx) => {
+  const connectorName = 'github';
+  const github = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const iterator = github.paginate.iterator(github.rest.issues.listForRepo, {
+    owner: ctx.params.org,
+    repo: ctx.params.repo,
+    per_page: 100,
+  });
+
+  // iterate through each response
+  const issuesList = [];
+  for await (const { data: issues } of iterator) {
+    for (const issue of issues) {
+      issuesList.push(issue);
+    }
+  }
+  ctx.body = issuesList;
 });
 
 // Create a new GitHub issue
 router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
-  const github = await integration.tenant.getSdkByTenant(ctx, 'github', ctx.params.tenantId);
+  const connectorName = 'github';
+  const github = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const { data } = await github.rest.issues.create({
     owner: ctx.params.owner,
     repo: ctx.params.repo,
