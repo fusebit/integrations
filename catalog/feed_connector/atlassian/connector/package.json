@@ -8,7 +8,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.2.0",
-    "@fusebit-int/atlassian-connector": "^7.2.0"
+    "@fusebit-int/framework": ">0.0.0",
+    "@fusebit-int/atlassian-connector": ">0.0.0"
   }
 }

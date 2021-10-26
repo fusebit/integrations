@@ -11,7 +11,7 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/connector/package.json
     "get": "fuse connector get <%%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.2.0",
-    "@fusebit-int/<%= name.toLowerCase() %>-connector": "^7.2.0"
+    "@fusebit-int/framework": ">0.0.0",
+    "@fusebit-int/<%= name.toLowerCase() %>-connector": ">0.0.0"
   }
 }
