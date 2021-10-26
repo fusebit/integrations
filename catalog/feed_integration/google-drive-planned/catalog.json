@@ -1,0 +1,13 @@
+{
+  "id": "google-drive-planned",
+  "name": "Google Drive",
+  "smallIcon": "#/assets/google-drive.svg",
+  "largeIcon": "#/assets/google-drive.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Storage,Office"
+  },
+  "configuration": {}
+}
