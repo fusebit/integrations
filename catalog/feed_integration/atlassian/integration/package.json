@@ -10,5 +10,8 @@
     "@fusebit-int/framework": ">0.0.0",
     "@fusebit-int/atlassian-provider": ">0.0.0"
   },
-  "files": ["./integration.js", "README.md"]
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
 }
