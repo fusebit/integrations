@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "PagerDuty"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "pagerdutyConnector",
+      "skip": false,
+      "provider": "@fusebit-int/pagerduty-provider",
+      "entityId": "<% global.entities.pagerdutyConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

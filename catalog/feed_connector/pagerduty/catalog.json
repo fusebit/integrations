@@ -1,0 +1,35 @@
+{
+  "id": "pagerduty",
+  "name": "PagerDuty",
+  "smallIcon": "#/assets/pagerduty.svg",
+  "largeIcon": "#/assets/pagerduty.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "pagerduty,crm,sales,intro,popular"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "pagerdutyConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/pagerduty-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
