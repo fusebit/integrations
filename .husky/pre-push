@@ -1,7 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-lerna run lint
+lerna run lint:check
 npm run prettier:check
 lerna run build
 lerna run test
