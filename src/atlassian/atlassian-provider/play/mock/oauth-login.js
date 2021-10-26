@@ -5,19 +5,21 @@ const superagent = require('superagent');
 const integration = new Integration();
 const router = integration.router;
 
-router.get('/api/do/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, 'atlassian-test-connector', ctx.params.installId);
+const connectorName = 'atlassian-test-connector';
+
+router.get('/api/check/:installId', async (ctx) => {
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   ctx.body = await sdk.getAccessibleResources();
 });
 
 router.get('/api/unregister/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, 'atlassian-test-connector', ctx.params.installId);
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const response = await sdk.webhook.unregisterAll();
   ctx.body = response;
 });
 
 router.get('/api/register/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, 'atlassian-test-connector', ctx.params.installId);
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const resources = await sdk.getAccessibleResources();
   const registerResponse = await sdk.webhook.register(resources[0].id, [
     {
@@ -30,7 +32,7 @@ router.get('/api/register/:installId', async (ctx) => {
 });
 
 router.get('/api/event/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, 'atlassian-test-connector', ctx.params.installId);
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const resources = await sdk.getAccessibleResources();
 
   const rand = `${Math.random() * 10000}`;
@@ -53,8 +55,6 @@ router.get('/api/event/:installId', async (ctx) => {
 });
 
 integration.event.on('/:connectorId/webhook/:eventType', async (ctx) => {
-  console.log(`Event from Jira: ${JSON.stringify(ctx.params)}`);
-  console.log(`${JSON.stringify(ctx.req.body, null, 2)}`);
   await integration.storage.setData(ctx, `/test/atlassianProvider/webhook/${Math.random() * 10000000}`, {
     data: ctx.req.body,
     expires: new Date(Date.now() + 60 * 1000).toISOString(),

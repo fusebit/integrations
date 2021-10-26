@@ -54,7 +54,7 @@ test('basic test', async ({ page }) => {
   response = await fusebitRequest(
     account,
     RequestMethod.get,
-    `/integration/${Constants.INTEGRATION_ID}/api/do/${installId}`
+    `/integration/${Constants.INTEGRATION_ID}/api/check/${installId}`
   );
 
   expect(response).toBeHttp({ statusCode: 200 });
@@ -66,21 +66,7 @@ test('basic test', async ({ page }) => {
 
   /* Now that the environment is set up, let's do a handful of tests in parallel. */
   await Promise.all([testWebhook({ installId })]);
-
-  // Open questions:
-  //  * How do we use the latest code in the repo instead of only what was published historically?
-  //    * Serve it in a temporary directory.  Don't even need to do the push in that case, just need to
-  //      make sure the connector and integration have been created.
-  //
-  //  * Also, the webhooks expire every 30 days... so maybe register them and start returning a warning health
-  //    value when they get close to expiring?
 }, 180000);
-
-/*
-test.only('shortcut', async ({ page }) => {
-  await testWebhook({ installId: 'ins-1ab2cdc6991ff65c11c15e78b9e8e2af' });
-});
-*/
 
 const testWebhook = async ({ installId }) => {
   await unregisterWebhooks(installId);
@@ -146,8 +132,9 @@ const pushChange = async (installId: string) => {
 
 const waitForWebhook = async () => {
   // Wait for the webhook event to fire.
-  let cnt = 10;
-  while (cnt > 0) {
+  let cnt: number;
+  for (cnt = 10; cnt > 0; cnt--) {
+    // Get the contents of the webhook storage and validate if it's what the test is looking for.
     let response = await fusebitRequest(
       account,
       RequestMethod.get,
@@ -156,6 +143,7 @@ const waitForWebhook = async () => {
       { version: 1 }
     );
     expect(response).toBeHttp({ statusCode: 200 });
+
     if (response.body.total > 0) {
       const entries = await Promise.all(
         response.body.items.map((item: { storageId: string }) =>
