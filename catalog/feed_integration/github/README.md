@@ -1,4 +1,4 @@
 Integrating with GitHub is easy with Fusebit!
-Enable use of GitHub to read, write, or modify your customer's GitHub registries in your integration.
+This Integration enables you to connect to GitHub's source control, issue tracking, and CI/CD to build awesome end-to-end experiences. Easily work with repositories, issues, packages, projects, pull requests, and team management functionality, among others.
 
 [Learn more](https://developer.fusebit.io/docs/github)!
