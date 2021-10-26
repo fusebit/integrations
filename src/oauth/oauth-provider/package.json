@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-provider",
-  "version": "6.3.1",
+  "version": "6.3.2",
   "description": "Fusebit OAuth 2.0 Provider",
   "keywords": [
     "Fusebit",

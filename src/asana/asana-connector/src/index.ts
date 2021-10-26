@@ -46,9 +46,6 @@ class ServiceConnector extends OAuthConnector {
           getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
           getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey),
         };
-        await next();
-      },
-      async (ctx: Connector.Types.Context) => {
         try {
           await this.service.handleWebhookEvent(ctx);
         } catch (e) {
@@ -58,7 +55,7 @@ class ServiceConnector extends OAuthConnector {
       }
     );
     this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx, next) => {
-      const createdTime = new Date().getTime();
+      const createdTime = Date.now();
       const ttlSeconds = 60;
       const expiryTime = createdTime + ttlSeconds * 1000;
       await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), expiryTime);

@@ -49,7 +49,7 @@ class Service extends OAuthConnector.Service {
       return true;
     }
 
-    if (new Date(Number.parseInt(webhookChallengeExpiryTime.data)) < new Date()) {
+    if (webhookChallengeExpiryTime.data < Date.now()) {
       return true;
     }
     ctx.fusebit.setWebhookSecret(secret);

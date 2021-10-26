@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/asana-connector",
-  "version": "6.3.1",
+  "version": "6.3.2",
   "description": "Asana Connector",
   "keywords": [
     "Fusebit",
@@ -34,7 +34,7 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^6.3.0",
+    "@fusebit-int/oauth-connector": "6.3.2",
     "superagent": "6.1.0"
   },
   "devDependencies": {

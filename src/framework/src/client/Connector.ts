@@ -36,7 +36,6 @@ class Service extends EntityBase.ServiceDefault {
 
     const isChallenge = await this.initializationChallenge(ctx);
     if (isChallenge) {
-      ctx.status = 200;
       return;
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/asana-provider",
-  "version": "6.3.1",
+  "version": "6.3.2",
   "description": "Asana provider",
   "keywords": [
     "Fusebit",
@@ -32,10 +32,10 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "peerDependencies": {
-    "@fusebit-int/framework": "6.3.1"
+    "@fusebit-int/framework": "6.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "6.3.1",
+    "@fusebit-int/framework": "6.3.2",
     "@types/asana": "^0.18.4",
     "@types/bluebird": "*",
     "@types/node": "^16.9.2",
