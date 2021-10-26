@@ -23,7 +23,8 @@
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
+    "test": "node libc/index.js feed_integration > /dev/null && node libc/index.js feed_connector > /dev/null"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"
