@@ -18,6 +18,8 @@ const integration = new Integration();
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
 
+const connectorName = 'github';
+
 // The sample test endpoint of this integration gets the user account details in the GitHub account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', async (ctx) => {
   const github = await integration.tenant.getSdkByTenant(ctx, 'github', ctx.params.tenantId);
@@ -27,7 +29,6 @@ router.post('/api/tenant/:tenantId/test', async (ctx) => {
 
 // List repository issues
 router.get('/api/tenant/:tenantId/:org/:repo/issues', async (ctx) => {
-  const connectorName = 'github';
   const github = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const iterator = github.paginate.iterator(github.rest.issues.listForRepo, {
     owner: ctx.params.org,
@@ -47,7 +48,6 @@ router.get('/api/tenant/:tenantId/:org/:repo/issues', async (ctx) => {
 
 // Create a new GitHub issue
 router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
-  const connectorName = 'github';
   const github = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const { data } = await github.rest.issues.create({
     owner: ctx.params.owner,
