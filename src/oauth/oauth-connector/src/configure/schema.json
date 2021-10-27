@@ -39,7 +39,7 @@
       "type": "string"
     },
     "scope": {
-      "title": "Comma separated scopes to request from the OAuth server",
+      "title": "Space separated scopes to request from the OAuth server",
       "type": "string"
     },
     "clientId": {
