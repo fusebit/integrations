@@ -18,11 +18,11 @@ const integration = new Integration();
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
 
-const connectorName = 'github';
+const connectorName = 'githubConnector';
 
 // The sample test endpoint of this integration gets the user account details in the GitHub account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', async (ctx) => {
-  const github = await integration.tenant.getSdkByTenant(ctx, 'github', ctx.params.tenantId);
+  const github = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const { data } = await github.rest.users.getAuthenticated();
   ctx.body = data;
 });
