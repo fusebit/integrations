@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "atlassianIntegration": {
+    "confluenceIntegration": {
       "type": "object",
       "properties": {
         "id": {
@@ -10,7 +10,7 @@
         }
       }
     },
-    "atlassianConnector": {
+    "confluenceConnector": {
       "type": "object",
       "properties": {
         "id": {

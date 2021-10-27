@@ -1,0 +1,5 @@
+{
+  "confluenceConnector": {
+    "confluenceName": "confluence-connector"
+  }
+}

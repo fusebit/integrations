@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-jira-integration",
+  "version": "7.4.2",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/atlassian-provider": "^7.4.2",
+    "@fusebit-int/framework": "^7.4.2"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}

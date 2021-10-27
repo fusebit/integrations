@@ -1,14 +1,15 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "Atlassian"
+    "fusebit.service": "Atlassian Confluence"
   },
   "handler": "@fusebit-int/atlassian-connector",
   "configuration": {
     "mode": {
       "useProduction": false
     },
-    "scope": "read:jira-user read:jira-work manage:jira-webhook",
+
+    "scope": "read:confluence-space.summary read:confluence-props read:confluence-content.summary read:confluence-user read:confluence-groups",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,

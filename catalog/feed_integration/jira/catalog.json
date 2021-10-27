@@ -1,26 +1,26 @@
 {
-  "id": "atlassian",
-  "name": "Atlassian",
-  "smallIcon": "#/assets/atlassian.svg",
-  "largeIcon": "#/assets/atlassian.svg",
+  "id": "jira",
+  "name": "Atlassian Jira",
+  "smallIcon": "#/assets/jira.svg",
+  "largeIcon": "#/assets/jira.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Issues"
+    "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/atlassian#creating-your-own-atlassian-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/jira#creating-your-own-jira-app"
   },
   "configuration": {
     "schema": "config/schema.json",
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "atlassianConnector": {
+      "jiraConnector": {
         "entityType": "connector",
         "path": "connector/"
       },
-      "atlassianIntegration": {
+      "jiraIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }
