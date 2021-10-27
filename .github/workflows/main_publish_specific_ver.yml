@@ -4,10 +4,10 @@ on:
       versionToPublish:
         description: 'The version to manually publish, must be a valid git tag.'
         default: 'main'
-name: Manual - PROD - Packages Only - Specific Version
+name: Manual - PROD - Publish - Specific Version
 jobs:
   publish_prod:
-    name: Manual - PROD - Packages Only - Specific Version
+    name: Manual - PROD - Publish - Specific Version
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
@@ -27,3 +27,11 @@ jobs:
           FUSE_PROFILE_INTERNAL_LIST: 'FUSE_PROFILE_INTERNAL_763_US_WEST_1_API FUSE_PROFILE_INTERNAL_321_US_WEST_1_API'
           FUSE_PROFILE_INTERNAL_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_763_US_WEST_1_API }}
           FUSE_PROFILE_INTERNAL_321_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_INTERNAL_321_US_WEST_1_API }}
+      - name: Publish Catalog
+        run: ./scripts/cicd/publish_catalog.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROFILE_321_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_PROFILE_321_SECRET_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: us-east-1
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_MANAGE }}
+          CLOUDFRONT_ID: ${{ secrets.AWS_CLOUDFRONT_MANAGE }}
