@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-slack-bot-connector",
-  "version": "7.4.2",
+  "version": "7.4.3",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.4.2",
-    "@fusebit-int/slack-connector": "^7.4.2"
+    "@fusebit-int/framework": "^7.4.3",
+    "@fusebit-int/slack-connector": "^7.4.3"
   }
 }

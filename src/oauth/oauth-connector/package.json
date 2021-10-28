@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/oauth-connector",
-  "version": "7.4.2",
+  "version": "7.4.3",
   "description": "Fusebit OAuth 2.0 connector",
   "keywords": [
     "Fusebit",
@@ -37,7 +37,7 @@
     "superagent": "^6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.4.2",
+    "@fusebit-int/framework": "^7.4.3",
     "@types/koa": "2.11.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
