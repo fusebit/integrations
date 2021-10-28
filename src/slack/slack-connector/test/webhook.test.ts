@@ -21,7 +21,7 @@ describe('Slack Webhook Events', () => {
   test('Validate: getAuthIdFromEvent', async () => {
     const service: any = new ServiceConnector.Service();
 
-    expect(service.getAuthIdFromEvent(sampleEvent)).toBe(sampleEvent.authorizations[0].user_id);
+    expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.authorizations[0].user_id);
   });
 
   test('Validate: validateWebhookEvent', async () => {
@@ -57,7 +57,7 @@ describe('Slack Webhook Events', () => {
     ctx.req = sampleCtx.req;
 
     const connector: any = new ServiceConnector();
-    const eventAuthId = connector.service.getAuthIdFromEvent(sampleEvent);
+    const eventAuthId = connector.service.getAuthIdFromEvent(ctx, sampleEvent);
     // Create mocked endpoints for each event.
     const scope = nock(ctx.state.params.baseUrl);
     scope

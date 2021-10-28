@@ -27,7 +27,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const contacts = await salesforceClient.query('SELECT count() FROM Contact');
 
   ctx.body = {
-    messasge: `Successfully loaded ${contacts.totalSize} contacts from SFDC`,
+    message: `Successfully loaded ${contacts.totalSize} contacts from SFDC`,
   };
 });
 
