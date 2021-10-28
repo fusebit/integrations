@@ -1,17 +1,17 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-
+import crypto from 'crypto';
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
+    return [ctx.req.body.event];
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
     return '';
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
-    ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
+  protected validateWebhookEvent(ctx: Connector.Types.Context) {
+    return false;
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
@@ -23,7 +23,7 @@ class Service extends OAuthConnector.Service {
   }
 
   protected getWebhookEventType(event: any): string {
-    return '';
+    return event.event;
   }
 }
 
