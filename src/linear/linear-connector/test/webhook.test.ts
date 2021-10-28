@@ -72,7 +72,7 @@ describe('Linear Webhook Events', () => {
 
   test('Validate: getWebhookEventType', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.getWebhookEventType(sampleEvent)).toBe(sampleEvent.action);
+    expect(service.getWebhookEventType(sampleEvent)).toBe(`${sampleEvent.type}.${sampleEvent.action}`);
   });
 
   test('Validate: Event to Fanout', async () => {
@@ -91,7 +91,7 @@ describe('Linear Webhook Events', () => {
             {
               data: sampleEvent,
               entityId: Constants.connectorId,
-              eventType: sampleEvent.action,
+              eventType: `${sampleEvent.type}.${sampleEvent.action}`,
               webhookAuthId: eventAuthId,
               webhookEventId: `webhook/${Constants.connectorId}/${eventAuthId}`,
             },
