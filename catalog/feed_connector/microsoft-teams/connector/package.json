@@ -8,7 +8,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.4.2",
-    "@fusebit-int/microsoft-teams-connector": "^7.4.2"
+    "@fusebit-int/framework": "^7.4.3",
+    "@fusebit-int/microsoft-teams-connector": "^7.4.3"
   }
 }
