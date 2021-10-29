@@ -123,3 +123,6 @@ workspace/connector-*
 # Catalog Lock Files
 catalog/feed_connector/**/package-lock.json
 catalog/feed_integration/**/package-lock.json
+
+# No yarn locks
+**/yarn.lock
