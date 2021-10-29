@@ -17,7 +17,7 @@
     {
       "type": "Control",
       "scope": "#/properties/microsoftTeamsConnector/properties/id",
-      "label": "Slack Connector name",
+      "label": "Microsoft Teams Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

@@ -1,6 +1,6 @@
 {
   "id": "microsoft-teams-bot",
-  "name": "Slack Bot",
+  "name": "Microsoft Teams Bot",
   "smallIcon": "/images/microsoft-teams.svg",
   "largeIcon": "/images/microsoft-teams.svg",
   "version": "5.2.0",
