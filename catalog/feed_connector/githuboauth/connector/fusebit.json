@@ -1,16 +1,16 @@
 {
-  "id": "<%this.id%>",
+  "id": "<% this.id %>",
   "tags": {
-    "fusebit.service": "GitHub"
+    "fusebit.service": "GitHubOAuth"
   },
-  "handler": "@fusebit-int/github-connector",
+  "handler": "@fusebit-int/githuboauth-connector",
   "configuration": {
     "mode": {
       "useProduction": false
     },
     "scope": "user public_repo",
-    "clientId": "<%global.consts.random%>",
-    "clientSecret": "<%global.consts.random%>",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,

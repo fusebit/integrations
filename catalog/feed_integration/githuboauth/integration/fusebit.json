@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "GitHubOAuth"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "githubOAuthConnector",
+      "skip": false,
+      "provider": "@fusebit-int/githuboauth-provider",
+      "entityId": "<% global.entities.githuboauthConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
