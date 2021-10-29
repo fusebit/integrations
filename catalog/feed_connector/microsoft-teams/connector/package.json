@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-microsoft-teams-connector",
-  "version": "7.4.2",
+  "version": "7.4.3",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
