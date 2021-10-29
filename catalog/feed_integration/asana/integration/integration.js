@@ -36,7 +36,6 @@ router.post('/api/tenant/:tenantId/webhook/-/resource/:resourceId', async (ctx) 
   }
 });
 
-
 // The sample test endpoint fetches a webhook by Id
 router.get('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
   try {
