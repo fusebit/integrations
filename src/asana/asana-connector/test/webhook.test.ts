@@ -3,8 +3,21 @@ import { ServiceConnector } from '../src';
 import { Constants, getContext } from '../../../framework/test/utilities';
 
 import { sampleEvent, sampleConfig, sampleEventCtx, sampleChallengeCtx, WebhookId } from './sampleData';
+import { FusebitContext } from '@fusebit-int/framework/libc/router';
 
-const applyCtxState = (ctx: any, storage: Record<string, any>) => {
+type FusebitStorageContext = {
+  setWebhookStorageData: (data: WebhookStorageData) => Promise<void>;
+  getWebhookStorageData: () => Promise<WebhookStorageData>;
+};
+
+type TestFusebitContext = Omit<FusebitContext, 'fusebit'> & { fusebit: FusebitStorageContext };
+type PartialTestFusebitContext = Partial<TestFusebitContext> & { params: { webhookId: string } };
+
+const applyCtxState = (ctx: PartialTestFusebitContext, storage: Record<string, object>): TestFusebitContext => {
+  const setWebhookStorageData = async (data: WebhookStorageData): Promise<void> => {
+    storage[ctx.params.webhookId] = data;
+  };
+  const getWebhookStorageData = async (): Promise<WebhookStorageData> => storage[ctx.params.webhookId];
   const defaultCtx = getContext();
   const clonedCtx = JSON.parse(JSON.stringify(ctx));
   return {
@@ -12,10 +25,8 @@ const applyCtxState = (ctx: any, storage: Record<string, any>) => {
     ...clonedCtx,
     state: { ...defaultCtx.state, manager: { config: { configuration: sampleConfig.configuration } } },
     fusebit: {
-      setWebhookSecret: (secret: string) => (storage.secret = { data: secret }),
-      getWebhookSecret: () => storage.secret,
-      getWebhookCreateExpiry: () => storage.expiryDate,
-      setWebhookCreateExpiry: (expiryDate: number) => (storage.expiryDate = { data: expiryDate }),
+      getWebhookStorageData,
+      setWebhookStorageData,
     },
     res: {
       setHeader: jest.fn(),
@@ -49,21 +60,15 @@ describe('Asana Webhook Events', () => {
   test('Validate: validateWebhookEvent', async () => {
     const { SampleEventCtx, SampleChallengeCtx } = createContexts();
     const service: any = new ServiceConnector.Service();
-    SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 500);
+    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 500 });
     await service.initializationChallenge(SampleChallengeCtx);
     expect(await service.validateWebhookEvent(SampleEventCtx)).toBeTruthy();
   });
 
   test('Validate: validateWebhookEvent requires challenge', async () => {
-    let error;
-    try {
-      const { SampleEventCtx } = createContexts();
-      const service: any = new ServiceConnector.Service();
-      await service.validateWebhookEvent(SampleEventCtx);
-    } catch (e) {
-      error = e;
-    }
-    expect(error).toBeDefined();
+    const { SampleEventCtx } = createContexts();
+    const service: any = new ServiceConnector.Service();
+    await expect(service.validateWebhookEvent(SampleEventCtx)).rejects.toThrow();
   });
 
   test('Validate: initializationChallenge false', async () => {
@@ -76,7 +81,7 @@ describe('Asana Webhook Events', () => {
   test('Validate: initializationChallenge true', async () => {
     const { SampleChallengeCtx } = createContexts();
     const service: any = new ServiceConnector.Service();
-    SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 500);
+    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 500 });
     await new Promise((resolve) => setTimeout(resolve, 300));
     expect(await service.initializationChallenge(SampleChallengeCtx)).toBeTruthy();
     expect(SampleChallengeCtx.res.setHeader).toHaveBeenCalled();
@@ -85,8 +90,7 @@ describe('Asana Webhook Events', () => {
   test('Validate: initializationChallenge requires CreatedExpiry', async () => {
     const { SampleChallengeCtx } = createContexts();
     const service: any = new ServiceConnector.Service();
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(await service.initializationChallenge(SampleChallengeCtx)).toBeTruthy();
+    await expect(service.initializationChallenge(SampleChallengeCtx)).rejects.toThrow();
     expect(SampleChallengeCtx.res.setHeader).not.toHaveBeenCalled();
   });
 
@@ -104,7 +108,7 @@ describe('Asana Webhook Events', () => {
   test('Validate: Event to Fanout', async () => {
     const { SampleEventCtx, SampleChallengeCtx } = createContexts();
     const connector: any = new ServiceConnector();
-    SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 10 * 1000);
+    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 10 * 1000 });
     await connector.service.initializationChallenge(SampleChallengeCtx);
     const mockCtx = JSON.parse(JSON.stringify(SampleEventCtx));
     const events = connector.service.getEventsFromPayload(mockCtx);

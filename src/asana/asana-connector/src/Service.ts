@@ -18,7 +18,7 @@ class Service extends OAuthConnector.Service {
     if (ctx.req.headers['x-hook-secret']) {
       return true;
     }
-    const { secret: storageSecret } = await ctx.fusebit.getWebhookData();
+    const { secret: storageSecret } = await ctx.fusebit.getWebhookStorageData();
     const requestBody = ctx.req.body;
     const rawBody = JSON.stringify(requestBody)
       .replace(/\//g, '\\/')
