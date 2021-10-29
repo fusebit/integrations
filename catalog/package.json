@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog",
-  "version": "7.3.1",
+  "version": "7.4.3",
   "private": true,
   "description": "Fusebit Example Package Catalog",
   "keywords": [
@@ -23,7 +23,8 @@
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
+    "test": "node libc/index.js feed_integration > /dev/null && node libc/index.js feed_connector > /dev/null"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"

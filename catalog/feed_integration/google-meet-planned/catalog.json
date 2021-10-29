@@ -1,0 +1,13 @@
+{
+  "id": "google-meet-planned",
+  "name": "Google Meet",
+  "smallIcon": "#/assets/google-meet.svg",
+  "largeIcon": "#/assets/google-meet.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Video Conferencing,Office"
+  },
+  "configuration": {}
+}

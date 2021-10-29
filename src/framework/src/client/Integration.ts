@@ -60,7 +60,7 @@ class Middleware extends EntityBase.MiddlewareBase {}
  */
 export class Service extends EntityBase.ServiceBase {
   /**
-   * Get an authenticated SDK for the specified Connector, using a given Install
+   * Get an authenticated SDK for the specified Connector, using a given Install.
    * @param {FusebitContext} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
    * @param {string} installId The identifier of the Install to get the associated Connector
@@ -77,7 +77,7 @@ export class Service extends EntityBase.ServiceBase {
   };
 
   /**
-   * Get an authenticated SDK for each Connector in the list, using a given Install
+   * Get an authenticated SDK for each Connector in the list, using a given Install.
    * @param ctx The context object provided by the route function
    * @param {string[]} connectorNames An array of Connector names
    * @param {string} installId The identifier of the Install to get the associated Connectors

@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "github,popular"
+    "catalog": "Dev Tools,Project Management"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/github#creating-your-own-github-app"

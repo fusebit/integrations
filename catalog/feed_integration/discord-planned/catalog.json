@@ -1,0 +1,13 @@
+{
+  "id": "discord-planned",
+  "name": "Discord",
+  "smallIcon": "#/assets/discord.svg",
+  "largeIcon": "#/assets/discord.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Messaging"
+  },
+  "configuration": {}
+}

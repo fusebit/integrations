@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/atlassianConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

@@ -40,7 +40,7 @@ class Service extends OAuthConnector.Service {
   }
 
   protected getWebhookEventType(event: any): string {
-    return event.action;
+    return `${event.type}.${event.action}`;
   }
 }
 

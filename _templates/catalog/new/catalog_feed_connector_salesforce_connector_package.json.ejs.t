@@ -3,7 +3,7 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/connector/package.json
 ---
 {
   "name": "@fusebit-int/catalog-feed-connector-<%= name.toLowerCase() %>-connector",
-  "version": "7.2.0",
+  "version": "<%= h.currentVersion %>",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <%%this.name%> && yarn deploy",
@@ -11,7 +11,7 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/connector/package.json
     "get": "fuse connector get <%%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.2.0",
-    "@fusebit-int/<%= name.toLowerCase() %>-connector": "^7.2.0"
+    "@fusebit-int/framework": ">=<%= h.currentVersion %>",
+    "@fusebit-int/<%= name.toLowerCase() %>-connector": ">=<%= h.currentVersion %>"
   }
 }
