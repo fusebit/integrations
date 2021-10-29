@@ -55,9 +55,9 @@ class OAuthConnector extends Connector {
         cfg.configuration.authorizationUrl =
           cfg.configuration.authorizationUrl || cfg.configuration.constants.urls.production.authorizationUrl;
       } else if (proxyKey) {
-        cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || cfg.configuration.constants.urls.proxy.tokenUrl;
+        cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || cfg.configuration.constants.urls.proxy?.tokenUrl;
         cfg.configuration.authorizationUrl =
-          cfg.configuration.authorizationUrl || cfg.configuration.constants.urls.proxy.authorizationUrl;
+          cfg.configuration.authorizationUrl || cfg.configuration.constants.urls.proxy?.authorizationUrl;
       }
 
       return next();
