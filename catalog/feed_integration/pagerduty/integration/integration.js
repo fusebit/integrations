@@ -17,17 +17,18 @@ const integration = new Integration();
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
+const connectorName = 'pagerdutyConnector';
 
 // The sample test endpoint of this integration gets all incidents stored in the PagerDuty account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a PagerDuty client pre-configured with credentials necessary to communicate with your tenant's PagerDuty account.
   // For the PagerDuty SDK documentation, see https://developer.pagerduty.com/api-reference/ZG9jOjUxNzk5-changelog.
-  const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, 'pagerdutyConnector', ctx.params.tenantId);
+  const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const incidents = await pagerdutyClient.get('/incidents');
 
   ctx.body = {
-    message: `These are all the incidents within the PD account: ${await incidents.data.incidents}`,
+    message: `Identified ${incidents.data.incidents.length} incidents in PagerDuty.`,
   };
 });
 

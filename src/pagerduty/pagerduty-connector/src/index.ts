@@ -5,6 +5,7 @@ import { Service } from './Service';
 
 const TOKEN_URL = 'https://app.pagerduty.com/oauth/token';
 const AUTHORIZATION_URL = 'https://app.pagerduty.com/oauth/authorize';
+// PagerDuty does not implement a revocation URL, this is just a placeholder.
 const REVOCATION_URL = 'https://app.pagerduty.com/oauth/revoke';
 const SERVICE_NAME = 'PagerDuty';
 
