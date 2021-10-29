@@ -70,7 +70,7 @@ const createWebhookUrl = regexPathBuilder([
   undefined,
   'api',
   'fusebit_webhook_create',
-  '.*',
+  '.*'
 ]);
 const eventWebhookUrl = regexPathBuilder([
   '.*',
@@ -83,7 +83,7 @@ const eventWebhookUrl = regexPathBuilder([
   undefined,
   'api',
   'fusebit_webhook_event',
-  '.*',
+  '.*'
 ]);
 const tokenUrl = regexPathBuilder([
   '.*',
@@ -96,7 +96,7 @@ const tokenUrl = regexPathBuilder([
   undefined,
   'api',
   undefined,
-  'token',
+  'token'
 ]);
 
 describe('Asana Webhook Provider', () => {
