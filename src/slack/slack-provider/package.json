@@ -22,7 +22,6 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --config=./jest.config.ts",
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
