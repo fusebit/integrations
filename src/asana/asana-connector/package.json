@@ -10,6 +10,7 @@
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
+  "typings": "src/main.d.ts",
   "files": [
     "libc/**/*.js",
     "libc/**/*.d.ts",
@@ -34,13 +35,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "7.5.0",
+    "@fusebit-int/oauth-connector": ">=7.5.0",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "7.5.0",
-    "@types/koa": "^2.13.4",
-    "@types/koa__router": "^8.0.8",
+    "@fusebit-int/framework": ">=7.5.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
