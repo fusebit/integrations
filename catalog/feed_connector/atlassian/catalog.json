@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Issues"
+    "catalog": "Project Management,Dev Tools"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/atlassian#creating-your-own-atlassian-app"

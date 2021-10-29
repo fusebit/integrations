@@ -15,18 +15,24 @@ const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from witin your application.
+// to the integration, which you can then call from within your application.
 const router = integration.router;
 
 // The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // Create a Atlassian client pre-configured with credentials necessary to communicate with your tenant's Atlassian account.
+  // Create an Atlassian client pre-configured with credentials necessary to communicate with your tenant's
+  // Jira account.
+  //
   // For the Atlassian SDK documentation, see https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/.
-  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, 'atlassianConnector', ctx.params.tenantId);
+  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, 'jiraConnector', ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources();
 
+  const jira = atlassianClient.jira(resources[0].id);
+
+  const result = await jira.get('/search');
+
   ctx.body = {
-    message: `Successfully loaded ${resources.length} resources from Atlassian`,
+    message: `Found ${result.total} issues in Jira Cloud ${resources[0].id}`,
   };
 });
 

@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/atlassianIntegration/properties/id",
+      "scope": "#/properties/jiraIntegration/properties/id",
       "label": "Name"
     },
     {
@@ -16,7 +16,7 @@
     },
     {
       "type": "Control",
-      "scope": "#/properties/atlassianConnector/properties/id",
+      "scope": "#/properties/jiraConnector/properties/id",
       "label": "Atlassian Connector name",
       "rule": {
         "effect": "SHOW",

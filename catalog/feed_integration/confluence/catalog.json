@@ -1,0 +1,29 @@
+{
+  "id": "confluence",
+  "name": "Atlassian Confluence",
+  "smallIcon": "#/assets/confluence.svg",
+  "largeIcon": "#/assets/confluence.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Project Management,Dev Tools"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/confluence#creating-your-own-confluence-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "confluenceConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "confluenceIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
