@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "contacts",
+    "scope": "",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
