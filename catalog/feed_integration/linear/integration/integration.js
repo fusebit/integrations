@@ -18,11 +18,13 @@ const integration = new Integration();
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
 
+const connectorName = 'linearConnector';
+
 // The sample test endpoint of this integration gets all contacts stored in the Linear account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Linear client pre-configured with credentials necessary to communicate with your tenant's Linear account.
   // For the Linear SDK documentation, see https://developers.linear.app/docs/sdk/getting-started.
-  const linearClient = await integration.tenant.getSdkByTenant(ctx, 'linearConnector', ctx.params.tenantId);
+  const linearClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // List all the Linear issues assigned to me.
   const me = await linearClient.viewer;

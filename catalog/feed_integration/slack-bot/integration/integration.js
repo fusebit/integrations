@@ -18,11 +18,13 @@ const integration = new Integration();
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
 
+const connectorName = 'slackConnector';
+
 // The sample test endpoint of this integration sends a Direct Message to the Slack user associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Slack client pre-configured with credentials necessary to communicate with your tenant's Slack workspace.
   // For the Slack SDK documentation, see https://slack.dev/node-slack-sdk/web-api.
-  const slackClient = await integration.tenant.getSdkByTenant(ctx, 'slackConnector', ctx.params.tenantId);
+  const slackClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // Get the Slack user ID associated with your tenant
   const slackUserId = slackClient.fusebit.credentials.authed_user.id;

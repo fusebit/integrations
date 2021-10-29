@@ -14,13 +14,15 @@ const { Integration } = require('@fusebit-int/framework');
 
 const integration = new Integration();
 
+const connectorName = 'asanaClient';
+
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
 
 // This sample test endpoint gets the Asana user information for the individual that authenticated the asana integration
 router.get('/api/tenant/:tenantId/me', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+  const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await asanaClient.users.me();
   ctx.body = me;
 });
@@ -28,7 +30,7 @@ router.get('/api/tenant/:tenantId/me', integration.middleware.authorizeUser('ins
 // The sample test endpoint registers a new webhook for use with this integration
 router.post('/api/tenant/:tenantId/webhook/-/resource/:resourceId', async (ctx) => {
   try {
-    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
     const webhook = await asanaWebhookClient.create(ctx.params.resourceId, {});
     ctx.body = webhook;
   } catch (e) {
@@ -39,7 +41,7 @@ router.post('/api/tenant/:tenantId/webhook/-/resource/:resourceId', async (ctx) 
 // The sample test endpoint fetches a webhook by Id
 router.get('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
   try {
-    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
     const webhook = await asanaWebhookClient.get(ctx.params.webhookId);
     ctx.body = webhook;
   } catch (e) {
@@ -50,7 +52,7 @@ router.get('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
 // The sample test endpoint deletes a webhook by Id
 router.delete('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
   try {
-    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
     const webhook = await asanaWebhookClient.delete(ctx.params.webhookId);
     ctx.body = webhook;
   } catch (e) {
