@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "",
+    "scope": "api offline_access",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
