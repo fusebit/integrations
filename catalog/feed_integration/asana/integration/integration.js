@@ -26,61 +26,41 @@ router.get('/api/tenant/:tenantId/me', integration.middleware.authorizeUser('ins
 });
 
 // The sample test endpoint registers a new webhook for use with this integration
-router.post('/api/tenant/:tenantId/webhook/:resourceId', async (ctx) => {
+router.post('/api/tenant/:tenantId/webhook/-/resource/:resourceId', async (ctx) => {
   try {
-    const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
-    const data = {};
-    const webhook = await asanaClient.webhooks.fusebitCreate(ctx.params.resourceId, data);
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const webhook = await asanaWebhookClient.create(ctx.params.resourceId, {});
     ctx.body = webhook;
   } catch (e) {
     ctx.throw(e);
   }
 });
 
-router.get('/api/tenant/:tenantId/webhook', async (ctx) => {
+
+// The sample test endpoint fetches a webhook by Id
+router.get('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
   try {
-    const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
-    const me = await asanaClient.users.me();
-    const workspaces = me.workspaces;
-    const workspaceIds = workspaces.map((workspace) => workspace.gid);
-    const webhooks = await Promise.all(
-      workspaceIds.flatMap(async (workspaceId) => {
-        return (await asanaClient.webhooks.getAll(workspaceId)).data;
-      })
-    );
-    ctx.body = webhooks;
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const webhook = await asanaWebhookClient.get(ctx.params.webhookId);
+    ctx.body = webhook;
   } catch (e) {
     ctx.throw(e);
   }
 });
 
-router.delete('/api/tenant/:tenantId/webhook/:subdomain', async (ctx) => {
+// The sample test endpoint deletes a webhook by Id
+router.delete('/api/tenant/:tenantId/webhook/:webhookId', async (ctx) => {
   try {
-    const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
-    const me = await asanaClient.users.me();
-    const workspaces = me.workspaces;
-    const workspaceIds = workspaces.map((workspace) => workspace.gid);
-    await Promise.all(
-      workspaceIds.map(async (workspaceId) => {
-        const webhooks = (await asanaClient.webhooks.getAll(workspaceId)) || [];
-        return Promise.all(
-          webhooks.data
-            .filter((webhook) => {
-              return webhook.target.includes(ctx.params.subdomain);
-            })
-            .map((webhook) => {
-              return asanaClient.webhooks.deleteById(webhook.gid);
-            })
-        );
-      })
-    );
+    const asanaWebhookClient = await integration.webhook.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
+    const webhook = await asanaWebhookClient.delete(ctx.params.webhookId);
+    ctx.body = webhook;
   } catch (e) {
     ctx.throw(e);
   }
 });
 
 integration.event.on('/asanaConnector/webhook/:eventType', (ctx) => {
-  console.log('webhook received: ', ctx.req.body);
+  console.log('webhook received: ', ctx.req.body.data);
 });
 
 module.exports = integration;

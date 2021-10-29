@@ -6,7 +6,7 @@
   "handler": "@fusebit-int/asana-connector",
   "configuration": {
     "mode": {
-      "useProduction": true
+      "useProduction": false
     },
     "scope": "",
     "clientId": "<%global.consts.random%>",

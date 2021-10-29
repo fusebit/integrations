@@ -71,8 +71,6 @@ const createWebhookUrl = regexPathBuilder([
   'fusebit_webhook_create',
   '.*',
 ]);
-
-console.log(createWebhookUrl.source)
 const eventWebhookUrl = regexPathBuilder([
   '.*',
   'v2',

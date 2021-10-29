@@ -29,8 +29,6 @@ class Service extends OAuthConnector.Service {
     const rawBody = JSON.stringify(requestBody)
       .replace(/\//g, '\\/')
       .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
-
-    console.log(await ctx.fusebit.getWebhookSecret());
     const calculatedSignature = crypto.createHmac('sha256', signingSecret).update(rawBody).digest('hex');
 
     const signature = ctx.req.headers['x-hook-signature'] as string;
@@ -52,10 +50,8 @@ class Service extends OAuthConnector.Service {
     }
 
     if (webhookChallengeExpiryTime.data < Date.now()) {
-      console.log('expired');
       return true;
     }
-    console.log('good');
     ctx.fusebit.setWebhookSecret(secret);
     ctx.res.setHeader('x-hook-secret', secret);
     return true;
