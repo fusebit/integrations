@@ -1,7 +1,7 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "GitHub"
+    "fusebit.service": "GitHubApp"
   },
   "handler": "@fusebit-int/githubapp-connector",
   "configuration": {
