@@ -45,7 +45,9 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
     const params = this.ctx.state.params;
 
     const createWebhookUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}/api/fusebit_webhook_create`;
-    const createWebhookResponse = await superagent.post(createWebhookUrl).set('Authorization', `Bearer ${params.functionAccessToken}`);
+    const createWebhookResponse = await superagent
+      .post(createWebhookUrl)
+      .set('Authorization', `Bearer ${params.functionAccessToken}`);
     const { webhookId } = createWebhookResponse.body;
 
     const webhookTag = encodeURIComponent(['webhook', this.config.entityId, webhookId].join('/'));

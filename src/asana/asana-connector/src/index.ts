@@ -8,18 +8,23 @@ const AUTHORIZATION_URL = 'https://app.asana.com/-/oauth_authorize';
 const REVOCATION_URL = 'https://app.asana.com/-/oauth_revoke';
 const SERVICE_NAME = 'Asana';
 
-
 class ServiceConnector extends OAuthConnector {
-
   static Service = Service;
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL);
   }
-  protected setWebhookStorageData = async (ctx: Connector.Types.Context, storageKey: string, data: WebhookStorageData): Promise<void> => {
+  protected setWebhookStorageData = async (
+    ctx: Connector.Types.Context,
+    storageKey: string,
+    data: WebhookStorageData
+  ): Promise<void> => {
     await connector.storage.setData(ctx, storageKey, { data });
   };
-  protected getWebhookStorageData = async (ctx: Connector.Types.Context, storageKey: string): Promise<WebhookStorageData> => {
+  protected getWebhookStorageData = async (
+    ctx: Connector.Types.Context,
+    storageKey: string
+  ): Promise<WebhookStorageData> => {
     return (await connector.storage.getData(ctx, storageKey))?.data;
   };
 
@@ -46,7 +51,7 @@ class ServiceConnector extends OAuthConnector {
       ctx.fusebit = {
         ...ctx.fusebit,
         setWebhookData: (data: WebhookStorageData) => this.setWebhookStorageData(ctx, webhookStorageKey, data),
-        getWebhookData: () => this.getWebhookStorageData(ctx, webhookStorageKey)
+        getWebhookData: () => this.getWebhookStorageData(ctx, webhookStorageKey),
       };
       try {
         await this.service.handleWebhookEvent(ctx);
@@ -57,7 +62,6 @@ class ServiceConnector extends OAuthConnector {
     });
     // TODO: name convention?
     this.router.post('/api/fusebit_webhook_create', async (ctx: any) => {
-
       let existingEntry, webhookId, storageKey;
       do {
         webhookId = randomUUID();
@@ -69,7 +73,7 @@ class ServiceConnector extends OAuthConnector {
       const ttlSeconds = 60;
       const expiry = createdTime + ttlSeconds * 1000;
 
-      await this.setWebhookStorageData(ctx, storageKey, {expiry});
+      await this.setWebhookStorageData(ctx, storageKey, { expiry });
       ctx.body = { createdTime, webhookId };
     });
   }

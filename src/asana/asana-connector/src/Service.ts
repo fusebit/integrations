@@ -18,7 +18,7 @@ class Service extends OAuthConnector.Service {
     if (ctx.req.headers['x-hook-secret']) {
       return true;
     }
-    const {secret: storageSecret} = await ctx.fusebit.getWebhookData();
+    const { secret: storageSecret } = await ctx.fusebit.getWebhookData();
     const requestBody = ctx.req.body;
     const rawBody = JSON.stringify(requestBody)
       .replace(/\//g, '\\/')
@@ -38,7 +38,7 @@ class Service extends OAuthConnector.Service {
       return false;
     }
 
-    const {expiry:webhookChallengeExpiryTime} = await ctx.fusebit.getWebhookStorageData();
+    const { expiry: webhookChallengeExpiryTime } = await ctx.fusebit.getWebhookStorageData();
     if (!webhookChallengeExpiryTime) {
       return true;
     }
@@ -46,7 +46,7 @@ class Service extends OAuthConnector.Service {
     if (webhookChallengeExpiryTime.data < Date.now()) {
       return true;
     }
-    ctx.fusebit.setWebhookStorageData({secret});
+    ctx.fusebit.setWebhookStorageData({ secret });
     ctx.res.setHeader('x-hook-secret', secret);
     return true;
   }

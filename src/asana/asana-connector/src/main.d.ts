@@ -1,6 +1,6 @@
 interface WebhookStorageData {
-  secret?: string,
-  expiry?: number
+  secret?: string;
+  expiry?: number;
 }
 
 interface Event extends Record<string, any> {
@@ -8,8 +8,8 @@ interface Event extends Record<string, any> {
 }
 
 interface ITest {
-  a: number,
-  b: string
+  a: number;
+  b: string;
 }
 
 type ATest = ITest[keyof ITest][];
