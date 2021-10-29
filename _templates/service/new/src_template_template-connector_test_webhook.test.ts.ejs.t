@@ -45,7 +45,7 @@ describe('<%= h.capitalize(name) %> Webhook Events', () => {
     const service: any = new ServiceConnector().service;
 
     const scope = nock('https://api.<%= name.toLowerCase() %>.com');
-    scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get(`/me`).reply(200, sampleMe);
+    scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get('/me').reply(200, sampleMe);
 
     expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(
       '616e378a5800630069f43cb6'

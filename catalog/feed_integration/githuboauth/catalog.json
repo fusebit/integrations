@@ -1,0 +1,29 @@
+{
+  "id": "githuboauth",
+  "name": "GitHub OAuth App",
+  "smallIcon": "#/assets/github.svg",
+  "largeIcon": "#/assets/github.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Dev Tools,Project Management"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/github-oauth#creating-your-own-github-oauth-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "githuboauthConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "githuboauthIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

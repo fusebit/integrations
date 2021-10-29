@@ -1,6 +1,6 @@
 {
   "id": "github",
-  "name": "GitHub",
+  "name": "GitHub App",
   "smallIcon": "#/assets/github.svg",
   "largeIcon": "#/assets/github.svg",
   "version": "5.2.0",
