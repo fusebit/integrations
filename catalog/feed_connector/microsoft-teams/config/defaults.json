@@ -1,5 +1,5 @@
 {
-  "slackConnector": {
-    "slackName": "slack-connector"
+  "microsoftTeamsConnector": {
+    "microsoftTeamsName": "microsoft-teams-connector"
   }
 }

@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/slackConnector/properties/id",
+      "scope": "#/properties/microsoftTeamsConnector/properties/id",
       "label": "Name"
     }
   ]

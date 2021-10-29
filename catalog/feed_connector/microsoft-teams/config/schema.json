@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "slackConnector": {
+    "microsoftTeamsConnector": {
       "type": "object",
       "properties": {
         "id": {

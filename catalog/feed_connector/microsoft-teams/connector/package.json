@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-connector-slack-connector",
+  "name": "@fusebit-int/catalog-feed-connector-microsoft-teams-connector",
   "version": "7.4.2",
   "private": true,
   "scripts": {
@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@fusebit-int/framework": "^7.4.2",
-    "@fusebit-int/slack-connector": "^7.4.2"
+    "@fusebit-int/microsoft-teams-connector": "^7.4.2"
   }
 }
