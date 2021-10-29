@@ -8,7 +8,7 @@
     "get": "fuse connector get <%this.name%> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.3.3",
-    "@fusebit-int/pagerduty-connector": "^7.3.3"
+    "@fusebit-int/framework": ">=7.3.3",
+    "@fusebit-int/pagerduty-connector": ">=7.3.3"
   }
 }

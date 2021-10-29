@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "pagerduty,crm,sales,intro,popular"
+    "catalog": "Dev Tools,Operations"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app"
