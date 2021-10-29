@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/githubIntegration/properties/id",
+      "scope": "#/properties/githubappIntegration/properties/id",
       "label": "Name"
     },
     {
@@ -16,7 +16,7 @@
     },
     {
       "type": "Control",
-      "scope": "#/properties/githubConnector/properties/id",
+      "scope": "#/properties/githubappConnector/properties/id",
       "label": "GitHub Connector name",
       "rule": {
         "effect": "SHOW",

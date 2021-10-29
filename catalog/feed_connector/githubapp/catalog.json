@@ -1,12 +1,12 @@
 {
-  "id": "github",
+  "id": "githubapp",
   "name": "GitHub App",
   "smallIcon": "#/assets/github.svg",
   "largeIcon": "#/assets/github.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "github,popular"
+    "catalog": "githubapp,popular"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/github#creating-your-own-github-app"
@@ -16,7 +16,7 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "githubConnector": {
+      "githubappConnector": {
         "entityType": "connector",
         "path": "connector/"
       }
@@ -25,7 +25,7 @@
       {
         "name": "<% this.id %>",
         "skip": false,
-        "provider": "@fusebit-int/github-provider",
+        "provider": "@fusebit-int/githubapp-provider",
         "entityId": "<% this.id %>",
         "dependsOn": [],
         "entityType": "connector"

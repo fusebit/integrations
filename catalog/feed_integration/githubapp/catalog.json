@@ -1,5 +1,5 @@
 {
-  "id": "github",
+  "id": "githubapp",
   "name": "GitHub App",
   "smallIcon": "#/assets/github.svg",
   "largeIcon": "#/assets/github.svg",
@@ -16,11 +16,11 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "githubConnector": {
+      "githubappConnector": {
         "entityType": "connector",
         "path": "connector/"
       },
-      "githubIntegration": {
+      "githubappIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }
