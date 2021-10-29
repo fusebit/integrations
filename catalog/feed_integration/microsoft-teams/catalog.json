@@ -1,0 +1,29 @@
+{
+  "id": "microsoft-teams-bot",
+  "name": "Slack Bot",
+  "smallIcon": "/images/microsoft-teams.svg",
+  "largeIcon": "/images/microsoft-teams.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-teams#creating-your-own-microsoft-teams-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftTeamsConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "microsoftTeamsIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

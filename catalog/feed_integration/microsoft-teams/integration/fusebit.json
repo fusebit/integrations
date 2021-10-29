@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Microsoft Teams"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "microsoftTeamsConnector",
+      "skip": false,
+      "provider": "@fusebit-int/microsoft-teams-provider",
+      "entityId": "<% global.entities.microsoftTeamsConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
