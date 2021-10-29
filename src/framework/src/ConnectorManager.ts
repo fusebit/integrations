@@ -80,6 +80,38 @@ class ConnectorManager {
   }
 
   /**
+   * Get a specific instantiated webhook connector manager object by name.
+   *
+   * Returns a function that accepts a context object and returns an instantiated webhook connector, configured with
+   * the appropriate variables pulled from the ctx.  The returned function can be cached and used across
+   * multiple calls and endpoints.
+   *
+   * @param name Connector name
+   * @param {string} installId The unique id of the tenant Install that should be used to determine the
+   * appropriate connector identity to populate into the sdk.
+   */
+  public async getWebhookClientByName(ctx: FusebitContext, name: string, installId: string): Promise<any> {
+    const cfg = this.connectors[name];
+    if (!cfg) {
+      throw new Error(
+        `Unknown connector ${name}; add it to the configuration (known: ${JSON.stringify(
+          Object.keys(this.connectors)
+        )})?`
+      );
+    }
+    const inst = cfg.instance ? cfg.instance : this.loadConnector(name, cfg);
+
+    const service = new Service();
+    const install = await service.getInstall(ctx, installId);
+
+    const identity = install.data[name];
+    if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
+      ctx.throw(404);
+    }
+    const client = await inst.instantiateWebhook(ctx, identity.entityId, installId);
+    return client;
+  }
+  /**
    * Get a specific instantiated connector manager object by name.
    *
    * Returns a function that accepts a context object and returns an instantiated connector, configured with

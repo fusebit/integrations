@@ -17,7 +17,7 @@ class ServiceConnector extends OAuthConnector {
   public constructor() {
     super();
 
-    this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/configure', async (ctx: any) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Service Configuration';
@@ -37,12 +37,12 @@ class ServiceConnector extends OAuthConnector {
 
     this.router.post(
       `/api/fusebit_webhook_event/:webhookId`,
-      async (ctx, next) => {
+      async (ctx: any) => {
         const webhookSecretKey = createWebhookSecretKey(ctx.params.webhookId);
         const webhookCreatedExpiryKey = createWebhookCreateExpiryKey(ctx.params.webhookId);
         ctx.fusebit = {
           ...ctx.fusebit,
-          setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, secret),
+          setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, {data:secret}),
           getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
           getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey),
         };
@@ -54,11 +54,11 @@ class ServiceConnector extends OAuthConnector {
         }
       }
     );
-    this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx, next) => {
+    this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx: any) => {
       const createdTime = Date.now();
       const ttlSeconds = 60;
       const expiryTime = createdTime + ttlSeconds * 1000;
-      await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), expiryTime);
+      await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), {data:expiryTime});
       ctx.body = { createdTime };
     });
   }

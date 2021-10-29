@@ -14,7 +14,7 @@ class Service extends OAuthConnector.Service {
     });
   }
 
-  protected getAuthIdFromEvent(event: any) {
+  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
     return event.webhookId;
   }
 
@@ -22,13 +22,15 @@ class Service extends OAuthConnector.Service {
     if (ctx.req.headers['x-hook-secret']) {
       return true;
     }
-    const signingSecret = (await ctx.fusebit.getWebhookSecret())?.data;
+    const storageSecret = await ctx.fusebit.getWebhookSecret();
+    const signingSecret = storageSecret?.data;
     // TODO: we should move this into the base service.  It's a useful piece of code that we're already starting to duplicate
     const requestBody = ctx.req.body;
     const rawBody = JSON.stringify(requestBody)
       .replace(/\//g, '\\/')
       .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
 
+    console.log(await ctx.fusebit.getWebhookSecret())
     const calculatedSignature = crypto.createHmac('sha256', signingSecret).update(rawBody).digest('hex');
 
     const signature = ctx.req.headers['x-hook-signature'] as string;
@@ -50,15 +52,17 @@ class Service extends OAuthConnector.Service {
     }
 
     if (webhookChallengeExpiryTime.data < Date.now()) {
+      console.log('expired');
       return true;
     }
+    console.log('good')
     ctx.fusebit.setWebhookSecret(secret);
     ctx.res.setHeader('x-hook-secret', secret);
     return true;
   }
 
   protected getWebhookEventType(event: any): string {
-    return [event.resource.resource_type, event.action].join('/');
+    return event.action;
   }
 }
 

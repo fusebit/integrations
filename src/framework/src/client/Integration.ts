@@ -5,6 +5,45 @@ import superagent from 'superagent';
 
 const TENANT_TAG_NAME = 'fusebit.tenantId';
 
+
+/**
+ * @class
+ * @alias integration.webhook
+ */
+class Webhook {
+
+  /**
+   * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} tenantId Represents a single user of this Integration,
+   * usually corresponding to a user or account in your own system
+   * @returns {Promise<any>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:tenant', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
+   *    // use client methods . . .
+   * });
+   */
+  public getSdkByTenant = async <W extends Integration.Types.WebhookClient>(ctx: FusebitContext, connectorName: string, tenantId: string): Promise<W>  => {
+    const response = await superagent
+      .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
+      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
+    const body = response.body;
+
+    if (body.items.length === 0) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
+    }
+
+    if (body.items.length > 1) {
+      ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
+    }
+
+    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, body.items[0].id);
+  };
+}
+
 /**
  * @class Middleware
  * @augments MiddlewareBase
@@ -121,6 +160,16 @@ class Tenant {
   };
 }
 
+type _Service = Service;
+type _Webhook = Webhook;
+interface _WebhookClient {
+  create: (...args: any[]) => any;
+  get: (...args: any[]) => any;
+  getAll: (...args: any[]) => any;
+  delete: (...args: any[]) => any;
+}
+
+
 /**
  * Integration
  * @namespace
@@ -137,8 +186,15 @@ namespace Integration {
     export type Next = EntityBase.Types.Next;
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
     export interface IInstall extends EntityBase.Types.IInstall {}
+    export type Response = EntityBase.ResponseDefault;
+    export type Middleware = EntityBase.MiddlewareDefault;
+    export type Storage = EntityBase.StorageDefault;
+    export type Service = _Service;
+    export type Webhook = _Webhook;
+    export type WebhookClient = _WebhookClient;
   }
 }
+
 /**
  * @class Integration
  * @description Access to our SDK capabilities, like Storage, Authorization middlewares, SDK clients.
@@ -146,7 +202,7 @@ namespace Integration {
  * @private
  *
  */
-export default class Integration extends EntityBase {
+class Integration extends EntityBase {
   /**
    * @memberof Service
    * @private
@@ -171,4 +227,12 @@ export default class Integration extends EntityBase {
    * @private
    */
   public response = new EntityBase.ResponseDefault();
+
+  /**
+   * @private
+   */
+  public webhook: Webhook = new Webhook();
+
 }
+
+export default Integration;

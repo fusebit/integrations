@@ -14,7 +14,7 @@ nock(endpoint)
   .reply(200, {});
 
 class ProviderActivatorImpl extends ProviderActivator<boolean> {
-  protected instantiate(ctx: FusebitContext, lookupKey: string): Promise<boolean> {
+  public instantiate(ctx: FusebitContext, lookupKey: string): Promise<boolean> {
     throw Error('Not implemented');
   }
 

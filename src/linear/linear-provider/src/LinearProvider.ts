@@ -8,7 +8,7 @@ export default class LinearProvider extends Internal.ProviderActivator<FusebitLi
   /*
    * This function will create an authorized wrapper of the Linear SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitLinearClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitLinearClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitLinearClient = new Client({ accessToken: credentials.access_token });
     client.fusebit = { credentials, webhook: new LinearWebhook(client, ctx, this.config) };

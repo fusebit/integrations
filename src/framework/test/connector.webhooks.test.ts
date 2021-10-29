@@ -38,7 +38,7 @@ describe('Connector', () => {
     const connector = new TestConnector();
 
     await connector.service.handleWebhookEvent(ctx);
-    expect(ctx.status).toBe(200);
+    expect(ctx.status).toBeUndefined();
     expect(mockedValidateWebhookEvent).toBeCalledTimes(1);
     expect(mockedInitializationChallenge).toBeCalledTimes(1);
   });

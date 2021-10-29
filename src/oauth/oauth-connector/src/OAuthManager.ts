@@ -122,13 +122,13 @@ class OAuthConnector extends Connector {
         const constUrls = ctx.state.manager.config.configuration.constants.urls;
         if (
           ctx.body.data.tokenUrl == constUrls.production.tokenUrl ||
-          ctx.body.data.tokenUrl == constUrls.proxy.tokenUrl
+          ctx.body.data.tokenUrl == constUrls.proxy?.tokenUrl
         ) {
           delete ctx.body.data.tokenUrl;
         }
         if (
           ctx.body.data.authorizationUrl == constUrls.production.authorizationUrl ||
-          ctx.body.data.authorizationUrl == constUrls.proxy.authorizationUrl
+          ctx.body.data.authorizationUrl == constUrls.proxy?.authorizationUrl
         ) {
           delete ctx.body.data.authorizationUrl;
         }

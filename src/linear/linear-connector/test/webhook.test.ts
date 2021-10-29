@@ -50,14 +50,14 @@ describe('Linear Webhook Events', () => {
 
   test('Validate: validateWebhookEvent false', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.validateWebhookEvent(badCtx)).toBeFalsy();
+    expect(await service.validateWebhookEvent(badCtx)).toBeFalsy();
   });
 
   // Linear does not implement initializationChallenge.
   // Therefore only need to validate Linear against no initialization challenge.
   test('Validate initializationChallenge false', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
+    expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test('Validate: getTokenAuthId', async () => {
