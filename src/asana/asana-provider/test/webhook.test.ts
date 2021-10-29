@@ -44,16 +44,30 @@ const regexPathBuilder = (pathSegments: (string | undefined)[]) => {
   );
 };
 
-const tagUrl = regexPathBuilder(['.*', 'v2', 'account', , 'subscription', , 'integration', , 'install', , 'tag', '.*']);
+const tagUrl = regexPathBuilder([
+  '.*',
+  'v2',
+  'account',
+  undefined,
+  'subscription',
+  undefined,
+  'integration',
+  undefined,
+  'install',
+  undefined,
+  'tag',
+  '.*',
+]);
 const createWebhookUrl = regexPathBuilder([
   '.*',
   'v2',
   'account',
-  ,
+  undefined,
   'subscription',
-  ,
+  undefined,
   'connector',
-  ,
+  undefined,
+  undefined,
   'api',
   'fusebit_webhook_create',
   '.*',
@@ -62,16 +76,28 @@ const eventWebhookUrl = regexPathBuilder([
   '.*',
   'v2',
   'account',
-  ,
+  undefined,
   'subscription',
-  ,
+  undefined,
   'connector',
-  ,
+  undefined,
   'api',
   'fusebit_webhook_event',
   '.*',
 ]);
-const tokenUrl = regexPathBuilder(['.*', 'v2', 'account', , 'subscription', , 'connector', , 'api', , 'token']);
+const tokenUrl = regexPathBuilder([
+  '.*',
+  'v2',
+  'account',
+  undefined,
+  'subscription',
+  undefined,
+  'connector',
+  undefined,
+  'api',
+  undefined,
+  'token',
+]);
 
 describe('Asana Webhook Provider', () => {
   beforeEach(() => {
