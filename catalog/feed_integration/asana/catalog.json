@@ -1,0 +1,29 @@
+{
+  "id": "asana",
+  "name": "Asana",
+  "smallIcon": "#/assets/asana.svg",
+  "largeIcon": "#/assets/asana.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Issues"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "asanaConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "asanaIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
