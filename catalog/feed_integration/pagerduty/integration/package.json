@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-pagerduty-integration",
-  "version": "7.3.3",
+  "version": "7.6.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": ">=7.3.3",
-    "@fusebit-int/pagerduty-provider": ">=7.3.3"
+    "@fusebit-int/framework": "^7.6.0",
+    "@fusebit-int/pagerduty-provider": "^7.6.0"
   },
   "files": [
     "./integration.js",
