@@ -35,30 +35,27 @@ class ServiceConnector extends OAuthConnector {
       return ['webhook', 'create_expiry', webhookId].join('/');
     };
 
-    this.router.post(
-      `/api/fusebit_webhook_event/:webhookId`,
-      async (ctx: any) => {
-        const webhookSecretKey = createWebhookSecretKey(ctx.params.webhookId);
-        const webhookCreatedExpiryKey = createWebhookCreateExpiryKey(ctx.params.webhookId);
-        ctx.fusebit = {
-          ...ctx.fusebit,
-          setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, {data:secret}),
-          getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
-          getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey),
-        };
-        try {
-          await this.service.handleWebhookEvent(ctx);
-        } catch (e) {
-          // This is a problem.  Prettier demands no typing, ts demands typing.
-          ctx.throw((e as any).message);
-        }
+    this.router.post(`/api/fusebit_webhook_event/:webhookId`, async (ctx: any) => {
+      const webhookSecretKey = createWebhookSecretKey(ctx.params.webhookId);
+      const webhookCreatedExpiryKey = createWebhookCreateExpiryKey(ctx.params.webhookId);
+      ctx.fusebit = {
+        ...ctx.fusebit,
+        setWebhookSecret: (secret: string) => this.storage.setData(ctx, webhookSecretKey, { data: secret }),
+        getWebhookSecret: () => this.storage.getData(ctx, webhookSecretKey),
+        getWebhookCreateExpiry: () => this.storage.getData(ctx, webhookCreatedExpiryKey),
+      };
+      try {
+        await this.service.handleWebhookEvent(ctx);
+      } catch (e) {
+        // This is a problem.  Prettier demands no typing, ts demands typing.
+        ctx.throw((e as any).message);
       }
-    );
+    });
     this.router.post(`/api/fusebit_webhook_create/:webhookId`, async (ctx: any) => {
       const createdTime = Date.now();
       const ttlSeconds = 60;
       const expiryTime = createdTime + ttlSeconds * 1000;
-      await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), {data:expiryTime});
+      await this.storage.setData(ctx, createWebhookCreateExpiryKey(ctx.params.webhookId), { data: expiryTime });
       ctx.body = { createdTime };
     });
   }

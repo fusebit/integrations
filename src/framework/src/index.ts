@@ -8,7 +8,10 @@ import {
   Next as NextType,
 } from './router';
 import { Manager as Manager_, IOnStartup as IOnStartup_, IConfig as IConfig_ } from './Manager';
-import { ConnectorManager as ConnectorManager_, IInstanceConnectorConfig as IInstanceConnectorConfig_ } from './ConnectorManager';
+import {
+  ConnectorManager as ConnectorManager_,
+  IInstanceConnectorConfig as IInstanceConnectorConfig_,
+} from './ConnectorManager';
 import * as Storage_ from './Storage';
 import { Form as Form_ } from './Form';
 import { Handler as Handler_ } from './Handler';

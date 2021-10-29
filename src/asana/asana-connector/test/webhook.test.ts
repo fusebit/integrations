@@ -12,24 +12,24 @@ const applyCtxState = (ctx: any, storage: Record<string, any>) => {
     ...clonedCtx,
     state: { ...defaultCtx.state, manager: { config: { configuration: sampleConfig.configuration } } },
     fusebit: {
-      setWebhookSecret:  (secret: string) => storage.secret = {data: secret},
-      getWebhookSecret:  () => storage.secret,
-      getWebhookCreateExpiry:  () => storage.expiryDate,
-      setWebhookCreateExpiry:  (expiryDate: number) => storage.expiryDate = {data: expiryDate}
+      setWebhookSecret: (secret: string) => (storage.secret = { data: secret }),
+      getWebhookSecret: () => storage.secret,
+      getWebhookCreateExpiry: () => storage.expiryDate,
+      setWebhookCreateExpiry: (expiryDate: number) => (storage.expiryDate = { data: expiryDate }),
     },
     res: {
-      setHeader: jest.fn()
-    }
+      setHeader: jest.fn(),
+    },
   };
-}
+};
 
 const createContexts = () => {
   const Storage = {};
   return {
     SampleChallengeCtx: applyCtxState(sampleChallengeCtx, Storage),
-    SampleEventCtx: applyCtxState(sampleEventCtx, Storage)
-  }
-}
+    SampleEventCtx: applyCtxState(sampleEventCtx, Storage),
+  };
+};
 
 describe('Asana Webhook Events', () => {
   test('Validate: getEventsFromPayload', async () => {
@@ -51,7 +51,7 @@ describe('Asana Webhook Events', () => {
     const service: any = new ServiceConnector.Service();
     SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 500);
     await service.initializationChallenge(SampleChallengeCtx);
-    expect( await service.validateWebhookEvent(SampleEventCtx)).toBeTruthy();
+    expect(await service.validateWebhookEvent(SampleEventCtx)).toBeTruthy();
   });
 
   test('Validate: validateWebhookEvent requires challenge', async () => {
@@ -59,12 +59,12 @@ describe('Asana Webhook Events', () => {
     try {
       const { SampleEventCtx } = createContexts();
       const service: any = new ServiceConnector.Service();
-      await service.validateWebhookEvent(SampleEventCtx)
+      await service.validateWebhookEvent(SampleEventCtx);
     } catch (e) {
       error = e;
     }
     expect(error).toBeDefined();
-  })
+  });
 
   test('Validate: initializationChallenge false', async () => {
     const { SampleEventCtx, SampleChallengeCtx } = createContexts();
@@ -77,7 +77,7 @@ describe('Asana Webhook Events', () => {
     const { SampleChallengeCtx } = createContexts();
     const service: any = new ServiceConnector.Service();
     SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 500);
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     expect(await service.initializationChallenge(SampleChallengeCtx)).toBeTruthy();
     expect(SampleChallengeCtx.res.setHeader).toHaveBeenCalled();
   });
@@ -85,7 +85,7 @@ describe('Asana Webhook Events', () => {
   test('Validate: initializationChallenge requires CreatedExpiry', async () => {
     const { SampleChallengeCtx } = createContexts();
     const service: any = new ServiceConnector.Service();
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     expect(await service.initializationChallenge(SampleChallengeCtx)).toBeTruthy();
     expect(SampleChallengeCtx.res.setHeader).not.toHaveBeenCalled();
   });
@@ -104,7 +104,7 @@ describe('Asana Webhook Events', () => {
   test('Validate: Event to Fanout', async () => {
     const { SampleEventCtx, SampleChallengeCtx } = createContexts();
     const connector: any = new ServiceConnector();
-    SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 10 * 1000)
+    SampleChallengeCtx.fusebit.setWebhookCreateExpiry(Date.now() + 10 * 1000);
     await connector.service.initializationChallenge(SampleChallengeCtx);
     const mockCtx = JSON.parse(JSON.stringify(SampleEventCtx));
     const events = connector.service.getEventsFromPayload(mockCtx);
@@ -114,15 +114,13 @@ describe('Asana Webhook Events', () => {
     scope
       .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${eventAuthId}`, (body) => {
         expect(body).toEqual({
-          payload: events.map((event: any) =>
-            ({
-              data: event,
-              entityId: Constants.connectorId,
-              eventType: sampleEvent.action,
-              webhookAuthId: eventAuthId,
-              webhookEventId: `webhook/${Constants.connectorId}/${eventAuthId}`,
-            })
-          )
+          payload: events.map((event: any) => ({
+            data: event,
+            entityId: Constants.connectorId,
+            eventType: sampleEvent.action,
+            webhookAuthId: eventAuthId,
+            webhookEventId: `webhook/${Constants.connectorId}/${eventAuthId}`,
+          })),
         });
         return true;
       })

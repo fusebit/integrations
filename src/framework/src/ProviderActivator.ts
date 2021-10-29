@@ -5,8 +5,9 @@ import { Integration } from './client';
 
 export default abstract class ProviderActivator<T, W extends Integration.Types.WebhookClient | undefined = undefined> {
   public abstract instantiate(ctx: FusebitContext, lookupKey: string, installId?: string): Promise<T>;
-  instantiateWebhook?: W extends undefined ? never : (ctx: FusebitContext, lookupKey: string, installId: string) => Promise<W>;
-
+  instantiateWebhook?: W extends undefined
+    ? never
+    : (ctx: FusebitContext, lookupKey: string, installId: string) => Promise<W>;
 
   public config: IInstanceConnectorConfig;
   constructor(cfg: IInstanceConnectorConfig) {

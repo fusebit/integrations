@@ -9,16 +9,13 @@ export default class AsanaProvider extends Internal.ProviderActivator<FusebitAsa
     lookupKey: string,
     installId: string
   ): Promise<AsanaWebhook> => {
-      const client = await this.instantiate(ctx, lookupKey);
-      return new AsanaWebhook(ctx, lookupKey, installId, this.config, client);
-  }
+    const client = await this.instantiate(ctx, lookupKey);
+    return new AsanaWebhook(ctx, lookupKey, installId, this.config, client);
+  };
   /*
    * This function will create an authorized wrapper of the Asana SDK client.
    */
-  public async instantiate(
-    ctx: Internal.Types.Context,
-    lookupKey: string
-  ): Promise<FusebitAsanaClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitAsanaClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitAsanaClient = Asana.Client.create().useAccessToken(credentials.access_token);
     client.fusebit = { credentials };

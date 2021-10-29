@@ -8,12 +8,12 @@ const webhooks = {
   deleteById: jest.fn(),
 };
 jest.mock('asana', () => ({
-    Client: {
-      create: jest.fn(() => ({
-        useAccessToken: jest.fn(() => ({ webhooks })),
-        webhooks,
-      })),
-   },
+  Client: {
+    create: jest.fn(() => ({
+      useAccessToken: jest.fn(() => ({ webhooks })),
+      webhooks,
+    })),
+  },
 }));
 import AsanaClient from 'asana';
 const asanaClient = AsanaClient.Client.create();

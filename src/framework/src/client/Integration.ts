@@ -5,13 +5,11 @@ import superagent from 'superagent';
 
 const TENANT_TAG_NAME = 'fusebit.tenantId';
 
-
 /**
  * @class
  * @alias integration.webhook
  */
 class Webhook {
-
   /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
@@ -26,7 +24,11 @@ class Webhook {
    *    // use client methods . . .
    * });
    */
-  public getSdkByTenant = async <W extends Integration.Types.WebhookClient>(ctx: FusebitContext, connectorName: string, tenantId: string): Promise<W>  => {
+  public getSdkByTenant = async <W extends Integration.Types.WebhookClient>(
+    ctx: FusebitContext,
+    connectorName: string,
+    tenantId: string
+  ): Promise<W> => {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
@@ -169,7 +171,6 @@ interface _WebhookClient {
   delete: (...args: any[]) => any;
 }
 
-
 /**
  * Integration
  * @namespace
@@ -232,7 +233,6 @@ class Integration extends EntityBase {
    * @private
    */
   public webhook: Webhook = new Webhook();
-
 }
 
 export default Integration;

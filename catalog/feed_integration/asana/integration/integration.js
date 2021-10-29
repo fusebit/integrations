@@ -42,11 +42,12 @@ router.get('/api/tenant/:tenantId/webhook', async (ctx) => {
     const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
     const me = await asanaClient.users.me();
     const workspaces = me.workspaces;
-    const workspaceIds = workspaces.map(workspace => workspace.gid);
+    const workspaceIds = workspaces.map((workspace) => workspace.gid);
     const webhooks = await Promise.all(
       workspaceIds.flatMap(async (workspaceId) => {
-        return (await asanaClient.webhooks.getAll(workspaceId)).data
-      }));
+        return (await asanaClient.webhooks.getAll(workspaceId)).data;
+      })
+    );
     ctx.body = webhooks;
   } catch (e) {
     ctx.throw(e);
@@ -58,16 +59,19 @@ router.delete('/api/tenant/:tenantId/webhook/:subdomain', async (ctx) => {
     const asanaClient = await integration.tenant.getSdkByTenant(ctx, 'asanaConnector', ctx.params.tenantId);
     const me = await asanaClient.users.me();
     const workspaces = me.workspaces;
-    const workspaceIds = workspaces.map(workspace => workspace.gid);
+    const workspaceIds = workspaces.map((workspace) => workspace.gid);
     await Promise.all(
       workspaceIds.map(async (workspaceId) => {
-        const webhooks = await asanaClient.webhooks.getAll(workspaceId) || [];
-        return Promise.all(webhooks.data.filter(webhook => {
-            return webhook.target.includes(ctx.params.subdomain);
-          }).map(webhook => {
-            return asanaClient.webhooks.deleteById(webhook.gid);
-          })
-        )
+        const webhooks = (await asanaClient.webhooks.getAll(workspaceId)) || [];
+        return Promise.all(
+          webhooks.data
+            .filter((webhook) => {
+              return webhook.target.includes(ctx.params.subdomain);
+            })
+            .map((webhook) => {
+              return asanaClient.webhooks.deleteById(webhook.gid);
+            })
+        );
       })
     );
   } catch (e) {
