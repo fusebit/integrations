@@ -1,11 +1,11 @@
-# `@fusebit-int/msteams-provider`
+# `@fusebit-int/microsoft-teams-provider`
 
 > TODO: description
 
 ## Usage
 
 ```
-const msteamsProvider = require('@fusebit-int/msteams-provider');
+const microsoftTeamsProvider = require('@fusebit-int/microsoft-teams-provider');
 
 // TODO: DEMONSTRATE API
 ```

@@ -1,10 +1,10 @@
 {
-  "name": "@fusebit-int/msteams-provider",
+  "name": "@fusebit-int/microsoft-teams-provider",
   "version": "7.4.2",
-  "description": "MSTeams provider",
+  "description": "Microsoft Teams provider",
   "keywords": [
     "Fusebit",
-    "MSTeams"
+    "Microsoft Teams"
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",

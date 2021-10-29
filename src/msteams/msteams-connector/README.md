@@ -1,11 +1,11 @@
-# `@fusebit-int/msteams-connector`
+# `@fusebit-int/microsoft-teams-connector`
 
 > TODO: description
 
 ## Usage
 
 ```
-const msteamsConnector = require('@fusebit-int/msteams-connector');
+const microsoft-teamsConnector = require('@fusebit-int/microsoft-teams-connector');
 
 // TODO: DEMONSTRATE API
 ```

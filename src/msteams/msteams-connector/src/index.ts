@@ -6,7 +6,7 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 const AUTHORIZATION_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
 const REVOCATION_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/revoke';
-const SERVICE_NAME = 'MSTeams';
+const SERVICE_NAME = 'Microsoft Teams';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;
@@ -25,12 +25,12 @@ class ServiceConnector extends OAuthConnector {
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
-        'MSTeams Configuration';
+        'Microsoft Teams Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your MSTeams App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your MSTeams App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your MSTeams App';
+      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Microsoft Teams App';
+      ctx.body.schema.properties.clientId.description = 'The Client ID from your Microsoft Teams App';
+      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Microsoft Teams App';
     });
   }
 }

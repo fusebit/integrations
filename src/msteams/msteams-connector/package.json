@@ -1,13 +1,20 @@
 {
-  "name": "@fusebit-int/msteams-connector",
+  "name": "@fusebit-int/microsoft-teams-connector",
   "version": "7.4.2",
-  "description": "MSTeams Connector",
-  "keywords": ["Fusebit", "MSTeams"],
+  "description": "Microsoft Teams Connector",
+  "keywords": [
+    "Fusebit",
+    "Microsoft Teams"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"

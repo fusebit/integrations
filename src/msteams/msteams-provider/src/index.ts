@@ -1,3 +1,3 @@
-import Provider from './MSTeamsProvider';
+import Provider from './MicrosoftTeamsProvider';
 
 export default Provider;

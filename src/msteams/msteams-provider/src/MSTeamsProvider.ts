@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import { AuthenticationProvider, Client, ClientOptions } from '@microsoft/microsoft-graph-client';
 import { BotFrameworkAdapter } from 'botbuilder';
 
-type FusebitMSTeamsClient = Client & { fusebit?: any; botFrameworkAdapter?: BotFrameworkAdapter };
+type FusebitMicrosoftTeamsClient = Client & { fusebit?: any; botFrameworkAdapter?: BotFrameworkAdapter };
 
 class FusebitAuthenticationProvider implements AuthenticationProvider {
   constructor(private accessToken: string) {}
@@ -11,16 +11,16 @@ class FusebitAuthenticationProvider implements AuthenticationProvider {
   }
 }
 
-export default class MSTeamsProvider extends Internal.ProviderActivator<FusebitMSTeamsClient> {
+export default class MicrosoftTeamsProvider extends Internal.ProviderActivator<FusebitMicrosoftTeamsClient> {
   /*
-   * This function will create an authorized wrapper of the MSTeams SDK client.
+   * This function will create an authorized wrapper of the MicrosoftTeams SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitMSTeamsClient> {
+  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitMicrosoftTeamsClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const clientOptions: ClientOptions = {
       authProvider: new FusebitAuthenticationProvider(credentials.access_token),
     };
-    const client: FusebitMSTeamsClient = Client.initWithMiddleware(clientOptions);
+    const client: FusebitMicrosoftTeamsClient = Client.initWithMiddleware(clientOptions);
     client.fusebit = { credentials };
 
     client.botFrameworkAdapter = new BotFrameworkAdapter({

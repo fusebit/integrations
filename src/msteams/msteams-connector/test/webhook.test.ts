@@ -12,7 +12,7 @@ const sampleCtx: any = {
 
 const sampleAccessToken = 'sample_access_token';
 
-describe('MSTeams Webhook Events', () => {
+describe('Microsoft Teams Webhook Events', () => {
   test.todo('Validate: getEventsFromPayload', async () => {
     const service: any = new ServiceConnector().service;
 
@@ -41,7 +41,7 @@ describe('MSTeams Webhook Events', () => {
   test.todo('Validate: getTokenAuthId', async () => {
     const service: any = new ServiceConnector().service;
 
-    const scope = nock('https://api.msteams.com');
+    const scope = nock('https://api.microsoft-teams.com');
     scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get(`/me`).reply(200, sampleMe);
 
     expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(

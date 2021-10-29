@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/slackConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}
