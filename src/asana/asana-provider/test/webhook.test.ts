@@ -138,7 +138,7 @@ describe('Asana Webhook Provider', () => {
     const webhookId = 'webhook_id';
     const params = { abc: 123 };
     const dispatchOptions = { def: 456 };
-    await webhookClient.getAll(webhookId, params, dispatchOptions);
+    await webhookClient.list(webhookId, params, dispatchOptions);
     expect(asanaClient.webhooks.getAll).toHaveBeenCalledWith(webhookId, params, dispatchOptions);
   });
 

@@ -2,8 +2,7 @@
 import EntityBase from './EntityBase';
 import { FusebitContext } from '../router';
 import superagent from 'superagent';
-
-const TENANT_TAG_NAME = 'fusebit.tenantId';
+import { getTenantInstalls } from './Utility';
 
 /**
  * @class
@@ -24,15 +23,12 @@ class Webhook {
    *    // use client methods . . .
    * });
    */
-  public getSdkByTenant = async <W extends Integration.Types.WebhookClient>(
+  public getSdkByTenant = async <T extends any, W extends Integration.Types.WebhookClient<T>>(
     ctx: FusebitContext,
     connectorName: string,
     tenantId: string
   ): Promise<W> => {
-    const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
-      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-    const body = response.body;
+    const body = await getTenantInstalls(ctx, tenantId);
 
     if (body.items.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
@@ -43,6 +39,27 @@ class Webhook {
     }
 
     return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, body.items[0].id);
+  };
+
+  /**
+   * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} installId Represents a single installation of this Integration
+   * @returns {Promise<any>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:tenant', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
+   *    // use client methods . . .
+   * });
+   */
+  public getSdk = async <T extends any, W extends Integration.Types.WebhookClient<T>>(
+    ctx: FusebitContext,
+    connectorName: string,
+    installId: string
+  ): Promise<W> => {
+    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
   };
 }
 
@@ -111,8 +128,7 @@ export class Service extends EntityBase.ServiceBase {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/install/${installId}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-    const body = response.body;
-    return body;
+    return response.body;
   };
 }
 
@@ -145,10 +161,7 @@ class Tenant {
    * });
    */
   public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
-    const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
-      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-    const body = response.body;
+    const body = await getTenantInstalls(ctx, tenantId);
 
     if (body.items.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
@@ -164,11 +177,12 @@ class Tenant {
 
 type _Service = Service;
 type _Webhook = Webhook;
-interface _WebhookClient {
-  create: (...args: any[]) => any;
-  get: (...args: any[]) => any;
-  getAll: (...args: any[]) => any;
-  delete: (...args: any[]) => any;
+abstract class _WebhookClient<T> {
+  abstract create: (...args: any[]) => Promise<T>;
+  abstract get: (...args: any[]) => Promise<T>;
+  abstract list: (...args: any[]) => Promise<T[]>;
+  abstract delete: (...args: any[]) => Promise<void>;
+  abstract deleteAll: (...args: any[]) => Promise<void>;
 }
 
 /**
@@ -192,7 +206,7 @@ namespace Integration {
     export type Storage = EntityBase.StorageDefault;
     export type Service = _Service;
     export type Webhook = _Webhook;
-    export type WebhookClient = _WebhookClient;
+    export type WebhookClient<T> = _WebhookClient<T>;
   }
 }
 

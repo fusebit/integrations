@@ -2,12 +2,8 @@ import { Internal } from '@fusebit-int/framework';
 import Asana from 'asana';
 import AsanaWebhook from './AsanaWebhook';
 
-export default class AsanaProvider extends Internal.ProviderActivator<FusebitAsanaClient, AsanaWebhook> {
-  public instantiateWebhook = async (
-    ctx: Internal.Types.Context,
-    lookupKey: string,
-    installId: string
-  ): Promise<AsanaWebhook> => {
+export default class AsanaProvider extends Internal.ProviderActivator<FusebitAsanaClient> {
+  public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {
     const client = await this.instantiate(ctx, lookupKey);
     return new AsanaWebhook(ctx, lookupKey, installId, this.config, client);
   };

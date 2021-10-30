@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import Asana from 'asana';
 import superagent from 'superagent';
 
-class AsanaWebhook implements Internal.Types.WebhookClient {
+class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webhooks.Type> {
   constructor(
     ctx: Internal.Types.Context,
     lookupKey: string,
@@ -35,12 +35,12 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
    * @param {String|Number} resource A resource ID to subscribe to. The resource can be a task or project.
    * @param {Object} data Data for the request
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise} The response from the API
+   * @return {Promise<webhook>} The created webhook
    */
   public create = async (
     resource: string | number,
-    data: any,
-    dispatchOptions?: any
+    data: object,
+    dispatchOptions?: object
   ): Promise<Asana.resources.Webhooks.Type> => {
     const params = this.ctx.state.params;
 
@@ -55,14 +55,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
     await superagent.put(tagUrl).set('Authorization', `Bearer ${params.functionAccessToken}`);
 
     const webhookUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}/api/fusebit_webhook_event/${webhookId}`;
-
-    return new Promise(async (resolve, reject) => {
-      try {
-        resolve(await this.client.webhooks.create(resource, webhookUrl, data, dispatchOptions));
-      } catch (e) {
-        reject(e);
-      }
-    });
+    return await this.client.webhooks.create(resource, webhookUrl, data, dispatchOptions);
   };
 
   /**
@@ -70,16 +63,14 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
    * @param {String} webhook The webhook to get.
    * @param {Object} [params] Parameters for the request
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise} The requested resource
+   * @return {Promise<webhook>} The requested resource
    */
-  public get = async (webhook: string, params?: any, dispatchOptions?: any): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        resolve(await this.client.webhooks.getById(webhook, params, dispatchOptions));
-      } catch (e) {
-        reject(e);
-      }
-    });
+  public get = async (
+    webhook: string,
+    params?: object,
+    dispatchOptions?: object
+  ): Promise<Asana.resources.Webhooks.Type> => {
+    return await this.client.webhooks.getById(webhook, params, dispatchOptions);
   };
 
   /**
@@ -89,20 +80,14 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
    * @param {Object} [params] Parameters for the request
    * @param {String|Number} [params.resource] Only return webhooks for the given resource.
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise} The response from the API
+   * @return {Promise<webhook[]>} An array of the requested webhooks
    */
-  public getAll = async (
+  public list = async (
     workspace: string | number,
-    params?: any,
-    dispatchOptions?: any
+    params?: object,
+    dispatchOptions?: object
   ): Promise<Asana.resources.Webhooks.Type[]> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        resolve(await this.client.webhooks.getAll(workspace, params, dispatchOptions));
-      } catch (e) {
-        reject(e);
-      }
-    });
+    return await this.client.webhooks.getAll(workspace, params, dispatchOptions);
   };
 
   /**
@@ -111,16 +96,24 @@ class AsanaWebhook implements Internal.Types.WebhookClient {
    * webhook, but no further requests will be issued.
    * @param {String} webhook The webhook to delete.
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise} The response from the API
+   * @return {Promise<void>}
    */
-  public delete = async (webhook: string, dispatchOptions?: any): Promise<Asana.resources.Webhooks.Type> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        resolve(await this.client.webhooks.deleteById(webhook, dispatchOptions));
-      } catch (e) {
-        reject(e);
-      }
-    });
+  public delete = async (webhook: string, dispatchOptions?: object) => {
+    await this.client.webhooks.deleteById(webhook, dispatchOptions);
+  };
+
+  /**
+   * This method permanently removes a webhook. Note that it may be possible
+   * to receive a request that was already in flight after deleting the
+   * webhook, but no further requests will be issued.
+   * @param {String} workspace The workspace to remove all webhooks from.
+   * @param {Object} [params] Parameters for the request
+   * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
+   * @return {Promise<void>}
+   */
+  public deleteAll = async (workspace: string, params?: object, dispatchOptions?: object) => {
+    const webhooks = await this.list(workspace, params, dispatchOptions);
+    await Promise.all(webhooks.map((webhook) => this.delete(webhook.gid, dispatchOptions)));
   };
 }
 

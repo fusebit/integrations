@@ -49,7 +49,7 @@ module Internal {
     export type Next = NextType;
     export interface IConfig extends IConfig_ {}
     export interface IOnStartup extends IOnStartup_ {}
-    export type WebhookClient = Integration.Types.WebhookClient;
+    export type WebhookClient<T> = Integration.Types.WebhookClient<T>;
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
   }
 }
