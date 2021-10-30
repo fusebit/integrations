@@ -24,8 +24,8 @@ export default class MicrosoftTeamsProvider extends Internal.ProviderActivator<F
     client.fusebit = { credentials };
 
     client.botFrameworkAdapter = new BotFrameworkAdapter({
-      appId: credentials.client_id || '16a42606-f57e-444e-9a97-3d703d05f436',
-      appPassword: credentials.client_secret || 'JwP7Q~7r6MZifK~7aU~r3-JsAgbehuoHybYqS',
+      appId: credentials.client_id,
+      appPassword: credentials.client_secret,
     });
 
     return client;
