@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "User.Read profile email",
+    "scope": "User.Read offline_access",
     "clientId": "<%global.consts.random%>",
     "clientSecret": "<%global.consts.random%>",
     "refreshErrorLimit": 100000,
