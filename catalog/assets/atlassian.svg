@@ -1,14 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 24.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:url(#SVGID_1_);}
-	.st1{fill:#2681FF;}
-</style>
-<g>
-	
-		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-1.0728" y1="510.15" x2="0.9305" y2="510.15" gradientTransform="matrix(-66.1209 114.5251 -90.1898 -83.962 46160.0039 43231.2578)">
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<style type="text/css">
+		.st0{fill:url(#SVGID_1_);}
+		.st1{fill:#2681FF;}
+	</style>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-1.0728" y1="510.15" x2="0.9305" y2="510.15" gradientTransform="matrix(-66.1209 114.5251 -90.1898 -83.962 46160.0039 43231.2578)">
 		<stop  offset="0" style="stop-color:#0052CC"/>
 		<stop  offset="0.923" style="stop-color:#2684FF"/>
 		<stop  offset="1" style="stop-color:#2684FF"/>
@@ -17,5 +12,4 @@
 		h174.7c5.7,0.1,11-3.1,13.4-8.3C240.8,425.6,218,307.2,151.8,236.5z"/>
 	<path class="st1" d="M243.9,8.2c-70.2,111.2-65.5,234.3-19.3,326.8l84.3,168.5c2.5,5.1,7.7,8.3,13.4,8.3H497c5.2,0,10-2.7,12.8-7.1
 		c2.7-4.4,3-9.9,0.7-14.6c0,0-235.1-470.2-241-482C264.1-2.4,250.7-2.6,243.9,8.2z"/>
-</g>
 </svg>
