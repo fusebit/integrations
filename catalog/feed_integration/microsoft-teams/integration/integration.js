@@ -76,7 +76,7 @@ router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('
 });
 
 // This event handler responds to messages in channels that the bot has access to
-integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
+integration.event.on('/:componentName/webhook/message', async (ctx) => {
   const microsoftTeamsClient = await integration.service.getSdk(
     ctx,
     ctx.params.componentName,
