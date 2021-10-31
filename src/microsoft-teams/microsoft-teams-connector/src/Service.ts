@@ -1,29 +1,44 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
+import superagent from 'superagent';
 
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
+    return [ctx.req.body];
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
-    return '';
+    return ctx.req.body.from.aadObjectId;
   }
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
-    ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
+    /**
+     * TODO - Follow the steps here:
+     * https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-connector-authentication?view=azure-bot-service-4.0#openid-metadata-document
+     *
+     * This will require an async validateWebhookEvent to fetch jwks and the like
+     *
+     */
+
+    return true;
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
-    ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
+    // TODO - no initializationChallenge?
+    return false;
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
-    return '';
+    console.log(token.access_token);
+    const response = await superagent
+      .get('https://graph.microsoft.com/v1.0/me')
+      .set('Authorization', `Bearer ${token.access_token}`);
+    console.log(response.body);
+    return response.body.id;
   }
 
   protected getWebhookEventType(event: any): string {
-    return '';
+    return event.type;
   }
 }
 

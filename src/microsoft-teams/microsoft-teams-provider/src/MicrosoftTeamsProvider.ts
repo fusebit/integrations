@@ -1,3 +1,5 @@
+// microsoft-graph-client uses fetch
+import 'isomorphic-fetch';
 import { Internal } from '@fusebit-int/framework';
 import { AuthenticationProvider, Client, ClientOptions } from '@microsoft/microsoft-graph-client';
 import { BotFrameworkAdapter } from 'botbuilder';
