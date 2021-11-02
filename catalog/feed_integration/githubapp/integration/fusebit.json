@@ -6,10 +6,10 @@
   "handler": "./integration",
   "components": [
     {
-      "name": "githubConnector",
+      "name": "githubappConnector",
       "skip": false,
-      "provider": "@fusebit-int/github-provider",
-      "entityId": "<% global.entities.githubConnector.id %>",
+      "provider": "@fusebit-int/githubapp-provider",
+      "entityId": "<% global.entities.githubappConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }

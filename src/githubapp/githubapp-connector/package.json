@@ -1,7 +1,7 @@
 {
-  "name": "@fusebit-int/github-connector",
+  "name": "@fusebit-int/githubapp-connector",
   "version": "7.7.1",
-  "description": "GitHub Connector",
+  "description": "GitHub App Connector",
   "keywords": [
     "Fusebit",
     "GitHub"

@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "githubIntegration": {
+    "githubappIntegration": {
       "type": "object",
       "properties": {
         "id": {
@@ -10,7 +10,7 @@
         }
       }
     },
-    "githubConnector": {
+    "githubappConnector": {
       "type": "object",
       "properties": {
         "id": {

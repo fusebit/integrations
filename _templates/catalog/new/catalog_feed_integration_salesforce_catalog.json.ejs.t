@@ -9,7 +9,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/catalog.json
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "<%= name.toLowerCase() %>,crm,sales,popular"
+    "catalog": ""
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>#creating-your-own-<%= name.toLowerCase() %>-app"

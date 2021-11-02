@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-github-integration",
+  "name": "@fusebit-int/catalog-feed-integration-githubapp-integration",
   "version": "7.7.1",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@fusebit-int/framework": "^7.7.1",
-    "@fusebit-int/github-provider": "^7.7.1"
+    "@fusebit-int/githubapp-provider": "^7.7.1"
   },
   "files": [
     "./integration.js",

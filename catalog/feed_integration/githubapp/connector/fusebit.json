@@ -3,7 +3,7 @@
   "tags": {
     "fusebit.service": "GitHub"
   },
-  "handler": "@fusebit-int/github-connector",
+  "handler": "@fusebit-int/githubapp-connector",
   "configuration": {
     "mode": {
       "useProduction": false
