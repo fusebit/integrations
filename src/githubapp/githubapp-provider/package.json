@@ -1,7 +1,7 @@
 {
-  "name": "@fusebit-int/github-provider",
+  "name": "@fusebit-int/githubapp-provider",
   "version": "7.7.1",
-  "description": "GitHub provider",
+  "description": "GitHub App provider",
   "keywords": [
     "Fusebit",
     "GitHub"
