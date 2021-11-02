@@ -9,7 +9,7 @@
     "catalog": "Dev Tools,Project Management"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/github#creating-your-own-github-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/githubapp#creating-your-own-githubapp"
   },
   "configuration": {
     "schema": "config/schema.json",
