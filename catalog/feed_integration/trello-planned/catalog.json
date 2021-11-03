@@ -1,0 +1,13 @@
+{
+  "id": "trello-planned",
+  "name": "Trello",
+  "smallIcon": "#/assets/trello.svg",
+  "largeIcon": "#/assets/trello.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Project Management"
+  },
+  "configuration": {}
+}

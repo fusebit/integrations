@@ -1,0 +1,1 @@
+Use our Intercom Integration to retrieve and update information from your own Intercom account, or to integrate Intercom into your own product. It's completely up to you and your custom use case.
