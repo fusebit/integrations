@@ -87,7 +87,7 @@ describe('Connector', () => {
 
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent() {
+      protected async validateWebhookEvent() {
         return true;
       }
       protected initializationChallenge() {
@@ -145,7 +145,7 @@ describe('Connector', () => {
     // Mock some methods on service.
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent() {
+      protected async validateWebhookEvent() {
         return true;
       }
       protected initializationChallenge() {

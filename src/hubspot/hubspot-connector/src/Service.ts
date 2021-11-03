@@ -15,7 +15,7 @@ class Service extends OAuthConnector.Service {
 
   // HubSpot has a very straightforward auth scheme; there's a slightly more complicated v2 variant, but it's
   // not in use at this time for webhooks.
-  protected validateWebhookEvent(ctx: Connector.Types.Context) {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
     if (ctx.req.headers['x-hubspot-signature-version'] !== 'v1') {
       ctx.throw(400, { message: `Unsupported signature version: ${ctx.req.headers['x-hubspot-signature-version']}` });
     }

@@ -28,7 +28,7 @@ class Service extends EntityBase.ServiceDefault {
    * @returns {Promise<void>}
    */
   public async handleWebhookEvent(ctx: EntityBase.Types.Context) {
-    const isValid = this.validateWebhookEvent(ctx);
+    const isValid = await this.validateWebhookEvent(ctx);
 
     if (!isValid) {
       ctx.throw(400, `Webhook event failed validation for connector ${ctx.state.params.entityId}`);
@@ -175,7 +175,7 @@ class Service extends EntityBase.ServiceDefault {
   /**
    * Override: Cryptographically validate the contents of the request.
    */
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
   }
 

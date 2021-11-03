@@ -3,7 +3,7 @@ import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 
 export default abstract class ProviderActivator<T> {
-  protected abstract instantiate(ctx: FusebitContext, lookupKey: string): Promise<T>;
+  protected abstract instantiate(ctx: FusebitContext, lookupKey?: string): Promise<T>;
 
   public config: IInstanceConnectorConfig;
   constructor(cfg: IInstanceConnectorConfig) {

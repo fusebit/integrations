@@ -13,7 +13,7 @@ class Service extends OAuthConnector.Service {
     return event.user.accountId;
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const authJwt = ctx.req.headers.authorization?.split(' ')[1];
     if (!authJwt) {
       ctx.throw(403, 'Invalid authorization');

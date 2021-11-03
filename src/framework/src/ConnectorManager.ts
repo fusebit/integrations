@@ -32,6 +32,9 @@ interface IInstanceConnectorConfigMap {
   [name: string]: IInstanceConnectorConfig;
 }
 
+/** The string representation of the default installation. */
+const defaultInstallation = 'ins-00000000000000000000000000000000';
+
 /**
  * ConnectorManager
  *
@@ -102,13 +105,16 @@ class ConnectorManager {
     const inst = cfg.instance ? cfg.instance : this.loadConnector(name, cfg);
 
     const service = new Service();
-    const install = await service.getInstall(ctx, installId);
-
-    const identity = install.data[name];
-    if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
-      ctx.throw(404);
+    let identity;
+    if (installId !== defaultInstallation) {
+      const install = await service.getInstall(ctx, installId);
+      identity = install.data[name];
+      if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
+        ctx.throw(404);
+      }
     }
-    const client = await inst.instantiate(ctx, identity.entityId);
+
+    const client = await inst.instantiate(ctx, identity ? identity.entityId : null);
     client.fusebit = client.fusebit || {};
     client.fusebit.identity = identity;
     return client;

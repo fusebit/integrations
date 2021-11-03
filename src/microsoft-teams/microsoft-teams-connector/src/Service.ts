@@ -4,14 +4,21 @@ import superagent from 'superagent';
 
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    return [ctx.req.body];
+    const eventPayload = {
+      botFrameworkConfig: {
+        authorization: ctx.header.authorization,
+        host: ctx.req.body.serviceUrl,
+      },
+      teamsEvent: ctx.req.body,
+    };
+    return [eventPayload];
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
     return ctx.req.body.from.aadObjectId;
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
     /**
      * TODO - Follow the steps here:
      * https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-connector-authentication?view=azure-bot-service-4.0#openid-metadata-document
@@ -20,25 +27,35 @@ class Service extends OAuthConnector.Service {
      *
      */
 
+    const botFrameworkCredentialsResponse = await superagent
+      .get('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token')
+      .type('form')
+      .send({
+        grant_type: 'client_credentials',
+        client_id: ctx.state.manager.config.configuration.clientId,
+        client_secret: ctx.state.manager.config.configuration.clientSecret,
+        scope: 'https://api.botframework.com/.default',
+      });
+
+    const botFrameworkAccessToken = botFrameworkCredentialsResponse.body.access_token;
+    ctx.req.headers.authorization = `Bearer ${botFrameworkAccessToken}`;
+
     return true;
   }
 
   protected initializationChallenge(ctx: Connector.Types.Context): boolean {
-    // TODO - no initializationChallenge?
     return false;
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
-    console.log(token.access_token);
     const response = await superagent
       .get('https://graph.microsoft.com/v1.0/me')
       .set('Authorization', `Bearer ${token.access_token}`);
-    console.log(response.body);
     return response.body.id;
   }
 
-  protected getWebhookEventType(event: any): string {
-    return event.type;
+  protected getWebhookEventType({ teamsEvent }: any): string {
+    return teamsEvent.type;
   }
 }
 
