@@ -1,0 +1,20 @@
+{
+  "id": "<%this.id%>",
+  "tags": {
+    "fusebit.service": "GitHub"
+  },
+  "handler": "@fusebit-int/githubapp-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "user public_repo",
+    "clientId": "<%global.consts.random%>",
+    "clientSecret": "<%global.consts.random%>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "GitHub"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "githubappConnector",
+      "skip": false,
+      "provider": "@fusebit-int/githubapp-provider",
+      "entityId": "<% global.entities.githubappConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Atlassian Confluence"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "confluenceConnector",
+      "skip": false,
+      "provider": "@fusebit-int/atlassian-provider",
+      "entityId": "<% global.entities.confluenceConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

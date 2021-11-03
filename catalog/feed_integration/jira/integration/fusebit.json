@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Atlassian Jira"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "jiraConnector",
+      "skip": false,
+      "provider": "@fusebit-int/atlassian-provider",
+      "entityId": "<% global.entities.jiraConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

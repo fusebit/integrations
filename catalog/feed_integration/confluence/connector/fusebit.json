@@ -1,0 +1,21 @@
+{
+  "id": "<%this.id%>",
+  "tags": {
+    "fusebit.service": "Atlassian Confluence"
+  },
+  "handler": "@fusebit-int/atlassian-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+
+    "scope": "read:confluence-space.summary read:confluence-props read:confluence-content.summary read:confluence-user read:confluence-groups",
+    "clientId": "<%global.consts.random%>",
+    "clientSecret": "<%global.consts.random%>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

@@ -18,14 +18,15 @@ const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from witin your application.
+// to the integration, which you can then call from within your application.
 const router = integration.router;
+const connectorName = '<%= name.toLowerCase() %>Connector';
 
 // The sample test endpoint of this integration gets all contacts stored in the <%= h.capitalize(name) %> account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a <%= h.capitalize(name) %> client pre-configured with credentials necessary to communicate with your tenant's <%= h.capitalize(name) %> account.
   // For the <%= h.capitalize(name) %> SDK documentation, see https://jsforce.github.io/.
-  const <%= name.toLowerCase() %>Client = await integration.tenant.getSdkByTenant(ctx, '<%= name.toLowerCase() %>Connector', ctx.params.tenantId);
+  const <%= name.toLowerCase() %>Client = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const contacts = await <%= name.toLowerCase() %>Client.query('SELECT count() FROM Contact');
 

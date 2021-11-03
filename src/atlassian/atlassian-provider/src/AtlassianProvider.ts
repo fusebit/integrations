@@ -1,8 +1,16 @@
 import { Internal } from '@fusebit-int/framework';
-import JiraClient from 'jira-client';
 import superagent from 'superagent';
 
 import { Webhook } from './Webhook';
+
+interface IApiClient {
+  get: (url: string) => Promise<any>;
+  put: (url: string) => Promise<any>;
+  post: (url: string) => Promise<any>;
+  delete: (url: string) => Promise<any>;
+  head: (url: string) => Promise<any>;
+  patch: (url: string) => Promise<any>;
+}
 
 interface IFusebitCredentials {
   credentials: { access_token: string };
@@ -56,13 +64,35 @@ class AtlassianClient {
     return response.body;
   }
 
-  public jira(cloudId: string, ...options: any): JiraClient {
-    return new JiraClient({
-      ...options,
-      protocol: 'https',
-      host: `api.atlassian.com/ex/jira/${cloudId}`,
-      bearer: this.fusebit.credentials.access_token,
-    });
+  public makeApiClient(cloudId: string, token: string): IApiClient {
+    const makeUrl = (cloudId: string, url: string) =>
+      `https://api.atlassian.com/ex/${token}/${cloudId}/rest/api/3${url}`;
+
+    const makeRequest = (verb: string) => async (url: string) =>
+      (
+        await (superagent as any)
+          [verb](makeUrl(cloudId, url))
+          .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`)
+      ).body;
+
+    const api: IApiClient = {
+      get: makeRequest('get'),
+      put: makeRequest('put'),
+      post: makeRequest('post'),
+      delete: makeRequest('delete'),
+      head: makeRequest('head'),
+      patch: makeRequest('patch'),
+    };
+
+    return api;
+  }
+
+  public jira(cloudId: string): IApiClient {
+    return this.makeApiClient(cloudId, 'jira');
+  }
+
+  public confluence(cloudId: string): IApiClient {
+    return this.makeApiClient(cloudId, 'confluence');
   }
 }
 
@@ -77,6 +107,7 @@ export default class AtlassianProvider extends Internal.ProviderActivator<Atlass
       lookupKey,
       connectorId: this.config.entityId,
     });
+
     return client;
   }
 }

@@ -1,0 +1,30 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/pagerdutyIntegration/properties/id",
+      "label": "Name"
+    },
+    {
+      "type": "Control",
+      "label": "Customize",
+      "scope": "#/properties/ui/properties/toggle",
+      "options": {
+        "toggle": true
+      }
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/pagerdutyConnector/properties/id",
+      "label": "PagerDuty Connector name",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/ui/properties/toggle",
+          "schema": { "const": true }
+        }
+      }
+    }
+  ]
+}
