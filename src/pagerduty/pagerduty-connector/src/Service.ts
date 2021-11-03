@@ -10,11 +10,11 @@ class Service extends OAuthConnector.Service {
     return 'global';
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context) {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
     return false;
   }
 
-  protected initializationChallenge(ctx: Connector.Types.Context): boolean {
+  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
   }
 
