@@ -50,7 +50,7 @@ describe('Linear Webhook Events', () => {
 
   test('Validate: validateWebhookEvent false', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.validateWebhookEvent(badCtx)).toBeFalsy();
+    expect(await service.validateWebhookEvent(badCtx)).toBeFalsy();
   });
 
   // Linear does not implement initializationChallenge.

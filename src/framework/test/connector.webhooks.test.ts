@@ -21,7 +21,7 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent returns 200 on valid challenge', async () => {
     const ctx = getContext();
-    const mockedValidateWebhookEvent = jest.fn(() => true);
+    const mockedValidateWebhookEvent = jest.fn(async () => true);
     const mockedInitializationChallenge = jest.fn(() => true);
 
     class TestService extends Connector.Service {
@@ -46,7 +46,7 @@ describe('Connector', () => {
   test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', async () => {
     const ctx = getContext();
     try {
-      const mockedValidateWebhookEvent = jest.fn(() => true);
+      const mockedValidateWebhookEvent = jest.fn(async () => true);
       const mockedInitializationChallenge = jest.fn(() => false);
 
       class TestService extends Connector.Service {
