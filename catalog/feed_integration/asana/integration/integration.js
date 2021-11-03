@@ -21,7 +21,7 @@ const connectorName = 'asanaClient';
 const router = integration.router;
 
 // This sample test endpoint gets the Asana user information for the individual that authenticated the asana integration
-router.get('/api/tenant/:tenantId/me', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await asanaClient.users.me();
   ctx.body = me;
