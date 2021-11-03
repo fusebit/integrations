@@ -12,7 +12,7 @@ export default class OAuthProvider extends Internal.ProviderActivator<{ accessTo
    * Normally, this function would return an instantiated SDK object populated and enriched as appropriate.
    * For now, just return the accessToken for the caller to do with as they please.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<{ accessToken: string }> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<{ accessToken: string }> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     // Take the responding token, put it into the object below.
     return {

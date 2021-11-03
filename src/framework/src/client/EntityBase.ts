@@ -1,22 +1,18 @@
 /* tslint:disable no-namespace no-empty-interface max-classes-per-file */
 import {
-  HttpContext,
   CronContext as CronContext_,
   EventContext as EventContext_,
-  Next as RouterNext,
   HttpRouter as HttpRouter_,
   CronRouter as CronRouter_,
   EventRouter as EventRouter_,
 } from '../router';
 import * as Storage from '../Storage';
 import * as Middleware from '../middleware';
-
+import Utilities from './Utilities';
 import { Form } from '../Form';
-
 import { IOnStartup as IOnStartupInterface } from '../Manager';
 
-type ContextType = HttpContext;
-type NextType = RouterNext;
+const utilities = new Utilities();
 
 /**
  * @private
@@ -32,14 +28,16 @@ abstract class EntityBase {
   public readonly router = new HttpRouter_();
   public readonly cron = new CronRouter_(this.router);
   public readonly event = new EventRouter_(this.router);
+
+  protected readonly utilities = utilities;
 }
 
 namespace EntityBase {
   export namespace Types {
-    export type Context = ContextType;
+    export type Context = Utilities.Types.ContextType;
     export type EventContext = EventContext_;
     export type CronContext = CronContext_;
-    export type Next = NextType;
+    export type Next = Utilities.Types.NextType;
     export interface IOnStartup extends IOnStartupInterface {}
     export interface IInstallResponse {
       items: IInstall[];
@@ -64,14 +62,23 @@ namespace EntityBase {
     export type Router = HttpRouter_;
   }
   /**
+   * @private Shared utility functions across namespaces
+   */
+  abstract class EntityNamespace {
+    protected readonly utilities = utilities;
+  }
+  /**
    * @private
    */
-  export abstract class ServiceBase {}
+  export abstract class ServiceBase extends EntityNamespace {
+    protected readonly utilities = utilities;
+  }
 
   /**
    * @alias integration.storage
    */
   export abstract class StorageBase {
+    protected readonly utilities = utilities;
     /**
      * Save any data in JSON format up to ~400Kb in size.
      *
@@ -115,7 +122,7 @@ namespace EntityBase {
      * @returns {Promise<Storage.IStorageBucketResponse>}
      */
     public setData = (
-      ctx: ContextType,
+      ctx: Utilities.Types.ContextType,
       dataKey: string,
       body: Storage.IStorageBucketItemParams
     ): Promise<Storage.IStorageBucketItem> => Storage.createStorage(ctx.state.params).put(body, dataKey);
@@ -127,8 +134,10 @@ namespace EntityBase {
      * @param {string} dataKey The key name used for referencing the stored data
      * @returns {Promise<Storage.IStorageBucketResponse | undefined>}
      */
-    public getData = (ctx: ContextType, dataKey: string): Promise<Storage.IStorageBucketItem | undefined> =>
-      Storage.createStorage(ctx.state.params).get(dataKey);
+    public getData = (
+      ctx: Utilities.Types.ContextType,
+      dataKey: string
+    ): Promise<Storage.IStorageBucketItem | undefined> => Storage.createStorage(ctx.state.params).get(dataKey);
 
     /**
      * A listing operation query data stored in an artifact known as a Bucket (Buckets are
@@ -147,7 +156,7 @@ namespace EntityBase {
      * @returns {Promise<Storage.IStorageBucketList>} A list of Storage items
      */
     public listData = (
-      ctx: ContextType,
+      ctx: Utilities.Types.ContextType,
       dataKeyPrefix: string,
       options?: Storage.IListOption
     ): Promise<Storage.IStorageBucketList> => Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
@@ -161,7 +170,7 @@ namespace EntityBase {
      * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deleteData = (
-      ctx: ContextType,
+      ctx: Utilities.Types.ContextType,
       dataKey: string,
       version?: string
     ): Promise<Storage.IStorageBucketResponseDelete> =>
@@ -177,7 +186,7 @@ namespace EntityBase {
      * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
     public deletePrefixedData = (
-      ctx: ContextType,
+      ctx: Utilities.Types.ContextType,
       dataKeyPrefix: string,
       version?: string
     ): Promise<Storage.IStorageBucketResponseDelete> =>
@@ -188,6 +197,7 @@ namespace EntityBase {
    * @alias integration.middleware
    */
   export abstract class MiddlewareBase {
+    protected readonly utilities = utilities;
     /**
      * Usually, the routes you define in an integration require protection against unauthorized access.
      * This function restricts access to users authenticated in Fusebit with the specified permission.
@@ -227,7 +237,20 @@ namespace EntityBase {
    * @private
    */
   export abstract class ResponseBase {
+    protected readonly utilities = utilities;
     public createJsonForm = Form;
+  }
+  /**
+   * @private
+   */
+  export abstract class TenantBase {
+    protected readonly utilities = utilities;
+  }
+  /**
+   * @private
+   */
+  export abstract class WebhookBase {
+    protected readonly utilities = utilities;
   }
 
   /**
@@ -246,6 +269,14 @@ namespace EntityBase {
    * @private
    */
   export class ResponseDefault extends ResponseBase {}
+  /**
+   * @private
+   */
+  export class WebhookDefault extends WebhookBase {}
+  /**
+   * @private
+   */
+  export class TenantDefault extends TenantBase {}
 }
 
 export default EntityBase;

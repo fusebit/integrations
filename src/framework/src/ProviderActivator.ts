@@ -29,7 +29,7 @@ export default abstract class ProviderActivator<T> {
   }: {
     ctx: FusebitContext;
     lookupKey: string;
-  }): Promise<{ access_token: string }> {
+  }): Promise<{ access_token: string; instance_url: string }> {
     const tokenPath = `/api/${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;

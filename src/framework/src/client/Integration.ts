@@ -2,13 +2,12 @@
 import EntityBase from './EntityBase';
 import { FusebitContext } from '../router';
 import superagent from 'superagent';
-import { getTenantInstalls } from './Utility';
 
 /**
  * @class
  * @alias integration.webhook
  */
-class Webhook {
+class Webhook extends EntityBase.WebhookBase {
   /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
@@ -28,7 +27,7 @@ class Webhook {
     connectorName: string,
     tenantId: string
   ): Promise<W> => {
-    const body = await getTenantInstalls(ctx, tenantId);
+    const body = await this.utilities.getTenantInstalls(ctx, tenantId);
 
     if (body.items.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
@@ -59,7 +58,7 @@ class Webhook {
     connectorName: string,
     installId: string
   ): Promise<W> => {
-    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
+    return this.utilities.getConnectorSdkByName(ctx, connectorName, installId);
   };
 }
 
@@ -136,16 +135,7 @@ export class Service extends EntityBase.ServiceBase {
  * @class
  * @alias integration.tenant
  */
-class Tenant {
-  /**
-   * @private
-   */
-  public service: Service;
-
-  constructor(service: Service) {
-    this.service = service;
-  }
-
+class Tenant extends EntityBase.TenantBase {
   /**
    * Get an authenticated SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
@@ -161,7 +151,7 @@ class Tenant {
    * });
    */
   public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
-    const body = await getTenantInstalls(ctx, tenantId);
+    const body = await this.utilities.getTenantInstalls(ctx, tenantId);
 
     if (body.items.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
@@ -170,8 +160,7 @@ class Tenant {
     if (body.items.length > 1) {
       ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
-
-    return this.service.getSdk(ctx, connectorName, body.items[0].id);
+    return this.utilities.getConnectorSdkByName(ctx, connectorName, body.items[0].id);
   };
 }
 
@@ -236,7 +225,7 @@ class Integration extends EntityBase {
    * @memberof Tenant
    * @private
    */
-  public tenant = new Tenant(this.service);
+  public tenant = new Tenant();
   /**
    * @memberof ResponseDefault
    * @private
