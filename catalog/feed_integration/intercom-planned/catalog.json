@@ -1,0 +1,13 @@
+{
+  "id": "intercom-planned",
+  "name": "Intercom",
+  "smallIcon": "#/assets/intercom.svg",
+  "largeIcon": "#/assets/intercom.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Messaging,Support"
+  },
+  "configuration": {}
+}

@@ -1,0 +1,2 @@
+Microsoft Teams is the ultimate hub for chat-based collaboration, meetings, calling, and enterprise voice features. 
+This integration allows you to easily build chat bots and messaging extensions for Teams.
