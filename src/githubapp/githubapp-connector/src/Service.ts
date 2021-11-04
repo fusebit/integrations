@@ -12,7 +12,7 @@ class Service extends OAuthConnector.Service {
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
-    return ctx.req.body.installation.id;
+    return event.data.installation.id;
   }
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
