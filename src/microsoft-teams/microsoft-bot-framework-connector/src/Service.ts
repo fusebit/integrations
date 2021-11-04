@@ -10,7 +10,7 @@ class Service extends OAuthConnector.Service {
         accessToken: ctx.botFrameworkAccessToken,
         botAuth: ctx.headers.authorization,
       },
-      teamsEvent: ctx.req.body,
+      botEvent: ctx.req.body,
     };
     return [eventPayload];
   }
@@ -54,8 +54,8 @@ class Service extends OAuthConnector.Service {
     return response.body.id;
   }
 
-  protected getWebhookEventType({ teamsEvent }: any): string {
-    return teamsEvent.type;
+  protected getWebhookEventType({ botEvent }: any): string {
+    return botEvent.type;
   }
 }
 

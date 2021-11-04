@@ -40,7 +40,7 @@ export default class MicrosoftTeamsProvider extends Internal.ProviderActivator<F
     });
 
     ctx.req.headers.authorization = botFrameworkConfig.botAuth;
-    ctx.req.body = ctx.req.body.data.teamsEvent;
+    ctx.req.body = ctx.req.body.data.botEvent;
 
     if (!lookupKey) {
       return {
