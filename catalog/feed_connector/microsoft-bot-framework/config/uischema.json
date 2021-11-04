@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/microsoftTeamsConnector/properties/id",
+      "scope": "#/properties/microsoftBotFrameworkConnector/properties/id",
       "label": "Name"
     }
   ]

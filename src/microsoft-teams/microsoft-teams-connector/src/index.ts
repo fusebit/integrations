@@ -28,9 +28,9 @@ class ServiceConnector extends OAuthConnector {
         'Microsoft Teams Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Microsoft Teams App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your Microsoft Teams App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Microsoft Teams App';
+      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Azure App';
+      ctx.body.schema.properties.clientId.description = 'The Client ID from your Azure App';
+      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Azure App';
     });
   }
 }

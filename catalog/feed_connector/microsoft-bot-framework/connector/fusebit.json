@@ -1,9 +1,9 @@
 {
   "id": "<%this.id%>",
   "tags": {
-    "fusebit.service": "Microsoft Teams"
+    "fusebit.service": "Microsoft Bot Framework"
   },
-  "handler": "@fusebit-int/microsoft-teams-connector",
+  "handler": "@fusebit-int/microsoft-bot-framework-connector",
   "configuration": {
     "mode": {
       "useProduction": false
