@@ -34,8 +34,6 @@ export default class MicrosoftTeamsProvider extends Internal.ProviderActivator<F
     botFrameworkAdapter.credentials.authenticationContext._cache._entries.push({
       _clientId: botFrameworkConfig.clientId,
       accessToken: botFrameworkConfig.accessToken,
-      tokenType: 'Bearer',
-      expiresIn: 99999,
       expiresOn: new Date(2999, 11, 30),
       resource: 'https://api.botframework.com',
       _authority: 'https://login.microsoftonline.com/botframework.com',
