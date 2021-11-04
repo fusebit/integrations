@@ -6,8 +6,9 @@ class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
     const eventPayload = {
       botFrameworkConfig: {
-        authorization: ctx.header.authorization,
-        host: ctx.req.body.serviceUrl,
+        clientId: ctx.state.manager.config.configuration.clientId,
+        accessToken: ctx.botFrameworkAccessToken,
+        botAuth: ctx.headers.authorization,
       },
       teamsEvent: ctx.req.body,
     };
@@ -37,8 +38,7 @@ class Service extends OAuthConnector.Service {
         scope: 'https://api.botframework.com/.default',
       });
 
-    const botFrameworkAccessToken = botFrameworkCredentialsResponse.body.access_token;
-    ctx.req.headers.authorization = `Bearer ${botFrameworkAccessToken}`;
+    ctx.botFrameworkAccessToken = botFrameworkCredentialsResponse.body.access_token;
 
     return true;
   }
