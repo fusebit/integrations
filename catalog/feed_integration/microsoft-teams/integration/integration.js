@@ -24,7 +24,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // For the Microsoft Teams SDK documentation, see https://github.com/microsoftgraph/msgraph-sdk-javascript.
   const microsoftTeamsClient = await integration.tenant.getSdkByTenant(
     ctx,
-    'microsoftTeamsConnector',
+    'microsoftBotFrameworkConnector',
     ctx.params.tenantId
   );
 
@@ -46,7 +46,7 @@ router.post('/api/postMessage/:tenantId', integration.middleware.authorizeUser('
   // For the Microsoft Teams SDK documentation, see https://github.com/microsoftgraph/msgraph-sdk-javascript.
   const microsoftTeamsClient = await integration.tenant.getSdkByTenant(
     ctx,
-    'microsoftTeamsConnector',
+    'microsoftBotFrameworkConnector',
     ctx.params.tenantId
   );
 
@@ -66,7 +66,7 @@ router.post('/api/postMessage/:tenantId', integration.middleware.authorizeUser('
 router.get('/api/tenant/:tenantId/users', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const microsoftTeamsClient = await integration.tenant.getSdkByTenant(
     ctx,
-    'microsoftTeamsConnector',
+    'microsoftBotFrameworkConnector',
     ctx.params.tenantId
   );
 

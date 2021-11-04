@@ -1,5 +1,5 @@
 {
-  "microsoftTeamsConnector": {
-    "microsoftTeamsName": "microsoft-teams-connector"
+  "microsoftBotFrameworkConnector": {
+    "microsoftBotFrameworkName": "microsoft-bot-framework-connector"
   }
 }

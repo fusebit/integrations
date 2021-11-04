@@ -6,7 +6,7 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 const AUTHORIZATION_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
 const REVOCATION_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/revoke';
-const SERVICE_NAME = 'Microsoft Teams';
+const SERVICE_NAME = 'Microsoft Bot Framework';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;
@@ -25,12 +25,13 @@ class ServiceConnector extends OAuthConnector {
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
-        'Microsoft Teams Configuration';
+        'Microsoft Bot Framework Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Azure App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your Azure App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Azure App';
+      ctx.body.schema.properties.scope.description =
+        'Space separated scopes to request from your Microsoft Bot Framework';
+      ctx.body.schema.properties.clientId.description = 'The Client ID from your Microsoft Bot Framework';
+      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Microsoft Bot Framework';
     });
   }
 }

@@ -10,7 +10,7 @@
         }
       }
     },
-    "microsoftTeamsConnector": {
+    "microsoftBotFrameworkConnector": {
       "type": "object",
       "properties": {
         "id": {

@@ -6,10 +6,10 @@
   "handler": "./integration",
   "components": [
     {
-      "name": "microsoftTeamsConnector",
+      "name": "microsoftBotFrameworkConnector",
       "skip": false,
       "provider": "@fusebit-int/microsoft-teams-provider",
-      "entityId": "<% global.entities.microsoftTeamsConnector.id %>",
+      "entityId": "<% global.entities.microsoftBotFrameworkConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }

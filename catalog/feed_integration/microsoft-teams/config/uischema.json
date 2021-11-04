@@ -16,8 +16,8 @@
     },
     {
       "type": "Control",
-      "scope": "#/properties/microsoftTeamsConnector/properties/id",
-      "label": "Microsoft Teams Connector name",
+      "scope": "#/properties/microsoftBotFrameworkConnector/properties/id",
+      "label": "Microsoft Bot Framework Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

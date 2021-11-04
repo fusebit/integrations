@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-microsoft-teams-connector",
+  "name": "@fusebit-int/catalog-feed-integration-microsoft-bot-framework-connector",
   "version": "7.4.3",
   "private": true,
   "scripts": {
@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@fusebit-int/framework": "^7.4.3",
-    "@fusebit-int/microsoft-teams-connector": "^7.4.3"
+    "@fusebit-int/microsoft-bot-framework-connector": "^7.4.3"
   }
 }

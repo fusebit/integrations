@@ -16,7 +16,7 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "microsoftTeamsConnector": {
+      "microsoftBotFrameworkConnector": {
         "entityType": "connector",
         "path": "connector/"
       },

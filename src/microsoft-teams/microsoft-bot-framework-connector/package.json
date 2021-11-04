@@ -1,10 +1,10 @@
 {
-  "name": "@fusebit-int/microsoft-teams-connector",
+  "name": "@fusebit-int/microsoft-bot-framework-connector",
   "version": "7.4.3",
-  "description": "Microsoft Teams Connector",
+  "description": "Microsoft Bot Framework Connector",
   "keywords": [
     "Fusebit",
-    "Microsoft Teams"
+    "Microsoft Bot Framework"
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
