@@ -12,6 +12,7 @@ interface IOAuthConfig {
   refreshWaitCountLimit: number;
   refreshInitialBackoff: number;
   refreshBackoffIncrement: number;
+  defaultEventHandler: string;
 
   mountUrl: string;
 }

@@ -15,6 +15,7 @@
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,
     "refreshBackoffIncrement": 100000,
-    "accessTokenExpirationBuffer": 500
+    "accessTokenExpirationBuffer": 500,
+    "defaultEventHandler": ""
   }
 }
