@@ -119,6 +119,23 @@ class Tenant {
 
     return this.service.getSdk(ctx, connectorName, body.items[0].id);
   };
+
+  public getSdkByTag = async (ctx: FusebitContext, connectorName: string, tag: string, tagValue: string) => {
+    const response = await superagent
+      .get(`${ctx.state.params.baseUrl}/install?tag=${tag}=${encodeURIComponent(tagValue)}`)
+      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
+    const body = response.body;
+
+    if (body.items.length === 0) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tag ${tag} and value ${tagValue}`);
+    }
+
+    if (body.items.length > 1) {
+      ctx.throw(400, `Too many Integration Installs found with tag ${tag} and value ${tagValue}`);
+    }
+
+    return this.service.getSdk(ctx, connectorName, body.items[0].id);
+  };
 }
 
 /**
