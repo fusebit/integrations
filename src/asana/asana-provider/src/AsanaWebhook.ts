@@ -41,20 +41,20 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
     resource: string | number,
     data: object,
     dispatchOptions?: object
-  ): Promise<Asana.resources.Webhooks.Type> => {
+  ): Promise<Asana.resources.Webhooks.Type | void> => {
     const params = this.ctx.state.params;
-
-    const createWebhookUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}/api/fusebit_webhook_create`;
+    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
+    const createWebhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/create`;
     const createWebhookResponse = await superagent
       .post(createWebhookUrl)
       .set('Authorization', `Bearer ${params.functionAccessToken}`);
     const { webhookId } = createWebhookResponse.body;
 
     const webhookTag = encodeURIComponent(['webhook', this.config.entityId, webhookId].join('/'));
-    const tagUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/integration/${params.entityId}/install/${this.installId}/tag/${webhookTag}/null`;
+    const tagUrl = `${baseUrl}/integration/${params.entityId}/install/${this.installId}/tag/${webhookTag}/null`;
     await superagent.put(tagUrl).set('Authorization', `Bearer ${params.functionAccessToken}`);
 
-    const webhookUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}/api/fusebit_webhook_event/${webhookId}`;
+    const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}`;
     return await this.client.webhooks.create(resource, webhookUrl, data, dispatchOptions);
   };
 
@@ -87,7 +87,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
     params?: object,
     dispatchOptions?: object
   ): Promise<Asana.resources.Webhooks.Type[]> => {
-    return await this.client.webhooks.getAll(workspace, params, dispatchOptions);
+    return (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
   };
 
   /**
@@ -99,7 +99,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @return {Promise<void>}
    */
   public delete = async (webhook: string, dispatchOptions?: object) => {
-    await this.client.webhooks.deleteById(webhook, dispatchOptions);
+    this.client.webhooks.deleteById(webhook, dispatchOptions);
   };
 
   /**
@@ -111,9 +111,9 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
    * @return {Promise<void>}
    */
-  public deleteAll = async (workspace: string, params?: object, dispatchOptions?: object) => {
-    const webhooks = await this.list(workspace, params, dispatchOptions);
-    await Promise.all(webhooks.map((webhook) => this.delete(webhook.gid, dispatchOptions)));
+  public deleteAll = async (workspaceId: string, params?: object, dispatchOptions?: object) => {
+    const webhooks = await this.list(workspaceId, params, dispatchOptions);
+    await Promise.all(webhooks.map(async (webhook) => this.delete(webhook.gid, dispatchOptions)));
   };
 }
 

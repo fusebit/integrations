@@ -68,7 +68,9 @@ const createWebhookUrl = regexPathBuilder([
   'connector',
   undefined,
   'api',
-  'fusebit_webhook_create',
+  'fusebit',
+  'webhook',
+  'create',
 ]);
 const eventWebhookUrl = regexPathBuilder([
   '.*',
@@ -80,7 +82,9 @@ const eventWebhookUrl = regexPathBuilder([
   'connector',
   undefined,
   'api',
-  'fusebit_webhook_event',
+  'fusebit',
+  'webhook',
+  'event',
   '.*',
 ]);
 const tokenUrl = regexPathBuilder([

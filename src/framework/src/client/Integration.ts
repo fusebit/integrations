@@ -27,17 +27,17 @@ class Webhook extends EntityBase.WebhookBase {
     connectorName: string,
     tenantId: string
   ): Promise<W> => {
-    const body = await this.utilities.getTenantInstalls(ctx, tenantId);
+    const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
 
-    if (body.items.length === 0) {
+    if (!installs || !installs.length) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
     }
 
-    if (body.items.length > 1) {
+    if (installs.length > 1) {
       ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
 
-    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, body.items[0].id);
+    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installs[0].id);
   };
 
   /**
@@ -151,23 +151,23 @@ class Tenant extends EntityBase.TenantBase {
    * });
    */
   public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
-    const body = await this.utilities.getTenantInstalls(ctx, tenantId);
+    const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
 
-    if (body.items.length === 0) {
+    if (installs.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
     }
 
-    if (body.items.length > 1) {
+    if (installs.length > 1) {
       ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
-    return this.utilities.getConnectorSdkByName(ctx, connectorName, body.items[0].id);
+    return this.utilities.getConnectorSdkByName(ctx, connectorName, installs[0].id);
   };
 }
 
 type _Service = Service;
 type _Webhook = Webhook;
 abstract class _WebhookClient<T> {
-  abstract create: (...args: any[]) => Promise<T>;
+  abstract create: (...args: any[]) => Promise<T | void>;
   abstract get: (...args: any[]) => Promise<T>;
   abstract list: (...args: any[]) => Promise<T[]>;
   abstract delete: (...args: any[]) => Promise<void>;

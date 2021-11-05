@@ -6,11 +6,12 @@ import {
   CronRouter as CronRouter_,
   EventRouter as EventRouter_,
 } from '../router';
-import * as Storage from '../Storage';
 import * as Middleware from '../middleware';
 import Utilities from './Utilities';
 import { Form } from '../Form';
 import { IOnStartup as IOnStartupInterface } from '../Manager';
+import * as Storage from '../Storage';
+import { IStorageBucketItem, IStorageBucketItemParams } from '../Storage';
 
 const utilities = new Utilities();
 
@@ -60,6 +61,8 @@ namespace EntityBase {
       parentEntityType: string;
     }
     export type Router = HttpRouter_;
+    export interface StorageBucketItem extends IStorageBucketItem {}
+    export interface StorageBucketItemParams extends IStorageBucketItemParams {}
   }
   /**
    * @private Shared utility functions across namespaces
@@ -121,11 +124,7 @@ namespace EntityBase {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString} for further information.
      * @returns {Promise<Storage.IStorageBucketResponse>}
      */
-    public setData = (
-      ctx: Utilities.Types.ContextType,
-      dataKey: string,
-      body: Storage.IStorageBucketItemParams
-    ): Promise<Storage.IStorageBucketItem> => Storage.createStorage(ctx.state.params).put(body, dataKey);
+    public setData = this.utilities.setData;
 
     /**
      * Get saved data
@@ -134,10 +133,7 @@ namespace EntityBase {
      * @param {string} dataKey The key name used for referencing the stored data
      * @returns {Promise<Storage.IStorageBucketResponse | undefined>}
      */
-    public getData = (
-      ctx: Utilities.Types.ContextType,
-      dataKey: string
-    ): Promise<Storage.IStorageBucketItem | undefined> => Storage.createStorage(ctx.state.params).get(dataKey);
+    public getData = this.utilities.getData;
 
     /**
      * A listing operation query data stored in an artifact known as a Bucket (Buckets are
@@ -155,11 +151,7 @@ namespace EntityBase {
      * @param {Storage.IListOption} options The bucket name
      * @returns {Promise<Storage.IStorageBucketList>} A list of Storage items
      */
-    public listData = (
-      ctx: Utilities.Types.ContextType,
-      dataKeyPrefix: string,
-      options?: Storage.IListOption
-    ): Promise<Storage.IStorageBucketList> => Storage.createStorage(ctx.state.params).list(dataKeyPrefix, options);
+    public listData = this.utilities.listData;
 
     /**
      * Delete data
@@ -169,12 +161,7 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the stored data
      * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
-    public deleteData = (
-      ctx: Utilities.Types.ContextType,
-      dataKey: string,
-      version?: string
-    ): Promise<Storage.IStorageBucketResponseDelete> =>
-      Storage.createStorage(ctx.state.params).delete(dataKey, version);
+    public deleteData = this.utilities.deleteData;
 
     /**
      * Delete data stored in an artifact known as a Bucket
@@ -185,12 +172,7 @@ namespace EntityBase {
      * @param {string=} version Delete a specific version of the Bucket
      * @returns {Promise<Storage.IStorageBucketResponseDelete>}
      */
-    public deletePrefixedData = (
-      ctx: Utilities.Types.ContextType,
-      dataKeyPrefix: string,
-      version?: string
-    ): Promise<Storage.IStorageBucketResponseDelete> =>
-      Storage.createStorage(ctx.state.params).deletePrefixed(dataKeyPrefix, version);
+    public deletePrefixedData = this.utilities.deletePrefixedData;
   }
 
   /**

@@ -1,1 +1,1 @@
-type FusebitAsanaClient = import('asana').Client & { fusebit?: any };
+type FusebitAsanaClient = import('asana').Client & { fusebit?: object };

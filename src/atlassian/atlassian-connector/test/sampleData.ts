@@ -1,9 +1,10 @@
 import * as fs from 'fs';
+import path from 'path';
 
 export const sampleEvent = require('./mock/webhook-event.json');
 
 export const sampleHeaders = {
-  authorization: `Bearer ${fs.readFileSync('./test/mock/sample-raw-jwt.txt', 'utf8')}`,
+  authorization: `Bearer ${fs.readFileSync(path.join(__dirname, '/mock/sample-raw-jwt.txt'), 'utf8')}`,
 };
 
 export const sampleConfig = {

@@ -14,11 +14,11 @@ const { Integration } = require('@fusebit-int/framework');
 
 const integration = new Integration();
 
-const connectorName = 'asanaClient';
-
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
+
+const connectorName = 'asanaConnector';
 
 // This sample test endpoint gets the Asana user information for the individual that authenticated the asana integration
 router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {

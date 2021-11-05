@@ -17,6 +17,7 @@ const integration = new Integration();
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
 // to the integration, which you can then call from witin your application.
 const router = integration.router;
+
 const connectorName = 'pagerdutyConnector';
 
 // The sample test endpoint of this integration gets all incidents stored in the PagerDuty account associated with your tenant.

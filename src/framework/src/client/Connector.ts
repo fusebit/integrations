@@ -20,7 +20,7 @@ const writeSequencingBug = () => {
  * @alias connector.service
  * @augments EntityBase.ServiceBase
  */
-class Service extends EntityBase.ServiceDefault {
+export class Service extends EntityBase.ServiceDefault {
   /**
    * Handles an event triggered by a connector Webhook
    * @param ctx The context object provided by the route function
@@ -202,22 +202,22 @@ class Service extends EntityBase.ServiceDefault {
  * @class Connector
  * @augments EntityBase
  */
-class Connector extends EntityBase {
+class Connector<S extends Connector.Service = Connector.Service> extends EntityBase {
   static Service = Service;
 
   constructor() {
     super();
 
-    this.router.post('/api/fusebit_webhook_event', async (ctx: Connector.Types.Context) => {
+    this.router.post('/api/fusebit/webhook/event', async (ctx: Connector.Types.Context) => {
       await this.service.handleWebhookEvent(ctx);
     });
   }
 
-  protected createService() {
-    return new Connector.Service();
+  protected createService(): S {
+    return new Connector.Service() as S;
   }
 
-  public service = this.createService();
+  public service: S = this.createService();
   public middleware = new EntityBase.MiddlewareDefault();
   public storage = new EntityBase.StorageDefault();
   public response = new EntityBase.ResponseDefault();
@@ -226,10 +226,12 @@ class Connector extends EntityBase {
 type _Service = Service;
 
 namespace Connector {
+  export type Service = _Service;
   export namespace Types {
-    export type Router = EntityBase.Types.Router;
-    export type Context = EntityBase.Types.Context;
-    export type Next = EntityBase.Types.Next;
+    export import Router = EntityBase.Types.Router;
+    // export type Router = EntityBase.Types.Router;
+    export import Context = EntityBase.Types.Context;
+    export import Next = EntityBase.Types.Next;
     export type Handler = (
       ctx: Connector.Types.Context,
       next: Connector.Types.Next
@@ -248,6 +250,8 @@ namespace Connector {
     export type Middleware = EntityBase.MiddlewareDefault;
     export type Storage = EntityBase.StorageDefault;
     export type Service = _Service;
+    export type StorageBucketItem = EntityBase.Types.StorageBucketItem;
+    export type StorageBucketItemParams = EntityBase.Types.StorageBucketItemParams;
   }
 }
 export default Connector;

@@ -1,131 +1,167 @@
 import nock from 'nock';
 import { ServiceConnector } from '../src';
-import { Constants, getContext } from '../../../framework/test/utilities';
+import { Connector } from '@fusebit-int/framework';
 
 import { sampleEvent, sampleConfig, sampleEventCtx, sampleChallengeCtx, WebhookId } from './sampleData';
-import { FusebitContext } from '@fusebit-int/framework/libc/router';
 
-type FusebitStorageContext = {
-  setWebhookStorageData: (data: WebhookStorageData) => Promise<void>;
-  getWebhookStorageData: () => Promise<WebhookStorageData>;
+//TODO fix imports
+import { Constants, getContext } from '../../../framework/test/utilities';
+
+const testMemoryStorage: Record<string, Connector.Types.StorageBucketItem | undefined> = {};
+const setData = async (ctx: object, key: string, data: Connector.Types.StorageBucketItemParams) => {
+  testMemoryStorage[key] = { ...data, status: 200, storageId: key };
+};
+const getData = async (ctx: object, key: string) => {
+  return testMemoryStorage[key];
 };
 
-type TestFusebitContext = Omit<FusebitContext, 'fusebit'> & { fusebit: FusebitStorageContext };
-type PartialTestFusebitContext = Partial<TestFusebitContext> & { params: { webhookId: string } };
-
-const applyCtxState = (ctx: PartialTestFusebitContext, storage: Record<string, object>): TestFusebitContext => {
-  const setWebhookStorageData = async (data: WebhookStorageData): Promise<void> => {
-    storage[ctx.params.webhookId] = data;
-  };
-  const getWebhookStorageData = async (): Promise<WebhookStorageData> => storage[ctx.params.webhookId];
+const applyCtxState = (ctx: Connector.Types.Context): Connector.Types.Context => {
   const defaultCtx = getContext();
   const clonedCtx = JSON.parse(JSON.stringify(ctx));
   return {
     ...defaultCtx,
     ...clonedCtx,
     state: { ...defaultCtx.state, manager: { config: { configuration: sampleConfig.configuration } } },
-    fusebit: {
-      getWebhookStorageData,
-      setWebhookStorageData,
-    },
     res: {
       setHeader: jest.fn(),
     },
   };
 };
 
-const createContexts = () => {
-  const Storage = {};
-  return {
-    SampleChallengeCtx: applyCtxState(sampleChallengeCtx, Storage),
-    SampleEventCtx: applyCtxState(sampleEventCtx, Storage),
-  };
+// Global variables to be used per-test, overwritten in `beforeEach`
+let SampleChallengeCtx: Connector.Types.Context;
+let SampleEventCtx: Connector.Types.Context;
+let webhookId: string;
+let service: any;
+let connector: any;
+
+const createMockConnector = () => {
+  connector = new ServiceConnector();
+  service = connector.service;
+  service.utilities.getData = jest.fn(getData);
+  service.utilities.setData = jest.fn(setData);
+};
+
+const testRegisterWebhook = async () => {
+  // Register Webhook only uses ctx for storage, which is mocked
+  webhookId = (await service.registerWebhook({})).webhookId;
+  const expectedChallengeStorageId = service.createWebhookChallengeStorageKey(webhookId);
+  expect(service.utilities.setData).toHaveBeenCalledWith(expect.anything(), expectedChallengeStorageId, {
+    expires: expect.anything(),
+    data: {},
+  });
+
+  Object.assign(SampleChallengeCtx, { params: { webhookId } });
+  Object.assign(SampleEventCtx, { params: { webhookId } });
+};
+
+const testInitializationChallenge = async () => {
+  const isChallenge = await service.initializationChallenge(SampleChallengeCtx);
+  expect(isChallenge).toBeTruthy();
+  expect(SampleChallengeCtx.res.setHeader).toHaveBeenCalled();
+  const expectedSecretStorageId = service.createWebhookSecretStorageKey(webhookId);
+  const expectedChallengeStorageId = service.createWebhookChallengeStorageKey(webhookId);
+  expect(service.utilities.getData).toHaveBeenCalledWith(expect.anything(), expectedChallengeStorageId);
+  expect(service.utilities.setData).toHaveBeenCalledWith(expect.anything(), expectedSecretStorageId, {
+    data: { secret: expect.any(String) },
+  });
+};
+
+const testValidation = async () => {
+  Object.assign(SampleEventCtx, { params: { webhookId } });
+  const isEventChallenge = await service.initializationChallenge(SampleEventCtx);
+  expect(isEventChallenge).toBeFalsy();
+  const validationPassed = await service.validateWebhookEvent(SampleEventCtx);
+  expect(validationPassed).toBeTruthy();
 };
 
 describe('Asana Webhook Events', () => {
+  beforeEach(() => {
+    SampleChallengeCtx = applyCtxState((sampleChallengeCtx as unknown) as Connector.Types.Context);
+    SampleEventCtx = applyCtxState((sampleEventCtx as unknown) as Connector.Types.Context);
+    createMockConnector();
+  });
   test('Validate: getEventsFromPayload', async () => {
-    const { SampleEventCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
     const events = service.getEventsFromPayload(SampleEventCtx);
     expect(events[0]).toMatchObject(sampleEvent);
   });
 
   test('Validate: getAuthIdFromEvent', async () => {
-    const { SampleEventCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
     const events = service.getEventsFromPayload(SampleEventCtx);
     expect(service.getAuthIdFromEvent(SampleEventCtx, events[0])).toBe(WebhookId);
   });
 
-  test('Validate: validateWebhookEvent', async () => {
-    const { SampleEventCtx, SampleChallengeCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 500 });
-    await service.initializationChallenge(SampleChallengeCtx);
-    expect(await service.validateWebhookEvent(SampleEventCtx)).toBeTruthy();
-  });
-
-  test('Validate: validateWebhookEvent requires challenge', async () => {
-    const { SampleEventCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    await expect(service.validateWebhookEvent(SampleEventCtx)).rejects.toThrow();
+  test('Validate: initializationChallenge true', async () => {
+    await testRegisterWebhook();
+    await testInitializationChallenge();
   });
 
   test('Validate: initializationChallenge false', async () => {
-    const { SampleEventCtx, SampleChallengeCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    expect(await service.initializationChallenge(SampleEventCtx)).toBeFalsy();
-    expect(SampleChallengeCtx.res.setHeader).not.toHaveBeenCalled();
+    await testRegisterWebhook();
+    const isChallenge = await service.initializationChallenge(SampleEventCtx);
+    expect(isChallenge).toBeFalsy();
+    expect(SampleEventCtx.res.setHeader).not.toHaveBeenCalled();
   });
 
-  test('Validate: initializationChallenge true', async () => {
-    const { SampleChallengeCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 500 });
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(await service.initializationChallenge(SampleChallengeCtx)).toBeTruthy();
-    expect(SampleChallengeCtx.res.setHeader).toHaveBeenCalled();
+  test('Validate: validateWebhookEvent requires challenge', async () => {
+    await testRegisterWebhook();
+    await expect(testValidation()).rejects.toThrow();
+    await expect(service.validateWebhookEvent(SampleEventCtx)).rejects.toThrow();
   });
 
-  test('Validate: initializationChallenge requires CreatedExpiry', async () => {
-    const { SampleChallengeCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    await expect(service.initializationChallenge(SampleChallengeCtx)).rejects.toThrow();
+  test('Validate: initializationChallenge requires registerWebhook', async () => {
+    webhookId = 'unknown_webhook_id';
+    await expect(testInitializationChallenge()).rejects.toThrow();
     expect(SampleChallengeCtx.res.setHeader).not.toHaveBeenCalled();
   });
 
   test('Validate: getTokenAuthId', async () => {
-    const { SampleEventCtx } = createContexts();
-    const service: any = new ServiceConnector.Service();
-    expect(service.getTokenAuthId(SampleEventCtx, { bot_user_id: 'userid' })).resolves.toBeUndefined();
+    await expect(service.getTokenAuthId({}, {})).resolves.toBeUndefined();
   });
 
   test('Validate: getWebhookEventType', async () => {
-    const service: any = new ServiceConnector.Service();
     expect(service.getWebhookEventType({ action: 'eventType' })).toBe('eventType');
   });
 
+  test('Validate: validateWebhookEvent', async () => {
+    await testRegisterWebhook();
+    await testInitializationChallenge();
+    await testValidation();
+  });
+
   test('Validate: Event to Fanout', async () => {
-    const { SampleEventCtx, SampleChallengeCtx } = createContexts();
-    const connector: any = new ServiceConnector();
-    await SampleChallengeCtx.fusebit.setWebhookStorageData({ expiry: Date.now() + 10 * 1000 });
-    await connector.service.initializationChallenge(SampleChallengeCtx);
-    const mockCtx = JSON.parse(JSON.stringify(SampleEventCtx));
-    const events = connector.service.getEventsFromPayload(mockCtx);
-    const eventAuthId = connector.service.getAuthIdFromEvent(mockCtx, events[0]);
+    await testRegisterWebhook();
+    await testInitializationChallenge();
+    await testValidation();
+
     // Create mocked endpoints for each event.
     const scope = nock(SampleEventCtx.state.params.baseUrl);
+
+    const getWebhookData = () => {
+      const events = service.getEventsFromPayload(SampleEventCtx);
+      expect(Array.isArray(events)).toBeTruthy();
+      const eventAuthId = service.getAuthIdFromEvent(SampleEventCtx, events[0]);
+      const webhookTag = `webhook/${Constants.connectorId}/${eventAuthId}`;
+      return { webhookTag, events, eventAuthId };
+    };
     scope
-      .post(`/fan_out/event/webhook?tag=webhook/${Constants.connectorId}/${eventAuthId}`, (body) => {
+      .post('/fan_out/event/webhook', (body) => {
+        const { webhookTag, events, eventAuthId } = getWebhookData();
         expect(body).toEqual({
-          payload: events.map((event: any) => ({
+          payload: events.map((event: Event) => ({
             data: event,
             entityId: Constants.connectorId,
             eventType: sampleEvent.action,
             webhookAuthId: eventAuthId,
-            webhookEventId: `webhook/${Constants.connectorId}/${eventAuthId}`,
+            webhookEventId: webhookTag,
           })),
         });
+        return true;
+      })
+      .query((actual) => {
+        const { webhookTag } = getWebhookData();
+        const expected = { tag: webhookTag };
+        expect(actual).toEqual(expected);
         return true;
       })
       .reply(200);

@@ -20,7 +20,7 @@ export const validate = (options: IValidationOptions) => {
       if (options.body) {
         Joi.attempt(ctx.req.body, options.body);
       }
-    } catch (err) {
+    } catch (err: any) {
       errors.push({ location: 'body', details: err.details });
     }
 
@@ -28,7 +28,7 @@ export const validate = (options: IValidationOptions) => {
       if (options.query) {
         Joi.attempt(ctx.query, options.query);
       }
-    } catch (err) {
+    } catch (err: any) {
       errors.push({ location: 'query', details: err.details });
     }
 
@@ -36,7 +36,7 @@ export const validate = (options: IValidationOptions) => {
       if (options.params) {
         Joi.attempt(ctx.params, options.params);
       }
-    } catch (err) {
+    } catch (err: any) {
       errors.push({ location: 'params', details: err.details });
     }
 
