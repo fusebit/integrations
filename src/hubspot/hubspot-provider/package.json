@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/hubspot-provider",
-  "version": "7.4.3",
+  "version": "7.4.4-alpha.0",
   "description": "HubSpot provider",
   "keywords": [
     "Fusebit",
@@ -35,7 +35,7 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.4.3",
+    "@fusebit-int/framework": "^7.4.4-alpha.0",
     "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

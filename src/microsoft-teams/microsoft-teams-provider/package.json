@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/microsoft-teams-provider",
-  "version": "7.4.3",
+  "version": "7.4.4-alpha.0",
   "description": "Microsoft Teams provider",
   "keywords": [
     "Fusebit",
@@ -35,7 +35,7 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": ">=7.4.2",
+    "@fusebit-int/framework": "^7.4.4-alpha.0",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
     "@types/superagent": "^4.1.13",
