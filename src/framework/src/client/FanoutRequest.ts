@@ -29,8 +29,8 @@ export const makeFanoutRequester = (
   const makeRequest = () => {
     const url = new URL(`${ctx.state.params.baseUrl}/fan_out/event/webhook`);
     url.searchParams.set('tag', webhookEventId);
-    if (ctx.state.manager.config.defaultEventHandler) {
-      url.searchParams.set('default', ctx.state.manager.config.defaultEventHandler);
+    if (ctx.state.manager.config.configuration.defaultEventHandler) {
+      url.searchParams.set('default', ctx.state.manager.config.configuration.defaultEventHandler);
     }
 
     // Errors caught by the Promise.all below, where the request is actually started.

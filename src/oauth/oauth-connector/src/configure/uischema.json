@@ -133,6 +133,10 @@
                 {
                   "type": "Control",
                   "scope": "#/properties/accessTokenExpirationBuffer"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/defaultEventHandler"
                 }
               ]
             }

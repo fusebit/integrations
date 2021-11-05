@@ -33,8 +33,9 @@ export const request = (method: string, path: string, headers?: any, query?: any
 
 export const cfg = {
   handler: 'foo',
-  configuration: {},
-  defaultEventHandler: '',
+  configuration: {
+    defaultEventHandler: '',
+  },
   mountUrl: '',
 
   schedule: [],

@@ -64,6 +64,10 @@
     },
     "accessTokenExpirationBuffer": {
       "type": "integer"
+    },
+    "defaultEventHandler": {
+      "title": "Default Event Handler",
+      "type": "string"
     }
   },
   "required": ["scope", "clientId", "clientSecret"]
