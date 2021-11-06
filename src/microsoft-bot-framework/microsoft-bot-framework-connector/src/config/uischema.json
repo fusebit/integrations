@@ -1,0 +1,96 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/mode/properties/useProduction",
+      "label": "Enable Production Credentials",
+      "options": {
+        "toggle": true
+      }
+    },
+    {
+      "type": "Group",
+      "label": "Fusebit Connector Configuration",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/mode/properties/useProduction",
+          "schema": {
+            "const": true
+          }
+        }
+      },
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/clientId"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/clientSecret",
+                  "options": {
+                    "format": "password"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/scope"
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/constants/properties/urls/properties/webhookUrl"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Advanced Fusebit Options",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/mode/properties/useProduction",
+          "schema": {
+            "const": true
+          }
+        }
+      },
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/tokenUrl"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
