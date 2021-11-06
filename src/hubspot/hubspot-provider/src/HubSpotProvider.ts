@@ -1,8 +1,6 @@
 import { Internal } from '@fusebit-int/framework';
 import { Client } from '@hubspot/api-client';
 
-type FusebitHubSpotClient = Client & { fusebit?: any };
-
 export default class HubSpotProvider extends Internal.ProviderActivator<FusebitHubSpotClient> {
   /*
    * This function will create an authorized wrapper of the HubSpot SDK client.

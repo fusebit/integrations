@@ -1,21 +1,14 @@
 import { Connector } from '@fusebit-int/framework';
-import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
+import { OAuthEngine } from './OAuthEngine';
 
 import IdentityClient from './IdentityClient';
 
 import * as ConfigurationUI from './configure';
-import { IOAuthToken, ITags } from './OAuthTypes';
-
-type MiddlewareAdjustUrlConfiguration = (
-  defaultTokenUrl: string,
-  defaultAuthorizationUrl: string,
-  proxyKey?: string
-) => Connector.Types.Handler;
 
 class OAuthConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
 
-  protected sanitizeCredentials(credentials: { refresh_token: string }): object {
+  protected sanitizeCredentials(credentials: { refresh_token?: string }): object {
     const result = { ...credentials };
     delete result.refresh_token;
     return result;
@@ -156,7 +149,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
             await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey, false)
           );
         } catch (error) {
-          ctx.throw(500, error.message);
+          ctx.throw(500, (error as any).message);
         }
         if (!ctx.body) {
           ctx.throw(404);
@@ -171,7 +164,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         try {
           ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
         } catch (error) {
-          ctx.throw(500, error.message);
+          ctx.throw(500, (error as any).message);
         }
         if (!ctx.body) {
           ctx.throw(404);
@@ -217,8 +210,10 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
       try {
         await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
-      } catch (e) {
-        await this.onSessionError(ctx, { error: `Conversion error: ${e.response?.text} - ${e.stack}` });
+      } catch (error) {
+        await this.onSessionError(ctx, {
+          error: `Conversion error: ${(error as any).response?.text} - ${(error as any).stack}`,
+        });
       }
       return ctx.state.engine.redirectToCallback(ctx);
     });

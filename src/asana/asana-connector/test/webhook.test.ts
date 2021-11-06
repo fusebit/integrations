@@ -74,8 +74,8 @@ const testValidation = async () => {
 
 describe('Asana Webhook Events', () => {
   beforeEach(() => {
-    SampleChallengeCtx = applyCtxState((sampleChallengeCtx as unknown) as Connector.Types.Context);
-    SampleEventCtx = applyCtxState((sampleEventCtx as unknown) as Connector.Types.Context);
+    SampleChallengeCtx = applyCtxState(sampleChallengeCtx as unknown as Connector.Types.Context);
+    SampleEventCtx = applyCtxState(sampleEventCtx as unknown as Connector.Types.Context);
     createMockConnector();
   });
   test('Validate: getEventsFromPayload', async () => {

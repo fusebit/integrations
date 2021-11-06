@@ -1,8 +1,6 @@
 import { Internal } from '@fusebit-int/framework';
 import { WebClient } from '@slack/web-api';
 
-type FusebitWebClient = WebClient & { fusebit?: any };
-
 export default class SlackProvider extends Internal.ProviderActivator<FusebitWebClient> {
   /*
    * This function will create an authorized wrapper of the Slack SDK client.

@@ -1,3 +1,9 @@
+type MiddlewareAdjustUrlConfiguration = (
+  defaultTokenUrl: string,
+  defaultAuthorizationUrl: string,
+  proxyKey?: string
+) => import('@fusebit-int/framework').Connector.Types.Handler;
+
 interface IOAuthConfig {
   authorizationUrl: string;
   audience?: string;
@@ -39,4 +45,4 @@ interface IIdentityClientParams {
   createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
 }
 
-export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams };
+type Entries<T extends Record<string, any>> = [keyof T, any][];

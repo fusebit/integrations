@@ -1,10 +1,5 @@
 import { Internal } from '@fusebit-int/framework';
 import { api } from '@pagerduty/pdjs';
-import { PartialCall } from '@pagerduty/pdjs/build/src/api';
-
-// PagerDuty is a special case with it's SDK structure
-// PartialCall is the type of return when you run `await api()`
-type FusebitPagerDutyClient = PartialCall & { fusebit?: any };
 
 export default class PagerDutyProvider extends Internal.ProviderActivator<FusebitPagerDutyClient> {
   /*

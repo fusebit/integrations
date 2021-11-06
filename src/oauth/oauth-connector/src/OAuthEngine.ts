@@ -1,8 +1,6 @@
 import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 
-import { IOAuthConfig, IOAuthToken } from './OAuthTypes';
-
 class OAuthEngine {
   public cfg: IOAuthConfig;
 
@@ -233,18 +231,22 @@ class OAuthEngine {
         await tokenRw.put(token, lookupKey);
 
         return token;
-      } catch (e) {
+      } catch (error) {
         if (token.refreshErrorCount > this.cfg.refreshErrorLimit) {
           await ctx.state.identityClient?.delete(lookupKey);
           throw new Error(
-            `Error refreshing access token. Maximum number of attempts exceeded, identity ${lookupKey} has been deleted: ${e.message}`
+            `Error refreshing access token. Maximum number of attempts exceeded, identity ${lookupKey} has been deleted: ${
+              (error as any).message
+            }`
           );
         } else {
           token.refreshErrorCount = (token.refreshErrorCount || 0) + 1;
           token.status = 'refresh_error';
           await tokenRw.put(token, lookupKey);
           throw new Error(
-            `Error refreshing access token, attempt ${token.refreshErrorCount} out of ${this.cfg.refreshErrorLimit}: ${e.message}`
+            `Error refreshing access token, attempt ${token.refreshErrorCount} out of ${this.cfg.refreshErrorLimit}: ${
+              (error as any).message
+            }`
           );
         }
       }
@@ -276,8 +278,8 @@ class OAuthEngine {
           if (!token || token.status === 'refresh_error') {
             throw new Error('Concurrent access token refresh operation failed');
           }
-        } catch (e) {
-          return reject(new Error(`Error waiting for access token refresh: ${e.message}`));
+        } catch (error) {
+          return reject(new Error(`Error waiting for access token refresh: ${(error as any).message}`));
         }
         if (token.status === 'authenticated') {
           return resolve(token);
@@ -304,4 +306,4 @@ class OAuthEngine {
   }
 }
 
-export { OAuthEngine, IOAuthConfig };
+export { OAuthEngine };

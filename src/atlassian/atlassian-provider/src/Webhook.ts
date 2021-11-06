@@ -4,24 +4,6 @@ import { Internal } from '@fusebit-int/framework';
 
 import { AtlassianClient } from './AtlassianProvider';
 
-interface IWebhookDetail {
-  jqlFilter: string;
-  events: string[];
-  fieldIdsFilter?: string[];
-  issuePropertyKeysFilter?: string[];
-}
-
-interface IWebhookRegisterResult {
-  createdWebhookId: number;
-}
-
-type IWebhookRegisterFailed = { errors: string[] };
-type IWebhookRegisterResponse = IWebhookRegisterResult | IWebhookRegisterFailed;
-
-interface IWebhookRegisterResponses {
-  webhookRegistrationResult: IWebhookRegisterResponse[];
-}
-
 export class Webhook {
   protected ctx: Internal.Types.Context;
   protected client: AtlassianClient;
