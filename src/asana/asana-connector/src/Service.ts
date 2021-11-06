@@ -42,9 +42,7 @@ class Service extends OAuthConnector.Service {
     const storageData = await this.utilities.getData(ctx, webhookStorageId);
     const storageSecret = storageData?.data.secret;
     const requestBody = ctx.req.body;
-    const rawBody = JSON.stringify(requestBody)
-      .replace(/\//g, '\\/')
-      .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
+    const rawBody = JSON.stringify(requestBody);
     const calculatedSignature = crypto.createHmac('sha256', storageSecret).update(rawBody).digest('hex');
 
     const signature = ctx.req.headers['x-hook-signature'] as string;
@@ -64,7 +62,7 @@ class Service extends OAuthConnector.Service {
     const webhookStorageData = await this.utilities.getData(ctx, webhookChallengeStorageKey);
 
     if (!webhookStorageData) {
-      ctx.throw('Webhook Data not found');
+      ctx.throw('Webhook Registration Not Found', 404);
       return true;
     }
 

@@ -100,7 +100,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
   };
 
   /**
-   * This method permanently removes a webhook. Note that it may be possible
+   * This method permanently removes all webhooks within a workspace. Note that it may be possible
    * to receive a request that was already in flight after deleting the
    * webhook, but no further requests will be issued.
    * @param {String} workspace The workspace to remove all webhooks from.

@@ -49,8 +49,8 @@ class Webhook extends EntityBase.WebhookBase {
    * @returns {Promise<any>} Authenticated SDK you would use to interact with the
    * Connector service on behalf of your user.
    * @example
-   * router.post('/api/:connectorName/:tenant', async (ctx) => {
-   *    const webhookClient = await integration.webhook.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdk(ctx, ctx.params.connectorName, ctx.params.installId);
    *    // use client methods . . .
    * });
    */
