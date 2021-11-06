@@ -1,0 +1,1 @@
+This Integration allows you to access user's mail, calendar, and contacts data on Outlook.com or Office 365. 

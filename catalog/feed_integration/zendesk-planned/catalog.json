@@ -1,0 +1,13 @@
+{
+  "id": "zendesk-planned",
+  "name": "Zendesk",
+  "smallIcon": "#/assets/zendesk.svg",
+  "largeIcon": "#/assets/zendesk.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Support"
+  },
+  "configuration": {}
+}

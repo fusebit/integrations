@@ -1,0 +1,13 @@
+{
+  "id": "microsoft-onedrive-planned",
+  "name": "Microsoft OneDrive",
+  "smallIcon": "#/assets/microsoft-onedrive.svg",
+  "largeIcon": "#/assets/microsoft-onedrive.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Storage,Office"
+  },
+  "configuration": {}
+}

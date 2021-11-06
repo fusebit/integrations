@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/githubapp-provider",
-  "version": "7.8.0",
+  "version": "7.8.2",
   "description": "GitHub App provider",
   "keywords": [
     "Fusebit",
@@ -35,7 +35,7 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.8.0",
+    "@fusebit-int/framework": "^7.8.2",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",

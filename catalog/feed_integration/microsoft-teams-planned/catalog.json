@@ -1,0 +1,13 @@
+{
+  "id": "microsoft-teams-planned",
+  "name": "Microsoft Teams",
+  "smallIcon": "#/assets/microsoft-teams.svg",
+  "largeIcon": "#/assets/microsoft-teams.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Messaging,Office"
+  },
+  "configuration": {}
+}

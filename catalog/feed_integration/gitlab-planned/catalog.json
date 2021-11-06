@@ -1,0 +1,13 @@
+{
+  "id": "gitlab-planned",
+  "name": "GitLab",
+  "smallIcon": "#/assets/gitlab.svg",
+  "largeIcon": "#/assets/gitlab.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Dev Tools"
+  },
+  "configuration": {}
+}
