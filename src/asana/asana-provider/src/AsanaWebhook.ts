@@ -108,7 +108,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @return {Promise<void>}
    */
   public deleteAll = async (workspaceId: string, params?: object, dispatchOptions?: object) => {
-    const webhooks = await this.list(workspaceId, params, dispatchOptions);
+    const webhooks = (await this.list(workspaceId, params, dispatchOptions))?.data;
     await Promise.all(webhooks.map(async (webhook) => this.delete(webhook.gid, dispatchOptions)));
   };
 }

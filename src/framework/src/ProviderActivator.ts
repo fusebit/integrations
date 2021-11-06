@@ -6,7 +6,7 @@ import { Integration } from './client';
 export abstract class WebhookClient<T> {
   abstract create: (...args: any[]) => Promise<T | void>;
   abstract get: (...args: any[]) => Promise<T>;
-  abstract list: (...args: any[]) => Promise<T[]>;
+  abstract list: (...args: any[]) => Promise<any>;
   abstract delete: (...args: any[]) => Promise<void>;
   abstract deleteAll: (...args: any[]) => Promise<void>;
 }
