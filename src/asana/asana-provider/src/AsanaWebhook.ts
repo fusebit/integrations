@@ -84,7 +84,8 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
     workspace: string | number,
     params?: object,
     dispatchOptions?: object
-  ): Promise<Asana.resources.Webhooks.Type[]> => (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
+  ): Promise<Asana.resources.Webhooks.Type[]> =>
+    (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
 
   /**
    * This method permanently removes a webhook. Note that it may be possible

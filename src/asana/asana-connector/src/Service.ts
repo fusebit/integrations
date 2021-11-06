@@ -1,7 +1,7 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import crypto from 'crypto';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 class Service extends OAuthConnector.Service {
   private createWebhookChallengeStorageKey = (webhookId: string) => {
