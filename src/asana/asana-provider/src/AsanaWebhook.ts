@@ -78,14 +78,13 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @param {Object} [params] Parameters for the request
    * @param {String|Number} [params.resource] Only return webhooks for the given resource.
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise<webhook[]>} An array of the requested webhooks
+   * @return {Promise<Asana.resources.ResourceList<Asana.resources.Webhooks.Type>} An array of the requested webhooks
    */
   public list = async (
     workspace: string | number,
     params?: object,
     dispatchOptions?: object
-  ): Promise<Asana.resources.Webhooks.Type[]> =>
-    (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
+  ): Promise<Asana.resources.ResourceList<Asana.resources.Webhooks.Type>> => this.client.webhooks.getAll(workspace, params, dispatchOptions);
 
   /**
    * This method permanently removes a webhook. Note that it may be possible
@@ -95,9 +94,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
    * @return {Promise<void>}
    */
-  public delete = async (webhook: string, dispatchOptions?: object) => {
-    this.client.webhooks.deleteById(webhook, dispatchOptions);
-  };
+  public delete = async (webhook: string, dispatchOptions?: object) => this.client.webhooks.deleteById(webhook, dispatchOptions);
 
   /**
    * This method permanently removes all webhooks within a workspace. Note that it may be possible
