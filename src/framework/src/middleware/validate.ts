@@ -20,24 +20,24 @@ export const validate = (options: IValidationOptions) => {
       if (options.body) {
         Joi.attempt(ctx.req.body, options.body);
       }
-    } catch (err: any) {
-      errors.push({ location: 'body', details: err.details });
+    } catch (err) {
+      errors.push({ location: 'body', details: (err as any).details });
     }
 
     try {
       if (options.query) {
         Joi.attempt(ctx.query, options.query);
       }
-    } catch (err: any) {
-      errors.push({ location: 'query', details: err.details });
+    } catch (err) {
+      errors.push({ location: 'query', details: (err as any).details });
     }
 
     try {
       if (options.params) {
         Joi.attempt(ctx.params, options.params);
       }
-    } catch (err: any) {
-      errors.push({ location: 'params', details: err.details });
+    } catch (err) {
+      errors.push({ location: 'params', details: (err as any).details });
     }
 
     if (errors.length > 0) {

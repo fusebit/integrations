@@ -1,10 +1,7 @@
 import nock from 'nock';
 import { ServiceConnector } from '../src';
 import { Connector } from '@fusebit-int/framework';
-
 import { sampleEvent, sampleConfig, sampleEventCtx, sampleChallengeCtx, WebhookId } from './sampleData';
-
-//TODO fix imports
 import { Constants, getContext } from '../../../framework/test/utilities';
 
 const testMemoryStorage: Record<string, Connector.Types.StorageBucketItem | undefined> = {};

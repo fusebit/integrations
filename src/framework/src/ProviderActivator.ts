@@ -3,20 +3,25 @@ import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 import { Integration } from './client';
 
+export abstract class WebhookClient<T> {
+  abstract create: (...args: any[]) => Promise<T | void>;
+  abstract get: (...args: any[]) => Promise<T>;
+  abstract list: (...args: any[]) => Promise<T[]>;
+  abstract delete: (...args: any[]) => Promise<void>;
+  abstract deleteAll: (...args: any[]) => Promise<void>;
+}
+
 export default abstract class ProviderActivator<T> {
   public abstract instantiate(ctx: FusebitContext, lookupKey: string, installId?: string): Promise<T>;
-  instantiateWebhook?: (
+  public instantiateWebhook?: (
     ctx: FusebitContext,
     lookupKey: string,
     installId: string
-  ) => Promise<Integration.Types.WebhookClient<unknown>>;
+  ) => Promise<WebhookClient<any>>;
 
   public config: IInstanceConnectorConfig;
   constructor(cfg: IInstanceConnectorConfig) {
     this.config = cfg;
-    if (!this.instantiateWebhook) {
-      delete this.instantiateWebhook;
-    }
   }
 
   /**

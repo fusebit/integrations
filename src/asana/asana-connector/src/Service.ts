@@ -1,6 +1,7 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-import crypto, { randomUUID } from 'crypto';
+import crypto from 'crypto';
+import {v4 as uuidv4} from 'uuid';
 
 class Service extends OAuthConnector.Service {
   private createWebhookChallengeStorageKey = (webhookId: string) => {
@@ -11,7 +12,7 @@ class Service extends OAuthConnector.Service {
   };
 
   public registerWebhook = async (ctx: Connector.Types.Context) => {
-    const webhookId = randomUUID();
+    const webhookId = uuidv4();
     const storageKey = this.createWebhookChallengeStorageKey(webhookId);
 
     const createdTime = Date.now();

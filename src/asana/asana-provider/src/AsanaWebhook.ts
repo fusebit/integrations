@@ -30,12 +30,12 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * The parameters of this method are the same as the Asana Client's webhook creation method's, with the exception of
    * the `target` url.  This argument has been removed, as Fusebit will register the webhooks on your behalf.
    *
-   * You may choose to consult the Asana Client documentation for additional information about these parameters.
+   * You may choose to consult the [Asana Client documentation](https://developers.asana.com/docs/webhooks) for additional information about these parameters.
    *
    * @param {String|Number} resource A resource ID to subscribe to. The resource can be a task or project.
    * @param {Object} data Data for the request
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise<webhook>} The created webhook
+   * @return {Promise<Asana.resources.Webhooks.Type>} The created webhook
    */
   public create = async (
     resource: string | number,
@@ -55,7 +55,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
     await superagent.put(tagUrl).set('Authorization', `Bearer ${params.functionAccessToken}`);
 
     const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}`;
-    return await this.client.webhooks.create(resource, webhookUrl, data, dispatchOptions);
+    return this.client.webhooks.create(resource, webhookUrl, data, dispatchOptions);
   };
 
   /**
@@ -63,15 +63,13 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
    * @param {String} webhook The webhook to get.
    * @param {Object} [params] Parameters for the request
    * @param {Object} [dispatchOptions] Options, if any, to pass the dispatcher for the request
-   * @return {Promise<webhook>} The requested resource
+   * @return {Promise<Asana.resources.Webhooks.Type>} The requested resource
    */
   public get = async (
     webhook: string,
     params?: object,
     dispatchOptions?: object
-  ): Promise<Asana.resources.Webhooks.Type> => {
-    return await this.client.webhooks.getById(webhook, params, dispatchOptions);
-  };
+  ): Promise<Asana.resources.Webhooks.Type> => this.client.webhooks.getById(webhook, params, dispatchOptions);
 
   /**
    * Returns the compact representation of all webhooks your app has
@@ -86,9 +84,7 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
     workspace: string | number,
     params?: object,
     dispatchOptions?: object
-  ): Promise<Asana.resources.Webhooks.Type[]> => {
-    return (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
-  };
+  ): Promise<Asana.resources.Webhooks.Type[]> => (await this.client.webhooks.getAll(workspace, params, dispatchOptions))?.data;
 
   /**
    * This method permanently removes a webhook. Note that it may be possible

@@ -10,6 +10,10 @@ const SERVICE_NAME = 'Asana';
 class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
+  protected createService() {
+    return new ServiceConnector.Service();
+  }
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL);
   }
@@ -35,10 +39,6 @@ class ServiceConnector extends OAuthConnector<Service> {
     this.router.post('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
       await this.service.handleWebhookEvent(ctx);
     });
-  }
-
-  protected createService() {
-    return new ServiceConnector.Service();
   }
 }
 

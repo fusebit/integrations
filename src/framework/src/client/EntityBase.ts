@@ -1,16 +1,17 @@
 /* tslint:disable no-namespace no-empty-interface max-classes-per-file */
 import {
+  HttpContext as ContextType,
   CronContext as CronContext_,
   EventContext as EventContext_,
   HttpRouter as HttpRouter_,
   CronRouter as CronRouter_,
   EventRouter as EventRouter_,
+  Next as RouterNext,
 } from '../router';
 import * as Middleware from '../middleware';
 import Utilities from './Utilities';
 import { Form } from '../Form';
 import { IOnStartup as IOnStartupInterface } from '../Manager';
-import * as Storage from '../Storage';
 import { IStorageBucketItem, IStorageBucketItemParams } from '../Storage';
 
 const utilities = new Utilities();
@@ -35,10 +36,10 @@ abstract class EntityBase {
 
 namespace EntityBase {
   export namespace Types {
-    export type Context = Utilities.Types.ContextType;
+    export type Context = ContextType;
     export type EventContext = EventContext_;
     export type CronContext = CronContext_;
-    export type Next = Utilities.Types.NextType;
+    export type Next = RouterNext;
     export interface IOnStartup extends IOnStartupInterface {}
     export interface IInstallResponse {
       items: IInstall[];

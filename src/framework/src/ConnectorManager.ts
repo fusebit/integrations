@@ -90,7 +90,7 @@ class ConnectorManager {
    * @param {string} installId The unique id of the tenant Install that should be used to determine the
    * appropriate connector identity to populate into the sdk.
    */
-  public async getWebhookClientByName(ctx: FusebitContext, name: string, installId: string): Promise<any> {
+  public async getWebhookClientByName(ctx: FusebitContext, name: string, installId: string) {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(

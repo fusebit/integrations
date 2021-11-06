@@ -1,6 +1,7 @@
 /* tslint:disable:max-classes-per-file no-empty-interface no-namespace */
 import EntityBase from './EntityBase';
 import { FusebitContext } from '../router';
+import { WebhookClient as _WebhookClient } from '../ProviderActivator';
 import superagent from 'superagent';
 
 /**
@@ -22,11 +23,11 @@ class Webhook extends EntityBase.WebhookBase {
    *    // use client methods . . .
    * });
    */
-  public getSdkByTenant = async <T extends any, W extends Integration.Types.WebhookClient<T>>(
+  public getSdkByTenant = async <T>(
     ctx: FusebitContext,
     connectorName: string,
     tenantId: string
-  ): Promise<W> => {
+  ): Promise<Integration.Types.WebhookClient<T>> => {
     const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
 
     if (!installs || !installs.length) {
@@ -37,7 +38,7 @@ class Webhook extends EntityBase.WebhookBase {
       ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
 
-    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installs[0].id);
+    return this.getSdk(ctx, connectorName, installs[0].id);
   };
 
   /**
@@ -58,7 +59,7 @@ class Webhook extends EntityBase.WebhookBase {
     connectorName: string,
     installId: string
   ): Promise<W> => {
-    return this.utilities.getConnectorSdkByName(ctx, connectorName, installId);
+    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
   };
 }
 
@@ -166,13 +167,6 @@ class Tenant extends EntityBase.TenantBase {
 
 type _Service = Service;
 type _Webhook = Webhook;
-abstract class _WebhookClient<T> {
-  abstract create: (...args: any[]) => Promise<T | void>;
-  abstract get: (...args: any[]) => Promise<T>;
-  abstract list: (...args: any[]) => Promise<T[]>;
-  abstract delete: (...args: any[]) => Promise<void>;
-  abstract deleteAll: (...args: any[]) => Promise<void>;
-}
 
 /**
  * Integration
