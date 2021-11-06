@@ -32,7 +32,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Asana App';
     });
 
-    this.router.post('/api/fusebit/webhook/create', async (ctx: Connector.Types.Context) => {
+    this.router.post('/api/fusebit/webhook/create', this.middleware.authorizeUser('connector:execute'), async (ctx: Connector.Types.Context) => {
       ctx.body = await this.service.registerWebhook(ctx);
     });
 

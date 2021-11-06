@@ -27,7 +27,9 @@ router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('i
   const workspace = me.workspaces[0].gid;
   const assignee = me.gid;
   const tasks = await asanaClient.tasks.getTasks({ workspace, assignee });
-  ctx.body = tasks;
+  ctx.body = {
+    message: `Found ${tasks.data.length} tasks in the Asana Workspace  ${me.workspaces[0].name}`,
+  };
 });
 
 // The sample test endpoint registers a new webhook for use with this integration
