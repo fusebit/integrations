@@ -1,4 +1,3 @@
-
 interface IApiClient {
   get: (url: string) => Promise<any>;
   put: (url: string) => Promise<any>;

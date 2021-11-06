@@ -8,8 +8,14 @@ import { IAccount, waitForOperation, fusebitRequest, RequestMethod, postAndWait 
 //   'https://developer.atlassian.com/console/myapps/d639ce0f-f387-45d1-8421-e6d3dc6288c7/authorization/auth-code-grant';
 
 // Load the secrets from the environment
-export const { OAUTH_USERNAME, OAUTH_PASSWORD, SECRET_CLIENTID, SECRET_CLIENTSECRET, INTEGRATION_ID, CONNECTOR_ID } =
-  process.env;
+export const {
+  OAUTH_USERNAME,
+  OAUTH_PASSWORD,
+  SECRET_CLIENTID,
+  SECRET_CLIENTSECRET,
+  INTEGRATION_ID,
+  CONNECTOR_ID,
+} = process.env;
 
 // A variety of constants used for testing this component.
 export const TOKEN_URL = 'https://auth.atlassian.com/oauth/token';
