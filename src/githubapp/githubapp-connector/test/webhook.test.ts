@@ -40,7 +40,7 @@ describe('GitHub App Connector Webhooks Test Suite', () => {
   test('Validate: initializationChallenge false', async () => {
     const service: any = new ServiceConnector().service;
 
-    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
+    expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test('Validate: getTokenAuthId', async () => {
