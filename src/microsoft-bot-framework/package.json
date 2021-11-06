@@ -1,0 +1,36 @@
+{
+  "name": "@fusebit-int/microsoft-bot-framework",
+  "version": "7.8.2",
+  "description": "Connector for the Microsoft Bot Framework",
+  "keywords": [
+    "Fusebit",
+    "Microsoft Bot Framework"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/integrations.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "jest --config=./jest.config.ts",
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/integrations/issues"
+  }
+}
