@@ -208,7 +208,7 @@ class Connector<S extends Connector.Service = Connector.Service> extends EntityB
   constructor() {
     super();
 
-    //  `/api/fusebit_webhook_event` is legacy.  Should be maintained for backwards compatability until we can
+    // `/api/fusebit_webhook_event` is legacy.  Should be maintained for backwards compatability until we can
     // determine that it is not in use by any customers.
     this.router.post(
       ['/api/fusebit/webhook/event', '/api/fusebit_webhook_event'],

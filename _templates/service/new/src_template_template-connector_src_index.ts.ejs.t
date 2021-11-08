@@ -36,12 +36,6 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your <%= h.capitalize(name) %> App';
     });
   }
-
-  static Service = Service;
-
-  protected createService() {
-      return new ServiceConnector.Service();
-  }
 }
 
 const connector = new ServiceConnector();
