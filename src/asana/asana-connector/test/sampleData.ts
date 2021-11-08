@@ -18,7 +18,7 @@ export const sampleEventCtx = {
   params: { webhookId: WebhookId },
   req: {
     method: 'POST',
-    url: `/api/fusebit_webhook_event/${WebhookId}`,
+    url: `/api/fusebit/webhook/event/${WebhookId}`,
     headers: {
       'x-hook-signature': '11c89fb59db2a2cfe5eef26a3d7dc77d3ad0bbdd7f23700d7aff2fe6ff8e2581',
       'x-asana-request-signature': '11c89fb59db2a2cfe5eef26a3d7dc77d3ad0bbdd7f23700d7aff2fe6ff8e2581',

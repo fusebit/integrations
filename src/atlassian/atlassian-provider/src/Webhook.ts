@@ -37,7 +37,7 @@ export class Webhook {
 
   protected getInboundUrl() {
     const params = this.ctx.state.params;
-    return `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.client.fusebit.connectorId}/api/fusebit_webhook_event`;
+    return `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.client.fusebit.connectorId}/api/fusebit/webhook/event`;
   }
 
   public async register(cloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> {

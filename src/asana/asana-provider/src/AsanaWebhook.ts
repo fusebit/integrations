@@ -25,8 +25,8 @@ class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webho
   private installId;
 
   /**
-   * Establishing an Asana webhook with fusebit is a simple process.  This method functions similarly to the
-   * one provided by the asana client.  However, fusebit has already handled managing webhook endpoints, validation,
+   * Establishing an Asana webhook with Fusebit is a simple process.  This method functions similarly to the
+   * one provided by the Asana client.  However, Fusebit has already handled managing webhook endpoints, validation,
    * and initial setup steps.
    *
    * The parameters of this method are the same as the Asana Client's webhook creation method's, with the exception of

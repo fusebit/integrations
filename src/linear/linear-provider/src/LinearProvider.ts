@@ -50,6 +50,6 @@ class LinearWebhook {
 
 const getWebhookUrl = (ctx: Internal.Types.Context, config: IInstanceConnectorConfig): string => {
   const params = ctx.state.params;
-  const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${config.entityId}}/api/fusebit_webhook_event`;
+  const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${config.entityId}}/api/fusebit/webhook/event`;
   return baseUrl;
 };
