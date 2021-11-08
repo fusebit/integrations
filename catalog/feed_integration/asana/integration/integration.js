@@ -20,7 +20,7 @@ const router = integration.router;
 
 const connectorName = 'asanaConnector';
 
-// This sample test endpoint gets the Asana user information for the individual that authenticated the asana integration
+// This sample test endpoint provides the number of tasks within the tenant's first workspace
 router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await asanaClient.users.me();

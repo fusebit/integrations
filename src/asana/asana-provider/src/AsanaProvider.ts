@@ -1,6 +1,6 @@
 import { Internal } from '@fusebit-int/framework';
 import Asana from 'asana';
-import AsanaWebhook from './AsanaWebhook';
+import AsanaWebhook, { FusebitAsanaClient } from './AsanaWebhook';
 
 export default class AsanaProvider extends Internal.ProviderActivator<FusebitAsanaClient> {
   public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {

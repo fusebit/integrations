@@ -2,6 +2,8 @@ import { Internal } from '@fusebit-int/framework';
 import Asana from 'asana';
 import superagent from 'superagent';
 
+export type FusebitAsanaClient = import('asana').Client & { fusebit?: object };
+
 class AsanaWebhook implements Internal.Types.WebhookClient<Asana.resources.Webhooks.Type> {
   constructor(
     ctx: Internal.Types.Context,

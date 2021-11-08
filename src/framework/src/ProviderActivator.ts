@@ -1,7 +1,6 @@
 import superagent from 'superagent';
 import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
-import { Integration } from './client';
 
 export abstract class WebhookClient<T> {
   abstract create: (...args: any[]) => Promise<T | void>;
@@ -9,6 +8,11 @@ export abstract class WebhookClient<T> {
   abstract list: (...args: any[]) => Promise<any>;
   abstract delete: (...args: any[]) => Promise<void>;
   abstract deleteAll: (...args: any[]) => Promise<void>;
+}
+
+export interface Token {
+  access_token: string;
+  instance_url: string;
 }
 
 export default abstract class ProviderActivator<T> {
@@ -26,7 +30,7 @@ export default abstract class ProviderActivator<T> {
 
   /**
    * Request credentials to communicate with specified connector.
-   * @returns Promise<token>
+   * @returns Promise<Token>
    */
   protected async requestConnectorToken({
     ctx,
@@ -34,7 +38,7 @@ export default abstract class ProviderActivator<T> {
   }: {
     ctx: FusebitContext;
     lookupKey: string;
-  }): Promise<{ access_token: string; instance_url: string }> {
+  }): Promise<Token> {
     const tokenPath = `/api/${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
