@@ -17,11 +17,13 @@ export interface Token {
 
 export default abstract class ProviderActivator<T> {
   public abstract instantiate(ctx: FusebitContext, lookupKey: string, installId?: string): Promise<T>;
-  public instantiateWebhook?: (
+  public instantiateWebhook = async (
     ctx: FusebitContext,
     lookupKey: string,
     installId: string
-  ) => Promise<WebhookClient<any>>;
+  ): Promise<WebhookClient<any>> => {
+    ctx.throw('Dynamic Webhooks are not supported for this connector');
+  };
 
   public config: IInstanceConnectorConfig;
   constructor(cfg: IInstanceConnectorConfig) {
