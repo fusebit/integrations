@@ -41,6 +41,10 @@
     "clientSecret": {
       "title": "Client Secret",
       "type": "string"
+    },
+    "defaultEventHandler": {
+      "title": "Default Event Handler",
+      "type": "string"
     }
   },
   "required": ["scope", "clientId", "clientSecret"]

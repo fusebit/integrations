@@ -2,11 +2,18 @@ import { Connector } from '@fusebit-int/framework';
 
 class Service extends Connector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
+    console.log('=============== getEventsFromPayload');
+    console.log(ctx.req.body);
+    console.log('===============');
     return [ctx.req.body];
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
-    return event.from.aadObjectId;
+    console.log('=============== getAuthIdFromEvent');
+    console.log('aadObjectId:', event.from.aadObjectId);
+    console.log('id:', event.from.id);
+    console.log('===============');
+    return event.from.aadObjectId || event.from.id;
   }
 
   protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
@@ -18,15 +25,10 @@ class Service extends Connector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
-    console.log('=============== getTokenAuthId');
-    console.log(ctx);
-    console.log(token);
-    console.log('===============');
-    return '';
-  }
-
   protected getWebhookEventType(event: any): string {
+    console.log('=============== getWebhookEventType');
+    console.log(event.from.aadObjectId);
+    console.log('===============');
     return event.type;
   }
 }

@@ -49,13 +49,8 @@
                   "scope": "#/properties/scope"
                 },
                 {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/constants/properties/urls/properties/webhookUrl"
-                    }
-                  ]
+                  "type": "Control",
+                  "scope": "#/properties/defaultEventHandler"
                 }
               ]
             }
@@ -80,13 +75,12 @@
           "type": "HorizontalLayout",
           "elements": [
             {
-              "type": "VerticalLayout",
-              "elements": [
-                {
-                  "type": "Control",
-                  "scope": "#/properties/tokenUrl"
-                }
-              ]
+              "type": "Control",
+              "scope": "#/properties/tokenUrl"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/constants/properties/urls/properties/webhookUrl"
             }
           ]
         }
