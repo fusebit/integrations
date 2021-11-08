@@ -208,7 +208,7 @@ class Connector<S extends Connector.Service = Connector.Service> extends EntityB
   constructor() {
     super();
 
-    this.router.post('/api/fusebit/webhook/event', async (ctx: Connector.Types.Context) => {
+    this.router.post(['/api/fusebit/webhook/event', '/api/fusebit_webhook_event'], async (ctx: Connector.Types.Context) => {
       await this.service.handleWebhookEvent(ctx);
     });
   }
