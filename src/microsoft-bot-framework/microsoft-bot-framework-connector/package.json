@@ -34,6 +34,7 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
+    "botframework-connector": "^4.14.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {

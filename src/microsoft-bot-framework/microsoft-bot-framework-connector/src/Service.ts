@@ -1,4 +1,5 @@
 import { Connector } from '@fusebit-int/framework';
+import { JwtTokenExtractor } from 'botframework-connector/lib/auth/jwtTokenExtractor';
 
 class Service extends Connector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
@@ -10,7 +11,21 @@ class Service extends Connector.Service {
   }
 
   protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    // TODO https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-connector-authentication?view=azure-bot-service-4.0#openid-metadata-document
+    const tokenValidationParams = {
+      issuer: ['https://api.botframework.com'],
+      clockTolerance: 300,
+      ignoreExpiration: false,
+    };
+
+    const metadataUrl = 'https://login.botframework.com/v1/.well-known/openidconfiguration';
+    const allowedAlgorithms = ['RS256', 'RS384', 'RS512'];
+    const tokenValidator = new JwtTokenExtractor(tokenValidationParams, metadataUrl, allowedAlgorithms);
+
+    const token = ctx.req.headers?.authorization?.split(' ')[1];
+    const channelId = ctx.req.body.channelId;
+    const requiredEndorsements: string[] = []; // empty array intended
+    await tokenValidator['validateToken'](token, channelId, requiredEndorsements);
+
     return true;
   }
 
