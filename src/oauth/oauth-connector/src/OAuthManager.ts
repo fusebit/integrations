@@ -82,13 +82,20 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       }
 
       const createTags = async (token: IOAuthToken): Promise<ITags | undefined> => {
-        const webhookId = await this.service.getWebhookTokenId(ctx, token);
-
+        const webhookIds = await this.service.getWebhookTokenId(ctx, token);
         const result: ITags = {};
-        if (webhookId) {
-          result[webhookId] = null;
-          return result;
+        if (webhookIds) {
+          if (Array.isArray(webhookIds)) {
+            webhookIds.forEach((webhookId) => {
+              if (webhookId) {
+                result[webhookId] = null;
+              }
+            });
+          } else {
+            result[webhookIds] = null;
+          }
         }
+        return result;
       };
 
       ctx.state.engine = ctx.state.engine || new OAuthEngine(ctx.state.manager.config.configuration as IOAuthConfig);

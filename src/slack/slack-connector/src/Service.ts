@@ -38,7 +38,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     return token.bot_user_id;
   }
 

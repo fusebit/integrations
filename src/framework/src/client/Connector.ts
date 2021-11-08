@@ -115,10 +115,13 @@ export class Service extends EntityBase.ServiceDefault {
   }
 
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
-  public async getWebhookTokenId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  public async getWebhookTokenId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const authId = await this.getTokenAuthId(ctx, token);
     if (authId) {
       const connectorId = ctx.state.params.entityId;
+      if (Array.isArray(authId)) {
+        return authId.map((authIdItem) => ['webhook', connectorId, authIdItem].join('/'));
+      }
       return ['webhook', connectorId, authId].join('/');
     }
   }
@@ -159,7 +162,7 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: When supplied with an OAuth token, extract out the key that will be used for authentication
    * association in webhook events.
    */
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     // No throw here.  This is called in the auth flow and needs to continue regardless of success
   }
 

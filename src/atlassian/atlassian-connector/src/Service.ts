@@ -32,7 +32,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const response = await superagent
       .get('https://api.atlassian.com/me')
       .set('Authorization', `Bearer ${token.access_token}`);

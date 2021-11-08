@@ -30,7 +30,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const query = { query: '{ organization { id } }' };
     const data = await superagent
       .post('https://api.linear.app/graphql')

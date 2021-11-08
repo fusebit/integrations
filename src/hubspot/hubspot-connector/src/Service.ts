@@ -35,7 +35,7 @@ class Service extends OAuthConnector.Service {
   }
 
   // Query hubspot to get the hub_id (aka portalId) for this authenticated user.
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any) {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     try {
       const meUrl = new URL(ctx.state.manager.config.configuration.tokenUrl);
       const response = await superagent.get(`${meUrl.origin}/oauth/v1/access-tokens/${token.access_token}`);

@@ -40,7 +40,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const installationsResponse = await superagent
       .get('https://api.github.com/user/installations')
       .set('User-Agent', `fusebit/${ctx.state.params.entityId}`)
@@ -49,7 +49,7 @@ class Service extends OAuthConnector.Service {
     const { total_count, installations } = installationsResponse.body;
 
     if (total_count) {
-      return installations[0].id;
+      return installations.map((installation: any) => installation.id);
     }
   }
 
