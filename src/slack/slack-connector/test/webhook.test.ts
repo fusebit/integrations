@@ -26,7 +26,7 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: validateWebhookEvent', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+    expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
   });
 
   test('Validate: initializationChallenge false', async () => {

@@ -31,7 +31,7 @@ describe('GitHub OAuth Connector Webhooks Test Suite', () => {
     const service: any = new ServiceConnector().service;
     sampleCtx.state.manager.config.configuration.signingSecret = 'secret';
 
-    expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+    expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 

@@ -45,7 +45,7 @@ describe('Linear Webhook Events', () => {
 
   test('Validate: validateWebhookEvent true', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+    expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
   });
 
   test('Validate: validateWebhookEvent false', async () => {
