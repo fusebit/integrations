@@ -83,9 +83,9 @@ function rsaPublicKeyToPEM(modulusB64: string, exponentB64: string) {
 
   const der = Buffer.from(encodedPubkey, 'hex').toString('base64') as string;
 
-  let pem = `-----BEGIN RSA PUBLIC KEY-----\n`;
+  let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
   pem += `${(der.match(/.{1,64}/g) || []).join('\n')}`;
-  pem += `\n-----END RSA PUBLIC KEY-----\n`;
+  pem += '\n-----END RSA PUBLIC KEY-----\n';
   return pem;
 }
 
