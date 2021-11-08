@@ -2,6 +2,7 @@ import superagent from 'superagent';
 import { ObjectEntries } from './Utilities';
 import { Internal } from '@fusebit-int/framework';
 import Context = Internal.Types.Context;
+import { IIdentityClientParams, IOAuthToken, ITags } from './OAuthTypes';
 
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');

@@ -1,6 +1,8 @@
 import { Internal } from '@fusebit-int/framework';
 import { Octokit as Client } from 'octokit';
 
+type FusebitGitHubOAuthClient = Client & { fusebit?: any };
+
 export default class GitHubOAuthProvider extends Internal.ProviderActivator<FusebitGitHubOAuthClient> {
   /*
    * This function will create an authorized wrapper of the GitHubOAuth SDK client.

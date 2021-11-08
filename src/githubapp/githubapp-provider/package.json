@@ -10,7 +10,6 @@
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "typings": "src/main.d.ts",
   "files": [
     "libc/*.js",
     "libc/*.d.ts"

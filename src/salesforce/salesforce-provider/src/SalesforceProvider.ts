@@ -1,6 +1,8 @@
 import { Internal } from '@fusebit-int/framework';
 import jsforce from 'jsforce';
 
+type FusebitClient = jsforce.Connection & { fusebit?: { credentials: any; identity?: any } };
+
 export default class SalesforceProvider extends Internal.ProviderActivator<FusebitClient> {
   /*
    * This function will create an authorized wrapper of the Salesforce client.

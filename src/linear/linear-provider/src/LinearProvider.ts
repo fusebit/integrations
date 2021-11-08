@@ -2,6 +2,8 @@ import { Internal } from '@fusebit-int/framework';
 import { IInstanceConnectorConfig } from '@fusebit-int/framework/libc/ConnectorManager';
 import { LinearClient as Client } from '@linear/sdk';
 
+type FusebitLinearClient = Client & { fusebit?: any };
+
 export default class LinearProvider extends Internal.ProviderActivator<FusebitLinearClient> {
   /*
    * This function will create an authorized wrapper of the Linear SDK client.

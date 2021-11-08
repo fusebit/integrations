@@ -1,5 +1,5 @@
 import connector, { OAuthConnector } from './OAuthManager';
-import { OAuthEngine } from './OAuthEngine';
+import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 
 export default connector;
-export { OAuthEngine, OAuthConnector };
+export { OAuthEngine, IOAuthConfig, OAuthConnector };
