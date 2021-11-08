@@ -14,6 +14,21 @@ class ServiceConnector extends Connector {
   public constructor() {
     super();
 
+    this.router.use(
+      (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
+        const { config: cfg } = ctx.state.manager;
+        cfg.configuration.constants = {
+          urls: {
+            production: {
+              tokenUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            },
+            webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
+          },
+        };
+        return next();
+      }
+    );
+
     this.router.get(
       '/api/configure',
       this.middleware.authorizeUser('connector:put'),

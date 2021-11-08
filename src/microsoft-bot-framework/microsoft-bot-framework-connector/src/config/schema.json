@@ -20,7 +20,7 @@
               "title": "Webhook URL",
               "type": "string",
               "readOnly": true,
-              "copiable": true
+              "copy": true
             }
           }
         }
