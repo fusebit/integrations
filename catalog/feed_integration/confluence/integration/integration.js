@@ -18,13 +18,15 @@ const integration = new Integration();
 // to the integration, which you can then call from within your application.
 const router = integration.router;
 
+const connectorName = 'confluenceConnector';
+
 // The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create an Atlassian client pre-configured with credentials necessary to communicate with your tenant's
   // Confluence account.
   //
   // For the Atlassian SDK documentation, see https://developer.atlassian.com/cloud/confluence/rest/intro/.
-  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, 'confluenceConnector', ctx.params.tenantId);
+  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources();
 
   const confluence = atlassianClient.confluence(resources[0].id);

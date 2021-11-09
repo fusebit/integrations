@@ -15,7 +15,7 @@ class Service extends OAuthConnector.Service {
     return event.data.installation.id;
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const payload = ctx.req.body;
     const signatureHeader = ctx.req.headers['x-hub-signature-256'] as string;
     if (payload && signatureHeader) {
@@ -36,7 +36,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected initializationChallenge(ctx: Connector.Types.Context): boolean {
+  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     return false;
   }
 

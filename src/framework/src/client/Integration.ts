@@ -1,9 +1,67 @@
 /* tslint:disable:max-classes-per-file no-empty-interface no-namespace */
 import EntityBase from './EntityBase';
 import { FusebitContext } from '../router';
+import { WebhookClient as _WebhookClient } from '../ProviderActivator';
 import superagent from 'superagent';
 
-const TENANT_TAG_NAME = 'fusebit.tenantId';
+/**
+ * @class
+ * @alias integration.webhook
+ */
+class Webhook extends EntityBase.WebhookBase {
+  /**
+   * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} tenantId Represents a single user of this Integration,
+   * usually corresponding to a user or account in your own system
+   * @returns {Promise<any>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:tenant', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
+   *    // use client methods . . .
+   * });
+   */
+  public getSdkByTenant = async <T>(
+    ctx: FusebitContext,
+    connectorName: string,
+    tenantId: string
+  ): Promise<Integration.Types.WebhookClient<T>> => {
+    const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
+
+    if (!installs || !installs.length) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
+    }
+
+    if (installs.length > 1) {
+      ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
+    }
+
+    return this.getSdk(ctx, connectorName, installs[0].id);
+  };
+
+  /**
+   * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {string} installId Represents a single installation of this Integration
+   * @returns {Promise<any>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdk(ctx, ctx.params.connectorName, ctx.params.installId);
+   *    // use client methods . . .
+   * });
+   */
+  public getSdk = async <T extends any, W extends Integration.Types.WebhookClient<T>>(
+    ctx: FusebitContext,
+    connectorName: string,
+    installId: string
+  ): Promise<W> => {
+    return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
+  };
+}
 
 /**
  * @class Middleware
@@ -70,8 +128,7 @@ export class Service extends EntityBase.ServiceBase {
     const response = await superagent
       .get(`${ctx.state.params.baseUrl}/install/${installId}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-    const body = response.body;
-    return body;
+    return response.body;
   };
 }
 
@@ -79,16 +136,7 @@ export class Service extends EntityBase.ServiceBase {
  * @class
  * @alias integration.tenant
  */
-class Tenant {
-  /**
-   * @private
-   */
-  public service: Service;
-
-  constructor(service: Service) {
-    this.service = service;
-  }
-
+class Tenant extends EntityBase.TenantBase {
   /**
    * Get an authenticated SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
@@ -104,22 +152,21 @@ class Tenant {
    * });
    */
   public getSdkByTenant = async (ctx: FusebitContext, connectorName: string, tenantId: string) => {
-    const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/install?tag=${TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
-      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-    const body = response.body;
+    const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
 
-    if (body.items.length === 0) {
+    if (installs.length === 0) {
       ctx.throw(404, `Cannot find an Integration Install associated with tenant ${tenantId}`);
     }
 
-    if (body.items.length > 1) {
+    if (installs.length > 1) {
       ctx.throw(400, `Too many Integration Installs found with tenant ${tenantId}`);
     }
-
-    return this.service.getSdk(ctx, connectorName, body.items[0].id);
+    return this.utilities.getConnectorSdkByName(ctx, connectorName, installs[0].id);
   };
 }
+
+type _Service = Service;
+type _Webhook = Webhook;
 
 /**
  * Integration
@@ -137,8 +184,15 @@ namespace Integration {
     export type Next = EntityBase.Types.Next;
     export interface IOnStartup extends EntityBase.Types.IOnStartup {}
     export interface IInstall extends EntityBase.Types.IInstall {}
+    export type Response = EntityBase.ResponseDefault;
+    export type Middleware = EntityBase.MiddlewareDefault;
+    export type Storage = EntityBase.StorageDefault;
+    export type Service = _Service;
+    export type Webhook = _Webhook;
+    export type WebhookClient<T> = _WebhookClient<T>;
   }
 }
+
 /**
  * @class Integration
  * @description Access to our SDK capabilities, like Storage, Authorization middlewares, SDK clients.
@@ -146,7 +200,7 @@ namespace Integration {
  * @private
  *
  */
-export default class Integration extends EntityBase {
+class Integration extends EntityBase {
   /**
    * @memberof Service
    * @private
@@ -165,10 +219,17 @@ export default class Integration extends EntityBase {
    * @memberof Tenant
    * @private
    */
-  public tenant = new Tenant(this.service);
+  public tenant = new Tenant();
   /**
    * @memberof ResponseDefault
    * @private
    */
   public response = new EntityBase.ResponseDefault();
+
+  /**
+   * @private
+   */
+  public webhook: Webhook = new Webhook();
 }
+
+export default Integration;

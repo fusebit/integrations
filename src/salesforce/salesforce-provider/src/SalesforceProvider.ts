@@ -7,7 +7,7 @@ export default class SalesforceProvider extends Internal.ProviderActivator<Fuseb
   /*
    * This function will create an authorized wrapper of the Salesforce client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const options = {
       instanceUrl: credentials.instance_url,

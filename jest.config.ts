@@ -8,7 +8,12 @@ const config: Config.InitialOptions = {
     '\\.(ts|tsx)$': 'ts-jest',
   },
   testRegex: '/test/.*\\.test.(ts|tsx|js)$',
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-node',
+  globals: {
+    'ts-jest': {
+      isolatedModules: false,
+    },
+  },
 };
 
 export default config;

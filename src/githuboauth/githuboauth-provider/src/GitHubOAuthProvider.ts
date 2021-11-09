@@ -7,7 +7,7 @@ export default class GitHubOAuthProvider extends Internal.ProviderActivator<Fuse
   /*
    * This function will create an authorized wrapper of the GitHubOAuth SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitGitHubOAuthClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitGitHubOAuthClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitGitHubOAuthClient = new Client({ accessToken: credentials.access_token });
     client.fusebit = { credentials };

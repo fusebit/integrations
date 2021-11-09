@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 
-import { Internal } from '../src/framework/libc';
+import { Connector, Internal } from '../src/framework/libc';
 const { Manager } = Internal;
 
 export const request = (method: string, path: string, headers?: any, query?: any, body?: any) => {
@@ -40,7 +40,7 @@ export const cfg = {
   schedule: [],
 };
 
-export const commonConnectorTests = (connector: { router: Internal.Router }) => {
+export const commonConnectorTests = (connector: Connector) => {
   describe('Connector', () => {
     test('validate connector can be loaded', async () => {
       const manager = new Manager();

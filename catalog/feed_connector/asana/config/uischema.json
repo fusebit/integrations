@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/asanaConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

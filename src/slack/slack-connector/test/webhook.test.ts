@@ -31,14 +31,14 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: initializationChallenge false', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
+    expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test('Validate: initializationChallenge true', async () => {
     const service: any = new ServiceConnector.Service();
     const ctx = JSON.parse(JSON.stringify(sampleCtx));
     ctx.req.body.challenge = 'a challenge';
-    expect(service.initializationChallenge(ctx)).toBeTruthy();
+    expect(await service.initializationChallenge(ctx)).toBeTruthy();
   });
 
   test('Validate: getTokenAuthId', async () => {

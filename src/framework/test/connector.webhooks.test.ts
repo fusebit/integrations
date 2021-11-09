@@ -21,8 +21,8 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent returns 200 on valid challenge', async () => {
     const ctx = getContext();
-    const mockedValidateWebhookEvent = jest.fn(() => true);
-    const mockedInitializationChallenge = jest.fn(() => true);
+    const mockedValidateWebhookEvent = jest.fn(async () => true);
+    const mockedInitializationChallenge = jest.fn(async () => true);
 
     class TestService extends Connector.Service {
       protected validateWebhookEvent = mockedValidateWebhookEvent;
@@ -38,7 +38,7 @@ describe('Connector', () => {
     const connector = new TestConnector();
 
     await connector.service.handleWebhookEvent(ctx);
-    expect(ctx.status).toBe(200);
+    expect(ctx.status).toBeUndefined();
     expect(mockedValidateWebhookEvent).toBeCalledTimes(1);
     expect(mockedInitializationChallenge).toBeCalledTimes(1);
   });
@@ -46,8 +46,8 @@ describe('Connector', () => {
   test('service.handleWebhookEvent raises exception when getEventsFromPayload is not overwritten', async () => {
     const ctx = getContext();
     try {
-      const mockedValidateWebhookEvent = jest.fn(() => true);
-      const mockedInitializationChallenge = jest.fn(() => false);
+      const mockedValidateWebhookEvent = jest.fn(async () => true);
+      const mockedInitializationChallenge = jest.fn(async () => false);
 
       class TestService extends Connector.Service {
         protected validateWebhookEvent = mockedValidateWebhookEvent;
@@ -87,10 +87,10 @@ describe('Connector', () => {
 
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent() {
+      protected async validateWebhookEvent() {
         return true;
       }
-      protected initializationChallenge() {
+      protected async initializationChallenge() {
         return false;
       }
       protected getEventsFromPayload() {
@@ -145,10 +145,10 @@ describe('Connector', () => {
     // Mock some methods on service.
     // Create the connector.
     class TestService extends Connector.Service {
-      protected validateWebhookEvent() {
+      protected async validateWebhookEvent() {
         return true;
       }
-      protected initializationChallenge() {
+      protected async initializationChallenge() {
         return false;
       }
       protected getEventsFromPayload() {
@@ -178,7 +178,7 @@ describe('Connector', () => {
 
     // Create a Promise we can wait on.
     let writeResolve: () => void = jest.fn();
-    const writePromise = new Promise((resolve) => (writeResolve = resolve));
+    const writePromise = new Promise((resolve) => (writeResolve = resolve.bind(null, null)));
 
     // Call the fanout
     const fanoutRequest = makeFanoutRequester(ctx, webhookEventId, webhookEvents, writeResolve);

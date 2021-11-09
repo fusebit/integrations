@@ -12,7 +12,7 @@ type MiddlewareAdjustUrlConfiguration = (
   proxyKey?: string
 ) => Connector.Types.Handler;
 
-class OAuthConnector extends Connector {
+class OAuthConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
 
   protected sanitizeCredentials(credentials: { refresh_token: string }): object {
@@ -43,7 +43,7 @@ class OAuthConnector extends Connector {
                 },
               }
             : {}),
-          webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
+          webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit/webhook/event`,
           callbackUrl: `${ctx.state.params.baseUrl}/api/callback`,
         },
       };
@@ -122,13 +122,13 @@ class OAuthConnector extends Connector {
         const constUrls = ctx.state.manager.config.configuration.constants.urls;
         if (
           ctx.body.data.tokenUrl == constUrls.production.tokenUrl ||
-          ctx.body.data.tokenUrl == constUrls.proxy.tokenUrl
+          ctx.body.data.tokenUrl == constUrls.proxy?.tokenUrl
         ) {
           delete ctx.body.data.tokenUrl;
         }
         if (
           ctx.body.data.authorizationUrl == constUrls.production.authorizationUrl ||
-          ctx.body.data.authorizationUrl == constUrls.proxy.authorizationUrl
+          ctx.body.data.authorizationUrl == constUrls.proxy?.authorizationUrl
         ) {
           delete ctx.body.data.authorizationUrl;
         }

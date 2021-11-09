@@ -7,8 +7,11 @@ const isRequestWritten = (request: superagent.Request): boolean =>
 
 // Every 5ms, check to see if superagent has finished writing the request down the wire, calling
 // onWriteCompleted when done.
-const waitForDrain = (request: superagent.Request, onWriteCompleted: () => void): void => {
-  setTimeout(() => (isRequestWritten(request) ? onWriteCompleted() : waitForDrain(request, onWriteCompleted)), 5);
+const waitForDrain = async (request: superagent.Request, onWriteCompleted: Function): Promise<void> => {
+  while (!isRequestWritten(request)) {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 5));
+  }
+  return onWriteCompleted();
 };
 
 export type FanoutRequest = () => Promise<superagent.Response>;
@@ -23,7 +26,7 @@ export const makeFanoutRequester = (
   ctx: Connector.Types.Context,
   webhookEventId: string,
   webhookEvents: Connector.Types.IWebhookEvents,
-  writeCompleted: () => void
+  writeCompleted: Function
 ) => {
   // Create the actual Superagent.request object
   const makeRequest = () => {

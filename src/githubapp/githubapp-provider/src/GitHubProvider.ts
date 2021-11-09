@@ -7,7 +7,7 @@ export default class GitHubProvider extends Internal.ProviderActivator<FusebitGi
   /*
    * This function will create an authorized wrapper of the GitHub SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitGitHubClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitGitHubClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitGitHubClient = new Client({ auth: credentials.access_token });
     client.fusebit = { credentials };

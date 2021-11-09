@@ -10,7 +10,7 @@ export default class PagerDutyProvider extends Internal.ProviderActivator<Fusebi
   /*
    * This function will create an authorized wrapper of the PagerDuty SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitPagerDutyClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitPagerDutyClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitPagerDutyClient = await api({ token: credentials.access_token, tokenType: 'bearer' });
     client.fusebit = { credentials };

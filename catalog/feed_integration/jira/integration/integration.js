@@ -18,13 +18,15 @@ const integration = new Integration();
 // to the integration, which you can then call from within your application.
 const router = integration.router;
 
+const connectorName = 'atlassianConnector';
+
 // The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create an Atlassian client pre-configured with credentials necessary to communicate with your tenant's
   // Jira account.
   //
   // For the Atlassian SDK documentation, see https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/.
-  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, 'jiraConnector', ctx.params.tenantId);
+  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources();
 
   const jira = atlassianClient.jira(resources[0].id);
