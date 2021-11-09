@@ -2,12 +2,12 @@
 
 set -xe
 
-npm ci
+npm i
 npx lerna bootstrap
 npx lerna run build
 
 
 cd tool/publish-docs
 
-npm ci
+npm i
 npm run build
