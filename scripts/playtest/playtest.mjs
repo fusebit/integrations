@@ -29,8 +29,6 @@ const getServicesWithPlay = async () => {
         }
     }
     await $`lerna run play-install`
-
-    await new Promise((res) => setTimeout(res, 10000))
     await $`lerna run play`
     const slack_payload = {
         text: ":alarm_clock: Playwright results just came in :alarm_clock:",
