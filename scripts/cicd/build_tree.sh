@@ -2,7 +2,7 @@
 
 set -xe
 
-npx lerna bootstrap
+npx lerna bootstrap --no-ci
 npx lerna run build
 
 cd tool/publish-docs
