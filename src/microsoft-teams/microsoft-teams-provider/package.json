@@ -1,0 +1,46 @@
+{
+  "name": "@fusebit-int/microsoft-teams-provider",
+  "version": "7.9.0",
+  "description": "Microsoft Teams provider",
+  "keywords": [
+    "Fusebit",
+    "Microsoft Teams"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/integrations.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/integrations/issues"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  },
+  "devDependencies": {
+    "@fusebit-int/framework": "^7.9.0",
+    "@types/node": "^16.11.7",
+    "@types/request": "^2.48.7",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^27.3.1",
+    "typescript": "^4.4.4"
+  }
+}
