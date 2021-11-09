@@ -2,10 +2,11 @@
 
 set -xe
 
-npx lerna bootstrap --no-ci
+npm ci
+npx lerna bootstrap
 npx lerna run build
 
 cd tool/publish-docs
 
-npm i
+npm ci
 npm run build

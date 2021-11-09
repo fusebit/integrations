@@ -9,10 +9,6 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.8.2",
     "@fusebit-int/slack-provider": "^7.8.2",
-    "superagent": "^6.1.0"
-  },
-  "devDependencies": {
-    "@types/superagent": "^4.1.12"
   },
   "files": [
     "./integration.js",
