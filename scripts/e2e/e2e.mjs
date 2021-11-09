@@ -27,6 +27,6 @@ const getServicesWithPlay = async () => {
             fs.promises.appendFile(`src/${service}/${service}-provider/.env.playwright`, `${storageKey}=${storageKeys.data[storageKey]}\n`)
         }
     }
-    $`lerna run play-install`
-    $`lerna run play`
+    await $`lerna run play-install`
+    await $`lerna run play`
 })()
