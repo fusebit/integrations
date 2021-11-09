@@ -20,7 +20,7 @@ class Service extends Connector.Service {
     return true;
   }
 
-  protected initializationChallenge(ctx: Connector.Types.Context): boolean {
+  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     return false;
   }
 
