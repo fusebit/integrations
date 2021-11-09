@@ -13,5 +13,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install -- test action
+        run: npm install
       - name: Build Tree
         run: ./scripts/cicd/lint.sh
