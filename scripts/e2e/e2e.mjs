@@ -28,5 +28,7 @@ const getServicesWithPlay = async () => {
         }
     }
     await $`lerna run play-install`
+
+    await new Promise((res) => setTimeout(res, 10000))
     await $`lerna run play`
 })()
