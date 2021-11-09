@@ -4,6 +4,7 @@ const fs = require('fs')
 
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
+// only need to match up with how storage is set.
 const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY
 
 const getServicesWithPlay = async () => {
@@ -31,4 +32,23 @@ const getServicesWithPlay = async () => {
 
     await new Promise((res) => setTimeout(res, 10000))
     await $`lerna run play`
+    const slack_payload = {
+        text: ":alarm_clock: Playwright results just came in :alarm_clock:",
+        blocks: []
+    }
+    for (const svc of servicesWithPlay) {
+        const pl = JSON.parse(await fs.promises.readFile(`./src/${svc}/${svc}-provider/results.json`))
+        const success = pl.suites[0].specs[0].ok
+        slack_payload.blocks.push({
+            type: 'section',
+            text: {
+            type: 'mrkdwn',
+            text: ""+
+                `${success ? ":white_check_mark:": ":warning:"} ` +
+                `${svc}'s playwright test ` +
+                `${success ? "passed": "failed"}`,
+            },
+        })
+        $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" https://hooks.slack.com/services/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`
+    }
 })()
