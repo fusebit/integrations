@@ -1,5 +1,4 @@
 import { Connector } from '@fusebit-int/framework';
-import superagent from 'superagent';
 import schema from './config/schema.json';
 import uischema from './config/uischema.json';
 
@@ -27,23 +26,6 @@ class ServiceConnector extends Connector {
           },
         };
         return next();
-      }
-    );
-
-    this.router.get(
-      '/api/bot-framework-access-token',
-      this.middleware.authorizeUser('connector:execute'),
-      async (ctx: Connector.Types.Context) => {
-        const botFrameworkCredentialsResponse = await superagent
-          .get(ctx.state.manager.config.configuration.tokenUrl)
-          .type('form')
-          .send({
-            grant_type: 'client_credentials',
-            client_id: ctx.state.manager.config.configuration.clientId,
-            client_secret: ctx.state.manager.config.configuration.clientSecret,
-            scope: ctx.state.manager.config.configuration.scope,
-          });
-        ctx.body = botFrameworkCredentialsResponse.body.access_token;
       }
     );
 

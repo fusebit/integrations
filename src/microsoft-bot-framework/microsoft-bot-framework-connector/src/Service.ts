@@ -1,14 +1,37 @@
-import { Connector } from '@fusebit-int/framework';
+import { Connector, Internal } from '@fusebit-int/framework';
 import superagent from 'superagent';
 import { verifyJwt } from './jwt';
 
 class Service extends Connector.Service {
+  public async handleWebhookEvent(ctx: Internal.Types.Context) {
+    const botFrameworkAccessTokenResponse = await superagent
+      .get(ctx.state.manager.config.configuration.tokenUrl)
+      .type('form')
+      .send({
+        grant_type: 'client_credentials',
+        client_id: ctx.state.manager.config.configuration.clientId,
+        client_secret: ctx.state.manager.config.configuration.clientSecret,
+        scope: ctx.state.manager.config.configuration.scope,
+      });
+    const botFrameworkAccessToken = botFrameworkAccessTokenResponse.body.access_token;
+
+    ctx.req.body = {
+      botFrameworkCredentials: {
+        accessToken: botFrameworkAccessToken,
+        botClientId: ctx.state.manager.config.configuration.clientId,
+      },
+      botFrameworkEvent: ctx.req.body,
+    };
+
+    return super.handleWebhookEvent(ctx);
+  }
+
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
-    return event.recipient.id;
+  protected getAuthIdFromEvent(ctx: Connector.Types.Context, { botFrameworkEvent }: any): string {
+    return botFrameworkEvent.recipient.id;
   }
 
   protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
@@ -24,8 +47,8 @@ class Service extends Connector.Service {
     return false;
   }
 
-  protected getWebhookEventType(event: any): string {
-    return event.type;
+  protected getWebhookEventType({ botFrameworkEvent }: any): string {
+    return botFrameworkEvent.type;
   }
 }
 
