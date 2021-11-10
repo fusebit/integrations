@@ -20,21 +20,18 @@ const getServicesWithPlay = async () => {
 };
 
 (async () => {
-    let storageErrors = []
-    const servicesWithPlay = await getServicesWithPlay()
-    console.log(servicesWithPlay)
-    for (const service of servicesWithPlay) { 
-        let storageKeys;
-        try {
-            storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`)
-        } catch (_) {
-            storageErrors.push(service)
-            servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service)
-        }
-        for (const storageKey of Object.keys(storageKeys.data)) {
-            await fs.promises.appendFile(`src/${service}/${service}-provider/.env.playwright`, `${storageKey}=${storageKeys.data[storageKey]}\n`)
-        }
-  let totalSuccess = true;
+  let storageErrors = [];
+  const servicesWithPlay = await getServicesWithPlay();
+  console.log(servicesWithPlay);
+  for (const service of servicesWithPlay) {
+    let storageKeys;
+    try {
+      storageKeys = JSON.parse(
+        await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`
+      );
+    } catch (_) {
+      storageErrors.push(service);
+      servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service);
     }
     for (const storageKey of Object.keys(storageKeys.data)) {
       await fs.promises.appendFile(
@@ -42,7 +39,15 @@ const getServicesWithPlay = async () => {
         `${storageKey}=${storageKeys.data[storageKey]}\n`
       );
     }
+    let totalSuccess = true;
   }
+  for (const storageKey of Object.keys(storageKeys.data)) {
+    await fs.promises.appendFile(
+      `src/${service}/${service}-provider/.env.playwright`,
+      `${storageKey}=${storageKeys.data[storageKey]}\n`
+    );
+  }
+
   await $`lerna run play-install`;
   await $`lerna run play`;
   const slack_payload = {
