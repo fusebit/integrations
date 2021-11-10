@@ -40,7 +40,7 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const userResponse = await superagent
       .get('https://api.github.com/user')
       .set('User-Agent', `fusebit/${ctx.state.params.entityId}`)

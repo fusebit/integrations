@@ -18,7 +18,7 @@ class Service extends OAuthConnector.Service {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     return 'global';
   }
 

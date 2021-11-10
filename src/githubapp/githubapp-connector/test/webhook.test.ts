@@ -52,9 +52,8 @@ describe('GitHub App Connector Webhooks Test Suite', () => {
       { ...sampleCtx, state: { params: { entityId: 'connector' } } },
       { access_token: `${sampleAccessToken}` }
     );
-    // TODO: This needs to be updated in order to support multiple Orgs.
-    const expectedIntallationId = 20312228;
-    expect(response).toBe(expectedIntallationId);
+    const expectedIntallationId = [20312228];
+    expect(response).toStrictEqual(expectedIntallationId);
   });
 
   test('Validate: getWebhookEventType', async () => {
