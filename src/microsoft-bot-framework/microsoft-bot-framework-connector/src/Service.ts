@@ -16,11 +16,11 @@ class Service extends Connector.Service {
     const botFrameworkAccessToken = botFrameworkAccessTokenResponse.body.access_token;
 
     ctx.req.body = {
-      botFrameworkCredentials: {
+      credentials: {
         accessToken: botFrameworkAccessToken,
         botClientId: ctx.state.manager.config.configuration.clientId,
       },
-      botFrameworkEvent: ctx.req.body,
+      event: ctx.req.body,
     };
 
     return super.handleWebhookEvent(ctx);
