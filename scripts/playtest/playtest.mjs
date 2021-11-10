@@ -30,7 +30,7 @@ const getServicesWithPlay = async () => {
             servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service)
         }
         for (const storageKey of Object.keys(storageKeys.data)) {
-            fs.promises.appendFile(`src/${service}/${service}-provider/.env.playwright`, `${storageKey}=${storageKeys.data[storageKey]}\n`)
+            await fs.promises.appendFile(`src/${service}/${service}-provider/.env.playwright`, `${storageKey}=${storageKeys.data[storageKey]}\n`)
         }
     }
     await $`lerna run play-install`
