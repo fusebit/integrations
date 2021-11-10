@@ -41,6 +41,8 @@ class Service extends OAuthConnector.Service {
   }
 
   protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+    // Since GitHub supports installing an Application to Multiple Orgs, we fetch the
+    // installations endpoint in order to register an AuthId to each Org.
     const installationsResponse = await superagent
       .get('https://api.github.com/user/installations')
       .set('User-Agent', `fusebit/${ctx.state.params.entityId}`)

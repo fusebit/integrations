@@ -87,9 +87,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         if (webhookIds) {
           if (Array.isArray(webhookIds)) {
             webhookIds.forEach((webhookId) => {
-              if (webhookId) {
-                result[webhookId] = null;
-              }
+              result[webhookId] = null;
             });
           } else {
             result[webhookIds] = null;
