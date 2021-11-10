@@ -1,0 +1,30 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/microsoftTeamsIntegration/properties/id",
+      "label": "Name"
+    },
+    {
+      "type": "Control",
+      "label": "Customize",
+      "scope": "#/properties/ui/properties/toggle",
+      "options": {
+        "toggle": true
+      }
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/microsoftBotFrameworkConnector/properties/id",
+      "label": "Microsoft Bot Framework Connector name",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/ui/properties/toggle",
+          "schema": { "const": true }
+        }
+      }
+    }
+  ]
+}

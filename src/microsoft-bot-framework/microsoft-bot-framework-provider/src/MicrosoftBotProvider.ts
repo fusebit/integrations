@@ -9,7 +9,7 @@ export default class SlackProvider extends Internal.ProviderActivator<FusebitBot
    */
   public async instantiate(ctx: Internal.Types.Context): Promise<FusebitBotFrameworkAdapter> {
     console.log('---------------------- iooooooo');
-    console.log();
+    console.log(ctx.req.body);
     console.log('----------------------');
 
     const { botFrameworkConfig } = ctx.req.body.data;

@@ -16,7 +16,7 @@ export interface Token {
 }
 
 export default abstract class ProviderActivator<T> {
-  public abstract instantiate(ctx: FusebitContext, lookupKey: string, installId?: string): Promise<T>;
+  public abstract instantiate(ctx: FusebitContext, lookupKey?: string, installId?: string): Promise<T>;
   public instantiateWebhook = async (
     ctx: FusebitContext,
     lookupKey: string,
