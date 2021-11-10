@@ -18,11 +18,17 @@ const getServicesWithPlay = async () => {
 }
 
 (async () => {
+    let storageErrors = []
     const servicesWithPlay = await getServicesWithPlay()
     console.log(servicesWithPlay)
-    for (const service of servicesWithPlay) {
-        console.log(service)
-        const storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`)
+    for (const service of servicesWithPlay) { 
+        let storageKeys;
+        try {
+            JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`)
+        } catch (_) {
+            storageErrors.push(service)
+            servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service)
+        }
         for (const storageKey of Object.keys(storageKeys.data)) {
             fs.promises.appendFile(`src/${service}/${service}-provider/.env.playwright`, `${storageKey}=${storageKeys.data[storageKey]}\n`)
         }
@@ -46,6 +52,16 @@ const getServicesWithPlay = async () => {
                 `${success ? "passed": "failed"}`,
             },
         })
-        $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" https://hooks.slack.com/services/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`
     }
+    for (const failure of storageErrors) {
+        slack_payload.blocks.push({
+            type: 'section',
+            text: {
+                type: 'mrkdwn',
+                text: "" +
+                    `:warning: configuration for ${failure} not found :warning:`
+            }
+        })
+    }
+    $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" https://hooks.slack.com/services/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`
 })()
