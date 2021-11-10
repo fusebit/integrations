@@ -21,6 +21,7 @@ const getServicesWithPlay = async () => {
 
 (async () => {
   let storageErrors = [];
+  let totalSuccess = true;
   const servicesWithPlay = await getServicesWithPlay();
   console.log(servicesWithPlay);
   for (const service of servicesWithPlay) {
@@ -39,13 +40,6 @@ const getServicesWithPlay = async () => {
         `${storageKey}=${storageKeys.data[storageKey]}\n`
       );
     }
-    let totalSuccess = true;
-  }
-  for (const storageKey of Object.keys(storageKeys.data)) {
-    await fs.promises.appendFile(
-      `src/${service}/${service}-provider/.env.playwright`,
-      `${storageKey}=${storageKeys.data[storageKey]}\n`
-    );
   }
 
   await $`lerna run play-install`;
