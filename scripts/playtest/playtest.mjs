@@ -13,8 +13,7 @@ const getServicesWithPlay = async () => {
     files = files.filter((file) => file !== 'framework')
     return files.filter((filename) => {
         let files = fs.readdirSync(`./src/${filename}/${filename}-provider/`)
-        files = files.filter((fileWithin) => fileWithin === 'play')
-        return files.length === 1
+        return files.includes('play')
     })
 }
 
