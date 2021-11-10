@@ -24,7 +24,7 @@ const getServicesWithPlay = async () => {
     for (const service of servicesWithPlay) { 
         let storageKeys;
         try {
-            JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`)
+            storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`)
         } catch (_) {
             storageErrors.push(service)
             servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service)
