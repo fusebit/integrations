@@ -22,13 +22,14 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
-  },
-  "peerDependencies": {
-    "@fusebit-int/framework": "*"
   },
   "devDependencies": {
     "@fusebit-int/framework": "^7.9.0",
@@ -45,5 +46,8 @@
   },
   "dependencies": {
     "botbuilder": "^4.14.1"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
   }
 }
