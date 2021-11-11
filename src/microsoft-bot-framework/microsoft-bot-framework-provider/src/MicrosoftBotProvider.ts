@@ -8,22 +8,18 @@ export default class SlackProvider extends Internal.ProviderActivator<FusebitBot
    * This function will create an authorized wrapper of the BotFrameworkAdapter client.
    */
   public async instantiate(ctx: Internal.Types.Context): Promise<FusebitBotFrameworkAdapter> {
-    console.log('---------------------- iooooooo');
-    console.log(ctx.req.body);
-    console.log('----------------------');
-
-    const { botFrameworkConfig } = ctx.req.body.data;
+    const { credentials } = ctx.req.body.data;
 
     const botFrameworkAdapter = new BotFrameworkAdapter({
-      appId: botFrameworkConfig.clientId,
+      appId: credentials.botClientId,
       appPassword: 'this-is-not-a-real-or-needed-secret-as-we-bypass-it',
     }) as FusebitBotFrameworkAdapter;
 
     const botFrameworkAdapterBypass = botFrameworkAdapter as any;
 
     botFrameworkAdapterBypass.credentials.authenticationContext._cache._entries.push({
-      _clientId: botFrameworkConfig.clientId,
-      accessToken: botFrameworkConfig.accessToken,
+      _clientId: credentials.botClientId,
+      accessToken: credentials.accessToken,
       expiresOn: new Date(2999, 11, 30),
       resource: 'https://api.botframework.com',
       _authority: 'https://login.microsoftonline.com/botframework.com',
@@ -35,10 +31,24 @@ export default class SlackProvider extends Internal.ProviderActivator<FusebitBot
       res: WebResponse,
       logic: (context: TurnContext) => Promise<any>
     ): Promise<void> => {
+      console.log('********************** processActivity before body change');
+      console.log('req.body', req.body);
+      console.log('req.headers', req.headers);
+      console.log('**********************');
+
       const fusebitBody = req.body;
-      req.body = fusebitBody.event;
+      req.body = fusebitBody.data.event;
+      req.headers.authorization = fusebitBody.data.credentials.verificationHeader;
+
+      console.log('********************** processActivity after body change');
+      console.log('req.body', req.body);
+      console.log('req.headers', req.headers);
+      console.log('**********************');
+
       await originalProcessActivity(req, res, logic);
-      req.body = fusebitBody;
+
+      console.log('********************** after processActivity');
+      // req.body = fusebitBody;
     };
 
     return botFrameworkAdapter;
