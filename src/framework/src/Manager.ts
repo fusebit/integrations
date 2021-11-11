@@ -18,7 +18,10 @@ type VendorModuleError = any;
 interface IConfig {
   handler: string;
   components?: IInstanceConnectorConfig[];
-  configuration: any;
+  configuration: {
+    defaultEventHandler?: string;
+    [key: string]: any;
+  };
   mountUrl: string;
   schedule: {
     cron: string;
