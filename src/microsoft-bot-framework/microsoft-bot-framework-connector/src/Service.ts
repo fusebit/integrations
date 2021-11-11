@@ -30,8 +30,8 @@ class Service extends Connector.Service {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, { botFrameworkEvent }: any): string {
-    return botFrameworkEvent.recipient.id;
+  protected getAuthIdFromEvent(ctx: Connector.Types.Context, { event }: any): string {
+    return event.recipient.id;
   }
 
   protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
@@ -47,8 +47,8 @@ class Service extends Connector.Service {
     return false;
   }
 
-  protected getWebhookEventType({ botFrameworkEvent }: any): string {
-    return botFrameworkEvent.type;
+  protected getWebhookEventType({ event }: any): string {
+    return event.type;
   }
 }
 

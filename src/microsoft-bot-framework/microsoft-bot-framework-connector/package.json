@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.5",
     "superagent": "6.1.0"
   },
   "devDependencies": {

@@ -27,11 +27,11 @@
       }
     },
     "tokenUrl": {
-      "title": "Override the OAuth2 Token Request URL",
+      "title": "Override the Microsoft Bot Framework Token Request URL",
       "type": "string"
     },
     "scope": {
-      "title": "Space separated scopes to request from the OAuth server",
+      "title": "Space separated scopes to request from the Microsoft Bot Framework server",
       "type": "string"
     },
     "clientId": {
