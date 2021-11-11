@@ -52,7 +52,7 @@ describe('GitHub App Connector Webhooks Test Suite', () => {
       { ...sampleCtx, state: { params: { entityId: 'connector' } } },
       { access_token: `${sampleAccessToken}` }
     );
-    const expectedIntallationId = [20312228];
+    const expectedIntallationId = [20312228, 20312229, 20312230];
     expect(response).toStrictEqual(expectedIntallationId);
   });
 
