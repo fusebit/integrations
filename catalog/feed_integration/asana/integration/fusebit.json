@@ -9,7 +9,7 @@
       "name": "asanaConnector",
       "skip": false,
       "provider": "@fusebit-int/asana-provider",
-      "entityId": "asana-connector",
+      "entityId": "<% global.entities.asanaConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }
