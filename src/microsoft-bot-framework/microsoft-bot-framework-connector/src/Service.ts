@@ -35,11 +35,25 @@ class Service extends Connector.Service {
   }
 
   protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const token = ctx.req.headers?.authorization?.split(' ')[1];
+    const { authorization } = ctx.req.headers;
+    if (!authorization || !authorization.toLocaleLowerCase().startsWith('bearer ')) {
+      ctx.throw(403, 'Invalid authorization');
+    }
+    const token = authorization.split(' ')[1];
+    if (!token) {
+      ctx.throw(403, 'Invalid authorization');
+    }
+
     const metadataUrl = 'https://login.botframework.com/v1/.well-known/openidconfiguration';
     const metadataResponse = await superagent.get(metadataUrl);
     const { jwks_uri } = metadataResponse.body;
-    await verifyJwt(token!, jwks_uri!);
+
+    try {
+      await verifyJwt(token!, jwks_uri!);
+    } catch (err) {
+      ctx.throw(403, 'Invalid authorization provided');
+    }
+
     return true;
   }
 
