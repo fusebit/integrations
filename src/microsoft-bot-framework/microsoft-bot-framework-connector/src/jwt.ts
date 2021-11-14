@@ -45,6 +45,9 @@ async function resolveSecret(token: string, jwksUri: string): Promise<string> {
     });
     const signingKey = await client.getSigningKey(kid);
     key = signingKey.getPublicKey();
+    urlToKey[jwksUri] = {
+      [kid]: key,
+    };
   }
 
   if (!key) {
