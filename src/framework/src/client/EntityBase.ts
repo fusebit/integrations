@@ -215,6 +215,11 @@ namespace EntityBase {
      * @returns {<Promise<any>>}
      */
     public validate = Middleware.validate;
+
+    /**
+     * Middleware that adds the ability to create new users of an integration without a backend.
+     */
+    public session = Middleware.session;
   }
   /**
    * @private
