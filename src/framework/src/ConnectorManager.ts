@@ -135,6 +135,10 @@ class ConnectorManager {
 
     const service = new Service();
 
+    // The install/identity might be null for cases when connectors are not associated with
+    // a particular tenant. For example, the Microsoft Bot Connector is a connector that
+    // uses client credentials to communicate with the Saas (the Microsoft Bot Framework). Hence,
+    // no install/id is needed to intantiate it.
     let install;
     let identity;
     if (installId) {
