@@ -31,6 +31,12 @@ function getCachedKey(kid: string, url: string) {
   return undefined;
 }
 
+function setCachedKey(kid: string, jwksUri: string, key: string) {
+  urlToKey[jwksUri] = {
+    [kid]: key,
+  };
+}
+
 async function resolveSecret(token: string, jwksUri: string): Promise<string> {
   const decodedHeader = decodeJwtHeader(token);
   const kid = decodedHeader?.kid;
@@ -45,9 +51,7 @@ async function resolveSecret(token: string, jwksUri: string): Promise<string> {
     });
     const signingKey = await client.getSigningKey(kid);
     key = signingKey.getPublicKey();
-    urlToKey[jwksUri] = {
-      [kid]: key,
-    };
+    setCachedKey(kid, jwksUri, key);
   }
 
   if (!key) {
