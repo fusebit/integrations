@@ -29,7 +29,8 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources();
 
-  const jira = atlassianClient.jira(resources[0].id);
+  const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
+  const jira = atlassianClient.jira(jiraCloud.id);
 
   const result = await jira.get('/search');
 

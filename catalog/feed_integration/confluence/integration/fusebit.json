@@ -6,7 +6,7 @@
   "handler": "./integration",
   "components": [
     {
-      "name": "confluenceConnector",
+      "name": "atlassianConnector",
       "skip": false,
       "provider": "@fusebit-int/atlassian-provider",
       "entityId": "<% global.entities.confluenceConnector.id %>",

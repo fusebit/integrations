@@ -1,5 +1,5 @@
 {
-  "id": "<%this.id%>",
+  "id": "<% this.id %>",
   "tags": {
     "fusebit.service": "Atlassian Jira"
   },
@@ -8,9 +8,10 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "read:jira-user read:jira-work manage:jira-webhook",
-    "clientId": "<%global.consts.random%>",
-    "clientSecret": "<%global.consts.random%>",
+    "scope": "read:jira-user read:jira-work manage:jira-webhook read:me",
+    "audience": "api.atlassian.com",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,
