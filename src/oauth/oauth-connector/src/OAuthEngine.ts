@@ -120,7 +120,7 @@ class OAuthEngine {
     const tokenUrl = this.getTokenUrl(ctx);
     try {
       const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
- 
+
       return this.normalizeOAuthToken(response.body);
     } catch (error) {
       throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
