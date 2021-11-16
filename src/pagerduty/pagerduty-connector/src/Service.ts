@@ -1,6 +1,7 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import superagent from 'superagent';
+import crypto from 'crypto';
 class Service extends OAuthConnector.Service {
   // Get storageKey to put the signing secret.
   public getStorageKey = (webhookId: string) => {
@@ -28,6 +29,12 @@ class Service extends OAuthConnector.Service {
     const { webhookId } = ctx.params;
     const signingSecretItem = await this.utilities.getData(ctx, this.getStorageKey(webhookId));
     const signingSecret = signingSecretItem?.data?.signingSecret as string;
+    const signatures = (ctx.req.headers['X-PagerDuty-Signature'] as string).split(',');
+    signatures.map((sig) => sig.split('v1=')[1]);
+    const sig = crypto.createHmac('sha256', Buffer.from(signingSecret)).update(ctx.req.body).digest('hex');
+    if (signatures.indexOf(sig) > -1) {
+      return true;
+    }
     return false;
   }
 
