@@ -70,7 +70,6 @@ class OAuthEngine {
    */
   public async convertAccessCodeToToken(ctx: Internal.Types.Context, lookupKey: string, code: string) {
     const token = await this.getAccessToken(code, ctx);
-    console.log(token);
     if (!isNaN(token.expires_in)) {
       token.expires_at = Date.now() + +token.expires_in * 1000;
     }
@@ -121,6 +120,7 @@ class OAuthEngine {
     const tokenUrl = this.getTokenUrl(ctx);
     try {
       const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
+ 
       return this.normalizeOAuthToken(response.body);
     } catch (error) {
       throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
