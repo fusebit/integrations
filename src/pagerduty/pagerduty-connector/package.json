@@ -35,11 +35,13 @@
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^7.10.1",
-    "superagent": "6.1.0"
+    "superagent": "6.1.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@fusebit-int/framework": "^7.10.1",
     "@types/superagent": "^4.1.12",
+    "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
