@@ -32,6 +32,7 @@ class ServiceConnector extends OAuthConnector {
         ctx.body.data.configuration = { scope: '' };
       }
 
+      // Required parameters
       ctx.body.data.configuration.scope = [
         ...new Set([
           ...ctx.body.data.configuration.scope.split(' '),
@@ -40,6 +41,8 @@ class ServiceConnector extends OAuthConnector {
           'manage:jira-webhook',
         ]),
       ].join(' ');
+
+      ctx.body.data.configuration.audience = 'api.atlassian.com';
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Atlassian App';
