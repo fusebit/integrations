@@ -3,7 +3,7 @@ import { BotFrameworkAdapter, TurnContext, WebRequest, WebResponse } from 'botbu
 
 type FusebitBotFrameworkAdapter = BotFrameworkAdapter & { fusebit?: any };
 
-export default class SlackProvider extends Internal.ProviderActivator<FusebitBotFrameworkAdapter> {
+export default class MicrosoftBotProvider extends Internal.ProviderActivator<FusebitBotFrameworkAdapter> {
   /*
    * This function will create an authorized wrapper of the BotFrameworkAdapter client.
    */
