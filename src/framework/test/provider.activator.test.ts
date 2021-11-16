@@ -5,7 +5,7 @@ import { Constants, getContext } from './utilities';
 
 const { endpoint, accountId, subscriptionId } = Constants;
 const entityId = 'some-integration-123';
-const lookupKey = '9c852221-a086-4aec-bfc7-90d79b07dd8b';
+const lookupKey = 'idn-01234567890123456789012345678901';
 
 const ctx = getContext();
 
@@ -32,7 +32,7 @@ const activator = new ProviderActivatorImpl({
 });
 
 describe('ProviderActivator', () => {
-  test('Raise exception when Install not found', async () => {
+  test('Raise exception when Identity is not found', async () => {
     try {
       await activator.callRequestConnectorToken({
         ctx,
@@ -43,7 +43,7 @@ describe('ProviderActivator', () => {
       expect(ctx.throw).toHaveBeenCalledTimes(1);
       expect(ctx.throw).toHaveBeenCalledWith(
         404,
-        `Cannot find Integration Install '${lookupKey}'. Has the tenant authorized this integration?`
+        `Cannot find Integration Identity '${lookupKey}'. Has the tenant authorized this integration?`
       );
     }
   });

@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-githubapp-connector",
-  "version": "7.10.1",
+  "version": "7.11.0",
   "private": true,
   "scripts": {
-    "redeploy": "fuse connector rm <%this.name%> && yarn deploy",
-    "deploy": "fuse connector deploy <%this.name%> -d .",
-    "get": "fuse connector get <%this.name%> -d ."
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.10.1",
-    "@fusebit-int/githubapp-connector": "^7.10.1"
+    "@fusebit-int/framework": "^7.11.0",
+    "@fusebit-int/githubapp-connector": "^7.11.0"
   }
 }

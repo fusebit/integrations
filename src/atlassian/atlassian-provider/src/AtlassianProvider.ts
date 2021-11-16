@@ -64,9 +64,8 @@ class AtlassianClient {
     return response.body;
   }
 
-  public makeApiClient(cloudId: string, token: string): IApiClient {
-    const makeUrl = (cloudId: string, url: string) =>
-      `https://api.atlassian.com/ex/${token}/${cloudId}/rest/api/3${url}`;
+  public makeApiClient(cloudId: string, token: string, suffix: string): IApiClient {
+    const makeUrl = (cloudId: string, url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${suffix}${url}`;
 
     const makeRequest = (verb: string) => async (url: string) =>
       (
@@ -88,11 +87,11 @@ class AtlassianClient {
   }
 
   public jira(cloudId: string): IApiClient {
-    return this.makeApiClient(cloudId, 'jira');
+    return this.makeApiClient(cloudId, 'jira', '/rest/api/3');
   }
 
   public confluence(cloudId: string): IApiClient {
-    return this.makeApiClient(cloudId, 'confluence');
+    return this.makeApiClient(cloudId, 'confluence', '/rest/api');
   }
 }
 
