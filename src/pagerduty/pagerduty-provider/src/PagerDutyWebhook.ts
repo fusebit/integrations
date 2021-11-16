@@ -7,7 +7,6 @@ type FusebitPagerDutyClient = PartialCall & { fusebit?: object };
 interface PagerDutyWebhookRegistrationArgs {
   description: string;
   events: string[];
-  filter: PDWebhookFilter;
 }
 
 interface PDWebhookFilter {
@@ -33,7 +32,7 @@ export default class PagerDutyWebhook implements Internal.Types.WebhookClient<an
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
     const createWebhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/create`;
     const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}`;
-    const results = await this.client.post('/webhook_subscription', {
+    const results = await this.client.post('/webhook_subscriptions', {
       data: {
         webhook_subscription: {
           ...args,
@@ -42,12 +41,16 @@ export default class PagerDutyWebhook implements Internal.Types.WebhookClient<an
             url: webhookUrl,
           },
           type: 'webhook_subscription',
+          filter: {
+            type: 'account_reference',
+          },
         },
       },
     });
+    console.log(results.data.webhook_subscription);
     await Superagent.post(createWebhookUrl).set('Authorization', `Bearer ${params.functionAccessToken}`).send({
       webhookId,
-      signingSecret: results.data.delivery_method.secret,
+      signingSecret: results.data.webhook_subscription.delivery_method.secret,
     });
     return { webhookId: results.data.id };
   };

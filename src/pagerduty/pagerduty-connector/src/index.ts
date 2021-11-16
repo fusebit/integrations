@@ -9,7 +9,7 @@ const AUTHORIZATION_URL = 'https://app.pagerduty.com/oauth/authorize';
 const REVOCATION_URL = 'https://app.pagerduty.com/oauth/revoke';
 const SERVICE_NAME = 'PagerDuty';
 
-class ServiceConnector extends OAuthConnector {
+class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
   protected createService() {
@@ -33,6 +33,18 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
+    });
+
+    this.router.post(
+      '/api/fusebit/webhook/create',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.registerWebhook(ctx);
+      }
+    );
+
+    this.router.post('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
+      await this.service.handleWebhookEvent(ctx);
     });
   }
 }
