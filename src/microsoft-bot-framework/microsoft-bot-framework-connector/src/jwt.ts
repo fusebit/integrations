@@ -33,9 +33,9 @@ function getCachedKey(kid: string, url: string) {
 
 async function resolveSecret(token: string, jwksUri: string): Promise<string> {
   const decodedHeader = decodeJwtHeader(token);
-  const kid = decodedHeader.kid;
+  const kid = decodedHeader?.kid;
   if (!kid) {
-    throw new Error("Unable to resolve secret. Token header does not have a 'kid' value.");
+    throw new Error("Unable to resolve secret. Token is missing or its header does not have a 'kid' value.");
   }
 
   let key = getCachedKey(kid, jwksUri);
