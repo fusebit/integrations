@@ -1,7 +1,8 @@
-import { Connector } from '@fusebit-int/framework';
-import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import superagent from 'superagent';
 import crypto from 'crypto';
+import { Connector } from '@fusebit-int/framework';
+import { OAuthConnector } from '@fusebit-int/oauth-connector';
+
 class Service extends OAuthConnector.Service {
   // Get storageKey to put the signing secret.
   public getStorageKey = (webhookId: string) => {
