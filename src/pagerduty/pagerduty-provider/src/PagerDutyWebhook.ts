@@ -1,5 +1,4 @@
 import { Internal } from '@fusebit-int/framework';
-import { api } from '@pagerduty/pdjs';
 import { PartialCall } from '@pagerduty/pdjs/build/src/api';
 import { v4 as uuidv4 } from 'uuid';
 import Superagent from 'superagent';
@@ -16,7 +15,7 @@ interface PDWebhookFilter {
   id: string;
 }
 
-class PagerDutyWebhook implements Internal.Types.WebhookClient<any> {
+export default class PagerDutyWebhook implements Internal.Types.WebhookClient<any> {
   constructor(
     private ctx: Internal.Types.Context,
     private lookupKey: string,
@@ -24,7 +23,10 @@ class PagerDutyWebhook implements Internal.Types.WebhookClient<any> {
     private config: Internal.Types.IInstanceConnectorConfig,
     private client: FusebitPagerDutyClient
   ) {}
-
+  /**
+   *
+   * @param args The configuration for the pagerduty webhook.
+   */
   public create = async (args: PagerDutyWebhookRegistrationArgs) => {
     const webhookId = uuidv4();
     const params = this.ctx.state.params;
@@ -47,5 +49,29 @@ class PagerDutyWebhook implements Internal.Types.WebhookClient<any> {
       webhookId,
       signingSecret: results.data.delivery_method.secret,
     });
+    return { webhookId: results.data.id };
+  };
+
+  public get = async (webhook: string): Promise<any> => {
+    const fusebitWebook = await this.client.get(`/webhook_subscriptions/${webhook}`);
+    return fusebitWebook.data;
+  };
+
+  public list = async (): Promise<any> => {
+    const fusebitWebhooks = await this.client.get('webhook_subscriptions');
+    return fusebitWebhooks.data.webhook_subscriptions;
+  };
+
+  public delete = async (webhook: string) => {
+    this.client.delete(`/webhook_subscriptions/${webhook}`);
+  };
+
+  public deleteAll = async () => {
+    const webhooks = await this.list();
+    await Promise.all(
+      webhooks.map((webhook: any) => {
+        return this.delete(webhook.id);
+      })
+    );
   };
 }

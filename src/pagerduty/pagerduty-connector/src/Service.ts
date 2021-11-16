@@ -1,7 +1,6 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import superagent from 'superagent';
-import { v4 as uuidv4 } from 'uuid';
 class Service extends OAuthConnector.Service {
   // Get storageKey to put the signing secret.
   public getStorageKey = (webhookId: string) => {
@@ -27,7 +26,8 @@ class Service extends OAuthConnector.Service {
       return false;
     }
     const { webhookId } = ctx.params;
-    const { data } = this.utilities.getData(ctx, this.getStorageKey(webhookId));
+    const signingSecretItem = await this.utilities.getData(ctx, this.getStorageKey(webhookId));
+    const signingSecret = signingSecretItem?.data?.signingSecret as string;
     return false;
   }
 
