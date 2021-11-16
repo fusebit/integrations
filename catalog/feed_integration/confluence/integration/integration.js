@@ -18,7 +18,7 @@ const integration = new Integration();
 // to the integration, which you can then call from within your application.
 const router = integration.router;
 
-const connectorName = 'confluenceConnector';
+const connectorName = 'atlassianConnector';
 
 // The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
@@ -29,12 +29,13 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources();
 
-  const confluence = atlassianClient.confluence(resources[0].id);
+  const confluenceCloud = resources.find((resource) => resource.scopes.includes('search:confluence'));
+  const confluence = atlassianClient.confluence(confluenceCloud.id);
 
-  const result = await confluence.get('/search');
+  const result = await confluence.get('/space');
 
   ctx.body = {
-    message: `Found ${result.size} issues in Confluence Cloud ${resources[0].id}`,
+    message: `Found ${result.size} spaces in Confluence Cloud ${confluenceCloud.id}`,
   };
 });
 
