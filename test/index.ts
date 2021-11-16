@@ -1,1 +1,1 @@
-export { commonConnectorTests } from './common';
+export { commonConnectorTests, cfg, request } from './common';
