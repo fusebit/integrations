@@ -1,7 +1,8 @@
-import { Internal } from '@fusebit-int/framework';
-import { PartialCall } from '@pagerduty/pdjs/build/src/api';
 import { v4 as uuidv4 } from 'uuid';
 import Superagent from 'superagent';
+import { PartialCall } from '@pagerduty/pdjs/build/src/api';
+import { Internal } from '@fusebit-int/framework';
+
 type FusebitPagerDutyClient = PartialCall & { fusebit?: object };
 
 interface PagerDutyWebhookRegistrationArgs {
