@@ -7,9 +7,9 @@ import { Internal } from '..';
 export interface ISessionOptions {
   healthUrlPath: string;
   startUrlPath: string;
-  tenantId: (ctx: FusebitContext) => string;
+  getTenantId: (ctx: FusebitContext) => string;
   commitUrlPath: string;
-  finalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) => string;
+  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) => string;
 }
 
 interface IFusebitJwt {
@@ -21,14 +21,14 @@ interface IFusebitJwt {
 export const defaultSessionOptions: ISessionOptions = {
   healthUrlPath: '/api/health',
   startUrlPath: '/api/service/start',
-  tenantId: () => uuidv4(),
+  getTenantId: () => uuidv4(),
   commitUrlPath: '/api/service/commit',
-  finalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) =>
+  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) =>
     `${ctx.state.params.baseUrl}/api/health?install=${installId}&tenant=${tenantId}`,
 };
 
 const start = (options: ISessionOptions) => async (ctx: FusebitContext) => {
-  const tenantId = options.tenantId(ctx);
+  const tenantId = options.getTenantId(ctx);
   const baseUrl = ctx.state.params.baseUrl;
   const token = ctx.state.params.functionAccessToken;
 
@@ -62,7 +62,8 @@ export const commit = (options: ISessionOptions) => async (ctx: FusebitContext) 
 
   result = await superagent.get(targetUrl).set('Authorization', `Bearer ${token}`);
 
-  ctx.redirect(options.finalRedirectUrl(ctx, result.body.id, result.body.tags['fusebit.tenantId']));
+  const finalUrl = options.getFinalRedirectUrl(ctx, result.body.id, result.body.tags['fusebit.tenantId']);
+  ctx.redirect(finalUrl);
 };
 
 const health = () => async (ctx: FusebitContext, next: Next) => {
