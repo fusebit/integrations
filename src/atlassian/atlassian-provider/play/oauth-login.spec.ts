@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import fs from 'fs/promises';
+
 import * as Constants from './setup';
 
 import { IAccount, getAccount, createSession, commitSession, fusebitRequest, RequestMethod } from './sdk';
@@ -152,7 +152,7 @@ const waitForWebhook = async () => {
       );
 
       // Check to see if any of the entries match
-      if (entries.some((entry) => entry.body.data === 'incident.triggered')) {
+      if (entries.some((entry: { body: any }) => entry.body.data.eventType === 'jira:issue_updated')) {
         // Good enough for now - mark the test a success and move on.
         break;
       }
