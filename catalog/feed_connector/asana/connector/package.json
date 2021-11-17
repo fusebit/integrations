@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-asana-connector",
-  "version": "7.12.0",
+  "version": "7.12.1",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/asana-connector": "^7.12.0",
-    "@fusebit-int/framework": "^7.12.0"
+    "@fusebit-int/asana-connector": "^7.12.1",
+    "@fusebit-int/framework": "^7.12.1"
   }
 }
