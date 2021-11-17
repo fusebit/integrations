@@ -1,5 +1,5 @@
 {
-  "id": "<%this.id%>",
+  "id": "<% this.id %>",
   "tags": {
     "fusebit.service": "Microsoft Bot Framework"
   },
@@ -10,6 +10,7 @@
     },
     "scope": "https://api.botframework.com/.default",
     "clientId": "<% global.consts.random %>",
-    "clientSecret": "<% global.consts.random %>"
+    "clientSecret": "<% global.consts.random %>",
+    "defaultEventHandler": "<% global.entities.microsoftTeamsIntegration.id %>"
   }
 }

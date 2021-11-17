@@ -89,7 +89,7 @@ export class Service extends EntityBase.ServiceBase {
    *    // use client methods . . .
    * });
    */
-  public getSdk = (ctx: FusebitContext, connectorName: string, installId: string) => {
+  public getSdk = (ctx: FusebitContext, connectorName: string, installId?: string) => {
     return ctx.state.manager.connectors.getByName(ctx, connectorName, installId);
   };
 
