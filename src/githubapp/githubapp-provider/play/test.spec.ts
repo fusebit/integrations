@@ -1,10 +1,20 @@
 import { test, expect } from '@playwright/test';
+import {
+  Constants,
+  startHttpServer,
+  waitForExpress,
+  IAccount,
+  getAccount,
+  createSession,
+  commitSession,
+  fusebitRequest,
+  RequestMethod,
+} from '@fusebit-int/play';
 
-import * as Constants from './setup';
-
-import { IAccount, getAccount, createSession, commitSession, fusebitRequest, RequestMethod } from './sdk';
-import { startHttpServer, waitForExpress } from './server';
 import { revokeAuthorization } from './appConfig';
+
+// Provider specific variables
+const { REPOSITORY_OWNER, REPOSITORY } = process.env;
 
 let account: IAccount;
 
@@ -13,7 +23,31 @@ test.beforeAll(async () => {
 });
 
 test.beforeAll(async () => {
-  await Constants.ensureEntities(account);
+  await Constants.ensureEntities(
+    account,
+    {
+      integrationId: Constants.INTEGRATION_ID,
+      connectorId: Constants.CONNECTOR_ID,
+      packageProvider: Constants.PACKAGE_PROVIDER,
+      packageConnector: Constants.PACKAGE_CONNECTOR,
+      oauthScopes: '',
+      authorizationUrl: Constants.AUTHORIZATION_URL,
+      tokenUrl: Constants.TOKEN_URL,
+      clientId: Constants.SECRET_CLIENTID,
+      clientSecret: Constants.SECRET_CLIENTSECRET,
+      signingSecret: Constants.SIGNING_SECRET,
+    },
+    [
+      {
+        name: '##OWNER##',
+        value: REPOSITORY_OWNER,
+      },
+      {
+        name: '##REPOSITORY##',
+        value: REPOSITORY,
+      },
+    ]
+  );
 });
 
 test.beforeEach(async ({ page }) => {
@@ -57,39 +91,43 @@ test('Authorize and fetch integration endpoints', async ({ page }) => {
   );
 
   expect(response).toBeHttp({ statusCode: 200 });
-
   expect(response.body).toHaveProperty('id');
-  expect(response.body).toHaveProperty('login');
-  expect(response.body).toHaveProperty('avatar_url');
 
-  await listIssues(installId);
-  await createIssue(installId);
+  await checkIssue(installId);
   await waitForWebhook();
 }, 180000);
 
-async function listIssues(installId: string): Promise<void> {
+async function listIssues(installId: string): Promise<any> {
   const githubIssuesResponse = await fusebitRequest(
     account,
     RequestMethod.get,
     `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}`
   );
-  expect(githubIssuesResponse.body.length).toBeGreaterThan(0);
-  expect(githubIssuesResponse.body[0]).toHaveProperty('url');
-  expect(githubIssuesResponse.body[0]).toHaveProperty('id');
-  expect(githubIssuesResponse.body[0]).toHaveProperty('title');
+  return githubIssuesResponse?.body;
 }
 
-async function createIssue(installId: string): Promise<void> {
-  const githubIssuesResponse = await fusebitRequest(
+async function checkIssue(installId: string): Promise<void> {
+  const issues = await listIssues(installId);
+  const issue = issues[0];
+
+  if (!issues.length) {
+    const githubIssuesResponse = await fusebitRequest(
+      account,
+      RequestMethod.post,
+      `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}`
+    );
+    issue = githubIssuesResponse.body;
+    expect(issue).toHaveProperty('id');
+  }
+
+  const updatedTittle = `Fusebit issue ${Math.random() * 10000000}`;
+  const updateIssueResponse = await fusebitRequest(
     account,
-    RequestMethod.post,
-    `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}`
+    RequestMethod.put,
+    `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}/${issue.number}`,
+    { title: updatedTittle }
   );
-  expect(githubIssuesResponse.body).toHaveProperty('url');
-  expect(githubIssuesResponse.body).toHaveProperty('id');
-  expect(githubIssuesResponse.body).toHaveProperty('repository_url');
-  expect(githubIssuesResponse.body).toHaveProperty('number');
-  expect(githubIssuesResponse.body).toHaveProperty('title');
+  expect(updateIssueResponse.body.title).toBe(updatedTittle);
 }
 
 const waitForWebhook = async () => {
@@ -113,7 +151,7 @@ const waitForWebhook = async () => {
         )
       );
       // Check to see if any of the entries match
-      if (entries.some((entry: { body: any }) => entry.body.data.eventType === 'issues.opened')) {
+      if (entries.some((entry: { body: any }) => entry.body.data.eventType === 'issues.edited')) {
         // Good enough for now - mark the test a success and move on.
         break;
       }

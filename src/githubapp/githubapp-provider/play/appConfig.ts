@@ -5,13 +5,6 @@ export const { OAUTH_USERNAME, OAUTH_PASSWORD } = process.env;
 export async function revokeAuthorization(page): Promise<void> {
   // Go to https://github.com/
   await page.goto('https://github.com/');
-  // Click canvas
-  await page.click('canvas', {
-    position: {
-      x: 668,
-      y: 164,
-    },
-  });
   // Click text=Sign in
   await page.click('text=Sign in');
   await expect(page).toHaveURL('https://github.com/login');
@@ -30,7 +23,6 @@ export async function revokeAuthorization(page): Promise<void> {
   await page.click('[aria-label="View profile and more"]');
   // Click a[role="menuitem"]:has-text("Settings")
   await page.click('a[role="menuitem"]:has-text("Settings")');
-  await expect(page).toHaveURL('https://github.com/settings/profile');
   // Click text=Applications
   await Promise.all([
     page.waitForNavigation(/*{ url: 'https://github.com/settings/installations' }*/),
@@ -39,8 +31,9 @@ export async function revokeAuthorization(page): Promise<void> {
   // Click text=Authorized GitHub Apps
   await page.click('text=Authorized GitHub Apps');
   await expect(page).toHaveURL('https://github.com/settings/apps/authorizations');
-  const applicationIsNotAuthorized = await page.isVisible('text=No authorized applications');
-  if (!applicationIsNotAuthorized) {
+  const emptyAuthorizedList = await page.isVisible('text=No authorized applications');
+
+  if (!emptyAuthorizedList) {
     // Click text=Revoke Are you sure you want to revoke authorization? Fusebit Test-App will no l >> summary[role="button"]
     await page.click(
       'text=Revoke Are you sure you want to revoke authorization? Fusebit Test-App will no l >> summary[role="button"]'
