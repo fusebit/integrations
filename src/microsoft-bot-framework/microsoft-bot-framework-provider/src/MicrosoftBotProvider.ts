@@ -84,7 +84,7 @@ export default class MicrosoftBotProvider extends Internal.ProviderActivator<Fus
     botFrameworkAdapterBypass.authenticateRequestInternal = (): Promise<ClaimsIdentity> => {
       const claims: Claim[] = [
         { type: 'serviceurl', value: 'https://smba.trafficmanager.net' },
-        { type: 'nbf', value: 9999999999 },
+        { type: 'nbf', value: 0 },
         { type: 'exp', value: 9999999999 },
         { type: 'iss', value: 'https://api.botframework.com' },
         { type: 'aud', value: credentials.botClientId },
