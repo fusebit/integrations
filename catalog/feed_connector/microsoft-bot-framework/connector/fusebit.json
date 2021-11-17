@@ -9,7 +9,7 @@
       "useProduction": false
     },
     "scope": "https://api.botframework.com/.default",
-    "clientId": "<%global.consts.random%>",
-    "clientSecret": "<%global.consts.random%>"
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>"
   }
 }
