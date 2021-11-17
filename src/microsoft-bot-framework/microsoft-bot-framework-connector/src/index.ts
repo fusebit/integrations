@@ -68,7 +68,7 @@ class ServiceConnector extends Connector {
             accessToken: botFrameworkAccessToken,
             botClientId: ctx.state.manager.config.configuration.clientId,
           };
-        } catch (error: any) {
+        } catch (error) {
           ctx.throw(500, error.message);
         }
       }
