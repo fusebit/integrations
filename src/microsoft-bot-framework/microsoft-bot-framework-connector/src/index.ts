@@ -69,7 +69,12 @@ class ServiceConnector extends Connector {
             botClientId: ctx.state.manager.config.configuration.clientId,
           };
         } catch (error) {
-          ctx.throw(500, error.message);
+          if (error instanceof Error) {
+            ctx.throw(500, error.message);
+            return;
+          }
+          // TODO log this error object (or whatever that is at this point)
+          ctx.throw(500);
         }
       }
     );
