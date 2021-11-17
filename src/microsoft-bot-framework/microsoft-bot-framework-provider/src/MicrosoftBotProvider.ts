@@ -1,6 +1,6 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import { Activity, BotFrameworkAdapter } from 'botbuilder';
+import { BotFrameworkAdapter } from 'botbuilder';
 
 type FusebitBotFrameworkAdapter = BotFrameworkAdapter & { fusebit?: any };
 
