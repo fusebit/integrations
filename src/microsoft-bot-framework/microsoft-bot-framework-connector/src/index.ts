@@ -5,6 +5,8 @@ import uischema from './config/uischema.json';
 
 import { Service } from './Service';
 
+const TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
+
 class ServiceConnector extends Connector {
   static Service = Service;
 
@@ -21,11 +23,19 @@ class ServiceConnector extends Connector {
         cfg.configuration.constants = {
           urls: {
             production: {
-              tokenUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+              tokenUrl: TOKEN_URL,
             },
             webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
           },
         };
+
+        // Make sure there's sensible defaults for the tokenUrl and authorizationUrl, but still allow them to be
+        // overwritten if necessary.
+        if (cfg.configuration.mode?.useProduction) {
+          cfg.configuration.tokenUrl =
+            cfg.configuration.tokenUrl || cfg.configuration.constants.urls.production.tokenUrl;
+        }
+
         return next();
       }
     );
