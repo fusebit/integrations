@@ -6,7 +6,8 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://github.com/login/oauth/access_token';
 const AUTHORIZATION_URL = 'https://github.com/login/oauth/authorize';
 const REVOCATION_URL = 'https://api.github.com/applications/CLIENT_ID/token';
-const SERVICE_NAME = 'GitHub';
+const SERVICE_NAME = 'GitHubApp';
+const HUMAN_SERVICE_NAME = 'GitHub';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;
@@ -26,7 +27,7 @@ class ServiceConnector extends OAuthConnector {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find(
         (element: { label: string }) => element.label == 'OAuth2 Configuration'
-      ).label = `${SERVICE_NAME} Configuration`;
+      ).label = `${HUMAN_SERVICE_NAME} Configuration`;
       // Adjust the ui schema and layout
       ctx.body.uischema.elements
         .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
@@ -38,12 +39,12 @@ class ServiceConnector extends OAuthConnector {
           },
         });
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
-      ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
-      ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
-      ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${HUMAN_SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.description = `The Client ID from your ${HUMAN_SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.signingSecret = {
-        title: `Signing Secret from your ${SERVICE_NAME} App`,
+        title: `Signing Secret from your ${HUMAN_SERVICE_NAME} App`,
         type: 'string',
       };
     });
