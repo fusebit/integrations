@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/asana-provider",
-  "version": "7.11.0",
+  "version": "7.12.0",
   "description": "Asana provider",
   "keywords": [
     "Fusebit",
@@ -36,7 +36,7 @@
     "@fusebit-int/framework": ">=7.5.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.11.0",
+    "@fusebit-int/framework": "^7.12.0",
     "@types/asana": "^0.18.4",
     "@types/bluebird": "*",
     "@types/node": "^16.9.2",
