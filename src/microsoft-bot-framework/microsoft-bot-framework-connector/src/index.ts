@@ -29,7 +29,7 @@ class ServiceConnector extends Connector {
           },
         };
 
-        // Make sure there's sensible defaults for the tokenUrl and authorizationUrl, but still allow them to be
+        // Make sure there is a sensible default value for tokenUrl, but still allow it to be
         // overwritten if necessary.
         if (cfg.configuration.mode?.useProduction) {
           cfg.configuration.tokenUrl =
