@@ -26,7 +26,8 @@
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
+    "test": "jest --config=./jest.config.ts"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
