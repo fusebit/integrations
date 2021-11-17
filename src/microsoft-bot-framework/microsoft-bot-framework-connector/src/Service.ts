@@ -26,7 +26,7 @@ class Service extends Connector.Service {
     const { jwks_uri } = metadataResponse.body;
 
     try {
-      await verifyJwt(token!, jwks_uri!);
+      await verifyJwt(token, jwks_uri);
     } catch (err) {
       ctx.throw(403, 'Invalid authorization provided');
     }
