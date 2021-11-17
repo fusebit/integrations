@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-hubspot-crm-contacts-connector",
-  "version": "7.12.4",
+  "version": "7.12.5",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.12.4",
-    "@fusebit-int/hubspot-connector": "^7.12.4"
+    "@fusebit-int/framework": "^7.12.5",
+    "@fusebit-int/hubspot-connector": "^7.12.5"
   }
 }
