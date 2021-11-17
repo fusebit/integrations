@@ -45,7 +45,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "botbuilder": "^4.14.1"
+    "botbuilder": "^4.14.1",
+    "superagent": "^6.1.0"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
