@@ -84,7 +84,10 @@ declare namespace PlaywrightTest {
 const config: PlaywrightTestConfig = {
   timeout: 180000,
   testDir: 'play',
-  reporter: [['json', { outputFile: 'results.json' }]],
+  reporter: [
+    ['json', { outputFile: 'results.json' }],
+    ['line', {}],
+  ],,
 };
 
 export default config;

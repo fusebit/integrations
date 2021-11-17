@@ -4,9 +4,6 @@ import { expect } from '@playwright/test';
 
 import { IAccount, waitForOperation, fusebitRequest, RequestMethod, postAndWait } from './sdk';
 
-// const DEVELOPER_CONSOLE_LINK =
-//   'https://developer.atlassian.com/console/myapps/d639ce0f-f387-45d1-8421-e6d3dc6288c7/authorization/auth-code-grant';
-
 // Load the secrets from the environment
 export const {
   OAUTH_USERNAME,
@@ -20,7 +17,7 @@ export const {
 // A variety of constants used for testing this component.
 export const TOKEN_URL = 'https://app.pagerduty.com/oauth/token';
 export const AUTHORIZATION_URL = 'https://app.pagerduty.com/oauth/authorize';
-export const OAUTH_AUDIENCE = 'app.pagerduty.com'; // Required otherwise Atlassian OAuth just sorta fails during login
+export const OAUTH_AUDIENCE = 'app.pagerduty.com';
 
 export const PACKAGE_CONNECTOR = '@fusebit-int/pagerduty-connector';
 export const PACKAGE_PROVIDER = '@fusebit-int/pagerduty-provider';
