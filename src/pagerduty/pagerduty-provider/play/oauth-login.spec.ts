@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
-import fs from 'fs/promises';
 import * as Constants from './setup';
-
 import { IAccount, getAccount, createSession, commitSession, fusebitRequest, RequestMethod } from './sdk';
 import { startHttpServer, waitForExpress } from './server';
 
@@ -63,6 +61,8 @@ test('basic test', async ({ page }) => {
 const testWebhook = async ({ installId }) => {
   await clearStorage();
 
+  await deleteAll(installId);
+
   await registerWebhook(installId);
 
   await pushChange(installId);
@@ -100,6 +100,16 @@ const registerWebhook = async (installId: string) => {
   expect(response).toBeHttp({ statusCode: 200 });
 };
 
+const deleteAll = async (installId: string) => {
+  // Deleted all old webhooks
+  const response = await fusebitRequest(
+    account,
+    RequestMethod.delete,
+    `/integration/${Constants.INTEGRATION_ID}/api/webhook/${installId}`
+  );
+  expect(response).toBeHttp({ statusCode: 200 });
+};
+
 const pushChange = async (installId: string) => {
   // Change the data in the system
   const response = await fusebitRequest(
@@ -118,7 +128,7 @@ const waitForWebhook = async () => {
     const response = await fusebitRequest(
       account,
       RequestMethod.get,
-      `/storage/integration/${Constants.INTEGRATION_ID}/test/atlassianProvider/webhook/*`,
+      `/storage/integration/${Constants.INTEGRATION_ID}/test/pagerDutyProvider/webhook/*`,
       {},
       { version: 1 }
     );
@@ -132,7 +142,7 @@ const waitForWebhook = async () => {
       );
 
       // Check to see if any of the entries match
-      if (entries.some((entry: { body: any }) => entry.body.data.eventType === 'jira:issue_updated')) {
+      if (entries.some((entry: { body: any }) => entry.body.data.eventType === 'incident.triggered')) {
         // Good enough for now - mark the test a success and move on.
         break;
       }
