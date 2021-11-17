@@ -71,7 +71,6 @@ class ServiceConnector extends Connector {
         } catch (error) {
           if (error instanceof Error) {
             ctx.throw(500, error.message);
-            return;
           }
           // TODO log this error object (or whatever that is at this point)
           ctx.throw(500);
