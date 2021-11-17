@@ -50,12 +50,14 @@ async function resolveSecret(token: string, jwksUri: string): Promise<string> {
       jwksUri,
     });
     const signingKey = await client.getSigningKey(kid);
+
+    if (!signingKey) {
+      throw new Error(`Unable to resolve secret. Signing key not found for kid ${kid}.`);
+    }
+
     key = signingKey.getPublicKey();
     setCachedKey(kid, jwksUri, key);
   }
 
-  if (!key) {
-    throw new Error('Unable to resolve secret; key not found in downloaded key file');
-  }
   return key;
 }
