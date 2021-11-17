@@ -6,7 +6,7 @@ type FusebitLinearClient = Client & { fusebit?: any };
 
 export default class LinearProvider extends Internal.ProviderActivator<FusebitLinearClient> {
   /**
-   * This function will create an authorized webhook SDK for PagerDuty.
+   * This function will create an authorized webhook SDK for Linear.
    */
   public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {
     const client = await this.instantiate(ctx, lookupKey);
