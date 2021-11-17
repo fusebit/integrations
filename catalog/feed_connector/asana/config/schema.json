@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "slackConnector": {
+    "asanaConnector": {
       "type": "object",
       "properties": {
         "id": {
