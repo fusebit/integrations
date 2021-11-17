@@ -7,7 +7,7 @@ module.exports = {
     node: true,
   },
   plugins: ['@typescript-eslint', 'security'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:security/recommended'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:security/recommended', 'prettier'],
   rules: {
     // enable additional rules
     indent: 'off',
