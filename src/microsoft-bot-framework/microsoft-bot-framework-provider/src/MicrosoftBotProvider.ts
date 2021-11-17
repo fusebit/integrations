@@ -1,12 +1,35 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import { BotFrameworkAdapter, TurnContext, WebRequest, WebResponse } from 'botbuilder';
+import { Activity, BotFrameworkAdapter } from 'botbuilder';
 
 type FusebitBotFrameworkAdapter = BotFrameworkAdapter & { fusebit?: any };
 
 interface MicrosoftBotProviderCredentials {
   accessToken: string;
   botClientId: string;
+}
+
+interface Claim {
+  type: string;
+  value: string | number;
+}
+
+class ClaimsIdentity {
+  constructor(private claims: Claim[], private authenticationType?: string | boolean) {}
+
+  public get isAuthenticated(): boolean {
+    if (typeof this.authenticationType === 'boolean') {
+      return this.authenticationType;
+    }
+
+    return this.authenticationType != null;
+  }
+
+  public getClaimValue(claimType: string): string | number | null {
+    const claim = this.claims.find((c) => c.type === claimType);
+
+    return claim?.value ?? null;
+  }
 }
 
 export default class MicrosoftBotProvider extends Internal.ProviderActivator<FusebitBotFrameworkAdapter> {
@@ -51,6 +74,17 @@ export default class MicrosoftBotProvider extends Internal.ProviderActivator<Fus
       resource: 'https://api.botframework.com',
       _authority: 'https://login.microsoftonline.com/botframework.com',
     });
+
+    botFrameworkAdapterBypass.authenticateRequestInternal = (): Promise<ClaimsIdentity> => {
+      const claims: Claim[] = [
+        { type: 'serviceurl', value: 'https://smba.trafficmanager.net' },
+        { type: 'nbf', value: 9999999999 },
+        { type: 'exp', value: 9999999999 },
+        { type: 'iss', value: 'https://api.botframework.com' },
+        { type: 'aud', value: credentials.botClientId },
+      ];
+      return Promise.resolve(new ClaimsIdentity(claims, true));
+    };
 
     return botFrameworkAdapter;
   }
