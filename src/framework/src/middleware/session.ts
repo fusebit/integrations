@@ -73,11 +73,12 @@ const health = () => async (ctx: FusebitContext, next: Next) => {
   const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8')) as IFusebitJwt;
 
   const allow = payload['https://fusebit.io/permissions'].allow;
-  if (
-    !allow.some((entry) => entry.action === 'session:add' && entry.resource === resource) ||
-    !allow.some((entry) => entry.action === 'session:commit' && entry.resource === resource)
-  ) {
-    throw new Error("Missing permissions on integration; add 'backend' to security.permissions?");
+  if (!allow.some((entry) => entry.action === 'session:add' && entry.resource === resource)) {
+    throw new Error("Missing 'session:add' permissions on the integration");
+  }
+
+  if (!allow.some((entry) => entry.action === 'session:commit' && entry.resource === resource)) {
+    throw new Error("Missing 'session:commit' permissions on the integration");
   }
 
   return next();
