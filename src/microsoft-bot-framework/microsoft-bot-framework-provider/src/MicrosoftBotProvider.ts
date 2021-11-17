@@ -38,7 +38,7 @@ export default class MicrosoftBotProvider extends Internal.ProviderActivator<Fus
   }: {
     ctx: Internal.Types.Context;
   }): Promise<MicrosoftBotProviderCredentials> {
-    const tokenPath = `/api/credentials`;
+    const tokenPath = '/api/credentials';
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
     const tokenResponse = await superagent
@@ -49,7 +49,7 @@ export default class MicrosoftBotProvider extends Internal.ProviderActivator<Fus
     const isEmpty = !credentials || Object.keys(credentials).length === 0;
 
     if (isEmpty) {
-      ctx.throw(404, `Cannot fetch the credentials for this connector.`);
+      ctx.throw(404, 'Cannot fetch the credentials for this connector.');
     }
 
     return credentials;
