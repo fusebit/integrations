@@ -52,7 +52,8 @@
     "eslint-plugin-security": "^1.4.0",
     "express": "^4.17.1",
     "jest": "^27.2.4",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "@fusebit-int/play": "^7.14.2"
   },
   "dependencies": {
     "@pagerduty/pdjs": "^2.2.3",
