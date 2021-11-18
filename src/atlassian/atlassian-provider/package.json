@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/atlassian-provider",
-  "version": "7.14.2",
+  "version": "7.15.0",
   "description": "Jira provider",
   "keywords": [
     "Fusebit",
@@ -37,7 +37,7 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.14.2",
+    "@fusebit-int/framework": "^7.15.0",
     "@playwright/test": "^1.15.2",
     "@types/express": "^4.17.13",
     "@types/node": "^16.9.2",
