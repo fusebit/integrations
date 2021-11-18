@@ -1,0 +1,15 @@
+{
+  "id": "<%this.id%>",
+  "tags": {
+    "fusebit.service": "Microsoft Bot Framework"
+  },
+  "handler": "@fusebit-int/microsoft-bot-framework-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "https://api.botframework.com/.default",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>"
+  }
+}

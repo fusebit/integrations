@@ -71,7 +71,7 @@ describe('Connector', () => {
 
   test('service.handleWebhookEvent dispatches events to fan-out', async () => {
     const ctx = getContext();
-    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.manager = { config: { configuration: { defaultEventHandler: false } } };
     ctx.state.params.entityId = Constants.connectorId;
 
     // Define the events.
@@ -129,7 +129,7 @@ describe('Connector', () => {
   test('fanoutEvent closes on write complete', async () => {
     const responseDelay = 200;
     const ctx = getContext();
-    ctx.state.manager = { config: { defaultEventHandler: false } };
+    ctx.state.manager = { config: { configuration: { defaultEventHandler: false } } };
     ctx.state.params.entityId = Constants.connectorId;
 
     // Define the events.

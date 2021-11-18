@@ -1,0 +1,56 @@
+{
+  "name": "@fusebit-int/microsoft-bot-framework-provider",
+  "version": "7.11.0",
+  "description": "Microsoft Bot Framework provider",
+  "keywords": [
+    "Fusebit",
+    "Microsoft Bot Framework"
+  ],
+  "author": "Fusebit, Inc",
+  "homepage": "https://fusebit.io",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "libc/index.js",
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusebit/integrations.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "tsc:version": "tsc --version",
+    "build": "tsc -b --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
+    "test": "jest --config=./jest.config.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/fusebit/integrations/issues"
+  },
+  "devDependencies": {
+    "@fusebit-int/framework": "^7.11.0",
+    "@types/node": "^16.11.7",
+    "@types/request": "^2.48.7",
+    "@types/superagent": "^4.1.13",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^27.3.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "botbuilder": "^4.14.1",
+    "superagent": "^6.1.0"
+  },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  }
+}

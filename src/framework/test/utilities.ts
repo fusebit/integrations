@@ -24,8 +24,9 @@ export const getIntegrationConfig = (options?: { withDummyConnector: boolean }):
         ]
       : []),
   ],
-  configuration: {},
-  defaultEventHandler: '',
+  configuration: {
+    defaultEventHandler: '',
+  },
   mountUrl: '',
   schedule: [],
 });

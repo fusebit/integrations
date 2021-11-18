@@ -31,7 +31,7 @@ describe('<%= h.capitalize(name) %> Webhook Events', () => {
   test.todo('Validate: validateWebhookEvent', async () => {
     const service: any = new ServiceConnector().service;
 
-    expect(service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+    expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 

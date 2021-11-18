@@ -122,7 +122,7 @@ class ConnectorManager {
    * @param {string} installId The unique id of the tenant Install that should be used to determine the
    * appropriate connector identity to populate into the sdk.
    */
-  public async getByName(ctx: FusebitContext, name: string, installId: string): Promise<any> {
+  public async getByName(ctx: FusebitContext, name: string, installId?: string): Promise<any> {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(
@@ -134,13 +134,22 @@ class ConnectorManager {
     const inst = cfg.instance ? cfg.instance : this.loadConnector(name, cfg);
 
     const service = new Service();
-    const install = await service.getInstall(ctx, installId);
 
-    const identity = install.data[name];
-    if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
-      ctx.throw(404);
+    // The install/identity might be null for cases when connectors are not associated with
+    // a particular tenant. For example, the Microsoft Bot Connector is a connector that
+    // uses client credentials to communicate with the Saas (the Microsoft Bot Framework). Hence,
+    // no install/id is needed to intantiate it.
+    let install;
+    let identity;
+    if (installId) {
+      install = await service.getInstall(ctx, installId);
+      identity = install.data[name];
+      if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
+        ctx.throw(404);
+      }
     }
-    const client = await inst.instantiate(ctx, identity.entityId, installId);
+
+    const client = await inst.instantiate(ctx, identity?.entityId, installId);
     client.fusebit = client.fusebit || {};
     client.fusebit.identity = identity;
     return client;

@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Microsoft Teams"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "microsoftBotFrameworkConnector",
+      "skip": true,
+      "provider": "@fusebit-int/microsoft-bot-framework-provider",
+      "entityId": "<% global.entities.microsoftBotFrameworkConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

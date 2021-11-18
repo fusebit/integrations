@@ -1,0 +1,35 @@
+{
+  "id": "microsoft-bot-framework",
+  "name": "Microsoft Bot Framework",
+  "smallIcon": "#/assets/microsoft-bot-framework.svg",
+  "largeIcon": "#/assets/microsoft-bot-framework.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-bot-framework#creating-your-own-microsoft-bot-framework-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftBotFrameworkConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/microsoft-bot-framework-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

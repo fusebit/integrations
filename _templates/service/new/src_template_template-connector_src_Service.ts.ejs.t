@@ -13,7 +13,7 @@ class Service extends OAuthConnector.Service {
     return '';
   }
 
-  protected validateWebhookEvent(ctx: Connector.Types.Context): boolean {
+  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
   }
 
