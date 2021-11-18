@@ -28,7 +28,7 @@
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
     "play": "playwright test -j 1",
-    "play-install": "playwright install"
+    "play:install": "playwright install"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
