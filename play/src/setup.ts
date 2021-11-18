@@ -1,9 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as fs from 'fs';
-
 import { expect } from '@playwright/test';
-
 import { IAccount, waitForOperation, fusebitRequest, RequestMethod, postAndWait } from './sdk';
 export interface IIntegrationVariable {
   name: string;

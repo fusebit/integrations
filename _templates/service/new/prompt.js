@@ -34,4 +34,17 @@ module.exports = [
     ],
     validate: requireAllValues,
   },
+  {
+    type: 'form',
+    name: 'play',
+    message: `Playwright tests configuration.
+    Many systems require a consistent and predictable id for webhooks, callback urls, etc.
+    Choose an integration id and a connector id that won't conflict`,
+    choices: [
+      { name: 'connector', message: 'Connector name' },
+      { name: 'integration', message: 'Integration name' },
+      { name: 'eventType', message: 'Webhook event type' },
+    ],
+    validate: requireAllValues,
+  },
 ].map((e) => ({ ...e, required: true }));
