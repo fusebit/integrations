@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "module": "CommonJS",
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "outDir": "libc",
+    "target": "ESNext"
+  },
+  "include": ["src"]
+}

@@ -6,14 +6,12 @@
     "src/framework",
     "catalog",
     "workspace/*",
-    "catalog/feed_*/**"
+    "catalog/feed_*/**",
+    "./play"
   ],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     }
   },

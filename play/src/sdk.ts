@@ -1,7 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import superagent from 'superagent';
 import * as child_process from 'child_process';
 
-import { expect } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 
 const MAX_WAIT_MS = 120000;
 
@@ -47,7 +49,7 @@ export const fusebitRequest = async (
   url: string,
   payload: any = {},
   options?: { version: 1 | 2 }
-): superagent.Request => {
+): Promise<superagent.Response> => {
   const fullUrl = url.startsWith('http')
     ? url
     : `${account.baseUrl}/v${options?.version || 2}/account/${account.accountId}/subscription/${
@@ -63,7 +65,7 @@ export const fusebitRequest = async (
 
 export const waitForOperation = async (account: IAccount, url: string) => {
   const startTime = Date.now();
-  let response: superagent.Request;
+  let response: superagent.Response;
   do {
     response = await fusebitRequest(account, RequestMethod.get, url);
     if (!response.body?.operationState || response.body.operationState.status !== 'processing') {
