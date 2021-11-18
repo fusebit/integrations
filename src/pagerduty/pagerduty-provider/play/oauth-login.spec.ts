@@ -1,7 +1,15 @@
 import { test, expect } from '@playwright/test';
-import * as Constants from './setup';
-import { IAccount, getAccount, createSession, commitSession, fusebitRequest, RequestMethod } from './sdk';
-import { startHttpServer, waitForExpress } from './server';
+import {
+  Constants,
+  startHttpServer,
+  waitForExpress,
+  IAccount,
+  getAccount,
+  createSession,
+  commitSession,
+  fusebitRequest,
+  RequestMethod,
+} from '@fusebit-int/play';
 
 let account: IAccount;
 
@@ -11,7 +19,18 @@ test.beforeAll(async () => {
 
 test.beforeAll(async () => {
   console.log('Setting up entties...');
-  await Constants.ensureEntities(account);
+  await Constants.ensureEntities(account, {
+    integrationId: Constants.INTEGRATION_ID,
+    connectorId: Constants.CONNECTOR_ID,
+    packageProvider: Constants.PACKAGE_PROVIDER,
+    packageConnector: Constants.PACKAGE_CONNECTOR,
+    oauthScopes: '',
+    authorizationUrl: Constants.AUTHORIZATION_URL,
+    tokenUrl: Constants.TOKEN_URL,
+    clientId: Constants.SECRET_CLIENTID,
+    clientSecret: Constants.SECRET_CLIENTSECRET,
+    signingSecret: Constants.SIGNING_SECRET,
+  });
   console.log('... complete.');
 });
 
