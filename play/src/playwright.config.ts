@@ -32,10 +32,7 @@ if (cfg.error) {
 export const playWrightConfig: PlaywrightTestConfig = {
   timeout: 180000,
   testDir: 'play',
-  reporter: [
-    ['json', { outputFile: 'results.json' }],
-    ['line', {}],
-  ],
+  reporter: [['json', { outputFile: 'results.json' }]],
 };
 
 matchers.register(expect);

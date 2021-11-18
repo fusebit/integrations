@@ -10,6 +10,7 @@ import {
   fusebitRequest,
   RequestMethod,
 } from '@fusebit-int/play';
+import { revokeAuthorization } from './appConfig';
 
 let account: IAccount;
 
@@ -41,6 +42,10 @@ test.beforeAll(async () => {
     ]
   );
   console.log('... complete.');
+});
+
+test.beforeEach(async ({ page }) => {
+  await revokeAuthorization(page);
 });
 
 test('basic test', async ({ page }) => {
