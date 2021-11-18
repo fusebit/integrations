@@ -1,9 +1,26 @@
 import { test, expect } from '@playwright/test';
 
-import * as Constants from './setup';
+import {
+  Constants,
+  startHttpServer,
+  waitForExpress,
+  IAccount,
+  getAccount,
+  createSession,
+  commitSession,
+  fusebitRequest,
+  RequestMethod,
+} from '@fusebit-int/play';
 
-import { IAccount, getAccount, createSession, commitSession, fusebitRequest, RequestMethod } from './sdk';
-import { startHttpServer, waitForExpress } from './server';
+export const OAUTH_SCOPES = [
+  'read:jira-user',
+  'read:jira-work',
+  'write:jira-work',
+  'manage:jira-webhook',
+  'read:me',
+  'read:confluence-content.summary',
+  'offline_access',
+].join(' ');
 
 let account: IAccount;
 
@@ -12,8 +29,19 @@ test.beforeAll(async () => {
 });
 
 test.beforeAll(async () => {
-  console.log('Setting up entties...');
-  await Constants.ensureEntities(account);
+  console.log('Setting up entities...');
+  await Constants.ensureEntities(account, {
+    integrationId: Constants.INTEGRATION_ID,
+    connectorId: Constants.CONNECTOR_ID,
+    packageProvider: Constants.PACKAGE_PROVIDER,
+    packageConnector: Constants.PACKAGE_CONNECTOR,
+    oauthScopes: OAUTH_SCOPES,
+    authorizationUrl: Constants.AUTHORIZATION_URL,
+    tokenUrl: Constants.TOKEN_URL,
+    clientId: Constants.SECRET_CLIENTID,
+    clientSecret: Constants.SECRET_CLIENTSECRET,
+    audience: Constants.OAUTH_AUDIENCE,
+  });
   console.log('... complete.');
 });
 
@@ -22,7 +50,6 @@ test('basic test', async ({ page }) => {
 
   const called = waitForExpress();
   app.use(called);
-
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, Constants.INTEGRATION_ID, `${localUrl}/oauthTest`);
 
@@ -66,7 +93,7 @@ test('basic test', async ({ page }) => {
 
   /* Now that the environment is set up, let's do a handful of tests in parallel. */
   await Promise.all([testWebhook({ installId })]);
-}, 180000);
+});
 
 const testWebhook = async ({ installId }) => {
   await unregisterWebhooks(installId);

@@ -28,7 +28,8 @@
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
     "play": "playwright test -j 1",
-    "play-install": "playwright install"
+    "play:headed": "playwright test --headed",
+    "play:install": "playwright install"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@fusebit-int/framework": "^7.16.0",
+    "@fusebit-int/play": "^7.16.0",
     "@playwright/test": "^1.15.2",
     "@types/express": "^4.17.13",
     "@types/node": "^16.9.2",

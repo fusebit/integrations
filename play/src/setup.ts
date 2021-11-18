@@ -10,12 +10,13 @@ export interface IConfiguration {
   connectorId: string;
   packageProvider: string;
   packageConnector: string;
-  oauthScopes: string;
   authorizationUrl: string;
   tokenUrl: string;
   clientId: string;
   clientSecret: string;
-  signingSecret: string;
+  signingSecret?: string;
+  audience?: string;
+  oauthScopes?: string;
 }
 
 export const {
@@ -31,6 +32,7 @@ export const {
   TOKEN_URL,
   SIGNING_SECRET,
   OAUTH_SCOPES,
+  OAUTH_AUDIENCE,
 } = process.env;
 
 const makeIntegration = (configuration: IConfiguration, integrationVariables: IIntegrationVariable[] = []) => ({
@@ -77,6 +79,7 @@ const makeConnector = (configuration: IConfiguration) => ({
       clientId: configuration.clientId,
       clientSecret: configuration.clientSecret,
       signingSecret: configuration.signingSecret,
+      audience: configuration.audience,
     },
   },
 });
