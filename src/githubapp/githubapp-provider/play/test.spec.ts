@@ -11,19 +11,6 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
-interface IToBeHttp {
-  statusCode?: number | number[];
-  data?: any;
-}
-
-declare global {
-  namespace PlaywrightTest {
-    interface Matchers<R> {
-      toBeHttp: ({ statusCode }: IToBeHttp) => R;
-    }
-  }
-}
-
 import { revokeAuthorization } from './appConfig';
 
 // Provider specific variables

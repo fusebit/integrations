@@ -14,19 +14,6 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
-interface IToBeHttp {
-  statusCode?: number | number[];
-  data?: any;
-}
-
-declare global {
-  namespace PlaywrightTest {
-    interface Matchers<R> {
-      toBeHttp: ({ statusCode }: IToBeHttp) => R;
-    }
-  }
-}
-
 let account: IAccount;
 
 test.beforeAll(async () => {
@@ -101,8 +88,8 @@ test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
 
 
 const waitForWebhook = async () => {
-  const storageKey = 'test/<%= play.connector.toLowerCase() %>/webhook/*';
-  const expectedEventType = '<%= play.eventType.toLowerCase() %>';
+  const storageKey = 'test/<%= name.toLowerCase() %>/webhook/*';
+  const expectedEventType = 'Type your expected event type here';
   // Wait for the webhook event to fire.
   let cnt: number;
   for (cnt = 10; cnt > 0; cnt--) {

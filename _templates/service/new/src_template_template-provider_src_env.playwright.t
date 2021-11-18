@@ -5,10 +5,10 @@ OAUTH_USERNAME=
 OAUTH_PASSWORD=
 SECRET_CLIENTID=
 SECRET_CLIENTSECRET=
-INTEGRATION_ID=<%= play.integration.toLowerCase() %>
-CONNECTOR_ID=<%= play.connector.toLowerCase() %>
+INTEGRATION_ID=<%= name.toLowerCase() %>-integration
+CONNECTOR_ID=<%= name.toLowerCase() %>-connector
 PACKAGE_PROVIDER=
 PACKAGE_CONNECTOR=
-AUTHORIZATION_URL=<%= connector.authorizationUrl.toLowerCase() %>
+AUTHORIZATION_URL=<%= connector.authorizationUrl %>
 TOKEN_URL=<%= connector.tokenUrl.toLowerCase() %>
 SIGNING_SECRET=
