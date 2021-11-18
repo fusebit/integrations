@@ -1,3 +1,6 @@
+---
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/test.spec.ts
+---
 import { test, expect } from '@playwright/test';
 import {
   Constants,
@@ -10,11 +13,6 @@ import {
   fusebitRequest,
   RequestMethod,
 } from '@fusebit-int/play';
-
-import { revokeAuthorization } from './appConfig';
-
-// Provider specific variables
-const { REPOSITORY_OWNER, REPOSITORY } = process.env;
 
 let account: IAccount;
 
@@ -30,31 +28,22 @@ test.beforeAll(async () => {
       connectorId: Constants.CONNECTOR_ID,
       packageProvider: Constants.PACKAGE_PROVIDER,
       packageConnector: Constants.PACKAGE_CONNECTOR,
-      oauthScopes: '',
+      oauthScopes: Constants.OAUTH_SCOPES,
       authorizationUrl: Constants.AUTHORIZATION_URL,
       tokenUrl: Constants.TOKEN_URL,
       clientId: Constants.SECRET_CLIENTID,
       clientSecret: Constants.SECRET_CLIENTSECRET,
       signingSecret: Constants.SIGNING_SECRET,
     },
-    [
-      {
-        name: '##OWNER##',
-        value: REPOSITORY_OWNER,
-      },
-      {
-        name: '##REPOSITORY##',
-        value: REPOSITORY,
-      },
-    ]
+    []
   );
 });
 
 test.beforeEach(async ({ page }) => {
-  await revokeAuthorization(page);
+  // Execute test prerequisites here
 });
 
-test('Authorize and fetch integration endpoints', async ({ page }) => {
+test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
   const { app, url: localUrl } = await startHttpServer();
 
   const called = waitForExpress();
@@ -91,46 +80,16 @@ test('Authorize and fetch integration endpoints', async ({ page }) => {
   );
 
   expect(response).toBeHttp({ statusCode: 200 });
-  expect(response.body).toHaveProperty('id');
 
-  await checkIssue(installId);
+  // TODO: Perform additional checks here: Use connector SDK, Webhooks, etc.
   await waitForWebhook();
+
 });
 
-async function listIssues(installId: string): Promise<any> {
-  const githubIssuesResponse = await fusebitRequest(
-    account,
-    RequestMethod.get,
-    `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}`
-  );
-  return githubIssuesResponse?.body;
-}
-
-async function checkIssue(installId: string): Promise<void> {
-  const issues = await listIssues(installId);
-  let issue = issues[0];
-
-  if (!issues.length) {
-    const githubIssuesResponse = await fusebitRequest(
-      account,
-      RequestMethod.post,
-      `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}`
-    );
-    issue = githubIssuesResponse.body;
-    expect(issue).toHaveProperty('id');
-  }
-
-  const updatedTittle = `Fusebit issue ${Math.random() * 10000000}`;
-  const updateIssueResponse = await fusebitRequest(
-    account,
-    RequestMethod.put,
-    `/integration/${Constants.INTEGRATION_ID}/api/issues/${installId}/${issue.number}`,
-    { title: updatedTittle }
-  );
-  expect(updateIssueResponse.body.title).toBe(updatedTittle);
-}
 
 const waitForWebhook = async () => {
+  const storageKey = 'test/<%= name.toLowerCase() %>/webhook/*';
+  const expectedEventType = 'Type your expected event type here';
   // Wait for the webhook event to fire.
   let cnt: number;
   for (cnt = 10; cnt > 0; cnt--) {
@@ -138,7 +97,7 @@ const waitForWebhook = async () => {
     const response = await fusebitRequest(
       account,
       RequestMethod.get,
-      `/storage/integration/${Constants.INTEGRATION_ID}/test/githubapp/webhook/*`,
+      `/storage/integration/${Constants.INTEGRATION_ID}/${storageKey}`,
       {},
       { version: 1 }
     );
@@ -150,8 +109,8 @@ const waitForWebhook = async () => {
           fusebitRequest(account, RequestMethod.get, `/storage/${item.storageId}`, {}, { version: 1 })
         )
       );
-      const filter = (entry) => entry.body.data.eventType === 'issues.edited';
       // Check to see if any of the entries match
+      const filter = (entry) => entry.body.data.eventType === expectedEventType;
       if (entries.some(filter)) {
         // Good enough for now - mark the test a success and move on.
         break;

@@ -1,15 +1,19 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import express from 'express';
+import { Server } from 'http';
+import { AddressInfo } from 'net';
 
 export const startHttpServer = async () => {
   const app = express();
 
-  const service = await new Promise((resolve) => {
-    const svc = app.listen(0, () => resolve(svc));
-  });
+  const createService = async (): Promise<Server> => {
+    return await new Promise((resolve) => {
+      const svc = app.listen(0, () => resolve(svc));
+    });
+  };
 
-  const port = service.address().port;
+  const service = await createService();
+
+  const port = (service?.address() as AddressInfo)?.port;
 
   return { app, service, port, url: `http://localhost:${port}` };
 };

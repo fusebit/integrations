@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { expect } from '@playwright/test';
+import { Expect, expect } from '@playwright/test';
 import superagent from 'superagent';
 
-function toBeHttp(response: superagent.Response, { statusCode, data }: IToBeHttp) {
+type SuperAgentResponse = superagent.Response & { data: any } & { request: superagent.SuperAgentRequest };
+
+function toBeHttp(response: SuperAgentResponse, { statusCode, data }: IToBeHttp) {
   let keyValueMsg = '';
   try {
     if (statusCode) {
@@ -18,7 +18,7 @@ function toBeHttp(response: superagent.Response, { statusCode, data }: IToBeHttp
         for (const [key, value] of Object.entries(data)) {
           keyValueMsg = `on data '${key}', expecting ${JSON.stringify(value)}`;
           if (typeof value === 'object' && value !== null) {
-            expect(response.body[key]).toMatchObject(value);
+            expect(response.body[key]).toMatchObject(value as any);
           } else {
             expect(response.body[key]).toEqual(value);
           }
@@ -28,7 +28,7 @@ function toBeHttp(response: superagent.Response, { statusCode, data }: IToBeHttp
       }
     }
   } catch (err) {
-    const msg = `${err.message} ${keyValueMsg}\n\nfailing request:\n${
+    const msg = `${(err as Error).message} ${keyValueMsg}\n\nfailing request:\n${
       response.status
     } ${response.request?.method.toUpperCase()} ${response.request?.url} - headers: ${JSON.stringify(
       response.headers,
@@ -45,5 +45,5 @@ const matchers = {
 };
 
 export default {
-  register: (expect) => expect.extend(matchers),
+  register: (expect: Expect) => expect.extend(matchers),
 };

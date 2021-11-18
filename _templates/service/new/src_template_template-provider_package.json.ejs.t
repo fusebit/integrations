@@ -23,7 +23,10 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
+    "play": "playwright test -j 1",
+    "play:headed": "playwright test --headed",
+    "play:install": "playwright install"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
@@ -33,6 +36,8 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
   },
   "devDependencies": {
     "@fusebit-int/framework": ">=<%= h.currentVersion %>",
+    "@fusebit-int/play": ">=<%= h.currentVersion %>",
+    "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
