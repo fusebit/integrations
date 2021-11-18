@@ -6,8 +6,8 @@ const fs = require('fs');
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
 const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY;
-const successWebhook = 'https://hooks.slack.com/services/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';
-const failureWebhook = 'https://hooks.slack.com/services/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';
+const successWebhook = process.env.SUCCESS_WEBHOOK;
+const failureWebhook = process.env.FAILURE_WEBHOOK;
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
