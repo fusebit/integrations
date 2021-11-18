@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/play",
-  "version": "7.15.0",
+  "version": "7.16.0",
   "description": "Common building blocks for Playwright tests",
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
@@ -25,12 +25,12 @@
     "@types/superagent": "^4.1.13",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
-    "typescript": "^4.4.3",
-    "dotenv": "^10.0.0"
+    "typescript": "^4.4.3"
   }
 }
