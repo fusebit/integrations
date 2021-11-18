@@ -12,3 +12,4 @@ PACKAGE_CONNECTOR=
 AUTHORIZATION_URL=<%= connector.authorizationUrl %>
 TOKEN_URL=<%= connector.tokenUrl.toLowerCase() %>
 SIGNING_SECRET=
+OAUTH_AUDIENCE=
