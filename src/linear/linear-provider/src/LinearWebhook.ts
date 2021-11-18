@@ -26,9 +26,10 @@ class LinearWebhook implements Internal.Types.WebhookClient<any> {
     const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}`;
     const results = await this.client.webhookCreate({
       url: webhookUrl,
+      id: webhookId,
       ...args,
     });
-    return { success: results.success, webhookId: (await results.webhook)?.id as string };
+    return { success: results.success, webhook: webhookId };
   };
 
   public list = async () => {

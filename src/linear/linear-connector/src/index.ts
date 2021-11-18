@@ -32,6 +32,10 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Linear App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Linear App';
     });
+
+    this.router.post('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
+      await this.service.handleWebhookEvent(ctx);
+    });
   }
 }
 
