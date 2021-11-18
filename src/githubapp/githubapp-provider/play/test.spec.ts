@@ -30,7 +30,7 @@ test.beforeAll(async () => {
       connectorId: Constants.CONNECTOR_ID,
       packageProvider: Constants.PACKAGE_PROVIDER,
       packageConnector: Constants.PACKAGE_CONNECTOR,
-      oauthScopes: 'read',
+      oauthScopes: '',
       authorizationUrl: Constants.AUTHORIZATION_URL,
       tokenUrl: Constants.TOKEN_URL,
       clientId: Constants.SECRET_CLIENTID,
