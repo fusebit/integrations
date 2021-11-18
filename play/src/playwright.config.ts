@@ -29,7 +29,7 @@ if (cfg.error) {
   throw msg;
 }
 
-const config: PlaywrightTestConfig = {
+export const playWrightConfig: PlaywrightTestConfig = {
   timeout: 180000,
   testDir: 'play',
   reporter: [
@@ -39,5 +39,3 @@ const config: PlaywrightTestConfig = {
 };
 
 matchers.register(expect);
-
-export default config;

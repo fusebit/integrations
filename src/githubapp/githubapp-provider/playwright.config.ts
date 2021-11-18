@@ -1,1 +1,2 @@
-export { PlayWrightConfig } from '@fusebit-int/play';
+import { playWrightConfig } from '@fusebit-int/play';
+export default playWrightConfig;
