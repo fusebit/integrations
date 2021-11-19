@@ -17,6 +17,7 @@ export interface IConfiguration {
   signingSecret?: string;
   audience?: string;
   oauthScopes?: string;
+  extraParams?: string;
 }
 
 export const {
@@ -80,6 +81,7 @@ const makeConnector = (configuration: IConfiguration) => ({
       clientSecret: configuration.clientSecret,
       signingSecret: configuration.signingSecret,
       audience: configuration.audience,
+      extraParams: configuration.extraParams,
     },
   },
 });

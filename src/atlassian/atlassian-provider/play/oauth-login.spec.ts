@@ -41,6 +41,7 @@ test.beforeAll(async () => {
     clientId: Constants.SECRET_CLIENTID,
     clientSecret: Constants.SECRET_CLIENTSECRET,
     audience: Constants.OAUTH_AUDIENCE,
+    extraParams: 'prompt=consent',
   });
   console.log('... complete.');
 });
