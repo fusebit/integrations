@@ -35,7 +35,12 @@ test.beforeAll(async () => {
       clientSecret: Constants.SECRET_CLIENTSECRET,
       signingSecret: Constants.SIGNING_SECRET,
     },
-    []
+    [
+      {
+        name: '##CONNECTOR_NAME##',
+        value: Constants.CONNECTOR_ID,
+      },
+    ]
   );
 });
 

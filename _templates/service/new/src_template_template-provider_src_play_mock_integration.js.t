@@ -4,7 +4,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/mock/i
 const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 const router = integration.router;
-const connectorName = '<%= name.toLowerCase() %>-connector';
+const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
