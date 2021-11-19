@@ -30,19 +30,28 @@ test.beforeAll(async () => {
 
 test.beforeAll(async () => {
   console.log('Setting up entities...');
-  await Constants.ensureEntities(account, {
-    integrationId: Constants.INTEGRATION_ID,
-    connectorId: Constants.CONNECTOR_ID,
-    packageProvider: Constants.PACKAGE_PROVIDER,
-    packageConnector: Constants.PACKAGE_CONNECTOR,
-    oauthScopes: OAUTH_SCOPES,
-    authorizationUrl: Constants.AUTHORIZATION_URL,
-    tokenUrl: Constants.TOKEN_URL,
-    clientId: Constants.SECRET_CLIENTID,
-    clientSecret: Constants.SECRET_CLIENTSECRET,
-    audience: Constants.OAUTH_AUDIENCE,
-    extraParams: 'prompt=consent',
-  });
+  await Constants.ensureEntities(
+    account,
+    {
+      integrationId: Constants.INTEGRATION_ID,
+      connectorId: Constants.CONNECTOR_ID,
+      packageProvider: Constants.PACKAGE_PROVIDER,
+      packageConnector: Constants.PACKAGE_CONNECTOR,
+      oauthScopes: OAUTH_SCOPES,
+      authorizationUrl: Constants.AUTHORIZATION_URL,
+      tokenUrl: Constants.TOKEN_URL,
+      clientId: Constants.SECRET_CLIENTID,
+      clientSecret: Constants.SECRET_CLIENTSECRET,
+      audience: Constants.OAUTH_AUDIENCE,
+      extraParams: 'prompt=consent',
+    },
+    [
+      {
+        name: '##CONNECTOR_NAME##',
+        value: Constants.CONNECTOR_ID,
+      },
+    ]
+  );
   console.log('... complete.');
 });
 
