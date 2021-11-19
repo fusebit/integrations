@@ -5,8 +5,8 @@ OAUTH_USERNAME=
 OAUTH_PASSWORD=
 SECRET_CLIENTID=
 SECRET_CLIENTSECRET=
-INTEGRATION_ID=<%= name.toLowerCase() %>-play-int
-CONNECTOR_ID=<%= name.toLowerCase() %>-play-con
+INTEGRATION_ID=test-play-<%= name.toLowerCase() %>-int
+CONNECTOR_ID=test-play-<%= name.toLowerCase() %>-con
 PACKAGE_PROVIDER=
 PACKAGE_CONNECTOR=
 AUTHORIZATION_URL=<%= connector.authorizationUrl %>
