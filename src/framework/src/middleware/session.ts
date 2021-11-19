@@ -9,7 +9,7 @@ export interface ISessionOptions {
   startUrlPath: string;
   getTenantId: (ctx: FusebitContext) => string;
   commitUrlPath: string;
-  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) => string;
+  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) => string;
 }
 
 interface IFusebitJwt {
@@ -23,7 +23,7 @@ export const defaultSessionOptions: ISessionOptions = {
   startUrlPath: '/api/service/start',
   getTenantId: () => uuidv4(),
   commitUrlPath: '/api/service/commit',
-  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string) =>
+  getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) =>
     `${ctx.state.params.baseUrl}/api/health?install=${installId}&tenant=${tenantId}`,
 };
 
@@ -53,6 +53,7 @@ export const commit = (options: ISessionOptions) => async (ctx: FusebitContext) 
   const sessionId = ctx.query.session;
   const token = ctx.state.params.functionAccessToken;
 
+  // Start the commit process
   let result = await superagent
     .post(`${baseUrl}/session/${sessionId}/commit`)
     .set('Authorization', `Bearer ${token}`)
@@ -60,9 +61,15 @@ export const commit = (options: ISessionOptions) => async (ctx: FusebitContext) 
 
   const { targetUrl } = result.body;
 
-  result = await superagent.get(targetUrl).set('Authorization', `Bearer ${token}`);
+  // Get the session while the commit is going to grab the tenant id; try multiple times in case there's a
+  // race.
+  do {
+    result = await superagent.get(`${baseUrl}/session/${sessionId}/`).set('Authorization', `Bearer ${token}`);
+  } while (!result.body.output);
+  const tenantId = result.body.tags['fusebit.tenantId'];
+  const installId = result.body.output.entityId;
 
-  const finalUrl = options.getFinalRedirectUrl(ctx, result.body.id, result.body.tags['fusebit.tenantId']);
+  const finalUrl = options.getFinalRedirectUrl(ctx, installId, tenantId, targetUrl);
   ctx.redirect(finalUrl);
 };
 
@@ -86,9 +93,9 @@ const health = () => async (ctx: FusebitContext, next: Next) => {
 
 export const session = (router: Internal.Router, options: Partial<ISessionOptions> = defaultSessionOptions) => {
   const opts: ISessionOptions = { ...defaultSessionOptions, ...options };
-  router.get(`${options.startUrlPath}`, start(opts));
-  router.get(`${options.commitUrlPath}`, commit(opts));
-  router.get(`${options.healthUrlPath}`, health());
+  router.get(`${opts.startUrlPath}`, start(opts));
+  router.get(`${opts.commitUrlPath}`, commit(opts));
+  router.get(`${opts.healthUrlPath}`, health());
 };
 
 // Share the handlers in case the caller wants to make use of them directly.
