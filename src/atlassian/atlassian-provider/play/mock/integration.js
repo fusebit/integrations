@@ -5,7 +5,7 @@ const superagent = require('superagent');
 const integration = new Integration();
 const router = integration.router;
 
-const connectorName = 'atlassian-test-connector';
+const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);

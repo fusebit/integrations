@@ -42,7 +42,7 @@ const getServicesWithPlay = async () => {
     }
   }
 
-  await $`lerna run play-install`;
+  await $`lerna run play:install --concurrency 1`;
   await $`lerna run play`;
   const slack_payload = {
     text: ':alarm_clock: Playwright results just came in :alarm_clock:',
