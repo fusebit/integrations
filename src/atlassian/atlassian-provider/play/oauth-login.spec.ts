@@ -12,6 +12,8 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
+import { doOAuthLogin } from './actions';
+
 export const OAUTH_SCOPES = [
   'read:jira-user',
   'read:jira-work',
@@ -66,15 +68,7 @@ test('basic test', async ({ page }) => {
   // Open the browser to the session url
   await page.goto(targetUrl);
 
-  // Perform the login
-  await page.waitForSelector('text=Log in to your account');
-  await page.fill('#username', Constants.OAUTH_USERNAME);
-  await page.click('button:has-text("Continue")');
-  await page.fill('[placeholder="Enter password"]', Constants.OAUTH_PASSWORD);
-  await page.click('button:has-text("Log in")');
-
-  // Accept the permissions page
-  await page.click('button:has-text("Accept")');
+  await doOAuthLogin(page);
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();
