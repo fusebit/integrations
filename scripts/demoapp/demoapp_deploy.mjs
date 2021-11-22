@@ -6,17 +6,25 @@ const { dirname } = require('path');
   // Install the toolchain
   await $`npm install -g @fusebit/cli`;
   // Import credentials
-  await $`echo $FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE | base64 -d | fuse profile import demoapp.stage`;
-  await $`echo $FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API | base64 -d | fuse profile import demoapp.prod`;
+  // await $`echo $FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE | base64 -d | fuse profile import demoapp.stage`;
+  // await $`echo $FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API | base64 -d | fuse profile import demoapp.prod`;
 
   // Deploy to each profile
-  for (const profile of ['demoapp.stage', 'demoapp.prod']) {
+  for (const profile of ['demoapp.stg.cicd', 'demoapp.cicd']) {
     await $`fuse profile set ${profile}`;
-    const integration_templates = ['slack-bot'];
+    if (!process.env.INTEGRATION_TEMPLATES) {
+      return 0;
+    }
+    const integration_templates = process.env.INTEGRATION_TEMPLATES.split(',');
+
     const replaceKeys = {};
     for (const integration_template of integration_templates) {
-      let integrationLayout = await $`fuse integration init -d placeholder -f ${integration_template} -o json  | jq`;
-      integrationLayout = JSON.parse(integrationLayout);
+      let integrationLayout = await $`fuse integration init -d placeholder -f ${integration_template} -o json | jq`;
+      try {
+        integrationLayout = JSON.parse(integrationLayout);
+      } catch (e) {
+        continue;
+      }
       replaceKeys[integrationLayout.integrations[0].id] = `${integration_template}-integration`;
       for (const component of integrationLayout.integrations[0].data.components) {
         if (component.entityType !== 'connector') {
@@ -31,16 +39,16 @@ const { dirname } = require('path');
       integrationLayout = JSON.parse(integrationLayout);
       for (const index in integrationLayout.connectors) {
         const config = await getStorage(`config/${integration_template}/${integrationLayout.connectors[index].id}`);
-        console.log(config);
         integrationLayout.connectors[index].data = mergeDeep(integrationLayout.connectors[index].data, config, true);
       }
       await $`mkdir integration`;
       await writeDirectory('integration', integrationLayout.integrations[0]);
-      await $`cd integration && npm run deploy`;
+      await $`cd integration && npm run deploy --confirm false`;
+      await $`rm -rf integration`;
       for (const connector of integrationLayout.connectors) {
         await $`mkdir connector`;
         await writeDirectory('connector', connector);
-        await $`cd connector && npm run deploy`;
+        await $`cd connector && npm run deploy --confirm false`;
         await $`rm -rf connector`;
       }
     }

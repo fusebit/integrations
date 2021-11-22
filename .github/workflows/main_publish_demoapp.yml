@@ -1,0 +1,23 @@
+on: 'workflow_dispatch'
+name: Manual - PROD - SDK Docs
+jobs:
+  publish_prod:
+    name: Manual - PROD - SDK Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install toolchain
+        run: npm install -g zx
+      - name: Deploy
+        run: ./scripts/demoapp/demoapp_deploy.sh
+        env:
+          FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
+          INTEGRATION_TEMPLATES: ''
