@@ -10,4 +10,7 @@ export const doOAuthLogin = async (page: Page) => {
   await page.fill('[placeholder="Enter password"]', Constants.OAUTH_PASSWORD);
   page.click('button:has-text("Log in")');
   await Promise.all([page.waitForNavigation(), page.click('button:has-text("Log in")')]);
+
+  // Accept the permissions page
+  await page.click('button:has-text("Accept")');
 };
