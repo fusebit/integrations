@@ -14,7 +14,7 @@
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore"
   },
   "dependencies": {
-    "@playwright/test": "^1.15.2",
+    "@playwright/test": "^1.16.3",
     "express": "^4.17.1",
     "superagent": "^6.1.0"
   },
