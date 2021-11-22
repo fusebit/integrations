@@ -54,12 +54,12 @@ $.verbose = false;
       }
       await $`mkdir integration`;
       await writeDirectory('integration', integrationLayout.integrations[0]);
-      await $`cd integration && npm run deploy  --quiet true`;
+      await $`cd integration && npm run deploy`;
       await $`rm -rf integration`;
       for (const connector of integrationLayout.connectors) {
         await $`mkdir connector`;
         await writeDirectory('connector', connector);
-        await $`cd connector && npm run deploy --quiet true`;
+        await $`cd connector && npm run deploy`;
         await $`rm -rf connector`;
       }
     }
