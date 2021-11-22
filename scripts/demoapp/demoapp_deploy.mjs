@@ -45,6 +45,7 @@ const { dirname } = require('path');
       for (const replaceKey of Object.keys(replaceKeys)) {
         integrationLayout = integrationLayout.replace(new RegExp(replaceKey, 'g'), replaceKeys[replaceKey]);
       }
+      integrationLayout = integrationLayout.replace(new RegExp('-d .', g), '-d . --quiet true');
       integrationLayout = JSON.parse(integrationLayout);
       for (const index in integrationLayout.connectors) {
         const config = await getStorage(`config/${integration_template}/${integrationLayout.connectors[index].id}`);
