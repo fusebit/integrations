@@ -123,13 +123,13 @@ const writeDirectory = async (path, spec) => {
   const cwd = path || process.cwd();
 
   // Write the version, if present
-  await writeFile(join(cwd, FusebitStateFile), JSON.stringify({ version: spec.version }));
+  await fs.writeFile(join(cwd, FusebitStateFile), JSON.stringify({ version: spec.version }));
   delete spec.version;
 
   // Write all of the files in the specification
   await Promise.all(
     Object.entries(spec.data.files).map(async ([filename, contents]) => {
-      await writeFile(join(cwd, filename), contents);
+      await fs.writeFile(join(cwd, filename), contents);
     })
   );
 
