@@ -2,6 +2,7 @@
 const fs = require('fs/promises');
 const { join } = require('path');
 const { dirname } = require('path');
+$.verbose = false;
 (async () => {
   // Install the toolchain
   await $`npm install -g @fusebit/cli`;
@@ -45,6 +46,7 @@ const { dirname } = require('path');
       for (const replaceKey of Object.keys(replaceKeys)) {
         integrationLayout = integrationLayout.replace(new RegExp(replaceKey, 'g'), replaceKeys[replaceKey]);
       }
+      integrationLayout = integrationLayout.replace(new RegExp('-d .', 'g'), '-d . --quiet true');
       integrationLayout = JSON.parse(integrationLayout);
       for (const index in integrationLayout.connectors) {
         const config = await getStorage(`config/${integration_template}/${integrationLayout.connectors[index].id}`);
@@ -52,12 +54,12 @@ const { dirname } = require('path');
       }
       await $`mkdir integration`;
       await writeDirectory('integration', integrationLayout.integrations[0]);
-      await $`cd integration && npm run deploy --confirm false`;
+      await $`cd integration && npm run deploy`;
       await $`rm -rf integration`;
       for (const connector of integrationLayout.connectors) {
         await $`mkdir connector`;
         await writeDirectory('connector', connector);
-        await $`cd connector && npm run deploy --confirm false`;
+        await $`cd connector && npm run deploy`;
         await $`rm -rf connector`;
       }
     }
@@ -123,13 +125,13 @@ const writeDirectory = async (path, spec) => {
   const cwd = path || process.cwd();
 
   // Write the version, if present
-  await writeFile(join(cwd, FusebitStateFile), JSON.stringify({ version: spec.version }));
+  await fs.writeFile(join(cwd, FusebitStateFile), JSON.stringify({ version: spec.version }));
   delete spec.version;
 
   // Write all of the files in the specification
   await Promise.all(
     Object.entries(spec.data.files).map(async ([filename, contents]) => {
-      await writeFile(join(cwd, filename), contents);
+      await fs.writeFile(join(cwd, filename), contents);
     })
   );
 
