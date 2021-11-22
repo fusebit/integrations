@@ -7,7 +7,7 @@ class Utilities {
 
   public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => {
     const response = await superagent
-      .get(`${ctx.state.params.baseUrl}/install?tag=${this.TENANT_TAG_NAME}=${encodeURIComponent(tenantId)}`)
+      .get(`${ctx.state.params.baseUrl}/install?tag=${this.TENANT_TAG_NAME}%3D${encodeURIComponent(tenantId)}`)
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     const body = response.body;
 
