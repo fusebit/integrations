@@ -51,6 +51,13 @@ jobs:
         env:
           README_API_KEY: ${{ secrets.README_COM_API_KEY }}
           README_HIDDEN: false
+      - name: Deploy
+        run: ./scripts/demoapp/demoapp_deploy.sh
+        env:
+          FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
+          INTEGRATION_TEMPLATES: 'slack-bot'
+          FUSE_PROFILES: demoapp.stage
 
   bump_minor:
     if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
@@ -99,6 +106,13 @@ jobs:
         env:
           README_API_KEY: ${{ secrets.README_COM_API_KEY }}
           README_HIDDEN: false
+      - name: Deploy
+        run: ./scripts/demoapp/demoapp_deploy.sh
+        env:
+          FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
+          INTEGRATION_TEMPLATES: 'slack-bot'
+          FUSE_PROFILES: demoapp.stage
 
   bump_major:
     if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
@@ -147,3 +161,10 @@ jobs:
         env:
           README_API_KEY: ${{ secrets.README_COM_API_KEY }}
           README_HIDDEN: false
+      - name: Deploy
+        run: ./scripts/demoapp/demoapp_deploy.sh
+        env:
+          FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE }}
+          FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
+          INTEGRATION_TEMPLATES: 'slack-bot'
+          FUSE_PROFILES: demoapp.stage

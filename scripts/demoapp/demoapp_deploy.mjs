@@ -6,11 +6,20 @@ const { dirname } = require('path');
   // Install the toolchain
   await $`npm install -g @fusebit/cli`;
   // Import credentials
-  await $`echo $FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE | base64 -d | fuse profile import demoapp.stage`;
-  await $`echo $FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API | base64 -d | fuse profile import demoapp.prod`;
-
+  if (process.env.CI === 'true') {
+    await $`echo $FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE | base64 -d | fuse profile import demoapp.stage`;
+    await $`echo $FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API | base64 -d | fuse profile import demoapp.prod`;
+  }
+  let fuse_profiles = [];
+  if (!process.env.FUSE_PROFILES) {
+    console.log(`
+        Unable to detect fusebit profiles to deploy to, please set the FUSE_PROFILES variable.
+    `);
+  } else {
+    fuse_profiles = process.env.FUSE_PROFILES.split(',');
+  }
   // Deploy to each profile
-  for (const profile of ['demoapp.stage', 'demoapp.prod']) {
+  for (const profile of fuse_profiles) {
     await $`fuse profile set ${profile}`;
     if (!process.env.INTEGRATION_TEMPLATES) {
       return 0;

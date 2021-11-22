@@ -1,8 +1,8 @@
 on: 'workflow_dispatch'
-name: Manual - PROD - SDK Docs
+name: Manual - PROD - Demo App
 jobs:
   publish_prod:
-    name: Manual - PROD - SDK Docs
+    name: Manual - PROD - Demo App
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
@@ -20,4 +20,5 @@ jobs:
         env:
           FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE: ${{ secrets.FUSE_PROFILE_DEMOAPP_321_US_WEST_2_STAGE }}
           FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
-          INTEGRATION_TEMPLATES: ''
+          INTEGRATION_TEMPLATES: 'slack-bot'
+          FUSE_PROFILES: demoapp.prod
