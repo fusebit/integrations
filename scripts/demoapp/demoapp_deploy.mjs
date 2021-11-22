@@ -52,12 +52,11 @@ const { dirname } = require('path');
       }
       await $`mkdir integration`;
       await writeDirectory('integration', integrationLayout.integrations[0]);
-      await $`cd integration && npm run deploy --confirm false`;
-      await $`rm -rf integration`;
+      await $`cd integration && npm run deploy`;
       for (const connector of integrationLayout.connectors) {
         await $`mkdir connector`;
         await writeDirectory('connector', connector);
-        await $`cd connector && npm run deploy --confirm false`;
+        await $`cd connector && npm run deploy`;
         await $`rm -rf connector`;
       }
     }
