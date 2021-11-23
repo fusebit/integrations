@@ -1,8 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { LinearClient as Client } from '@linear/sdk';
 import { Internal } from '@fusebit-int/framework';
-
-type LinearFusebitClient = Client & { fusebit?: any };
 
 interface ILinearWebhookConfig {
   teamId?: string;
@@ -10,15 +7,7 @@ interface ILinearWebhookConfig {
   resourceTypes: string[];
 }
 
-class LinearWebhook implements Internal.Types.WebhookClient<any> {
-  constructor(
-    private ctx: Internal.Types.Context,
-    private lookupKey: string,
-    private installId: string,
-    private config: Internal.Types.IInstanceConnectorConfig,
-    private client: LinearFusebitClient
-  ) {}
-
+class LinearWebhook extends Internal.WebhookClient {
   public create = async (args: ILinearWebhookConfig) => {
     const webhookId = uuidv4();
     const params = this.ctx.state.params;
@@ -32,7 +21,7 @@ class LinearWebhook implements Internal.Types.WebhookClient<any> {
     return { success: results.success, webhook: webhookId };
   };
 
-  public list = async () => {
+  public list = async (): Promise<any> => {
     const results = await this.client.webhooks();
     return { webhooks: results.nodes };
   };
@@ -48,7 +37,7 @@ class LinearWebhook implements Internal.Types.WebhookClient<any> {
   public deleteAll = async () => {
     const webhooks = await (await this.list()).webhooks;
     await Promise.all(
-      webhooks.map((webhook) => {
+      webhooks.map((webhook: any) => {
         this.delete(webhook.id);
       })
     );
