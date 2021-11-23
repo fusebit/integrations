@@ -10,7 +10,7 @@
     },
     "scope": "",
     "clientId": "<% global.consts.random %>",
-    "clientSecret": "<%g lobal.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,
