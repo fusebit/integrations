@@ -16,8 +16,7 @@ export const sampleEvent = {
   conversation: {
     conversationType: 'personal',
     tenantId: '56c94ff1-0f49-4b7d-a9b4-c2a1063d05c7',
-    id:
-      'a:1cTrDNWhStb608c4ZKbICUuIyW-s4DFbhuNNVNHxPkIWa54g3JDzbE0UruioRucAvVU55SHgiNiyDxw3k1rFgXhZxaXJm7hJN5ItAqc0JEzfERqwJDlq7nMznZpO49YNs',
+    id: 'a:1cTrDNWhStb608c4ZKbICUuIyW-s4DFbhuNNVNHxPkIWa54g3JDzbE0UruioRucAvVU55SHgiNiyDxw3k1rFgXhZxaXJm7hJN5ItAqc0JEzfERqwJDlq7nMznZpO49YNs',
   },
   recipient: { id: '28:16a42606-f57e-444e-9a97-3d703d05f436', name: 'IAmBot' },
   entities: [

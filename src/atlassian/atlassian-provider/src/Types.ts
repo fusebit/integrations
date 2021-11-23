@@ -36,7 +36,6 @@ export interface IAtlassianAccessibleResource {
 
 export type IAtlassianAccessibleResources = IAtlassianAccessibleResource[];
 
-
 export interface IWebhookDetail {
   jqlFilter: string;
   events: string[];
@@ -54,7 +53,7 @@ export interface IListWebhookResult {
   startAt: number;
   total: number;
   isLast: boolean;
-  values: IFullWebhookDetail[]
+  values: IFullWebhookDetail[];
 }
 
 export interface IWebhookRegisterResult {

@@ -1,14 +1,14 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
 import {
-  IAtlassianAccessibleResource, IFullWebhookDetail,
+  IAtlassianAccessibleResource,
+  IFullWebhookDetail,
   IListWebhookResult,
   IWebhookDetail,
   IWebhookRegisterResponses,
 } from './Types';
 
 export class AtlassianWebhook extends Internal.WebhookClient {
-
   protected getAtlassianUrl(cloudId: string) {
     return `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/webhook`;
   }
@@ -76,9 +76,9 @@ export class AtlassianWebhook extends Internal.WebhookClient {
     let isLast = false;
     let next = 0;
     do {
-      const listResponse = await this.list(cloudId, {next});
+      const listResponse = await this.list(cloudId, { next });
       const webhooks = listResponse.values;
-      const webhook = webhooks.find(webhook => webhook.id == webhookId);
+      const webhook = webhooks.find((webhook) => webhook.id == webhookId);
       if (webhook) {
         return webhook;
       }

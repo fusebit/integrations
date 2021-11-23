@@ -45,16 +45,12 @@ describe('Microsoft Bot Provider', () => {
     mockedClient.setProcessActivityExpectedBody(req.body.data);
 
     const res = {} as WebResponse;
-    await client.processActivity(
-      req,
-      res,
-      (): Promise<any> => {
-        expect(req.body).toBe(req.body);
-        expect(req.body.data).toBeDefined();
-        expect(req.body.webhookEventId).toBeDefined();
-        return Promise.resolve(true);
-      }
-    );
+    await client.processActivity(req, res, (): Promise<any> => {
+      expect(req.body).toBe(req.body);
+      expect(req.body.data).toBeDefined();
+      expect(req.body.webhookEventId).toBeDefined();
+      return Promise.resolve(true);
+    });
 
     expect(req.body).toBe(req.body);
     expect(req.body.data).toBeDefined();

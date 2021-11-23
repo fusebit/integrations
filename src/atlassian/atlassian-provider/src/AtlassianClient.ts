@@ -54,4 +54,4 @@ class AtlassianClient {
   }
 }
 
-export {AtlassianClient};
+export { AtlassianClient };
