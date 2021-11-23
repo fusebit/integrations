@@ -1,35 +1,13 @@
 import superagent from 'superagent';
-
 import { Internal } from '@fusebit-int/framework';
+import {
+  IAtlassianAccessibleResource, IFullWebhookDetail,
+  IListWebhookResult,
+  IWebhookDetail,
+  IWebhookRegisterResponses,
+} from './Types';
 
-import { AtlassianClient } from './AtlassianProvider';
-
-interface IWebhookDetail {
-  jqlFilter: string;
-  events: string[];
-  fieldIdsFilter?: string[];
-  issuePropertyKeysFilter?: string[];
-}
-
-interface IWebhookRegisterResult {
-  createdWebhookId: number;
-}
-
-type IWebhookRegisterFailed = { errors: string[] };
-type IWebhookRegisterResponse = IWebhookRegisterResult | IWebhookRegisterFailed;
-
-interface IWebhookRegisterResponses {
-  webhookRegistrationResult: IWebhookRegisterResponse[];
-}
-
-export class Webhook {
-  protected ctx: Internal.Types.Context;
-  protected client: AtlassianClient;
-
-  constructor(ctx: Internal.Types.Context, client: AtlassianClient) {
-    this.ctx = ctx;
-    this.client = client;
-  }
+export class AtlassianWebhook extends Internal.WebhookClient {
 
   protected getAtlassianUrl(cloudId: string) {
     return `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/webhook`;
@@ -40,32 +18,21 @@ export class Webhook {
     return `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.client.fusebit.connectorId}/api/fusebit/webhook/event`;
   }
 
-  public async register(cloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> {
-    const response = await superagent
-      .post(this.getAtlassianUrl(cloudId))
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
-      .send({ webhooks, url: this.getInboundUrl() });
-
-    return response.body;
-  }
-
   public async extendAll() {
     const resources = await this.client.getAccessibleResources();
     return await Promise.all(
-      resources.map(async (resource) => {
+      resources.map(async (resource: IAtlassianAccessibleResource) => {
         const cloudId = resource.id;
         const list = await this.list(cloudId);
         return this.extend(
           cloudId,
-          list.values.map((hook: { id: string }) => hook.id)
+          list.values.map((hook) => hook.id)
         );
       })
     );
   }
 
-  public async extend(cloudId: string, webhookIds: string[]) {
+  public async extend(cloudId: string, webhookIds: number[]) {
     return superagent
       .put(`${this.getAtlassianUrl(cloudId)}/refresh`)
       .set('Accept', 'application/json')
@@ -74,7 +41,18 @@ export class Webhook {
       .send({ webhookIds });
   }
 
-  public async list(cloudId: string, options?: { next?: number; count?: number }) {
+  public create = async (cloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> => {
+    const response = await superagent
+      .post(this.getAtlassianUrl(cloudId))
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
+      .send({ webhooks, url: this.getInboundUrl() });
+
+    return response.body;
+  };
+
+  public list = async (cloudId: string, options?: { next?: number; count?: number }): Promise<IListWebhookResult> => {
     const url = new URL(this.getAtlassianUrl(cloudId));
 
     if (options?.next) {
@@ -92,9 +70,24 @@ export class Webhook {
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`);
 
     return response.body;
-  }
+  };
 
-  public async unregister(cloudId: string, webhookIds: number[]) {
+  public get = async (cloudId: string, webhookId: number): Promise<IFullWebhookDetail | void> => {
+    let isLast = false;
+    let next = 0;
+    do {
+      const listResponse = await this.list(cloudId, {next});
+      const webhooks = listResponse.values;
+      const webhook = webhooks.find(webhook => webhook.id == webhookId);
+      if (webhook) {
+        return webhook;
+      }
+      isLast = listResponse.isLast;
+      next = listResponse.startAt + listResponse.total;
+    } while (!isLast);
+  };
+
+  public delete = async (cloudId: string, webhookIds: number[]) => {
     const response = await superagent
       .delete(this.getAtlassianUrl(cloudId))
       .set('Accept', 'application/json')
@@ -103,19 +96,19 @@ export class Webhook {
       .send({ webhookIds });
 
     return response.body;
-  }
+  };
 
-  public async unregisterAll() {
+  public deleteAll = async () => {
     const resources = await this.client.getAccessibleResources();
     return await Promise.all(
-      resources.map(async (resource) => {
+      resources.map(async (resource: IAtlassianAccessibleResource) => {
         const cloudId = resource.id;
         const list = await this.list(cloudId);
-        return this.unregister(
+        return this.delete(
           cloudId,
-          list.values.map((hook: { id: string }) => hook.id)
+          list.values.map((hook) => hook.id)
         );
       })
     );
-  }
+  };
 }

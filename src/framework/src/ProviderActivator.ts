@@ -2,12 +2,25 @@ import superagent from 'superagent';
 import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 
-export abstract class WebhookClient<T> {
-  abstract create: (...args: any[]) => Promise<T | void>;
-  abstract get: (...args: any[]) => Promise<T>;
+export abstract class WebhookClient<C = any> {
+  abstract create: (...args: any[]) => Promise<any>;
+  abstract get: (...args: any[]) => Promise<any>;
   abstract list: (...args: any[]) => Promise<any>;
-  abstract delete: (...args: any[]) => Promise<void>;
-  abstract deleteAll: (...args: any[]) => Promise<void>;
+  abstract delete: (...args: any[]) => Promise<any>;
+  abstract deleteAll: (...args: any[]) => Promise<any>;
+
+  constructor(ctx: FusebitContext, lookupKey: string, installId: string, config: IInstanceConnectorConfig, client: C) {
+    this.ctx = ctx;
+    this.client = client;
+    this.config = config;
+    this.lookupKey = lookupKey;
+    this.installId = installId;
+  }
+  protected ctx: FusebitContext;
+  protected lookupKey: string;
+  protected installId: string;
+  protected config: IInstanceConnectorConfig;
+  protected client: C;
 }
 
 export interface Token {
@@ -21,7 +34,7 @@ export default abstract class ProviderActivator<T> {
     ctx: FusebitContext,
     lookupKey: string,
     installId: string
-  ): Promise<WebhookClient<any>> => {
+  ): Promise<WebhookClient> => {
     ctx.throw('Dynamic Webhooks are not supported for this connector');
   };
 

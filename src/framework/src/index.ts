@@ -16,7 +16,7 @@ import * as Storage_ from './Storage';
 import { Form as Form_ } from './Form';
 import { Handler as Handler_ } from './Handler';
 import * as Middleware_ from './middleware';
-import ProviderActivator_ from './ProviderActivator';
+import ProviderActivator_, { WebhookClient } from './ProviderActivator';
 import { Connector, Integration } from './client/index';
 
 // Objects
@@ -29,6 +29,7 @@ const Internal = {
   Middleware: Middleware_,
   Storage: Storage_,
   ProviderActivator: ProviderActivator_,
+  WebhookClient: WebhookClient,
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
 module Internal {
@@ -49,7 +50,7 @@ module Internal {
     export type Next = NextType;
     export interface IConfig extends IConfig_ {}
     export interface IOnStartup extends IOnStartup_ {}
-    export type WebhookClient<T> = Integration.Types.WebhookClient<T>;
+    export type WebhookClient = Integration.Types.WebhookClient;
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
   }
 }
