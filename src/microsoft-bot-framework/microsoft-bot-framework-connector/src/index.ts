@@ -17,25 +17,28 @@ class ServiceConnector extends Connector {
   public constructor() {
     super();
 
-    this.router.use((ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
-      const { config: cfg } = ctx.state.manager;
-      cfg.configuration.constants = {
-        urls: {
-          production: {
-            tokenUrl: TOKEN_URL,
+    this.router.use(
+      (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
+        const { config: cfg } = ctx.state.manager;
+        cfg.configuration.constants = {
+          urls: {
+            production: {
+              tokenUrl: TOKEN_URL,
+            },
+            webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
           },
-          webhookUrl: `${ctx.state.params.baseUrl}/api/fusebit_webhook_event`,
-        },
-      };
+        };
 
-      // Make sure there is a sensible default value for tokenUrl, but still allow it to be
-      // overwritten if necessary.
-      if (cfg.configuration.mode?.useProduction) {
-        cfg.configuration.tokenUrl = cfg.configuration.tokenUrl || cfg.configuration.constants.urls.production.tokenUrl;
+        // Make sure there is a sensible default value for tokenUrl, but still allow it to be
+        // overwritten if necessary.
+        if (cfg.configuration.mode?.useProduction) {
+          cfg.configuration.tokenUrl =
+            cfg.configuration.tokenUrl || cfg.configuration.constants.urls.production.tokenUrl;
+        }
+
+        return next();
       }
-
-      return next();
-    });
+    );
 
     this.router.get(
       '/api/configure',
