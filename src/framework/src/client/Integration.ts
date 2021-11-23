@@ -23,7 +23,7 @@ class Webhook extends EntityBase.WebhookBase {
    *    // use client methods . . .
    * });
    */
-  public getSdkByTenant = async <T, C>(
+  public getSdkByTenant = async (
     ctx: FusebitContext,
     connectorName: string,
     tenantId: string
