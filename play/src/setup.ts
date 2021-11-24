@@ -82,6 +82,7 @@ const makeConnector = (configuration: IConfiguration) => ({
       signingSecret: configuration.signingSecret,
       audience: configuration.audience,
       extraParams: configuration.extraParams,
+      accessTokenExpirationBuffer: 500,
     },
   },
 });
