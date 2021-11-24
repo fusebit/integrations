@@ -11,7 +11,11 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
+import { authenticate } from './actions';
+
 let account: IAccount;
+
+const OAUTH_SCOPES = ['identity', 'read'].join(' ');
 
 test.beforeAll(async () => {
   account = getAccount();
@@ -41,10 +45,6 @@ test.beforeAll(async () => {
   );
 });
 
-test.beforeEach(async ({ page }) => {
-  // Execute test prerequisites here
-});
-
 test('reddit-provider test', async ({ page }) => {
   const { app, url: localUrl } = await startHttpServer();
 
@@ -52,17 +52,8 @@ test('reddit-provider test', async ({ page }) => {
   app.use(called);
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, Constants.INTEGRATION_ID, `${localUrl}/oauthTest`);
-  // Open the browser to the session url
-  await page.goto(targetUrl);
 
-  // Perform the login
-  await page.click('input[name="username"]');
-  await page.fill('input[name="username"]', Constants.OAUTH_USERNAME);
-  await page.fill('input[name="password"]', Constants.OAUTH_PASSWORD);
-  await page.click('button:has-text(" Log In ")');
-
-  // Accept the permissions page
-  await page.click('input[name="authorize"]');
+  authenticate({page, targetUrl});
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();

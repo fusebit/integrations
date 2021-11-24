@@ -23,7 +23,9 @@ class RedditOAuthEngine extends OAuthEngine {
 
   public async getAuthorizationUrl(ctx: Connector.Types.Context) {
     const defaultAuthorizationUrl = await super.getAuthorizationUrl(ctx);
-    return `${defaultAuthorizationUrl}&duration=permanent`;
+    const url = new URL(defaultAuthorizationUrl);
+    url.searchParams.set('duration', 'permanent');
+    return url.toString();
   }
 }
 
