@@ -8,7 +8,10 @@ export default class RedditProvider extends Internal.ProviderActivator<FusebitRe
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitRedditClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitRedditClient = new snoowrap({ userAgent: 'Fusebit Connector', accessToken: credentials.access_token });
+    const client: FusebitRedditClient = new snoowrap({
+      userAgent: 'Fusebit Connector',
+      accessToken: credentials.access_token,
+    });
     client.fusebit = { credentials };
     return client;
   }

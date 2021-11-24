@@ -26,7 +26,7 @@ router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('i
   const me = await redditClient.getMe();
   const { link_karma, comment_karma } = me;
   ctx.body = {
-    message: `This tenant has ${link_karma} karma from submitted posts and ${comment_karma} karma from comments.`
+    message: `This tenant has ${link_karma} karma from submitted posts and ${comment_karma} karma from comments.`,
   };
 });
 

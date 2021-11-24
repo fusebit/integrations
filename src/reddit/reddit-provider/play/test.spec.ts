@@ -85,9 +85,7 @@ test('reddit-provider test', async ({ page }) => {
 
   // TODO: Perform additional checks here: Use connector SDK, Webhooks, etc.
   await waitForWebhook();
-
 });
-
 
 const waitForWebhook = async () => {
   const storageKey = 'test/reddit/webhook/*';
