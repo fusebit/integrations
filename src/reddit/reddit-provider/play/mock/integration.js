@@ -5,7 +5,8 @@ const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  // TODO: Perform SDK check here
+  const me = await sdk.getMe();
+  ctx.body = {me};
 });
 
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {

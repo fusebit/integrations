@@ -1,4 +1,4 @@
-import { OAuthEngine } from '@fusebit-int/oauth-connector/libc';
+import { OAuthEngine } from '@fusebit-int/oauth-connector';
 import { Connector } from '@fusebit-int/framework';
 import superagent from 'superagent';
 
@@ -19,6 +19,11 @@ class RedditOAuthEngine extends OAuthEngine {
     } catch (error) {
       throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
     }
+  }
+
+  public async getAuthorizationUrl(ctx: Connector.Types.Context) {
+    const defaultAuthorizationUrl = await super.getAuthorizationUrl(ctx);
+    return `${defaultAuthorizationUrl}&duration=permanent`;
   }
 }
 
