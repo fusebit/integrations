@@ -2,8 +2,6 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import RedditOAuthEngine from './Engine';
 
-import { Service } from './Service';
-
 const TOKEN_URL = 'https://www.reddit.com/api/v1/access_token';
 const AUTHORIZATION_URL = 'https://www.reddit.com/api/v1/authorize';
 const REVOCATION_URL = 'https://www.reddit.com/api/v1/revoke_token';
@@ -11,11 +9,6 @@ const SERVICE_NAME = 'Reddit';
 
 class ServiceConnector extends OAuthConnector {
   protected readonly OAuthEngine = RedditOAuthEngine;
-  static Service = Service;
-
-  protected createService() {
-    return new ServiceConnector.Service();
-  }
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
