@@ -25,7 +25,9 @@ export const runProxyTest = async (
   page.click('button:has-text("Create")');
 
   // Click button:has-text("Edit")
-  await page.click('button:has-text("Edit")');
+  await page.click('button:has-text("Edit")', {
+    timeout: 180000,
+  });
 
   // Click button:has-text("Run")
   await page.click('button:has-text("Run")');
