@@ -16,15 +16,7 @@ interface PDWebhookFilter {
   id?: string;
 }
 
-export default class PagerDutyWebhook implements Internal.Types.WebhookClient<any> {
-  constructor(
-    private ctx: Internal.Types.Context,
-    private lookupKey: string,
-    private installId: string,
-    private config: Internal.Types.IInstanceConnectorConfig,
-    private client: FusebitPagerDutyClient
-  ) {}
-
+export default class PagerDutyWebhook extends Internal.WebhookClient {
   /**
    *
    * @param args The configuration for the pagerduty webhook.

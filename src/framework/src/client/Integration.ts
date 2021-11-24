@@ -23,11 +23,11 @@ class Webhook extends EntityBase.WebhookBase {
    *    // use client methods . . .
    * });
    */
-  public getSdkByTenant = async <T>(
+  public getSdkByTenant = async (
     ctx: FusebitContext,
     connectorName: string,
     tenantId: string
-  ): Promise<Integration.Types.WebhookClient<T>> => {
+  ): Promise<Integration.Types.WebhookClient> => {
     const installs = await this.utilities.getTenantInstalls(ctx, tenantId);
 
     if (!installs || !installs.length) {
@@ -54,11 +54,11 @@ class Webhook extends EntityBase.WebhookBase {
    *    // use client methods . . .
    * });
    */
-  public getSdk = async <T extends any, W extends Integration.Types.WebhookClient<T>>(
+  public getSdk = async (
     ctx: FusebitContext,
     connectorName: string,
     installId: string
-  ): Promise<W> => {
+  ): Promise<Integration.Types.WebhookClient> => {
     return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
   };
 }
@@ -189,7 +189,7 @@ namespace Integration {
     export type Storage = EntityBase.StorageDefault;
     export type Service = _Service;
     export type Webhook = _Webhook;
-    export type WebhookClient<T> = _WebhookClient<T>;
+    export type WebhookClient = _WebhookClient;
   }
 }
 
