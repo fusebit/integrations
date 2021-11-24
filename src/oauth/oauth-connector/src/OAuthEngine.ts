@@ -200,9 +200,10 @@ class OAuthEngine {
 
   protected async ensureLocalAccessToken(ctx: Internal.Types.Context, lookupKey: string, tokenRw: any) {
     let token: IOAuthToken = await tokenRw.get(lookupKey);
+    const accessTokenExpirationBuffer = this.cfg.accessTokenExpirationBuffer || 0;
     if (
       token.access_token &&
-      (token.expires_at === undefined || token.expires_at > Date.now() + this.cfg.accessTokenExpirationBuffer)
+      (token.expires_at === undefined || token.expires_at > Date.now() + accessTokenExpirationBuffer)
     ) {
       return token;
     }
