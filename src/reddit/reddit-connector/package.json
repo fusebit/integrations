@@ -52,6 +52,5 @@
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
-  },
-  "gitHead": "51ae1288e7f83adf4fb965799bcddf0711f58d5b"
+  }
 }
