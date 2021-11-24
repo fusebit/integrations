@@ -64,7 +64,7 @@ const getServicesWithPlay = async () => {
       break;
     }
     for (const item of cons.items) {
-      await $`fuse integration rm ${item.id} -q true`;
+      await $`fuse connector rm ${item.id} -q true`;
     }
   } while (!success_con);
 
