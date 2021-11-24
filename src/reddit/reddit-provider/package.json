@@ -1,10 +1,10 @@
 {
-  "name": "@fusebit-int/oauth-provider",
+  "name": "@fusebit-int/reddit-provider",
   "version": "7.17.9",
-  "description": "Fusebit OAuth 2.0 Provider",
+  "description": "Reddit provider",
   "keywords": [
     "Fusebit",
-    "OAuth"
+    "Reddit"
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
@@ -26,13 +26,23 @@
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
+    "play": "playwright test -j 1",
+    "play:headed": "playwright test --headed",
+    "play:install": "playwright install"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
   },
+  "peerDependencies": {
+    "@fusebit-int/framework": "*"
+  },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.17.9",
+    "@fusebit-int/framework": ">=7.17.9",
+    "@fusebit-int/play": ">=7.17.9",
+    "@playwright/test": "^1.16.3",
+    "@types/node": "^16.9.2",
+    "@types/request": "^2.48.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
@@ -40,10 +50,11 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
-    "typescript": "^3.8.0"
+    "typescript": "^4.4.3"
   },
-  "peerDependencies": {
-    "@fusebit-int/framework": "*"
+  "dependencies": {
+    "@fusebit-int/reddit-connector": "7.17.9",
+    "snoowrap": "^1.23.0"
   },
   "gitHead": "51ae1288e7f83adf4fb965799bcddf0711f58d5b"
 }

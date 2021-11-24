@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Reddit"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "redditConnector",
+      "skip": false,
+      "provider": "@fusebit-int/reddit-provider",
+      "entityId": "<% global.entities.redditConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

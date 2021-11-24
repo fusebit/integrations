@@ -95,11 +95,22 @@ class OAuthEngine {
    * Assume the token has 1h of validity in this case (Salesforce default is 2h, but it is configurable).
    * @param token The OAuth response from the authorization code exchange or refresh token exchange
    */
-  private normalizeOAuthToken(token: IOAuthToken): IOAuthToken {
+  protected normalizeOAuthToken(token: IOAuthToken): IOAuthToken {
     if (token.refresh_token && isNaN(token.expires_in)) {
       token.expires_in = 3600;
     }
     return token;
+  }
+
+  protected async fetchOAuthToken(ctx: Connector.Types.Context, params: Record<string, string>) {
+    const tokenUrl = this.getTokenUrl(ctx);
+    try {
+      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
+
+      return this.normalizeOAuthToken(response.body);
+    } catch (error) {
+      throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
+    }
   }
 
   /**
@@ -117,14 +128,7 @@ class OAuthEngine {
       redirect_uri: this.getRedirectUri(),
     };
 
-    const tokenUrl = this.getTokenUrl(ctx);
-    try {
-      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
-
-      return this.normalizeOAuthToken(response.body);
-    } catch (error) {
-      throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
-    }
+    return await this.fetchOAuthToken(ctx, params);
   }
 
   /**
@@ -141,15 +145,7 @@ class OAuthEngine {
       redirect_uri: this.getRedirectUri(),
     };
 
-    const tokenUrl = this.getTokenUrl(ctx);
-    try {
-      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
-
-      // Use the current token if a new one isn't supplied.
-      return this.normalizeOAuthToken({ refresh_token: refreshToken, ...response.body });
-    } catch (error) {
-      throw new Error(`Unable to connecto to tokenUrl '${tokenUrl}: ${error}`);
-    }
+    return await this.fetchOAuthToken(ctx, params);
   }
 
   /**

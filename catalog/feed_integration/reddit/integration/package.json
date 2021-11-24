@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-reddit-bot-integration",
+  "version": "7.17.9",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/reddit-provider": "^7.17.9",
+    "@fusebit-int/framework": "^7.17.9"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}
