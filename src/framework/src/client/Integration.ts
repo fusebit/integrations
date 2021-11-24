@@ -5,6 +5,7 @@ import { WebhookClient as _WebhookClient } from '../ProviderActivator';
 import superagent from 'superagent';
 
 /**
+ * Webhook utilities that give you access to Webhook client SDKs
  * @class
  * @alias integration.webhook
  */
@@ -133,6 +134,9 @@ export class Service extends EntityBase.ServiceBase {
 }
 
 /**
+ * Tenant utilities that give you access to Connector client SDKs.
+ * A Tenant represents a single user of an Integration, usually corresponding to a user or account in your own system.
+ * Read more: {@link https://developer.fusebit.io/docs/integration-programming-model#fusebit-tenancy-model}
  * @class
  * @alias integration.tenant
  */
