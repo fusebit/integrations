@@ -128,7 +128,7 @@ class OAuthEngine {
       redirect_uri: this.getRedirectUri(),
     };
 
-    return await this.fetchOAuthToken(ctx, params);
+    return this.fetchOAuthToken(ctx, params);
   }
 
   /**
@@ -145,7 +145,7 @@ class OAuthEngine {
       redirect_uri: this.getRedirectUri(),
     };
 
-    return await this.fetchOAuthToken(ctx, params);
+    return this.fetchOAuthToken(ctx, params);
   }
 
   /**

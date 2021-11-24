@@ -10,7 +10,7 @@ router.get('/api/check/:installId', async (ctx) => {
 });
 
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
-  // Save something in storage to loouk up later on.
+  // Save something in storage to look up later on.
   await integration.storage.setData(ctx, `/test/reddit/webhook/${Math.random() * 10000000}`, {
     data: ctx.req.body,
     expires: new Date(Date.now() + 60 * 1000).toISOString(),
