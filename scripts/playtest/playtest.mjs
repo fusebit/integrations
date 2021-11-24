@@ -52,9 +52,7 @@ const getServicesWithPlay = async () => {
       success_int = true;
       break;
     }
-    for (const item of ints.items) {
-      await $`fuse integration rm ${item.id} -q true`;
-    }
+    await Promise.all(ints.items.map((item) => $`fuse integration rm ${item.id} -q true`));
   } while (!success_int);
 
   do {
@@ -63,9 +61,7 @@ const getServicesWithPlay = async () => {
       success_con = true;
       break;
     }
-    for (const item of cons.items) {
-      await $`fuse connector rm ${item.id} -q true`;
-    }
+    await Promise.all(cons.items.map((item) => $`fuse connector rm ${item.id} -q true`));
   } while (!success_con);
 
   await $`lerna run play:install --concurrency 1`;
