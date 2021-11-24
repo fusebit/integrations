@@ -42,6 +42,28 @@ const getServicesWithPlay = async () => {
     }
   }
 
+  // Clean out all integrations and connectors
+  let success_int = false;
+  let success_con = false;
+
+  do {
+    const ints = JSON.parse(await $`fuse integration ls -o json`);
+    if (ints.items.length === 0) {
+      success_int = true;
+      break;
+    }
+    await Promise.all(ints.items.map((item) => $`fuse integration rm ${item.id} -q true`));
+  } while (!success_int);
+
+  do {
+    const cons = JSON.parse(await $`fuse connector ls -o json`);
+    if (cons.items.length === 0) {
+      success_con = true;
+      break;
+    }
+    await Promise.all(cons.items.map((item) => $`fuse connector rm ${item.id} -q true`));
+  } while (!success_con);
+
   await $`lerna run play:install --concurrency 1`;
   await $`lerna run play`;
   const slack_payload = {
