@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/asana-connector",
-  "version": "7.18.0",
+  "version": "7.18.1",
   "description": "Asana Connector",
   "keywords": [
     "Fusebit",
@@ -34,12 +34,12 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.18.0",
+    "@fusebit-int/oauth-connector": "^7.18.1",
     "superagent": "6.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.18.0",
+    "@fusebit-int/framework": "^7.18.1",
     "@types/superagent": "^4.1.12",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
