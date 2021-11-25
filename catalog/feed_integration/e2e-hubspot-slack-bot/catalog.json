@@ -1,0 +1,34 @@
+{
+  "id": "e2e-hubspot-slack-bot",
+  "name": "HubSpot Slack Bot",
+  "private": true,
+  "smallIcon": "/images/hubspot.svg",
+  "largeIcon": "/images/hubspot.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging,CRM"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "hubspotSlackBotIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      },
+      "hubspotConnector": {
+        "entityType": "connector",
+        "path": "../hubspot-crm-contacts/connector/"
+      },
+      "slackConnector": {
+        "entityType": "connector",
+        "path": "../slack-bot/connector/"
+      }
+    }
+  }
+}
