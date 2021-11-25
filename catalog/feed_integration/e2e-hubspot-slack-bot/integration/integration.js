@@ -3,9 +3,12 @@ const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 const router = integration.router;
 
+const slackConnectorName = 'slackConnector';
+const hubspotConnectorName = 'hubspotConnector';
+
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const slackClient = await integration.tenant.getSdkByTenant(ctx, 'slackConnector', ctx.params.tenantId);
-  const hubspotClient = await integration.tenant.getSdkByTenant(ctx, 'hubspotConnector', ctx.params.tenantId);
+  const slackClient = await integration.tenant.getSdkByTenant(ctx, slackConnectorName, ctx.params.tenantId);
+  const hubspotClient = await integration.tenant.getSdkByTenant(ctx, hubspotConnectorName, ctx.params.tenantId);
 
   const contact = await lookupAndPost(
     ctx.req.body.email,
@@ -18,8 +21,8 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
-  const slackClient = await integration.service.getSdk(ctx, 'slackConnector', ctx.req.body.installIds[0]);
-  const hubspotClient = await integration.service.getSdk(ctx, 'hubspotConnector', ctx.req.body.installIds[0]);
+  const slackClient = await integration.service.getSdk(ctx, slackConnectorName, ctx.req.body.installIds[0]);
+  const hubspotClient = await integration.service.getSdk(ctx, hubspotConnectorName, ctx.req.body.installIds[0]);
 
   // Parsing for "lookup <mailto:contact@fusebit.io|contact@fusebit.io>"
   const regex = new RegExp('(lookup.*<mailto:)([a-zA-Z0-9._-]+@[a-zA-Z0-9_-]+.[a-zA-Z0-9]+)', 'g');
@@ -29,6 +32,8 @@ integration.event.on('/:componentName/webhook/event_callback', async (ctx) => {
   }
 });
 
+// Looks up a HubSpot Contact by the email address specified, and posts a message
+// to Slack with the details of that contact
 async function lookupAndPost(email, slackChannel, slackClient, hubSpotClient) {
   const filter = { propertyName: 'email', operator: 'EQ', value: email };
   const sorts = JSON.stringify({ propertyName: 'createdate', direction: 'DESCENDING' });
@@ -62,7 +67,7 @@ async function lookupAndPost(email, slackChannel, slackClient, hubSpotClient) {
       :slightly_smiling_face: Name: ${contact.firstname} ${contact.lastname}
       :email: <mailto:${contact.email}|Email:> ${contact.email}
       :date: Date created: ${contact.createdate}
-      :flag-us: Location: ${contact.city}, (${contact.country})
+      :earth_americas: Location: ${contact.city}, (${contact.country})
       :computer: Job title: ${contact.jobtitle}
       :100: Company: ${contact.company}
       :link: Website: ${contact.website || 'not found'}
