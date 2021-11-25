@@ -72,6 +72,7 @@ namespace EntityBase {
     protected readonly utilities = utilities;
   }
   /**
+   * Installation specific utilities for accessing Connectors client SDKs and installation information.
    * @private
    */
   export abstract class ServiceBase extends EntityNamespace {
@@ -79,6 +80,7 @@ namespace EntityBase {
   }
 
   /**
+   * Secure and reliable storage utilities. You can write, read, update and delete hierarchical data in a versioned fashion.
    * @alias integration.storage
    */
   export abstract class StorageBase {
@@ -177,6 +179,7 @@ namespace EntityBase {
   }
 
   /**
+   * Powerful and useful middlewares like user authorization and input validation.
    * @alias integration.middleware
    */
   export abstract class MiddlewareBase {
@@ -222,7 +225,9 @@ namespace EntityBase {
     public session = Middleware.session;
   }
   /**
-   * @private
+   * Response utilities that give you access to useful functionalities like Json Forms creation.
+   * @alias integration.response
+   * @class
    */
   export abstract class ResponseBase {
     protected readonly utilities = utilities;
