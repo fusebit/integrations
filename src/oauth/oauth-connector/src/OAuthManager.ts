@@ -68,6 +68,12 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     return this.adjustUrlConfiguration('http://fusebit.io/token', 'http://fusebit.io/authorize', 'oauth');
   }
 
+  protected readonly OAuthEngine = OAuthEngine;
+
+  protected createEngine(ctx: Connector.Types.Context): OAuthEngine {
+    return ctx.state.engine || new this.OAuthEngine(ctx.state.manager.config.configuration as IOAuthConfig);
+  }
+
   constructor() {
     super();
 
@@ -96,7 +102,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         return result;
       };
 
-      ctx.state.engine = ctx.state.engine || new OAuthEngine(ctx.state.manager.config.configuration as IOAuthConfig);
+      ctx.state.engine = this.createEngine(ctx);
       ctx.state.engine.setMountUrl(ctx.state.params.baseUrl);
       ctx.state.identityClient = new IdentityClient({
         createTags,

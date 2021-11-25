@@ -1,15 +1,14 @@
 {
   "id": "<% this.id %>",
   "tags": {
-    "fusebit.service": "Atlassian Confluence"
+    "fusebit.service": "Reddit"
   },
-  "handler": "@fusebit-int/atlassian-connector",
+  "handler": "@fusebit-int/reddit-connector",
   "configuration": {
     "mode": {
       "useProduction": false
     },
-    "scope": "read:confluence-space.summary read:confluence-props read:confluence-content.summary read:confluence-user read:confluence-groups read:me search:confluence",
-    "audience": "api.atlassian.com",
+    "scope": "identity read",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
