@@ -1,0 +1,27 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Slack + HubSpot"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "slackConnector",
+      "skip": false,
+      "provider": "@fusebit-int/slack-provider",
+      "entityId": "<% global.entities.slackConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    },
+    {
+      "name": "hubspotConnector",
+      "skip": false,
+      "provider": "@fusebit-int/hubspot-provider",
+      "entityId": "<% global.entities.hubspotConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

@@ -1,0 +1,8 @@
+{
+  "slackConnector": {
+    "slackName": "slack-connector"
+  },
+  "hubspotConnector": {
+    "hubspotName": "hubspot-connector"
+  }
+}
