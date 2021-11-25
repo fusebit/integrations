@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install toolchain
+        run: npm install -g zx
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Patch Version
@@ -72,6 +74,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install toolchain
+        run: npm install -g zx
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Minor Version
@@ -127,6 +131,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install toolchain
+        run: npm install -g zx
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Major Version
