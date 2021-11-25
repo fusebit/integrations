@@ -14,7 +14,7 @@ router.get('/api/check/:installId', async (ctx) => {
     channel: slackUserId,
   });
 
-  ctx.body = { message: `Successfully sent a message to Slack user ${slackUserId}!` };
+  ctx.body = { message: 'Message sent' };
 });
 
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
