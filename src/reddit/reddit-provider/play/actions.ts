@@ -6,8 +6,6 @@ export interface IAuthenticateOptions {
   page: Page;
 }
 
-const { MFA_SECRET, HUBSPOT_TEST_USER_ACCOUNT } = process.env;
-
 export async function authenticate({ page, targetUrl }: IAuthenticateOptions) {
   // Open the browser to the session url
   await page.goto(targetUrl);
