@@ -1,6 +1,12 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import { IApiClient, IAtlassianAccessibleResources, IAtlassianMe, IFusebitCredentials } from './Types';
+import {
+  IApiClient,
+  IAtlassianAccessibleResources,
+  IAtlassianAccessibleResource,
+  IAtlassianMe,
+  IFusebitCredentials,
+} from './Types';
 
 class AtlassianClient {
   public fusebit: IFusebitCredentials;
@@ -9,10 +15,23 @@ class AtlassianClient {
     this.fusebit = fusebit;
   }
 
-  public async getAccessibleResources(): Promise<IAtlassianAccessibleResources> {
+  public async getAccessibleResources(filterFor?: 'jira' | 'confluence'): Promise<IAtlassianAccessibleResources> {
     const response = await superagent
       .get('https://api.atlassian.com/oauth/token/accessible-resources')
       .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+
+    if (filterFor === 'jira') {
+      return response.body.filter((cloud: IAtlassianAccessibleResource) =>
+        cloud.scopes.find((scope) => scope.includes('jira'))
+      );
+    }
+
+    if (filterFor === 'confluence') {
+      return response.body.filter((cloud: IAtlassianAccessibleResource) =>
+        cloud.scopes.find((scope) => scope.includes('confluence'))
+      );
+    }
+
     return response.body;
   }
 

@@ -31,6 +31,7 @@ test.beforeAll(async () => {
 });
 
 test.beforeAll(async () => {
+  return;
   console.log('Setting up entities...');
   await Constants.ensureEntities(
     account,
@@ -45,7 +46,7 @@ test.beforeAll(async () => {
       clientId: Constants.SECRET_CLIENTID,
       clientSecret: Constants.SECRET_CLIENTSECRET,
       audience: Constants.OAUTH_AUDIENCE,
-      extraParams: 'prompt=consent',
+      extraParams: 'prompt=consent&audience=api.atlassian.com',
     },
     [
       {
@@ -106,6 +107,8 @@ const testWebhook = async ({ installId }) => {
 
   await registerWebhook(installId);
 
+  await listWebhooks(installId);
+
   await pushChange(installId);
 
   await waitForWebhook();
@@ -147,6 +150,16 @@ const registerWebhook = async (installId: string) => {
     account,
     RequestMethod.get,
     `/integration/${Constants.INTEGRATION_ID}/api/register/${installId}`
+  );
+  expect(response).toBeHttp({ statusCode: 200 });
+};
+
+const listWebhooks = async (installId: string) => {
+  // Register the webhook.
+  const response = await fusebitRequest(
+    account,
+    RequestMethod.get,
+    `/integration/${Constants.INTEGRATION_ID}/api/list/${installId}`
   );
   expect(response).toBeHttp({ statusCode: 200 });
 };

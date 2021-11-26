@@ -13,15 +13,25 @@ router.get('/api/check/:installId', async (ctx) => {
 });
 
 router.get('/api/unregister/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const response = await sdk.webhook.unregisterAll();
+  const webhook = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
+  const response = await webhook.deleteAll();
   ctx.body = response;
+});
+
+router.get('/api/list/:installId', async (ctx) => {
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const resources = await sdk.getAccessibleResources('jira');
+  const webhook = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
+  ctx.body = webhook.list(responses[0].id);
 });
 
 router.get('/api/register/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const resources = await sdk.getAccessibleResources();
-  const registerResponse = await sdk.webhook.register(resources[0].id, [
+  const resources = await sdk.getAccessibleResources('jira');
+  const webhook = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
+
+  console.log(`Adding webhook for ${resources[0].id}`);
+  const registerResponse = await webhook.create(resources[0].id, [
     {
       jqlFilter: 'status != done',
       events: ['jira:issue_created', 'jira:issue_updated'],
@@ -33,9 +43,11 @@ router.get('/api/register/:installId', async (ctx) => {
 
 router.get('/api/event/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const resources = await sdk.getAccessibleResources();
+  const resources = await sdk.getAccessibleResources('jira');
 
   const rand = `${Math.random() * 10000}`;
+
+  console.log(`Firing change to DEMO-1 on ${resources[0].id}: ${rand}`);
   const response = await superagent
     .put(`https://api.atlassian.com/ex/jira/${resources[0].id}/rest/api/3/issue/DEMO-1`)
     .set('Authorization', `Bearer ${sdk.fusebit.credentials.access_token}`)
@@ -55,6 +67,7 @@ router.get('/api/event/:installId', async (ctx) => {
 });
 
 integration.event.on('/:connectorId/webhook/:eventType', async (ctx) => {
+  console.log(`in event`, ctx.req.body);
   await integration.storage.setData(ctx, `/test/atlassianProvider/webhook/${Math.random() * 10000000}`, {
     data: ctx.req.body,
     expires: new Date(Date.now() + 60 * 1000).toISOString(),
