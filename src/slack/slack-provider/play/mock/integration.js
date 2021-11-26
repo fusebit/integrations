@@ -5,13 +5,11 @@ const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  // Get the Slack user ID associated with your tenant
-  const slackUserId = sdk.fusebit.credentials.authed_user.id;
 
-  // Send a Direct Message to the Slack user
+  // Send a message to random, where the bot can listen
   await sdk.chat.postMessage({
     text: 'Hello world from Fusebit!',
-    channel: slackUserId,
+    channel: 'random',
   });
 
   ctx.body = { message: 'Message sent' };
