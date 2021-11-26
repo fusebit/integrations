@@ -27,7 +27,7 @@
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
-    "play": "playwright test -j 1 --browser firefox || true",
+    "play": "playwright test -j 1 --browser firefox",
     "play:headed": "playwright test --headed --browser firefox",
     "play:install": "playwright install"
   },
