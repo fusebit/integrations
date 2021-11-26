@@ -22,7 +22,7 @@ const getServicesWithPlay = async () => {
 (async () => {
   let storageErrors = [];
   let totalSuccess = true;
-  const servicesWithPlay = await getServicesWithPlay();
+  let servicesWithPlay = await getServicesWithPlay();
   console.log(servicesWithPlay);
   for (const service of servicesWithPlay) {
     let storageKeys;
@@ -30,15 +30,15 @@ const getServicesWithPlay = async () => {
       storageKeys = JSON.parse(
         await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`
       );
+      for (const storageKey of Object.keys(storageKeys.data)) {
+        await fs.promises.appendFile(
+          `src/${service}/${service}-provider/.env.playwright`,
+          `${storageKey}=${storageKeys.data[storageKey]}\n`
+        );
+      }
     } catch (_) {
       storageErrors.push(service);
       servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service);
-    }
-    for (const storageKey of Object.keys(storageKeys.data)) {
-      await fs.promises.appendFile(
-        `src/${service}/${service}-provider/.env.playwright`,
-        `${storageKey}=${storageKeys.data[storageKey]}\n`
-      );
     }
   }
 
@@ -97,7 +97,7 @@ const getServicesWithPlay = async () => {
       },
     });
   }
-  $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
+  await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
   }`;
 })();
