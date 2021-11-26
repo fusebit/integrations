@@ -21,7 +21,7 @@ const router = integration.router;
 const connectorName = 'redditConnector';
 
 // This sample test endpoint provides the reddit karma held by the tenant
-router.get('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const redditClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await redditClient.getMe();
   const { link_karma, comment_karma } = me;
