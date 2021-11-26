@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
     inputs:
       versionToPublish:
-        description: 'The version to manually publish, must be a valid git tag.'
+        description: 'The version to manually publish, must be a valid git tag i.e. "v7.20.0".'
         default: 'main'
 name: Manual - PROD - Publish - Specific Version
 jobs:
