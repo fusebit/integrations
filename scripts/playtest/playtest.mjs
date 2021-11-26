@@ -65,7 +65,7 @@ const getServicesWithPlay = async () => {
   } while (!success_con);
 
   await $`lerna run play:install --concurrency 1`;
-  await $`lerna run play --no-bail`;
+  await $`lerna run play --no-bail || true`;
   const slack_payload = {
     text: ':alarm_clock: Playwright results just came in :alarm_clock:',
     blocks: [],
