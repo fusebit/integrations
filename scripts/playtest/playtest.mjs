@@ -115,7 +115,9 @@ const installAwsCli = async () => {
 
   // Send output to AWS
   const date = new Date().getTime();
-  servicesWithPlay.map((service) => {
-    await $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date.toString()}/${service}/ || true`;
-  });
+  await Promise.all(
+    servicesWithPlay.map((service) => {
+      return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date.toString()}/${service}/ || true`;
+    })
+  );
 })();
