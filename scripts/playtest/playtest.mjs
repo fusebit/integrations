@@ -114,11 +114,8 @@ const installAwsCli = async () => {
   }`;
 
   // Send output to AWS
-  const date = new Date().toISOString();
+  const date = new Date().getTime();
   for (const service of servicesWithPlay) {
-    await $`cd src/${service}/${service}-provider/`;
-    await $`zip -r testresults.zip test-results/`;
-    await $`aws s3 cp src/${service}/${service}-provider/testresults.zip s3://fusebit-playwright-output/${date}/`;
-    await $`cd ../../..`;
+    await $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date.toString()}/${service}/ || true`;
   }
 })();
