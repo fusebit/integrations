@@ -19,7 +19,19 @@ const getServicesWithPlay = async () => {
   });
 };
 
+const installAwsCli = async () => {
+  // Installing latest AWS CLIv2
+  await $`apt install -y zip unzip`;
+  await $`curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`;
+  await $`unzip awscliv2.zip`;
+  await $`./aws/install`;
+};
+
 (async () => {
+  // Install AWS CLI if running in CI/CD
+  if (process.env.JOB_NAME) {
+    await installAwsCli();
+  }
   let storageErrors = [];
   let totalSuccess = true;
   let servicesWithPlay = await getServicesWithPlay();
@@ -100,4 +112,13 @@ const getServicesWithPlay = async () => {
   await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
   }`;
+
+  // Send output to AWS
+  const date = new Date().toISOString();
+  for (const service of servicesWithPlay) {
+    await $`cd src/${service}/${service}-provider/`;
+    await $`zip -r testresults.zip test-results/`;
+    await $`aws s3 cp src/${service}/${service}-provider/testresults.zip s3://fusebit-playwright-output/${date}/`;
+    await $`cd ../../..`;
+  }
 })();
