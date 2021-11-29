@@ -28,7 +28,7 @@ export interface Token {
   instance_url: string;
 }
 
-export default abstract class ProviderActivator<T> {
+export abstract class ProviderActivator<T> {
   public abstract instantiate(ctx: FusebitContext, lookupKey?: string, installId?: string): Promise<T>;
   public instantiateWebhook = async (
     ctx: FusebitContext,
@@ -70,4 +70,41 @@ export default abstract class ProviderActivator<T> {
 
     return connectorToken;
   }
+
+  /**
+   * Provide access to connector defined endpoints
+   * @returns Promise<any>
+   */
+  protected async requestConnectorAPI({
+    ctx,
+    path,
+    method,
+  }: {
+    ctx: FusebitContext;
+    path: string;
+    method: ProviderActivator.HttpMethodType;
+  }): Promise<any> {
+    const connnectorPath = `/api/${path}`;
+    const params = ctx.state.params;
+    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
+    const response = await superagent[method](`${baseUrl}${connnectorPath}`).set(
+      'Authorization',
+      `Bearer ${params.functionAccessToken}`
+    );
+    return response.body;
+  }
 }
+
+export namespace ProviderActivator {
+  export enum HttpMethodType {
+    GET = 'get',
+    POST = 'post',
+    PUT = 'put',
+    PATCH = 'patch',
+    HEAD = 'head',
+    DELETE = 'delete',
+    OPTIONS = 'options',
+  }
+}
+
+export default ProviderActivator;

@@ -104,3 +104,22 @@ export enum HttpMethodType {
   DELETE = 'delete',
   OPTIONS = 'options',
 }
+
+export interface IBotCheck {
+  hasBotScope: boolean;
+  botToken: string;
+}
+export interface IDiscordMethods {
+  get(resource: string, body: any): Promise<any>;
+  post(resource: string, body: any): Promise<any>;
+  patch(resource: string, body: any): Promise<any>;
+  delete(resource: string, body: any): Promise<any>;
+  put?(resource: string, body: any): Promise<any>;
+  head?(resource: string, body: any): Promise<any>;
+  options?(resource: string, body: any): Promise<any>;
+}
+
+export enum AuthorizationType {
+  Bearer = 'Bearer',
+  Bot = 'Bot',
+}

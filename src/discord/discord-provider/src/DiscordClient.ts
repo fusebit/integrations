@@ -1,124 +1,289 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
 import {
+  AuthorizationType,
   HttpMethodType,
+  IBotCheck,
   IDiscordApplication,
   IDiscordAuthorizationInfo,
   IDiscordChannel,
+  IDiscordMethods,
   IDiscordUser,
   IFusebitCredentials,
 } from './Types';
 
 class DiscordClient {
   public fusebit: IFusebitCredentials;
-  private baseUrl: string = 'https://discord.com/api';
+  private baseUrl = 'https://discord.com/api';
+  private botCheck: IBotCheck;
+  /**
+   * Use discord API that requires a user token
+   */
+  public user: IDiscordMethods;
+  /**
+   * Use discord API that requires a bot token (i.e fetching a guild, or a channel, or updating permissions on a user)
+   */
+  public bot: IDiscordMethods;
+  /**
+   * Webhooks are a low-effort way to post messages to channels in Discord.
+   * They do not require a bot user or authentication to use
+   */
+  public webhook: IDiscordMethods;
 
-  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
+  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials, botCheck: IBotCheck) {
     this.fusebit = fusebit;
+    this.botCheck = botCheck;
+    this.bot = {
+      /**
+       * @description Perform a GET request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      get: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.GET, body);
+      },
+      /**
+       * @description Perform a POST request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      post: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.POST, body);
+      },
+      /**
+       * @description Perform a PUT request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      put: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.PUT, body);
+      },
+      /**
+       * @description Perform a PATCH request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      patch: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.PATCH, body);
+      },
+      /**
+       * @description Perform a OPTIONS request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      options: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.OPTIONS, body);
+      },
+      /**
+       * @description Perform a HEAD request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      head: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.HEAD, body);
+      },
+      /**
+       * @description Perform a DELETE request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      delete: async (resource: string, body: any): Promise<any> => {
+        return this.requestBotResource(resource, HttpMethodType.DELETE, body);
+      },
+    };
+
+    this.user = {
+      /**
+       * @description Perform a GET request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      get: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.GET, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a POST request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      post: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.POST, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a PUT request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      put: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.PUT, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a PATCH request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      patch: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.PATCH, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a OPTIONS request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      options: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.OPTIONS, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a HEAD request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      head: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.HEAD, AuthorizationType.Bearer, body);
+      },
+      /**
+       * @description Perform a DELETE request to Discord's HTTPS/REST API using a bot token
+       * Using a bot token gives you access to the entire discord API according to the permissions you
+       * set to your bot, this requires adding bot scope to your connector.
+       * Read more at {@link https://discord.com/developers/docs/reference}
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      delete: async (resource: string, body: any): Promise<any> => {
+        return this.request(resource, HttpMethodType.DELETE, AuthorizationType.Bearer, body);
+      },
+    };
+
+    this.webhook = {
+      /**
+       * @description Perform a GET request to Discord's HTTPS/REST Webhooks API
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      get: async (resource: string, body: any): Promise<any> => {
+        return this.webhookRequest(resource, HttpMethodType.GET, body);
+      },
+      /**
+       * @description Perform a POST request to Discord's HTTPS/REST Webhooks API
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      post: async (resource: string, body: any): Promise<any> => {
+        return this.webhookRequest(resource, HttpMethodType.POST, body);
+      },
+      /**
+       * @description Perform a PATCH request to Discord's HTTPS/REST Webhooks API
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      patch: async (resource: string, body: any): Promise<any> => {
+        return this.webhookRequest(resource, HttpMethodType.PATCH, body);
+      },
+      /**
+       * @description Perform a DELETE request to Discord's HTTPS/REST Webhooks API
+       * @param {string} resource
+       * @param {string} [body]
+       * @returns Promise<any>
+       */
+      delete: async (resource: string, body: any): Promise<any> => {
+        return this.webhookRequest(resource, HttpMethodType.DELETE, body);
+      },
+    };
   }
 
   /**
-   * @description Returns info about the current authorization.
-   * @returns Promise<IDiscordAuthorizationInfo>
+   * Perform a HTTP request to Discord's HTTPS/REST API using a bot token
    */
-  public async getCurrentAuthorizationInfo(): Promise<IDiscordAuthorizationInfo> {
-    const response = await superagent
-      .get(`${this.baseUrl}/oauth2/@me`)
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
+  private async requestBotResource(resource: string, method: HttpMethodType, body?: any): Promise<any> {
+    if (!this.botCheck.hasBotScope) {
+      throw new Error('Missing scope, ensure the Connector bot scope is added to your configuration');
+    }
+    if (!this.botCheck.botToken) {
+      throw new Error(
+        'Missing bot token, ensure the Connector has the Discord Application Bot Token added to your configuration'
+      );
+    }
+    return this.request(resource, method, AuthorizationType.Bot, body);
   }
 
-  /**
-   * @description Returns the bot's application object.
-   * @returns Promise<IDiscordApplication>
-   */
-  public async getCurrentBotApplicationInfo(): Promise<IDiscordApplication> {
-    const response = await superagent
-      .get(`${this.baseUrl}/oauth2/applications/@me`)
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
-  }
-
-  /**
-   * @description Returns the user object of the requester's account.
-   * For OAuth2, this requires the identify scope, which will return the object without an email
-   * and optionally the email scope, which returns the object with an email.
-   * @returns Promise<IDiscordUser>
-   */
-  public async getCurrentUser(): Promise<IDiscordUser> {
-    const response = await superagent
-      .get(`${this.baseUrl}/users/@me`)
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
-  }
-
-  /**
-   * @description  Returns an user object for a given user ID.
-   * @returns Promise<IDiscordUser>
-   */
-  public async getUser(userId: string): Promise<IDiscordUser> {
-    const response = await superagent
-      .get(`${this.baseUrl}/users/${userId}`)
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
-  }
-
-  /**
-   * @description Create a new DM channel with a user.
-   * You should not use this endpoint to DM everyone in a server about something.
-   * DMs should generally be initiated by a user action.
-   * If you open a significant amount of DMs too quickly, your bot may be rate limited or blocked from opening new ones.
-   * @returns Promise<IDiscordChannel>
-   *
-   */
-
-  public async createDM(recipient_id: string): Promise<IDiscordChannel> {
-    const response = await superagent
-      .post(`${this.baseUrl}/users/@me/channels`)
-      .send({
-        recipient_id,
-      })
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
-  }
-
-  /**
-   * @description Provides access to Discord's HTTPS/REST API for general operations
-   * Using user access token, for more powerful operations use a Bot token.
-   * Read more at {@link https://discord.com/developers/docs/reference}
-   * @param {string} resource
-   * @enum {string} method Valid values: get,post,put,patch,head,delete,options
-   * @param body
-   * @returns
-   */
-  public async requestUserResource(resource: string, method: HttpMethodType, body?: any): Promise<any> {
+  private async request(
+    resource: string,
+    method: HttpMethodType,
+    authorizationType: AuthorizationType,
+    body?: any
+  ): Promise<any> {
     const response = await superagent[method](`${this.baseUrl}/${resource}`)
       .send(body)
       .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+      .set(
+        'Authorization',
+        `${authorizationType} ${
+          authorizationType === AuthorizationType.Bot ? this.botCheck.botToken : this.fusebit.credentials.access_token
+        }`
+      );
     return response.body;
   }
 
-  /**
-   * @description Provides access to Discord's HTTPS/REST API using a bot token
-   * Using a bot token gives you access to the entire discord API according to the permissions you
-   * set to your bot, this requires adding bot scope to your connector.
-   * Read more at {@link https://discord.com/developers/docs/reference}
-   * @param {string} resource
-   * @enum {string} method Valid values: get,post,put,patch,head,delete,options
-   * @param body
-   * @returns
-   */
-  public async requestResource(resource: string, method: HttpMethodType, body?: any): Promise<any> {
-    const response = await superagent[method](`${this.baseUrl}/${resource}`)
+  private async webhookRequest(webhookWithTokenUrl: string, method: HttpMethodType, body?: any): Promise<any> {
+    const response = await superagent[method](webhookWithTokenUrl)
       .send(body)
-      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
-      .set('Authorization', `Bot ${this.fusebit.credentials.access_token}`); // TODO: This needs to be botToken
+      .set('User-Agent', `fusebit/${this.fusebit.connectorId}`);
     return response.body;
   }
 }
