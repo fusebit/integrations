@@ -36,6 +36,11 @@ export const playWrightConfig: PlaywrightTestConfig = {
     ['json', { outputFile: 'results.json' }],
     ['line', {}],
   ],
+  use: {
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on',
+  },
 };
 
 matchers.register(expect);
