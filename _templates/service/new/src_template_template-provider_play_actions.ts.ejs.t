@@ -1,3 +1,6 @@
+---
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/actions.spec.ts
+---
 import { Page } from '@playwright/test';
 
 const { OAUTH_USERNAME, OAUTH_PASSWORD } = process.env;

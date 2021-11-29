@@ -1,3 +1,6 @@
+---
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/proxy.spec.ts
+---
 import { test } from '@playwright/test';
 
 import { IAccount, getAccount, Utilities } from '@fusebit-int/play';
