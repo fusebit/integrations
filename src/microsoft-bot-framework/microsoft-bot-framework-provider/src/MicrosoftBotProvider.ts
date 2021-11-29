@@ -69,13 +69,19 @@ export default class MicrosoftBotProvider extends Internal.ProviderActivator<Fus
     // The following logic injects an entry on the authentication context of the SDK
     // so we can hide the bot client secret from the integration.
     const botFrameworkAdapterBypass = botFrameworkAdapter as any;
-    botFrameworkAdapterBypass.credentials.authenticationContext._cache._entries.push({
-      _clientId: credentials.botClientId,
-      accessToken: credentials.accessToken,
-      expiresOn: new Date(2999, 11, 30),
-      resource: 'https://api.botframework.com',
-      _authority: 'https://login.microsoftonline.com/botframework.com',
-    });
+
+    // SDK raises errors if it finds more than one token per client, so we need to avoid that.
+    const accessTokens = botFrameworkAdapterBypass.credentials.authenticationContext._cache._entries;
+    const accessTokenConfigured = accessTokens.some((entry: any) => entry._clientId === credentials.botClientId);
+    if (!accessTokenConfigured) {
+      accessTokens.push({
+        _clientId: credentials.botClientId,
+        accessToken: credentials.accessToken,
+        expiresOn: new Date(2999, 11, 30),
+        resource: 'https://api.botframework.com',
+        _authority: 'https://login.microsoftonline.com/botframework.com',
+      });
+    }
 
     // This is a small workaround to make the SDK ignore the fact that it is not getting
     // the security access token that it uses to validate that events are really being sent
