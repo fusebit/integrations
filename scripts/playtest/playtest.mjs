@@ -105,16 +105,23 @@ const installAwsCli = async () => {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '' + `:warning: configuration for ${failure} not found :warning:`,
+        text: `:warning: configuration for ${failure} not found :warning:`,
       },
     });
   }
+  const date = new Date().getTime();
+  slack_payload.blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `To access trace files, run ./scripts/playtest/access.mjs ${date.toString()} <service>`,
+    },
+  });
   await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
   }`;
 
   // Send output to AWS
-  const date = new Date().getTime();
   await Promise.all(
     servicesWithPlay.map((service) => {
       return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date.toString()}/${service}/ || true`;
