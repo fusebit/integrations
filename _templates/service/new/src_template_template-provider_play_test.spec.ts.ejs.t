@@ -12,7 +12,9 @@ import {
   commitSession,
   fusebitRequest,
   RequestMethod,
+  waitForWebhook
 } from '@fusebit-int/play';
+import { authenticate } from './actions';
 
 let account: IAccount;
 
@@ -58,14 +60,7 @@ test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
   // Open the browser to the session url
   await page.goto(targetUrl);
 
-  // Perform the login
-  await page.click('input[name="login"]');
-  await page.fill('input[name="login"]', Constants.OAUTH_USERNAME);
-  await page.fill('input[name="password"]', Constants.OAUTH_PASSWORD);
-  await page.click('input:has-text("Sign in")');
-
-  // Accept the permissions page
-  await page.click('button:has-text("Authorize Fusebit Test-App")');
+  await authenticate(page);
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();
@@ -87,43 +82,6 @@ test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
   expect(response).toBeHttp({ statusCode: 200 });
 
   // TODO: Perform additional checks here: Use connector SDK, Webhooks, etc.
-  await waitForWebhook();
-
+  const filter = (entry) => entry.body.data.eventType === 'event_callback'; // update the event type here
+  await waitForWebhook(account, filter);
 });
-
-
-const waitForWebhook = async () => {
-  const storageKey = 'test/<%= name.toLowerCase() %>/webhook/*';
-  const expectedEventType = 'Type your expected event type here';
-  // Wait for the webhook event to fire.
-  let cnt: number;
-  for (cnt = 10; cnt > 0; cnt--) {
-    // Get the contents of the webhook storage and validate if it's what the test is looking for.
-    const response = await fusebitRequest(
-      account,
-      RequestMethod.get,
-      `/storage/integration/${Constants.INTEGRATION_ID}/${storageKey}`,
-      {},
-      { version: 1 }
-    );
-    expect(response).toBeHttp({ statusCode: 200 });
-
-    if (response.body.total > 0) {
-      const entries = await Promise.all(
-        response.body.items.map((item: { storageId: string }) =>
-          fusebitRequest(account, RequestMethod.get, `/storage/${item.storageId}`, {}, { version: 1 })
-        )
-      );
-      // Check to see if any of the entries match
-      const filter = (entry) => entry.body.data.eventType === expectedEventType;
-      if (entries.some(filter)) {
-        // Good enough for now - mark the test a success and move on.
-        break;
-      }
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    cnt -= 1;
-  }
-  expect(cnt).toBeGreaterThan(0);
-};
