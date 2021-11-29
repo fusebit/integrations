@@ -2,15 +2,7 @@ import { Page } from '@playwright/test';
 
 const { OAUTH_USERNAME, OAUTH_PASSWORD, SLACK_WORKSPACE } = process.env;
 
-export interface IAuthenticateOptions {
-  targetUrl: string;
-  page: Page;
-}
-
-export async function authenticate({ page, targetUrl }: IAuthenticateOptions) {
-  // Open the browser to the session url
-  await page.goto(targetUrl);
-
+export async function authenticate(page: Page) {
   // Select the workspace
   await page.fill('input[name="domain"]', SLACK_WORKSPACE);
   await page.click('button:has-text("Continue")');
