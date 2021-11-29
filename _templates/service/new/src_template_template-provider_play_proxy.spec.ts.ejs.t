@@ -12,8 +12,8 @@ test.beforeAll(async () => {
   account = getAccount();
 });
 
-test('Proxy: <%= name.toLowerCase() %>', async ({ page }) => {
+test('Proxy: <%= name %>', async ({ page }) => {
   // TODO: update the 'some message' param with the message Daisy will get on the
   // log console on our portal/editor when clicking the run button.
-  await Utilities.runProxyTest(account, page, '<%= name.toLowerCase() %>', authenticate, 'some message');
+  await Utilities.runProxyTest(account, page, '<%= name %>', authenticate, 'some message');
 }, 180000);

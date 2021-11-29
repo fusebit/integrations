@@ -1,5 +1,5 @@
 ---
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/actions.spec.ts
+to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/actions.ts
 ---
 import { Page } from '@playwright/test';
 
