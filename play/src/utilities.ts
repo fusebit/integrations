@@ -39,6 +39,6 @@ export const runProxyTest = async (
 
   const logPanel = page.locator('.fusebit-logs-content');
   await expect(logPanel).toHaveText(/.*Received response/, { timeout: 60000 });
-  await expect(logPanel).toHaveText(/.*Received response status 200/, { timeout: 0 });
-  await expect(logPanel).toHaveText(new RegExp(`.*${successResponse}`), { timeout: 0 });
+  await expect(logPanel).toHaveText(/.*Received response status 200/, { timeout: 10000 });
+  await expect(logPanel).toHaveText(new RegExp(`.*${successResponse}`), { timeout: 10000 });
 };
