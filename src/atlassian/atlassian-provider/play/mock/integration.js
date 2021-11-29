@@ -22,7 +22,7 @@ router.get('/api/list/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const resources = await sdk.getAccessibleResources('jira');
   const webhook = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
-  ctx.body = webhook.list(responses[0].id);
+  ctx.body = await webhook.list(resources[0].id);
 });
 
 router.get('/api/register/:installId', async (ctx) => {
