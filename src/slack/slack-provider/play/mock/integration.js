@@ -1,7 +1,7 @@
 const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 const router = integration.router;
-const connectorName = '##CONNECTOR_NAME##';
+const connectorName = '##CONNECTOR_ID##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
@@ -17,7 +17,7 @@ router.get('/api/check/:installId', async (ctx) => {
 
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   // Save something in storage to look up later on.
-  await integration.storage.setData(ctx, `/test/slack/webhook/${Math.random() * 10000000}`, {
+  await integration.storage.setData(ctx, `/test/${connectorName}/webhook/${Math.random() * 10000000}`, {
     data: ctx.req.body,
     expires: new Date(Date.now() + 60 * 1000).toISOString(),
   });
