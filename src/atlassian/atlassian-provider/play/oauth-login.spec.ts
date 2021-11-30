@@ -104,7 +104,11 @@ const testWebhook = async ({ installId }) => {
 
   await clearStorage();
 
+  await listWebhooks(installId, 0);
+
   await registerWebhook(installId);
+
+  await listWebhooks(installId, 1);
 
   await pushChange(installId);
 
@@ -129,7 +133,7 @@ const clearStorage = async () => {
     {},
     { version: 1 }
   );
-  expect(response).toBeHttp({ statusCode: [200, 404] });
+  expect(response).toBeHttp({ statusCode: [200, 204, 404] });
 
   response = await fusebitRequest(
     account,
@@ -149,6 +153,17 @@ const registerWebhook = async (installId: string) => {
     `/integration/${Constants.INTEGRATION_ID}/api/register/${installId}`
   );
   expect(response).toBeHttp({ statusCode: 200 });
+};
+
+const listWebhooks = async (installId: string, expectedCount: number) => {
+  // Register the webhook.
+  const response = await fusebitRequest(
+    account,
+    RequestMethod.get,
+    `/integration/${Constants.INTEGRATION_ID}/api/list/${installId}`
+  );
+  expect(response).toBeHttp({ statusCode: 200 });
+  expect(response.body.webhooks.total).toBe(expectedCount);
 };
 
 const pushChange = async (installId: string) => {
@@ -190,7 +205,6 @@ const waitForWebhook = async () => {
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    cnt -= 1;
   }
   expect(cnt).toBeGreaterThan(0);
 };

@@ -9,8 +9,11 @@ import {
 } from './Types';
 
 export class AtlassianWebhook extends Internal.WebhookClient {
-  protected getAtlassianUrl(cloudId: string) {
-    return `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/webhook`;
+  // Right now it looks like only Jira webhooks have a published Webhook SDK.  When that changes, support an
+  // additional parameter in the integration.webhook.getSdk, or a parameter on this object, to specify the
+  // cloudId and the type of cloud to use for these calls.
+  protected getAtlassianUrl(jiraCloudId: string) {
+    return `https://api.atlassian.com/ex/jira/${jiraCloudId}/rest/api/3/webhook`;
   }
 
   protected getInboundUrl() {
@@ -19,31 +22,31 @@ export class AtlassianWebhook extends Internal.WebhookClient {
   }
 
   public async extendAll() {
-    const resources = await this.client.getAccessibleResources();
+    const resources = await this.client.getAccessibleResources('jira');
     return await Promise.all(
       resources.map(async (resource: IAtlassianAccessibleResource) => {
-        const cloudId = resource.id;
-        const list = await this.list(cloudId);
+        const jiraCloudId = resource.id;
+        const list = await this.list(jiraCloudId);
         return this.extend(
-          cloudId,
+          jiraCloudId,
           list.values.map((hook) => hook.id)
         );
       })
     );
   }
 
-  public async extend(cloudId: string, webhookIds: number[]) {
+  public async extend(jiraCloudId: string, webhookIds: number[]) {
     return superagent
-      .put(`${this.getAtlassianUrl(cloudId)}/refresh`)
+      .put(`${this.getAtlassianUrl(jiraCloudId)}/refresh`)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
       .send({ webhookIds });
   }
 
-  public create = async (cloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> => {
+  public create = async (jiraCloudId: string, webhooks: IWebhookDetail[]): Promise<IWebhookRegisterResponses> => {
     const response = await superagent
-      .post(this.getAtlassianUrl(cloudId))
+      .post(this.getAtlassianUrl(jiraCloudId))
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
@@ -52,8 +55,11 @@ export class AtlassianWebhook extends Internal.WebhookClient {
     return response.body;
   };
 
-  public list = async (cloudId: string, options?: { next?: number; count?: number }): Promise<IListWebhookResult> => {
-    const url = new URL(this.getAtlassianUrl(cloudId));
+  public list = async (
+    jiraCloudId: string,
+    options?: { next?: number; count?: number }
+  ): Promise<IListWebhookResult> => {
+    const url = new URL(this.getAtlassianUrl(jiraCloudId));
 
     if (options?.next) {
       url.searchParams.set('startsAt', `${options.next}`);
@@ -72,11 +78,11 @@ export class AtlassianWebhook extends Internal.WebhookClient {
     return response.body;
   };
 
-  public get = async (cloudId: string, webhookId: number): Promise<IFullWebhookDetail | void> => {
+  public get = async (jiraCloudId: string, webhookId: number): Promise<IFullWebhookDetail | void> => {
     let isLast = false;
     let next = 0;
     do {
-      const listResponse = await this.list(cloudId, { next });
+      const listResponse = await this.list(jiraCloudId, { next });
       const webhooks = listResponse.values;
       const webhook = webhooks.find((webhook) => webhook.id == webhookId);
       if (webhook) {
@@ -87,9 +93,9 @@ export class AtlassianWebhook extends Internal.WebhookClient {
     } while (!isLast);
   };
 
-  public delete = async (cloudId: string, webhookIds: number[]) => {
+  public delete = async (jiraCloudId: string, webhookIds: number[]) => {
     const response = await superagent
-      .delete(this.getAtlassianUrl(cloudId))
+      .delete(this.getAtlassianUrl(jiraCloudId))
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
@@ -99,13 +105,13 @@ export class AtlassianWebhook extends Internal.WebhookClient {
   };
 
   public deleteAll = async () => {
-    const resources = await this.client.getAccessibleResources();
+    const resources = await this.client.getAccessibleResources('jira');
     return await Promise.all(
       resources.map(async (resource: IAtlassianAccessibleResource) => {
-        const cloudId = resource.id;
-        const list = await this.list(cloudId);
+        const jiraCloudId = resource.id;
+        const list = await this.list(jiraCloudId);
         return this.delete(
-          cloudId,
+          jiraCloudId,
           list.values.map((hook) => hook.id)
         );
       })
