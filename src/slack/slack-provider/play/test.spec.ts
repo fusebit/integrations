@@ -1,6 +1,3 @@
----
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/play/test.spec.ts
----
 import { test, expect } from '@playwright/test';
 import {
   Constants,
@@ -12,8 +9,9 @@ import {
   commitSession,
   fusebitRequest,
   RequestMethod,
-  waitForWebhook
+  waitForWebhook,
 } from '@fusebit-int/play';
+
 import { authenticate } from './actions';
 
 let account: IAccount;
@@ -39,28 +37,26 @@ test.beforeAll(async () => {
     },
     [
       {
-        name: '##CONNECTOR_NAME##',
+        name: '##CONNECTOR_ID##',
         value: Constants.CONNECTOR_ID,
       },
     ]
   );
 });
 
-test.beforeEach(async ({ page }) => {
-  // Execute test prerequisites here
-});
-
-test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
+test('slack-provider test', async ({ page }) => {
   const { app, url: localUrl } = await startHttpServer();
 
   const called = waitForExpress();
   app.use(called);
+
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, Constants.INTEGRATION_ID, `${localUrl}/oauthTest`);
+
   // Open the browser to the session url
   await page.goto(targetUrl);
 
-  await authenticate(page);
+  authenticate(page);
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();
@@ -80,8 +76,9 @@ test('<%= name.toLowerCase() %>-provider test', async ({ page }) => {
   );
 
   expect(response).toBeHttp({ statusCode: 200 });
+  expect(response.body.message).toBe('Message sent');
 
-  // TODO: Perform additional checks here: Use connector SDK, Webhooks, etc.
-  const filter = (entry) => entry.body.data.eventType === 'event_callback'; // update the event type here
+  const filter = (entry) => entry.body.data.eventType === 'event_callback';
+
   await waitForWebhook(account, filter);
 });
