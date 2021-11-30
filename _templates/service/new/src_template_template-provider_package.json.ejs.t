@@ -24,8 +24,8 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.jso
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
-    "play": "playwright test -j 1",
-    "play:headed": "playwright test --headed",
+    "play": "playwright test --workers 1",
+    "play:headed": "playwright test --headed --workers 1",
     "play:install": "playwright install"
   },
   "bugs": {
