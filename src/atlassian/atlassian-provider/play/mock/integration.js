@@ -9,7 +9,7 @@ const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  ctx.body = await sdk.getAccessibleResources();
+  ctx.body = await sdk.getAccessibleResources('jira');
 });
 
 router.get('/api/unregister/:installId', async (ctx) => {
@@ -21,7 +21,7 @@ router.get('/api/unregister/:installId', async (ctx) => {
 router.get('/api/register/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const webhookSdk = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
-  const resources = await sdk.getAccessibleResources();
+  const resources = await sdk.getAccessibleResources('jira');
   const registerResponse = await webhookSdk.create(resources[0].id, [
     {
       jqlFilter: 'status != done',
@@ -35,14 +35,14 @@ router.get('/api/register/:installId', async (ctx) => {
 router.get('/api/list/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const webhookSdk = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
-  const resources = await sdk.getAccessibleResources();
+  const resources = await sdk.getAccessibleResources('jira');
   const webhooks = await webhookSdk.list(resources[0].id);
   ctx.body = { webhooks };
 });
 
 router.get('/api/event/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const resources = await sdk.getAccessibleResources();
+  const resources = await sdk.getAccessibleResources('jira');
 
   const rand = `${Math.random() * 10000}`;
   const response = await superagent
