@@ -6,7 +6,7 @@ export interface IAuthenticateOptions {
   page: Page;
 }
 
-export async function authenticate({ page, targetUrl }: IAuthenticateOptions) {
+export async function doOAuthLogin({ page, targetUrl }: IAuthenticateOptions) {
   // Open the browser to the session url
   await page.goto(targetUrl);
 
