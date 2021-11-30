@@ -125,3 +125,6 @@ workspace/connector-*
 
 # No yarn locks
 **/yarn.lock
+
+# ignoring test-results created by playwright
+test-results/
