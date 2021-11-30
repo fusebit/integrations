@@ -13,15 +13,16 @@ router.get('/api/check/:installId', async (ctx) => {
 });
 
 router.get('/api/unregister/:installId', async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const response = await sdk.webhook.unregisterAll();
+  const webhookSdk = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
+  const response = await webhookSdk.deleteAll();
   ctx.body = response;
 });
 
 router.get('/api/register/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const webhookSdk = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
   const resources = await sdk.getAccessibleResources();
-  const registerResponse = await sdk.webhook.register(resources[0].id, [
+  const registerResponse = await webhookSdk.create(resources[0].id, [
     {
       jqlFilter: 'status != done',
       events: ['jira:issue_created', 'jira:issue_updated'],
@@ -29,6 +30,14 @@ router.get('/api/register/:installId', async (ctx) => {
   ]);
 
   ctx.body = registerResponse;
+});
+
+router.get('/api/list/:installId', async (ctx) => {
+  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const webhookSdk = await integration.webhook.getSdk(ctx, connectorName, ctx.params.installId);
+  const resources = await sdk.getAccessibleResources();
+  const webhooks = await webhookSdk.list(resources[0].id);
+  ctx.body = { webhooks };
 });
 
 router.get('/api/event/:installId', async (ctx) => {
