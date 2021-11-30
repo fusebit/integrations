@@ -12,4 +12,3 @@ test.beforeAll(async () => {
 test('Proxy: Reddit', async ({ page }) => {
   await Utilities.runProxyTest(account, page, 'Reddit', doOAuthLogin, 'spaces in Confluence Cloud');
 }, 180000);
-
