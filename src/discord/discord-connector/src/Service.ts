@@ -1,30 +1,30 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-import superagent from 'superagent';
-import nacl from 'tweetnacl';
+import crypto from 'crypto';
 
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
-    return [{ data: ctx.req.body, type: ctx.req.body.type.toString() }];
+    return [ctx.req.body];
   }
 
   protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
-    return event.data.guild_id;
+    return event.guild_id;
   }
 
   protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const payload = ctx.req.body;
     const signatureHeader = ctx.req.headers['x-signature-ed25519'] as string;
     const timeStamp = ctx.req.headers['x-signature-timestamp'] as string;
-    if (payload && signatureHeader && timeStamp) {
-      const message = Buffer.from(timeStamp + JSON.stringify(payload));
-      const signatureData = Buffer.from(signatureHeader, 'hex');
-      const publicKeyData = Buffer.from(ctx.state.manager.config.configuration.applicationPublicKey, 'hex');
-      // The webhook validation is using Discord recommended library for Node.js
-      const isValid = nacl.sign.detached.verify(message, signatureData, publicKeyData);
-      return isValid;
+    if (!payload || !signatureHeader || !timeStamp) {
+      return false;
     }
-    return false;
+    const message = Buffer.from(timeStamp + JSON.stringify(payload));
+    const signatureData = Buffer.from(signatureHeader, 'hex');
+    const keyDer = `302a300506032b6570032100${ctx.state.manager.config.configuration.applicationPublicKey}`;
+    const keyBase64 = Buffer.from(keyDer, 'hex').toString('base64');
+    const publicKey = `-----BEGIN PUBLIC KEY-----\n${keyBase64}\n-----END PUBLIC KEY-----`;
+    const isValid = crypto.verify(null, message, publicKey, signatureData);
+    return isValid;
   }
 
   protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {

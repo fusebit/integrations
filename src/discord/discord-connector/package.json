@@ -34,9 +34,7 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": ">=7.20.0",
-    "superagent": "6.1.0",
-    "tweetnacl": "^1.0.3"
+    "@fusebit-int/oauth-connector": ">=7.20.0"
   },
   "devDependencies": {
     "@fusebit-int/framework": ">=7.20.0",
