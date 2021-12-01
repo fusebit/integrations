@@ -2,14 +2,26 @@
   "id": "hubspot-crm-contacts",
   "name": "HubSpot Contacts sync",
   "smallIcon": "#/assets/hubspot.svg",
-  "largeIcon": "#/assets/hubspot.svg",
+  "largeIcon": "#/assets/hubspotlarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "texts": {
+        "postSuccess": "Your Contact was successfully added to Hubspot",
+        "postFail": "Oops! Something went wrong and we couldn't add your Contact",
+        "getFail" : "Oops! Something went wrong and we couldn't retrieve your Contacts",
+        "itemName": "Contact",
+        "labels": ["Email", "First Name"]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
