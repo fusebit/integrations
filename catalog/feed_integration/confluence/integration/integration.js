@@ -42,13 +42,6 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
-<<<<<<< Updated upstream
-// Retrieve pages and their URLs for Confluence
-// Note: This endpoint is also used by the sample app
-router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const resources = await atlassianClient.getAccessibleResources();
-=======
 // Retrieve pages and their URLs from Confluence
 // Note: This endpoint is also used by the sample app
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
@@ -58,18 +51,13 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
     ctx.throw('No Matching Account found in Atlassian', 404);
   }
 
->>>>>>> Stashed changes
   const confluenceCloud = resources.find((resource) => resource.scopes.includes('search:confluence'));
   const confluence = atlassianClient.confluence(confluenceCloud.id);
 
   const confluencePages = await confluence.get('/content');
   const baseURL = confluencePages._links.base;
 
-<<<<<<< Updated upstream
-  const pageList = Array.from(confluencePages.results).map((results) => ({
-=======
   const pageList = confluencePages.results.map((results) => ({
->>>>>>> Stashed changes
     pageTitle: results.title,
     pageLink: baseURL + results._links.webui,
   }));
