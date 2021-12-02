@@ -39,4 +39,22 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
+// Retrieve Issue IDs and Summaries from Jira
+// Note: This endpoint is also used by the sample app
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const resources = await atlassianClient.getAccessibleResources();
+  const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
+  const jira = atlassianClient.jira(jiraCloud.id);
+
+  const jiraIssues = await jira.get('/search?maxResults=15');
+
+  const issuesList = Array.from(jiraIssues.issues).map((issues) => ({
+    issueKey: issues.key,
+    issueSummary: issues.fields.summary,
+  }));
+
+  ctx.body = issuesList;
+});
+
 module.exports = integration;
