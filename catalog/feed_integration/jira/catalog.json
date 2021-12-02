@@ -2,14 +2,33 @@
   "id": "jira",
   "name": "Atlassian Jira",
   "smallIcon": "#/assets/jira.svg",
-  "largeIcon": "#/assets/jira.svg",
+  "largeIcon": "#/assets/jiraLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/jira#creating-your-own-jira-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/jira#creating-your-own-jira-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your issues from Jira",
+        "itemName": "Issue",
+        "properties": [
+          {
+            "name": "issueKey",
+            "label": "Issue Key"
+          },
+          {
+            "name": "issueSummary",
+            "label": "Issue Summary"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
