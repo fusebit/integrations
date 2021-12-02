@@ -29,10 +29,9 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources('jira');
   if (resources.length === 0) {
-    ctx.throw('No Matching Account found in Atlassian', 404);
+    ctx.throw(404, 'No Matching Account found in Atlassian');
   }
-
-  const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
+  const jiraCloud = resources[0];
   const jira = atlassianClient.jira(jiraCloud.id);
 
   const result = await jira.get('/search');
@@ -48,10 +47,9 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources('jira');
   if (resources.length === 0) {
-    ctx.throw('No Matching Account found in Atlassian', 404);
+    ctx.throw(404, 'No Matching Account found in Atlassian');
   }
-
-  const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
+  const jiraCloud = resources[0];
   const jira = atlassianClient.jira(jiraCloud.id);
 
   const jiraIssues = await jira.get('/search?maxResults=15');
