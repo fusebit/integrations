@@ -14,12 +14,21 @@
       "isEnabled": true,
       "isGetEnabled": true,
       "isPostEnabled": true,
-      "texts": {
+      "terms": {
         "postSuccess": "Your Contact was successfully added to Hubspot",
         "postFail": "Oops! Something went wrong and we couldn't add your Contact",
         "getFail": "Oops! Something went wrong and we couldn't retrieve your Contacts",
         "itemName": "Contact",
-        "labels": ["Email", "First Name"]
+        "properties": [
+          {
+            "name": "firstName",
+            "label": "First Name"
+          },
+          {
+            "name": "email",
+            "label": "Email"
+          }
+        ]
       }
     }
   },
