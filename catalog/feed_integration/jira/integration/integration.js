@@ -27,7 +27,10 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   //
   // For the Atlassian SDK documentation, see https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/.
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const resources = await atlassianClient.getAccessibleResources();
+  const resources = await atlassianClient.getAccessibleResources('jira');
+  if (resources.length === 0) {
+    ctx.throw('No Matching Account found in Atlassian', 404);
+  }
 
   const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
   const jira = atlassianClient.jira(jiraCloud.id);
@@ -43,13 +46,17 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 // Note: This endpoint is also used by the sample app
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const resources = await atlassianClient.getAccessibleResources();
+  const resources = await atlassianClient.getAccessibleResources('jira');
+  if (resources.length === 0) {
+    ctx.throw('No Matching Account found in Atlassian', 404);
+  }
+
   const jiraCloud = resources.find((resource) => resource.scopes.includes('read:jira-user'));
   const jira = atlassianClient.jira(jiraCloud.id);
 
   const jiraIssues = await jira.get('/search?maxResults=15');
 
-  const issuesList = Array.from(jiraIssues.issues).map((issues) => ({
+  const issuesList = jiraIssues.issues.map((issues) => ({
     issueKey: issues.key,
     issueSummary: issues.fields.summary,
   }));
