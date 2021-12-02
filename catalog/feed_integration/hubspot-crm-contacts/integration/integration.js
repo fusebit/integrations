@@ -31,4 +31,27 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   ctx.body = `Successfully loaded ${contacts.length} Contacts from HubSpot`;
 });
 
+// Add a new contact to HubSpot
+// Note: This endpoint is also used by the sample app
+router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const hubspotClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const newContact = { properties: { email: `${ctx.req.body.email}`, firstname: `${ctx.req.body.firstName}` } };
+
+  const addContact = await hubspotClient.crm.contacts.basicApi.create(newContact);
+});
+
+// Retrieve contact email address and first names from HubSpot
+// Note: This endpoint is also used by the sample app
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const hubspotClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const contacts = await hubspotClient.crm.contacts.getAll();
+
+  const contactsList = contacts.map((contact) => ({
+    email: contact.properties.email,
+    firstName: contact.properties.firstname,
+  }));
+
+  ctx.body = contactsList;
+});
+
 module.exports = integration;
