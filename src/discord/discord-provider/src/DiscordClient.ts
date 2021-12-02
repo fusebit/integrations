@@ -1,16 +1,6 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import {
-  AuthorizationType,
-  HttpMethodType,
-  IBotCheck,
-  IDiscordApplication,
-  IDiscordAuthorizationInfo,
-  IDiscordChannel,
-  IDiscordMethods,
-  IDiscordUser,
-  IFusebitCredentials,
-} from './Types';
+import { AuthorizationType, IBotCheck, IDiscordMethods, IFusebitCredentials } from './Types';
 
 class DiscordClient {
   public fusebit: IFusebitCredentials;
@@ -44,7 +34,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       get: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.GET, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.GET, body);
       },
       /**
        * @description Perform a POST request to Discord's HTTPS/REST API using a bot token
@@ -56,7 +46,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       post: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.POST, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.POST, body);
       },
       /**
        * @description Perform a PUT request to Discord's HTTPS/REST API using a bot token
@@ -68,7 +58,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       put: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.PUT, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.PUT, body);
       },
       /**
        * @description Perform a PATCH request to Discord's HTTPS/REST API using a bot token
@@ -80,7 +70,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       patch: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.PATCH, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.PATCH, body);
       },
       /**
        * @description Perform a OPTIONS request to Discord's HTTPS/REST API using a bot token
@@ -92,7 +82,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       options: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.OPTIONS, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.OPTIONS, body);
       },
       /**
        * @description Perform a HEAD request to Discord's HTTPS/REST API using a bot token
@@ -104,7 +94,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       head: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.HEAD, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.HEAD, body);
       },
       /**
        * @description Perform a DELETE request to Discord's HTTPS/REST API using a bot token
@@ -116,7 +106,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       delete: async (resource: string, body: any): Promise<any> => {
-        return this.requestBotResource(resource, HttpMethodType.DELETE, body);
+        return this.requestBotResource(resource, Internal.ProviderActivator.HttpMethodType.DELETE, body);
       },
     };
 
@@ -131,7 +121,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       get: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.GET, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.GET, AuthorizationType.Bearer, body);
       },
       /**
        * @description Perform a POST request to Discord's HTTPS/REST API using a bot token
@@ -143,7 +133,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       post: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.POST, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.POST, AuthorizationType.Bearer, body);
       },
       /**
        * @description Perform a PUT request to Discord's HTTPS/REST API using a bot token
@@ -155,7 +145,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       put: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.PUT, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.PUT, AuthorizationType.Bearer, body);
       },
       /**
        * @description Perform a PATCH request to Discord's HTTPS/REST API using a bot token
@@ -167,7 +157,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       patch: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.PATCH, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.PATCH, AuthorizationType.Bearer, body);
       },
       /**
        * @description Perform a OPTIONS request to Discord's HTTPS/REST API using a bot token
@@ -179,7 +169,12 @@ class DiscordClient {
        * @returns Promise<any>
        */
       options: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.OPTIONS, AuthorizationType.Bearer, body);
+        return this.request(
+          resource,
+          Internal.ProviderActivator.HttpMethodType.OPTIONS,
+          AuthorizationType.Bearer,
+          body
+        );
       },
       /**
        * @description Perform a HEAD request to Discord's HTTPS/REST API using a bot token
@@ -191,7 +186,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       head: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.HEAD, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.HEAD, AuthorizationType.Bearer, body);
       },
       /**
        * @description Perform a DELETE request to Discord's HTTPS/REST API using a bot token
@@ -203,7 +198,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       delete: async (resource: string, body: any): Promise<any> => {
-        return this.request(resource, HttpMethodType.DELETE, AuthorizationType.Bearer, body);
+        return this.request(resource, Internal.ProviderActivator.HttpMethodType.DELETE, AuthorizationType.Bearer, body);
       },
     };
 
@@ -215,7 +210,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       get: async (resource: string, body: any): Promise<any> => {
-        return this.webhookRequest(resource, HttpMethodType.GET, body);
+        return this.webhookRequest(resource, Internal.ProviderActivator.HttpMethodType.GET, body);
       },
       /**
        * @description Perform a POST request to Discord's HTTPS/REST Webhooks API
@@ -224,7 +219,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       post: async (resource: string, body: any): Promise<any> => {
-        return this.webhookRequest(resource, HttpMethodType.POST, body);
+        return this.webhookRequest(resource, Internal.ProviderActivator.HttpMethodType.POST, body);
       },
       /**
        * @description Perform a PATCH request to Discord's HTTPS/REST Webhooks API
@@ -233,7 +228,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       patch: async (resource: string, body: any): Promise<any> => {
-        return this.webhookRequest(resource, HttpMethodType.PATCH, body);
+        return this.webhookRequest(resource, Internal.ProviderActivator.HttpMethodType.PATCH, body);
       },
       /**
        * @description Perform a DELETE request to Discord's HTTPS/REST Webhooks API
@@ -242,7 +237,7 @@ class DiscordClient {
        * @returns Promise<any>
        */
       delete: async (resource: string, body: any): Promise<any> => {
-        return this.webhookRequest(resource, HttpMethodType.DELETE, body);
+        return this.webhookRequest(resource, Internal.ProviderActivator.HttpMethodType.DELETE, body);
       },
     };
   }
@@ -250,7 +245,7 @@ class DiscordClient {
   /**
    * Perform a HTTP request to Discord's HTTPS/REST API using a bot token
    */
-  private async requestBotResource(resource: string, method: HttpMethodType, body?: any): Promise<any> {
+  private async requestBotResource(resource: string, method: string, body?: any): Promise<any> {
     if (!this.botCheck.hasBotScope) {
       throw new Error('Missing scope, ensure the Connector bot scope is added to your configuration');
     }
@@ -264,11 +259,12 @@ class DiscordClient {
 
   private async request(
     resource: string,
-    method: HttpMethodType,
+    method: string,
     authorizationType: AuthorizationType,
     body?: any
   ): Promise<any> {
-    const response = await superagent[method](`${this.baseUrl}/${resource}`)
+    const response = await (superagent as any)
+      [method](`${this.baseUrl}/${resource}`)
       .send(body)
       .set('User-Agent', `fusebit/${this.fusebit.connectorId}`)
       .set(
@@ -280,8 +276,9 @@ class DiscordClient {
     return response.body;
   }
 
-  private async webhookRequest(webhookWithTokenUrl: string, method: HttpMethodType, body?: any): Promise<any> {
-    const response = await superagent[method](webhookWithTokenUrl)
+  private async webhookRequest(webhookWithTokenUrl: string, method: string, body?: any): Promise<any> {
+    const response = await (superagent as any)
+      [method](webhookWithTokenUrl)
       .send(body)
       .set('User-Agent', `fusebit/${this.fusebit.connectorId}`);
     return response.body;

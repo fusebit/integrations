@@ -79,18 +79,19 @@ export abstract class ProviderActivator<T> {
     ctx,
     path,
     method,
+    body,
   }: {
     ctx: FusebitContext;
     path: string;
     method: ProviderActivator.HttpMethodType;
+    body?: any;
   }): Promise<any> {
     const connnectorPath = `/api/${path}`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
-    const response = await superagent[method](`${baseUrl}${connnectorPath}`).set(
-      'Authorization',
-      `Bearer ${params.functionAccessToken}`
-    );
+    const response = await superagent[method](`${baseUrl}${connnectorPath}`)
+      .send(body)
+      .set('Authorization', `Bearer ${params.functionAccessToken}`);
     return response.body;
   }
 }
