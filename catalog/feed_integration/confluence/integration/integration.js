@@ -39,4 +39,23 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
+// Retrieve pages and their URLs for Confluence
+// Note: This endpoint is also used by the sample app
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const resources = await atlassianClient.getAccessibleResources();
+  const confluenceCloud = resources.find((resource) => resource.scopes.includes('search:confluence'));
+  const confluence = atlassianClient.confluence(confluenceCloud.id);
+
+  const confluencePages = await confluence.get('/content');
+  const baseURL = confluencePages._links.base;
+
+  const pageList = Array.from(confluencePages.results).map((results) => ({
+    pageTitle: results.title,
+    pageLink: baseURL + results._links.webui,
+  }));
+
+  ctx.body = pageList;
+});
+
 module.exports = integration;
