@@ -1,15 +1,35 @@
 {
   "id": "slack-bot",
   "name": "Slack Bot",
-  "smallIcon": "/images/slack.svg",
-  "largeIcon": "/images/slack.svg",
+  "smallIcon": "#/assets/slack.svg",
+  "largeIcon": "#/assets/slackLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": false,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your message was successfully sent to Slack",
+        "postFail": "Oops! Something went wrong and we couldn't send your message",
+        "itemName": "Task",
+        "properties": [
+          {
+            "name": "taskName",
+            "label": "Task Name"
+          },
+          {
+            "name": "taskDetail",
+            "label": "Task Detail"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
