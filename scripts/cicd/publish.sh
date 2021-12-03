@@ -7,19 +7,6 @@ set -x
 
 npm i -g @fusebit/cli
 
-# Check if publish is necessary
-VER_WART=v
-VERSION=$(cat lerna.json | jq -r .version)
-git tag --points-at HEAD | grep ${VER_WART}${VERSION} > /dev/null
-TAG_TEST=$?
-if [ ${TAG_TEST} -ne 0 ]; then
-  echo "Not publishing ${VERSION} - HEAD is not tagged ${VER_WART}-${VERSION}"
-  git tag --points-at HEAD
-  exit 0;
-else
-  echo "Publishing ${VERSION}"
-fi
-
 # start publish
 
 for i in $FUSE_PROFILE_INTERNAL_LIST
