@@ -5,6 +5,7 @@ on:
 name: CICD - DEV - Bump and Publish
 jobs:
   bump_patch:
+    concurrency: 'bump'
     if: contains(github.event.pull_request.labels.*.name, 'semver:patch') && github.event.pull_request.merged == true
     name: bump_patch
     runs-on: ubuntu-latest
@@ -62,6 +63,7 @@ jobs:
           FUSE_PROFILES: demoapp.stage
 
   bump_minor:
+    concurrency: 'bump'
     if: contains(github.event.pull_request.labels.*.name, 'semver:minor') && github.event.pull_request.merged == true
     name: bump_minor
     runs-on: ubuntu-latest
@@ -119,6 +121,7 @@ jobs:
           FUSE_PROFILES: demoapp.stage
 
   bump_major:
+    concurrency: 'bump'
     if: contains(github.event.pull_request.labels.*.name, 'semver:major') && github.event.pull_request.merged == true
     name: bump_major
     runs-on: ubuntu-latest
@@ -174,7 +177,9 @@ jobs:
           FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API: ${{ secrets.FUSE_PROFILE_DEMOAPP_763_US_WEST_1_API }}
           INTEGRATION_TEMPLATES: 'slack-bot'
           FUSE_PROFILES: demoapp.stage
+
   bump_none:
+    concurrency: 'bump'
     if: contains(github.event.pull_request.labels.*.name, 'semver:none') && github.event.pull_request.merged == true
     name: bump_none
     runs-on: ubuntu-latest
