@@ -11,7 +11,7 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
-import { doOAuthLogin } from './actions';
+import { authenticate } from './actions';
 
 let account: IAccount;
 
@@ -53,7 +53,7 @@ test('reddit-provider test', async ({ page }) => {
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, Constants.INTEGRATION_ID, `${localUrl}/oauthTest`);
 
-  doOAuthLogin({ page, targetUrl });
+  authenticate({ page, targetUrl });
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();
