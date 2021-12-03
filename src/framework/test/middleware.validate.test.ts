@@ -95,7 +95,7 @@ describe('Middleware: Validation', () => {
     const manager = new Manager();
     manager.setup(getIntegrationConfig(), integration.router);
 
-    // Invoke the event without permissions
+    // Invoke the event with invalid permissions
     const result = await manager.handle(
       request('GET', '/api/test', createPermissionsOptions(testResource, disallowedActions))
     );
@@ -127,7 +127,7 @@ describe('Middleware: Validation', () => {
     const manager = new Manager();
     manager.setup(getIntegrationConfig(), integration.router);
 
-    // Invoke the event with correct permissions
+    // Invoke the event with no permissions
     const result = await manager.handle(request('GET', '/api/test', createPermissionsOptions(testResource, [])));
     expect(result.status).toBe(403);
     expect(handler).toBeCalledTimes(0);
@@ -142,7 +142,7 @@ describe('Middleware: Validation', () => {
     const manager = new Manager();
     manager.setup(getIntegrationConfig(), integration.router);
 
-    // Invoke the event with correct permissions
+    // Invoke the event with invalid resource
     const result = await manager.handle(
       request('GET', '/api/test', createPermissionsOptions(testResource, [], disallowedResource))
     );
