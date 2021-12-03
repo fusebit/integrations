@@ -27,18 +27,18 @@ class Service extends OAuthConnector.Service {
     return { createdTime, webhookId };
   };
 
-  protected getEventsFromPayload(ctx: Connector.Types.Context) {
+  public getEventsFromPayload(ctx: Connector.Types.Context) {
     return ctx.req.body.events.map((event: Event) => {
       event.webhookId = ctx.params.webhookId;
       return event;
     });
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: Event) {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: Event) {
     return event.webhookId;
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     if (ctx.req.headers['x-hook-secret']) {
       return true;
     }
@@ -56,7 +56,7 @@ class Service extends OAuthConnector.Service {
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     const secret = ctx.req.headers['x-hook-secret'] as string;
     if (!secret) {
       return false;
@@ -77,7 +77,7 @@ class Service extends OAuthConnector.Service {
     return true;
   }
 
-  protected getWebhookEventType(event: Event): string {
+  public getWebhookEventType(event: Event): string {
     return event.action;
   }
 }

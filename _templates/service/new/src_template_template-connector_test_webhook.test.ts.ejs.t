@@ -3,6 +3,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/test/webho
 ---
 import nock from 'nock';
 import { ServiceConnector } from '../src';
+import { Service } from '../src/Service';
 
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
@@ -16,7 +17,7 @@ const sampleCtx: any = {
 
 const sampleAccessToken = 'sample_access_token';
 
-let service: any;
+let service: Service;
 beforeEach(() => {
   service = new ServiceConnector().service;
 });

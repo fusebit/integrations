@@ -4,15 +4,15 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import crypto from 'crypto';
 
 class Service extends OAuthConnector.Service {
-  protected getEventsFromPayload(ctx: Connector.Types.Context) {
+  public getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
     return event.authorizations?.[0]?.user_id;
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
+  public async validateWebhookEvent(ctx: Connector.Types.Context) {
     const signingSecret = ctx.state.manager.config.configuration.signingSecret;
     const timestampHeader = ctx.req.headers['x-slack-request-timestamp'];
     const requestBody = ctx.req.body;
@@ -30,7 +30,7 @@ class Service extends OAuthConnector.Service {
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context) {
+  public async initializationChallenge(ctx: Connector.Types.Context) {
     if (ctx.req.body.challenge) {
       ctx.body = { challenge: ctx.req.body.challenge };
       return true;
@@ -38,11 +38,11 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     return token.bot_user_id;
   }
 
-  protected getWebhookEventType(event: any) {
+  public getWebhookEventType(event: any) {
     return event.type;
   }
 }

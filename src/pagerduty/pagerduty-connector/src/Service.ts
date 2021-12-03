@@ -14,15 +14,15 @@ class Service extends OAuthConnector.Service {
     this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { signingSecret: signingSecret } });
   };
 
-  protected getEventsFromPayload(ctx: Connector.Types.Context) {
+  public getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
     return event.event.agent.id;
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context) {
+  public async validateWebhookEvent(ctx: Connector.Types.Context) {
     // PagerDuty webhook does not utilize a unified endpoint for webhooks.
     if (!ctx.params.webhookId) {
       return false;
@@ -42,12 +42,12 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     // PagerDuty does not implement any sort of initialization challenge, always assume false.
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const data = await superagent
       .get('https://api.pagerduty.com/users/me')
       .set('Authorization', `Bearer ${token.access_token}`)
@@ -55,7 +55,7 @@ class Service extends OAuthConnector.Service {
     return data.body.user.id;
   }
 
-  protected getWebhookEventType(event: any): string {
+  public getWebhookEventType(event: any): string {
     return event.event.event_type;
   }
 }

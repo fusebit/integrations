@@ -22,6 +22,25 @@ class ServiceConnector extends OAuthConnector {
   public constructor() {
     super();
 
+    this.router.get('/api/health', async (ctx: Connector.Types.Context) => {
+      const { botToken, scope } = ctx.state.manager.config.configuration;
+      const hasBotScope = (scope || '').split(' ').includes('bot');
+
+      if (hasBotScope && !botToken) {
+        ctx.body = ctx.throw(
+          'Missing bot token, ensure the Connector has the Discord Application Bot Token added to your configuration'
+        );
+      }
+
+      if (!hasBotScope && botToken) {
+        ctx.body = ctx.throw('Missing scope, ensure the Connector bot scope is added to your configuration');
+      }
+
+      ctx.body = {
+        status: 'ok',
+      };
+    });
+
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
@@ -60,12 +79,10 @@ class ServiceConnector extends OAuthConnector {
 
     // Expose bot token endpoint to get the stored bot token in the connector
     this.router.get(
-      '/api/bot/check',
+      '/api/bot-token',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        const hasBotScope = ctx.state.manager.config.configuration.scope.split(' ').includes('bot');
         ctx.body = {
-          hasBotScope,
           botToken: ctx.state.manager.config.configuration.botToken,
         };
       }

@@ -25,8 +25,8 @@ describe('Connector', () => {
     const mockedInitializationChallenge = jest.fn(async () => true);
 
     class TestService extends Connector.Service {
-      protected validateWebhookEvent = mockedValidateWebhookEvent;
-      protected initializationChallenge = mockedInitializationChallenge;
+      public validateWebhookEvent = mockedValidateWebhookEvent;
+      public initializationChallenge = mockedInitializationChallenge;
     }
 
     class TestConnector extends Connector {
@@ -50,8 +50,8 @@ describe('Connector', () => {
       const mockedInitializationChallenge = jest.fn(async () => false);
 
       class TestService extends Connector.Service {
-        protected validateWebhookEvent = mockedValidateWebhookEvent;
-        protected initializationChallenge = mockedInitializationChallenge;
+        public validateWebhookEvent = mockedValidateWebhookEvent;
+        public initializationChallenge = mockedInitializationChallenge;
       }
 
       class TestConnector extends Connector {
@@ -87,19 +87,19 @@ describe('Connector', () => {
 
     // Create the connector.
     class TestService extends Connector.Service {
-      protected async validateWebhookEvent() {
+      public async validateWebhookEvent() {
         return true;
       }
-      protected async initializationChallenge() {
+      public async initializationChallenge() {
         return false;
       }
-      protected getEventsFromPayload() {
+      public getEventsFromPayload() {
         return events;
       }
-      protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
+      public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
         return event;
       }
-      protected async createWebhookResponse(
+      public async createWebhookResponse(
         ctx: Connector.Types.Context,
         processPromise?: Promise<Connector.Types.FanoutResponse>
       ) {
@@ -145,19 +145,19 @@ describe('Connector', () => {
     // Mock some methods on service.
     // Create the connector.
     class TestService extends Connector.Service {
-      protected async validateWebhookEvent() {
+      public async validateWebhookEvent() {
         return true;
       }
-      protected async initializationChallenge() {
+      public async initializationChallenge() {
         return false;
       }
-      protected getEventsFromPayload() {
+      public getEventsFromPayload() {
         return events;
       }
-      protected getAuthIdFromEvent(event: any) {
+      public getAuthIdFromEvent(event: any) {
         return event;
       }
-      protected async createWebhookResponse(
+      public async createWebhookResponse(
         ctx: Connector.Types.Context,
         processPromise?: Promise<Connector.Types.FanoutResponse>
       ) {
