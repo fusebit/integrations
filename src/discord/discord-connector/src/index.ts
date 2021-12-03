@@ -22,7 +22,7 @@ class ServiceConnector extends OAuthConnector {
   public constructor() {
     super();
 
-    this.router.get('/api/health', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/health', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       const { botToken, scope } = ctx.state.manager.config.configuration;
       const hasBotScope = (scope || '').split(' ').includes('bot');
 
@@ -36,9 +36,7 @@ class ServiceConnector extends OAuthConnector {
         ctx.body = ctx.throw('Missing scope, ensure the Connector bot scope is added to your configuration');
       }
 
-      ctx.body = {
-        status: 'ok',
-      };
+      next();
     });
 
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
