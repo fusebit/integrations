@@ -2,14 +2,33 @@
   "id": "confluence",
   "name": "Atlassian Confluence",
   "smallIcon": "#/assets/confluence.svg",
-  "largeIcon": "#/assets/confluence.svg",
+  "largeIcon": "#/assets/confluenceLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/confluence#creating-your-own-confluence-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/confluence#creating-your-own-confluence-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your pages from Confluence",
+        "itemName": "Page",
+        "properties": [
+          {
+            "name": "pageTitle",
+            "label": "Page Title"
+          },
+          {
+            "name": "pageLink",
+            "label": "Page Link"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
