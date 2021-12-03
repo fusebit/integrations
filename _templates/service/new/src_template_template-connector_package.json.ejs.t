@@ -20,7 +20,7 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
   },
   "scripts": {
     "test": "jest --config=./jest.config.ts",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --config=./jest.config.ts",
+    "test:debug": "node --inspect-brk jest --runInBand --config=./jest.config.ts",
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
