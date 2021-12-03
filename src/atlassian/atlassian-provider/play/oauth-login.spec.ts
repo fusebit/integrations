@@ -12,7 +12,7 @@ import {
   RequestMethod,
 } from '@fusebit-int/play';
 
-import { doOAuthLogin } from './actions';
+import { authenticate } from './actions';
 
 export const OAUTH_SCOPES = [
   'read:jira-user',
@@ -68,7 +68,7 @@ test('basic test', async ({ page }) => {
   // Open the browser to the session url
   await page.goto(targetUrl);
 
-  await doOAuthLogin(page);
+  await authenticate(page);
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();

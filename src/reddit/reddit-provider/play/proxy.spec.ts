@@ -9,6 +9,6 @@ test.beforeAll(async () => {
   account = getAccount();
 });
 
-test('Proxy: Atlassian Confluence', async ({ page }) => {
-  await Utilities.runProxyTest(account, page, 'Atlassian Confluence', authenticate, 'spaces in Confluence Cloud');
+test('Proxy: Reddit', async ({ page }) => {
+  await Utilities.runProxyTest(account, page, 'Reddit', authenticate, 'karma from comments');
 }, 180000);
