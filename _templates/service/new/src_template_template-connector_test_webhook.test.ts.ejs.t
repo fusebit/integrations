@@ -6,6 +6,7 @@ import { ServiceConnector } from '../src';
 
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
+import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
 
 const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
