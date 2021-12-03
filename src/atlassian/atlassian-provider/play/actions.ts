@@ -10,21 +10,25 @@ export const authenticate = async (page: Page) => {
   await page.fill('[placeholder="Enter password"]', Constants.OAUTH_PASSWORD);
   await page.click('button:has-text("Log in")');
 
-  try {
-    await page.waitForLoadState('networkidle');
-  } catch (err) {
-    // Throws an error if the page closes, but we don't care.
+  await Promise.race([
+    page.waitForSelector('text=Choose a site'),
+    page.waitForSelector('button:has-text("Accept")'),
+    page.waitForEvent('close'),
+  ]);
+
+  if (page.isClosed()) {
+    return;
   }
 
-  if (!page.isClosed()) {
-    if (await page.$('text=Choose a site')) {
-      await page.click('text=Choose a site');
-      await page.click('#react-select-2-option-0');
-    }
+  if (await page.isVisible('text=Choose a site')) {
+    await page.click('text=Choose a site');
+    await page.click('#react-select-2-option-0');
+  }
 
-    if (await page.$('button:has-text("Accept")')) {
-      // Accept the permissions page
-      await page.click('button:has-text("Accept")');
-    }
+  if (await page.isVisible('button:has-text("Accept")')) {
+    // Accept the permissions page
+    await page.click('button:has-text("Accept")');
+  } else {
+    throw 'Accept Button Not Found';
   }
 };
