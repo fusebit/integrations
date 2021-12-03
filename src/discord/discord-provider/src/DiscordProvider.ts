@@ -9,21 +9,11 @@ export default class DiscordProvider extends Internal.ProviderActivator<FusebitD
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitDiscordClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const botCredentialsCheck = await this.requestConnectorAPI({
-      ctx,
-      path: 'bot/check',
-      method: Internal.ProviderActivator.HttpMethodType.GET,
+    const client: FusebitDiscordClient = new Client(ctx, {
+      credentials,
+      lookupKey,
+      connectorId: this.config.entityId,
     });
-
-    const client: FusebitDiscordClient = new Client(
-      ctx,
-      {
-        credentials,
-        lookupKey,
-        connectorId: this.config.entityId,
-      },
-      botCredentialsCheck
-    );
 
     client.fusebit = { credentials };
     return client;

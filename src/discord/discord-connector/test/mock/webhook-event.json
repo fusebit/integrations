@@ -1,0 +1,66 @@
+{
+  "ping_event": {
+    "body": {
+      "application_id": "913430579872137277",
+      "id": "916186825142464562",
+      "token": "aW50ZXJhY3Rpb246OTE2MTg2ODI1MTQyNDY0NTYyOm5tc0t1WHE4SktPWkZnb2lNZmxMRkpxMjBNajR2ZVNUZmUzWDJJOFNmVGhiWVRQdkEzVElySk1tT3ROdGZIdzFMQ3BnM1d0UWhYb242VjNGd1ZEc21LOWxsSDQ5NjFhSzl2cXFiVVR3cnhYTmtjYUJuZTFYb1NCVUJaakFKa2RS",
+      "type": 1,
+      "user": {
+        "avatar": "1ac76e1fe4ac7ad60dafc202970d5591",
+        "discriminator": "6325",
+        "id": "410660680937504768",
+        "public_flags": 0,
+        "username": "degrammer"
+      },
+      "version": 1
+    },
+    "headers": {
+      "x-signature-ed25519": "9c0bc3460940eb53c99c30d8450c6cf9ccc3a6035e60675b91a43a44b63173ae1efeaf12bdb58c64b9dc9670473a46fe320adb4ca6e29ef206cef78cf0205307",
+      "x-signature-timestamp": "1638506361"
+    }
+  },
+  "slash_command": {
+    "body": {
+      "application_id": "913430579872137277",
+      "channel_id": "889691384154570765",
+      "data": {
+        "id": "915287301695897680",
+        "name": "blep",
+        "options": [
+          { "name": "animal", "type": 3, "value": "animal_cat" },
+          { "name": "only_smol", "type": 5, "value": true }
+        ],
+        "type": 1
+      },
+      "guild_id": "889691384154570762",
+      "id": "916198195724447755",
+      "member": {
+        "avatar": null,
+        "communication_disabled_until": null,
+        "deaf": false,
+        "is_pending": false,
+        "joined_at": "2021-09-21T01:55:55.655000+00:00",
+        "mute": false,
+        "nick": null,
+        "pending": false,
+        "permissions": "2199023255551",
+        "premium_since": null,
+        "roles": [],
+        "user": {
+          "avatar": "1ac76e1fe4ac7ad60dafc202970d5591",
+          "discriminator": "6325",
+          "id": "410660680937504768",
+          "public_flags": 0,
+          "username": "degrammer"
+        }
+      },
+      "token": "aW50ZXJhY3Rpb246OTE2MTk4MTk1NzI0NDQ3NzU1OldsN1B0aW12bkNBdXMxZlAxTTlRT0NDQUk4NE1rOWhpYW84WUdySDFYc2l2VWY2c0RnbWpQMkl2MFBVcnpSb2YydEVmYWJYaEtFenBoUUJIZU1jdjdOZ1diRGFaWkdvd1lwZWgwR0tYQkkxOXcxd3JMUkJ2UWU0YVhCNVpKSFdj",
+      "type": 2,
+      "version": 1
+    },
+    "headers": {
+      "x-signature-ed25519": "0b3b73f4e2549ee1faa3904639a32da2aaec5f9fccb401e94816e58332a50b1c8b8e93a3ba3c6d58385a3ccfb308cf0d248a3c8f1b9d744380864ed6ab347e09",
+      "x-signature-timestamp": "1638509072"
+    }
+  }
+}

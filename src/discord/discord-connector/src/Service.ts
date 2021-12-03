@@ -2,6 +2,12 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import crypto from 'crypto';
 
+/* 
+  This is a temporary workaround in order to support ed25519 verification with Node 14 
+  without depending from an external library.
+*/
+const Ed25519_PUBLIC_KEY_PREFIX = '302a300506032b6570032100';
+
 class Service extends OAuthConnector.Service {
   protected getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
@@ -20,7 +26,7 @@ class Service extends OAuthConnector.Service {
     }
     const message = Buffer.from(timeStamp + JSON.stringify(payload));
     const signatureData = Buffer.from(signatureHeader, 'hex');
-    const keyDer = `302a300506032b6570032100${ctx.state.manager.config.configuration.applicationPublicKey}`;
+    const keyDer = `${Ed25519_PUBLIC_KEY_PREFIX}${ctx.state.manager.config.configuration.applicationPublicKey}`;
     const keyBase64 = Buffer.from(keyDer, 'hex').toString('base64');
     const publicKey = `-----BEGIN PUBLIC KEY-----\n${keyBase64}\n-----END PUBLIC KEY-----`;
     const isValid = crypto.verify(null, message, publicKey, signatureData);
