@@ -5,27 +5,27 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 class Service extends OAuthConnector.Service {
-  protected getEventsFromPayload(ctx: Connector.Types.Context) {
+  public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
     return '';
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     return '';
   }
 
-  protected getWebhookEventType(event: any): string {
+  public getWebhookEventType(event: any): string {
     return '';
   }
 }

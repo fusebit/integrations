@@ -3,15 +3,15 @@ import superagent from 'superagent';
 import { verifyJwt } from './jwt';
 
 class Service extends Connector.Service {
-  protected getEventsFromPayload(ctx: Connector.Types.Context) {
+  public getEventsFromPayload(ctx: Connector.Types.Context) {
     return [ctx.req.body];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
     return event.recipient.id;
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const { authorization } = ctx.req.headers;
     if (!authorization || !authorization.toLocaleLowerCase().startsWith('bearer ')) {
       ctx.throw(403, 'Invalid authorization');
@@ -34,11 +34,11 @@ class Service extends Connector.Service {
     return true;
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     return false;
   }
 
-  protected getWebhookEventType(event: any): string {
+  public getWebhookEventType(event: any): string {
     return event.type;
   }
 }

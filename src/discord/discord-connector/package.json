@@ -1,16 +1,20 @@
----
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.json
----
 {
-  "name": "@fusebit-int/<%= name.toLowerCase() %>-connector",
-  "version": "<%= h.currentVersion %>",
-  "description": "<%= h.capitalize(name) %> Connector",
-  "keywords": ["Fusebit", "<%= h.capitalize(name) %>"],
+  "name": "@fusebit-int/discord-connector",
+  "version": "7.20.0",
+  "description": "Discord Connector",
+  "keywords": [
+    "Fusebit",
+    "Discord"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
@@ -31,11 +35,10 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/package.js
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": ">=<%= h.currentVersion %>",
-    "superagent": "6.1.0"
+    "@fusebit-int/oauth-connector": ">=7.20.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": ">=<%= h.currentVersion %>",
+    "@fusebit-int/framework": ">=7.20.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",

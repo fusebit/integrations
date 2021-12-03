@@ -127,7 +127,7 @@ export class Service extends EntityBase.ServiceDefault {
   }
 
   // Default configuration functions
-  protected getEventsByAuthId(ctx: Connector.Types.Context): Record<string, Connector.Types.IWebhookEvents> | void {
+  public getEventsByAuthId(ctx: Connector.Types.Context): Record<string, Connector.Types.IWebhookEvents> | void {
     const events = this.getEventsFromPayload(ctx);
     if (!events) {
       ctx.throw(500, 'No Events found on payload.');
@@ -146,7 +146,7 @@ export class Service extends EntityBase.ServiceDefault {
   /**
    * Override: extract from a payload into an array of events to be processed later.
    */
-  protected getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
+  public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   }
 
@@ -154,7 +154,7 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: return the authentication id that can be used as a key for this particular event to group it
    * with other events belonging to that same authentication domain.
    */
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
     return;
   }
 
@@ -162,14 +162,14 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: When supplied with an OAuth token, extract out the key that will be used for authentication
    * association in webhook events.
    */
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     // No throw here.  This is called in the auth flow and needs to continue regardless of success
   }
 
   /**
    * Override: When a custom response is needed to send back to the webhook service, other than a 200 OK.
    */
-  protected async createWebhookResponse(
+  public async createWebhookResponse(
     ctx: Connector.Types.Context,
     processPromise?: Promise<FanoutResponse_>
   ): Promise<void> {
@@ -179,7 +179,7 @@ export class Service extends EntityBase.ServiceDefault {
   /**
    * Override: Cryptographically validate the contents of the request.
    */
-  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Validation configuration missing. Required for webhook processing.');
   }
 
@@ -187,7 +187,7 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: Different webhooks may have different types, this gives us the ability to segment on different
    * types of webhooks so that the integration can attach to different events.
    */
-  protected getWebhookEventType(event: any): string {
+  public getWebhookEventType(event: any): string {
     // No known event type
     return '';
   }
@@ -196,7 +196,7 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: Some webhooks have a special request that they send to test the validation checks of the
    * receiver.  Is this one of those requests?
    */
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
   }
 }

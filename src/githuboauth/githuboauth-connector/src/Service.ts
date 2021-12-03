@@ -5,17 +5,17 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 class Service extends OAuthConnector.Service {
-  protected getEventsFromPayload(ctx: Connector.Types.Context): any {
+  public getEventsFromPayload(ctx: Connector.Types.Context): any {
     const event = ctx.req.headers['x-github-event'];
     const type = `${event}.${ctx.req.body.action}`;
     return [{ data: ctx.req.body, type }];
   }
 
-  protected getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
     return event?.data?.sender?.id;
   }
 
-  protected async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const payload = ctx.req.body;
     const signatureHeader = ctx.req.headers['x-hub-signature-256'] as string;
     if (payload && signatureHeader) {
@@ -36,11 +36,11 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  protected async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     return false;
   }
 
-  protected async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const userResponse = await superagent
       .get('https://api.github.com/user')
       .set('User-Agent', `fusebit/${ctx.state.params.entityId}`)
@@ -49,7 +49,7 @@ class Service extends OAuthConnector.Service {
     return userResponse?.body?.id;
   }
 
-  protected getWebhookEventType(event: any): string {
+  public getWebhookEventType(event: any): string {
     return event.type;
   }
 }

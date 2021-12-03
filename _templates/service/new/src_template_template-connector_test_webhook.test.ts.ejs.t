@@ -3,9 +3,11 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/test/webho
 ---
 import nock from 'nock';
 import { ServiceConnector } from '../src';
+import { Service } from '../src/Service';
 
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
+import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
 
 const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
@@ -15,35 +17,30 @@ const sampleCtx: any = {
 
 const sampleAccessToken = 'sample_access_token';
 
+let service: Service;
+beforeEach(() => {
+  service = new ServiceConnector().service;
+});
+
 describe('<%= h.capitalize(name) %> Webhook Events', () => {
   test.todo('Validate: getEventsFromPayload', async () => {
-    const service: any = new ServiceConnector().service;
-
     expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
 
   test.todo('Validate: getAuthIdFromEvent', async () => {
-    const service: any = new ServiceConnector().service;
-
     expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.user.accountId);
   });
 
   test.todo('Validate: validateWebhookEvent', async () => {
-    const service: any = new ServiceConnector().service;
-
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 
   test.todo('Validate: initializationChallenge false', async () => {
-    const service: any = new ServiceConnector().service;
-
     expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test.todo('Validate: getTokenAuthId', async () => {
-    const service: any = new ServiceConnector().service;
-
     const scope = nock('https://api.<%= name.toLowerCase() %>.com');
     scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get('/me').reply(200, sampleMe);
 
@@ -53,8 +50,6 @@ describe('<%= h.capitalize(name) %> Webhook Events', () => {
   });
 
   test('Validate: getWebhookEventType', async () => {
-    const service: any = new ServiceConnector().service;
-
     expect(service.getWebhookEventType(sampleEvent)).toBe(sampleEvent.webhookEvent);
   });
 
