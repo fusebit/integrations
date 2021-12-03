@@ -47,7 +47,11 @@ export const getContext: () => FusebitContext = () =>
     }),
   } as unknown) as FusebitContext);
 
-export const request = (method: string, path: string, options?: { headers?: any; query?: any; body?: any }) => {
+export const request = (
+  method: string,
+  path: string,
+  options?: { headers?: any; query?: any; body?: any; state?: any; caller?: any }
+) => {
   return { method, path, ...options };
 };
 
