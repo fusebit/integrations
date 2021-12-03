@@ -20,7 +20,7 @@ const router = integration.router;
 
 const connectorName = 'atlassianConnector';
 
-// The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
+/// The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create an Atlassian client pre-configured with credentials necessary to communicate with your tenant's
   // Confluence account.
@@ -29,10 +29,10 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources('confluence');
   if (resources.length === 0) {
-    ctx.throw('No Matching Account found in Atlassian', 404);
+    ctx.throw(404, 'No Matching Account found in Atlassian');
   }
 
-  const confluenceCloud = resources.find((resource) => resource.scopes.includes('search:confluence'));
+  const confluenceCloud = resources[0];
   const confluence = atlassianClient.confluence(confluenceCloud.id);
 
   const result = await confluence.get('/space');
@@ -48,10 +48,10 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources('confluence');
   if (resources.length === 0) {
-    ctx.throw('No Matching Account found in Atlassian', 404);
+    ctx.throw(404, 'No Matching Account found in Atlassian');
   }
 
-  const confluenceCloud = resources.find((resource) => resource.scopes.includes('search:confluence'));
+  const confluenceCloud = resources[0];
   const confluence = atlassianClient.confluence(confluenceCloud.id);
 
   const confluencePages = await confluence.get('/content');
