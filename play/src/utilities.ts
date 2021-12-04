@@ -13,16 +13,16 @@ export const runProxyTest = async (
     `https://manage.fusebit.io/callback?silentAuth=false&requestedPath=/#access_token=${account.accessToken}&scope=openid%20profile%20email&expires_in=86400&token_type=Bearer`
   );
 
-  await page.waitForNavigation({ url: /.*\/integrations\/overview$/ });
+  await page.waitForNavigation({ url: /.*\/integrations\/overview$/, waitUntil: 'networkidle' });
 
   // Click button:has-text("New integration")
-  page.click('button:has-text("New integration")');
+  await page.click('button:has-text("New integration")');
 
   // Click text=Atlassian Confluence
   await page.click(`text=${integrationName}`);
 
   // Click button:has-text("Create")
-  page.click('button:has-text("Create")');
+  await page.click('button:has-text("Create")');
 
   // Click button:has-text("Edit")
   await page.click('button:has-text("Edit")', {
