@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-discord-connector",
+  "version": "7.20.5",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.20.5",
+    "@fusebit-int/discord-connector": ">=7.20.5"
+  }
+}

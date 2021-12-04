@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-discord-integration",
+  "version": "7.20.5",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.20.5",
+    "@fusebit-int/discord-provider": ">=7.20.5"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}
