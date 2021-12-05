@@ -100,6 +100,8 @@ const installAwsCli = async () => {
       },
     });
   }
+  const date = new Date().toDateString();
+
   for (const failure of storageErrors) {
     slack_payload.blocks.push({
       type: 'section',
@@ -109,12 +111,23 @@ const installAwsCli = async () => {
       },
     });
   }
+
+  slack_payload.blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text:
+        '' +
+        `To access the logs, run 
+      ./scripts/access_pw_logs ${date} <service-name>`,
+    },
+  });
+
   await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
   }`;
 
   // Send output to AWS
-  const date = new Date().toISOString();
   await Promise.all(
     servicesWithPlay.map((service) => {
       return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date}/${service}/ || true`;
