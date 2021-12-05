@@ -165,7 +165,7 @@ const installAwsCli = async () => {
   });
 
   await $`git log -n 3  --pretty=%B > /tmp/commits.txt`;
-  const commit = await fs.promises.readFile('/tmp/commits.txt');
+  const commit = await fs.promises.readFile('/tmp/commits.txt', { encoding: 'utf-8' });
   const commits = commit.split('\n');
   for (const com of commits) {
     failurePayload.blocks.push({
