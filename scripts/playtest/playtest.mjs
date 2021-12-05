@@ -168,6 +168,9 @@ const installAwsCli = async () => {
   const commit = await fs.promises.readFile('/tmp/commits.txt', { encoding: 'utf-8' });
   const commits = commit.split('\n');
   for (const com of commits) {
+    if (com === '') {
+      continue;
+    }
     slack_payload.blocks.push({
       type: 'section',
       text: {
