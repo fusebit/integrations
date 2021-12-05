@@ -100,7 +100,7 @@ const installAwsCli = async () => {
       },
     });
   }
-  const date = new Date().toDateString();
+  const date = new Date().toISOString();
 
   for (const failure of storageErrors) {
     slack_payload.blocks.push({
@@ -119,7 +119,7 @@ const installAwsCli = async () => {
       text:
         '' +
         `To access the logs, run 
-      ./scripts/access_pw_logs ${date} <service-name>`,
+      ./scripts/access_pw_logs.sh ${date} <service-name>`,
     },
   });
 
