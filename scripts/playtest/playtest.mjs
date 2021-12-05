@@ -84,8 +84,30 @@ const installAwsCli = async () => {
   };
   for (const svc of servicesWithPlay) {
     const pl = JSON.parse(await fs.promises.readFile(`./src/${svc}/${svc}-provider/results.json`));
-    const success = pl.suites[0].specs[0].ok;
-    if (!success) {
+    let basicSuccess = true;
+    let proxyExists = false;
+    let proxySuccess = true;
+    await Promise.all(
+      pl.suites.map(async (suite) => {
+        await Promise.all(
+          suite.specs.map(async (spec) => {
+            if (spec.title.toLowerCase().includes('proxy')) {
+              proxyExists = true;
+              if (!spec.ok) {
+                proxySuccess = false;
+              }
+              return;
+            }
+            if (!spec.ok) {
+              basicSuccess = false;
+              throw Error('Test Failed');
+            }
+          })
+        );
+      })
+    );
+
+    if (!proxySuccess || !basicSuccess) {
       totalSuccess = false;
     }
     slack_payload.blocks.push({
@@ -95,10 +117,23 @@ const installAwsCli = async () => {
         text:
           '' +
           `${success ? ':white_check_mark:' : ':warning:'} ` +
-          `${svc}'s playwright test ` +
-          `${success ? 'passed' : 'failed'}`,
+          `${svc}'s basic playwright test ` +
+          `${basicSuccess ? 'passed' : 'failed'}`,
       },
     });
+    if (proxyExists) {
+      slack_payload.blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text:
+            '' +
+            `${success ? ':white_check_mark:' : ':warning:'} ` +
+            `${svc}'s proxy playwright test ` +
+            `${proxySuccess ? 'passed' : 'failed'}`,
+        },
+      });
+    }
   }
   const date = new Date().toISOString();
 
