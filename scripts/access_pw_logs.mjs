@@ -18,6 +18,9 @@ const help = () => {
   const [_, timeStamp, serviceName] = argv._;
   const profile = argv.profile;
 
-  const profileArgument = profile ? '--profile' + profile : '';
-  await $`aws s3 sync s3://fusebit-playwright-output/${timeStamp}/${serviceName}/ logs/ ${profileArgument}`;
+  if (profile) {
+    await $`aws s3 sync s3://fusebit-playwright-output/${timeStamp}/${serviceName}/ logs/ --profile ${profile}`;
+  } else {
+    await $`aws s3 sync s3://fusebit-playwright-output/${timeStamp}/${serviceName}/ logs/`;
+  }
 })();
