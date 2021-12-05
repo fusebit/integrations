@@ -116,7 +116,7 @@ const installAwsCli = async () => {
         type: 'mrkdwn',
         text:
           '' +
-          `${success ? ':white_check_mark:' : ':warning:'} ` +
+          `${basicSuccess ? ':white_check_mark:' : ':warning:'} ` +
           `${svc}'s basic playwright test ` +
           `${basicSuccess ? 'passed' : 'failed'}`,
       },
@@ -128,7 +128,7 @@ const installAwsCli = async () => {
           type: 'mrkdwn',
           text:
             '' +
-            `${success ? ':white_check_mark:' : ':warning:'} ` +
+            `${proxySuccess ? ':white_check_mark:' : ':warning:'} ` +
             `${svc}'s proxy playwright test ` +
             `${proxySuccess ? 'passed' : 'failed'}`,
         },
