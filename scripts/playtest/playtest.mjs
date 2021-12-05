@@ -100,7 +100,6 @@ const installAwsCli = async () => {
             }
             if (!spec.ok) {
               basicSuccess = false;
-              throw Error('Test Failed');
             }
           })
         );
