@@ -1,7 +1,6 @@
 #!/usr/bin/env zx
 
 const fs = require('fs');
-
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
@@ -156,6 +155,27 @@ const installAwsCli = async () => {
       ./scripts/access_pw_logs.sh ${date} <service-name>`,
     },
   });
+
+  slack_payload.blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `Check the logs here ${process.env.BUILD_URL}`,
+    },
+  });
+
+  await $`git log -n 3  --pretty=%B > /tmp/commits.txt`;
+  const commit = await fs.promises.readFile('/tmp/commits.txt');
+  const commits = commit.split('\n');
+  for (const com of commits) {
+    failurePayload.blocks.push({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `${com} is one of the last commits.`,
+      },
+    });
+  }
 
   await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
