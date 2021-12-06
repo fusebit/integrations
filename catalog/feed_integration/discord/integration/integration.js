@@ -25,8 +25,12 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // Create a Discord client pre-configured with credentials necessary to communicate with your tenant's Discord account.
   // For the Discord API documentation, see https://discord.com/developers/docs/reference.
   const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const response = await discordClient.user.get('users/@me');
-  ctx.body = response;
+  const { id, username, avatar } = await discordClient.user.get('users/@me');
+  ctx.body = {
+    id,
+    username,
+    avatar,
+  };
 });
 
 // List Guild channels
@@ -47,10 +51,10 @@ router.post(
   integration.middleware.authorizeUser('install:get'),
   async (ctx) => {
     const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-    const response = await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
+    await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
       content: ctx.req.body.message || 'Hello world from Fusebit!',
     });
-    ctx.body = response;
+    ctx.body = 'Message posted successfully';
   }
 );
 
