@@ -17,7 +17,7 @@
       "terms": {
         "postSuccess": "Your Task was successfully added to Asana",
         "postFail": "Oops! Something went wrong and we couldn't add your Task",
-        "getFail": "Oops! Something went wrong and we couldn't retrieve your pages from Asana",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your tasks from Asana",
         "itemName": "Task",
         "properties": [
           {
