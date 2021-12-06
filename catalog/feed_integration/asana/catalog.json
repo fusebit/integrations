@@ -2,7 +2,7 @@
   "id": "asana",
   "name": "Asana",
   "smallIcon": "#/assets/asana.svg",
-  "largeIcon": "#/assets/asana.svg",
+  "largeIcon": "#/assets/asanaLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
