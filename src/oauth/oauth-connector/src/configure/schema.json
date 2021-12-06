@@ -66,6 +66,10 @@
     },
     "accessTokenExpirationBuffer": {
       "type": "integer"
+    },
+    "immediateResponse": {
+      "title": "The Integration ID that will handle the immediate response",
+      "type": "string"
     }
   },
   "required": ["scope", "clientId", "clientSecret"]

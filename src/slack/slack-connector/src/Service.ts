@@ -1,3 +1,4 @@
+import formurlencoded from 'form-urlencoded';
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
@@ -9,16 +10,23 @@ class Service extends OAuthConnector.Service {
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
-    return event.authorizations?.[0]?.user_id;
+    return `${event.team_id}/${event.api_app_id}`;
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context) {
     const signingSecret = ctx.state.manager.config.configuration.signingSecret;
     const timestampHeader = ctx.req.headers['x-slack-request-timestamp'];
+    const contentType = ctx.req.headers['content-type'];
     const requestBody = ctx.req.body;
-    const rawBody = JSON.stringify(requestBody)
-      .replace(/\//g, '\\/')
-      .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
+
+    let rawBody;
+    if (contentType?.toLocaleLowerCase() === 'application/x-www-form-urlencoded') {
+      rawBody = formurlencoded(requestBody);
+    } else {
+      rawBody = JSON.stringify(requestBody)
+        .replace(/\//g, '\\/')
+        .replace(/[\u007f-\uffff]/g, (c) => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4));
+    }
 
     const basestring = ['v0', timestampHeader, rawBody].join(':');
     const calculatedSignature = 'v0=' + crypto.createHmac('sha256', signingSecret).update(basestring).digest('hex');
@@ -39,7 +47,7 @@ class Service extends OAuthConnector.Service {
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    return token.bot_user_id;
+    return `${token.team.id}/${token.app_id}`;
   }
 
   public getWebhookEventType(event: any) {

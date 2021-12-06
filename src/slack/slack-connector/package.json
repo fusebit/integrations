@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^7.27.0",
+    "form-urlencoded": "^6.0.5",
     "superagent": "6.1.0"
   },
   "devDependencies": {

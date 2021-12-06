@@ -35,6 +35,10 @@
                 {
                   "type": "Control",
                   "scope": "#/properties/scope"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/immediateResponse"
                 }
               ]
             },
