@@ -9,7 +9,28 @@
     "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your Task was successfully added to Asana",
+        "postFail": "Oops! Something went wrong and we couldn't add your Task",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your pages from Asana",
+        "itemName": "Task",
+        "properties": [
+          {
+            "name": "taskName",
+            "label": "Task Name"
+          },
+          {
+            "name": "taskNotes",
+            "label": "Task Notes"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
