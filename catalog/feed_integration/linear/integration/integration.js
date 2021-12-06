@@ -28,8 +28,8 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
   // List all the Linear issues assigned to me.
   const me = await linearClient.viewer;
-  const issues = await me.assignedIssues();
-  if (!issues.nodes.length) {
+  const myIssues = await me.assignedIssues();
+  if (!myIssues.nodes.length) {
     ctx.body = {
       message: 'You have no issues!',
     };
@@ -38,7 +38,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     ctx.body = {
       message: 'You have issues:',
     };
-    issues.nodes.map((issue) => {
+    myIssues.nodes.map((issue) => {
       ctx.body.message += `\n > ${issue.title}`;
     });
     return;
