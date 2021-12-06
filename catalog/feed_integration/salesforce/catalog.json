@@ -1,15 +1,34 @@
 {
   "id": "salesforce",
   "name": "Salesforce",
-  "smallIcon": "https://cdn.fusebit.io/assets/images/salesforce.svg",
-  "largeIcon": "https://cdn.fusebit.io/assets/images/salesforce.svg",
+  "smallIcon": "#/assets/salesforce.svg",
+  "largeIcon": "#/assets/salesforce.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/salesforce#creating-your-own-salesforce-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/salesforce#creating-your-own-salesforce-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your contacts from Salesforce",
+        "itemName": "Contact",
+        "properties": [
+          {
+            "name": "contactName",
+            "label": "Name"
+          },
+          {
+            "name": "contactEmail",
+            "label": "Email"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
