@@ -11,6 +11,7 @@
 // Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
 
 const { Integration } = require('@fusebit-int/framework');
+const superagent = require('superagent');
 
 const integration = new Integration();
 
@@ -46,7 +47,7 @@ router.post(
   integration.middleware.authorizeUser('install:get'),
   async (ctx) => {
     const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-    const response = await discordClient.webhook.post(discordClient.fusebit.credentials.webhook.url, {
+    const response = await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
       content: ctx.req.body.message || 'Hello world from Fusebit!',
     });
     ctx.body = response;
