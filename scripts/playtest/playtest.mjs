@@ -1,6 +1,7 @@
 #!/usr/bin/env zx
 
 const fs = require('fs');
+
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
