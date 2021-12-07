@@ -173,10 +173,14 @@ export class Service extends EntityBase.ServiceDefault {
     ctx: Connector.Types.Context,
     processPromise?: Promise<FanoutResponse_>
   ): Promise<void> {
-    ctx.body = {
-      text: ':hourglass_flowing_sand: Running...',
-      response_type: 'ephemeral',
-    };
+    const { immediateResponse } = ctx.state.manager.config.configuration;
+
+    if (immediateResponse) {
+      ctx.body = {
+        text: ':hourglass_flowing_sand: Running...',
+        response_type: 'ephemeral',
+      };
+    }
   }
 
   /**
