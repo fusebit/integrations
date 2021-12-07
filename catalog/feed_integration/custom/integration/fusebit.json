@@ -1,0 +1,10 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Custom"
+  },
+  "handler": "./integration",
+  "components": [],
+  "componentTags": {},
+  "configuration": {}
+}

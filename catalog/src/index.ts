@@ -79,6 +79,14 @@ const loadDirectory = async (dirName: string, entitySpec: any) => {
   return entitySpec;
 };
 
+const isDirectory = (fileName: string) => {
+  try {
+    return !fs.lstatSync(fileName).isFile();
+  } catch (_) {
+    return false;
+  }
+};
+
 const createCatalogEntry = async (dirName: string) => {
   const imports = await loadImports();
   const catalog = JSON.parse(fs.readFileSync(join(dirName, 'catalog.json'), 'utf8'));
@@ -134,14 +142,19 @@ const createCatalogEntry = async (dirName: string) => {
     catalog.configuration.uischema = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.uischema), 'utf8'));
     catalog.configuration.data = JSON.parse(fs.readFileSync(join(dirName, catalog.configuration.data), 'utf8'));
   }
+
+  const snippetDir = join(dirName, 'snippets');
+  if (isDirectory(snippetDir)) {
+    catalog.snippets = fs.readdirSync(snippetDir).map((fileName) => ({
+      ...require(join(process.cwd(), snippetDir, fileName)),
+      id: fileName.match(/([^/]+)\.js$/)?.[1],
+    }));
+  }
+
   return catalog;
 };
 
 const loadCatalog = async (dirName: string) => {
-  const isDirectory = (fileName: string) => {
-    return !fs.lstatSync(fileName).isFile();
-  };
-
   const entries = fs
     .readdirSync(dirName)
     .map((fileName) => {

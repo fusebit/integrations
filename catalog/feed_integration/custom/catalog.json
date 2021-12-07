@@ -1,0 +1,22 @@
+{
+  "id": "custom",
+  "name": "Custom",
+  "smallIcon": "#/assets/fusebit.svg",
+  "largeIcon": "#/assets/fusebit.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging,Project Management,Dev Tools,Calendar,Office,Storage,Email,Video Conferencing,CRM,Support,Spreadsheets,Operations,Sales Automation"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "customIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
