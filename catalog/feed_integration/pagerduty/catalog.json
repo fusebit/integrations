@@ -23,8 +23,8 @@
             "label": "Title"
           },
           {
-            "name": "incedentLink",
-            "label": "Link"
+            "name": "affectedService",
+            "label": "Affected Service"
           }
         ]
       }

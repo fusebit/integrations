@@ -26,10 +26,10 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // For the PagerDuty SDK documentation, see https://developer.pagerduty.com/api-reference/ZG9jOjUxNzk5-changelog.
   const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const incidents = await pagerdutyClient.get('/incidents');
+  const services = await pagerdutyClient.get('/services');
 
   ctx.body = {
-    message: `Identified ${incidents.data.incidents.length} incidents in PagerDuty.`,
+    message: `Identified ${services.data.services.length} services in PagerDuty.`,
   };
 });
 
@@ -37,11 +37,12 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 // Note: This endpoint is also used by the sample app
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
   const incidents = await pagerdutyClient.get('/incidents');
 
   const incidentList = incidents.resource.map((incident) => ({
     incedentTitle: incident.title,
-    incedentLink: incident.html_url,
+    affectedService: incident.service.summary,
   }));
 
   ctx.body = incidentList;
