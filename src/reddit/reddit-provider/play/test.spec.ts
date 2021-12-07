@@ -53,7 +53,10 @@ test('reddit-provider test', async ({ page }) => {
   // Create a new session to drive the browser through
   const targetUrl = await createSession(account, Constants.INTEGRATION_ID, `${localUrl}/oauthTest`);
 
-  authenticate({ page, targetUrl });
+  // Open the browser to the session url
+  await page.goto(targetUrl);
+
+  await authenticate(page);
 
   // Wait for the auth target to be satisfied, and send the browser back to the local server.
   const request = await called.waitForCall();
