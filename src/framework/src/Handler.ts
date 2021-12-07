@@ -1,4 +1,4 @@
-import { Manager } from './Manager';
+import { Manager, IRequestResponse } from './Manager';
 
 export const Handler = (handler: string, config: any) => {
   const manager = new Manager();
@@ -29,13 +29,13 @@ export const Handler = (handler: string, config: any) => {
 
   manager.setup(config, router, routerError); // Configure the system.
 
-  return async (ctx: any) => {
+  return async (ctx: any): Promise<IRequestResponse> => {
     let result;
     try {
       result = await manager.handle(ctx);
     } catch (error) {
       console.log('ERROR: ', error);
-      return { body: { config, error, result, ctx } };
+      return { body: { config, error, result, ctx }, headers: {} };
     }
 
     return result;

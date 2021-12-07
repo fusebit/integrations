@@ -32,6 +32,12 @@ interface IConfig {
 
 /** The internal Fusebit request context. passed in through the lambda. */
 type RequestContext = any;
+interface IRequestResponse {
+  body?: any;
+  bodyEncoding?: string;
+  headers: Record<string, string>;
+  status?: number | string;
+}
 
 /** Event data supplied for an internal event invocation. */
 type EventData = any;
@@ -283,16 +289,17 @@ class Manager {
   }
 
   /** Convert the routable context into a response that the Fusebit function expects. */
-  public createResponse(ctx: FusebitContext) {
+  public createResponse(ctx: FusebitContext): IRequestResponse {
     const result = {
       body: ctx.body,
       headers: ctx.response.header,
       status: ctx.status,
       ...(typeof ctx.body === 'string' ? { bodyEncoding: 'utf8' } : {}),
+      ...(Buffer.isBuffer(ctx.body) ? { bodyEncoding: 'base64', body: ctx.body.toString('base64') } : {}),
     };
 
     return result;
   }
 }
 
-export { Manager, IStorage, IOnStartup, IConfig };
+export { Manager, IStorage, IOnStartup, IConfig, IRequestResponse };
