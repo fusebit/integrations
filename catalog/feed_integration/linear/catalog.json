@@ -9,7 +9,26 @@
     "catalog": "Project Management"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/linear#creating-your-own-linear-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/linear#creating-your-own-linear-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your issues from Linear",
+        "itemName": "Issue",
+        "properties": [
+          {
+            "name": "issueTitle",
+            "label": "Title"
+          },
+          {
+            "name": "issueDescription",
+            "label": "Description"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",

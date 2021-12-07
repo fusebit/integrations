@@ -28,8 +28,8 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
   // List all the Linear issues assigned to me.
   const me = await linearClient.viewer;
-  const issues = await me.assignedIssues();
-  if (!issues.nodes.length) {
+  const myIssues = await me.assignedIssues();
+  if (!myIssues.nodes.length) {
     ctx.body = {
       message: 'You have no issues!',
     };
@@ -38,11 +38,25 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     ctx.body = {
       message: 'You have issues:',
     };
-    issues.nodes.map((issue) => {
+    myIssues.nodes.map((issue) => {
       ctx.body.message += `\n > ${issue.title}`;
     });
     return;
   }
+});
+
+// Retrieve Issue Title and Issue Description from Linear
+// Note: This endpoint is also used by the sample app
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const linearClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const issues = await linearClient.issues();
+
+  const issuesList = issues.nodes.map((issue) => ({
+    issueTitle: issue.title,
+    issueDescription: issue.description,
+  }));
+
+  ctx.body = issuesList;
 });
 
 module.exports = integration;
