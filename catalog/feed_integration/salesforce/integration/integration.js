@@ -33,4 +33,18 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
+// Retrieve Name and Email from Salesforce
+// Note: This endpoint is also used by the sample app
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const salesforceClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const contacts = await salesforceClient.query('SELECT name, email FROM Contact');
+
+  const contactsList = contacts.records.map((contact) => ({
+    contactName: contact.Name,
+    contactEmail: contact.Email,
+  }));
+
+  ctx.body = contactsList;
+});
+
 module.exports = integration;

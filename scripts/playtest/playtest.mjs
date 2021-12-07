@@ -84,8 +84,29 @@ const installAwsCli = async () => {
   };
   for (const svc of servicesWithPlay) {
     const pl = JSON.parse(await fs.promises.readFile(`./src/${svc}/${svc}-provider/results.json`));
-    const success = pl.suites[0].specs[0].ok;
-    if (!success) {
+    let basicSuccess = true;
+    let proxyExists = false;
+    let proxySuccess = true;
+    await Promise.all(
+      pl.suites.map(async (suite) => {
+        await Promise.all(
+          suite.specs.map(async (spec) => {
+            if (spec.title.toLowerCase().includes('proxy')) {
+              proxyExists = true;
+              if (!spec.ok) {
+                proxySuccess = false;
+              }
+              return;
+            }
+            if (!spec.ok) {
+              basicSuccess = false;
+            }
+          })
+        );
+      })
+    );
+
+    if (!proxySuccess || !basicSuccess) {
       totalSuccess = false;
     }
     slack_payload.blocks.push({
@@ -94,12 +115,27 @@ const installAwsCli = async () => {
         type: 'mrkdwn',
         text:
           '' +
-          `${success ? ':white_check_mark:' : ':warning:'} ` +
-          `${svc}'s playwright test ` +
-          `${success ? 'passed' : 'failed'}`,
+          `${basicSuccess ? ':white_check_mark:' : ':warning:'} ` +
+          `${svc}'s basic playwright test ` +
+          `${basicSuccess ? 'passed' : 'failed'}`,
       },
     });
+    if (proxyExists) {
+      slack_payload.blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text:
+            '' +
+            `${proxySuccess ? ':white_check_mark:' : ':warning:'} ` +
+            `${svc}'s proxy playwright test ` +
+            `${proxySuccess ? 'passed' : 'failed'}`,
+        },
+      });
+    }
   }
+  const date = new Date().toISOString();
+
   for (const failure of storageErrors) {
     slack_payload.blocks.push({
       type: 'section',
@@ -109,15 +145,50 @@ const installAwsCli = async () => {
       },
     });
   }
+
+  slack_payload.blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text:
+        '' +
+        `To access the logs, run 
+      ./scripts/access_pw_logs.sh ${date} <service-name>`,
+    },
+  });
+
+  slack_payload.blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `Check the logs here ${process.env.BUILD_URL}`,
+    },
+  });
+
+  await $`git log -n 3  --pretty=%B > /tmp/commits.txt`;
+  const commit = await fs.promises.readFile('/tmp/commits.txt', { encoding: 'utf-8' });
+  const commits = commit.split('\n');
+  for (const com of commits) {
+    if (com === '') {
+      continue;
+    }
+    slack_payload.blocks.push({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `${com} is one of the last commits.`,
+      },
+    });
+  }
+
   await $`curl -X POST -d ${JSON.stringify(slack_payload)} -H "Content-Type: application/json" ${
     totalSuccess ? successWebhook : failureWebhook
   }`;
 
   // Send output to AWS
-  const date = new Date().getTime();
   await Promise.all(
     servicesWithPlay.map((service) => {
-      return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date.toString()}/${service}/ || true`;
+      return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${date}/${service}/ || true`;
     })
   );
 })();

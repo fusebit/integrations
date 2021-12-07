@@ -13,6 +13,7 @@ export const runProxyTest = async (
     `https://manage.fusebit.io/callback?silentAuth=false&requestedPath=/#access_token=${account.accessToken}&scope=openid%20profile%20email&expires_in=86400&token_type=Bearer`
   );
 
+  // Click button:has-text("New integration")
   await page.focus('button:has-text("New integration")');
   await page.click('button:has-text("New integration")');
 
