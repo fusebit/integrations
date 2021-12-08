@@ -144,8 +144,7 @@ class OAuthEngine {
       client_secret: this.cfg.clientSecret,
       redirect_uri: this.getRedirectUri(),
     };
-
-    return this.fetchOAuthToken(ctx, params);
+    return { refresh_token: refreshToken, ...(await this.fetchOAuthToken(ctx, params)) };
   }
 
   /**
