@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "read",
+    "scope": "read write",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
