@@ -2,14 +2,33 @@
   "id": "pagerduty",
   "name": "PagerDuty",
   "smallIcon": "#/assets/pagerduty.svg",
-  "largeIcon": "#/assets/pagerduty.svg",
+  "largeIcon": "#/assets/pagerdutyLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
     "catalog": "Dev Tools,Operations"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your incedents from PagerDuty",
+        "itemName": "Incedent",
+        "properties": [
+          {
+            "name": "incedentTitle",
+            "label": "Title"
+          },
+          {
+            "name": "affectedService",
+            "label": "Affected Service"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
