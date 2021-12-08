@@ -51,7 +51,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
     const task = await asanaClient.tasks.getTask(gid.taskGID);
     taskDetails.push({
       taskName: task.name,
-      taskNote: task.notes,
+      taskNotes: task.notes,
     });
   }
 
