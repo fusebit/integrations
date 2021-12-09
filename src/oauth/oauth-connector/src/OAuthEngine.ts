@@ -222,7 +222,7 @@ class OAuthEngine {
         token = await this.refreshAccessToken(token as IOAuthTokenWithRefresh, ctx);
 
         if (!isNaN(Number(token.expires_in))) {
-          token.expires_at = Date.now() + +Number(token.expires_in) * 1000;
+          token.expires_at = Date.now() + Number(token.expires_in) * 1000;
         }
 
         token.status = 'authenticated';
