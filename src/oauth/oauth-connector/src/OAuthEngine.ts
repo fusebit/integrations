@@ -70,8 +70,8 @@ class OAuthEngine {
    */
   public async convertAccessCodeToToken(ctx: Internal.Types.Context, lookupKey: string, code: string) {
     const token = await this.getAccessToken(code, ctx);
-    if (!isNaN(token.expires_in)) {
-      token.expires_at = Date.now() + +token.expires_in * 1000;
+    if (!isNaN(Number(token.expires_in))) {
+      token.expires_at = Date.now() + +Number(token.expires_in) * 1000;
     }
 
     token.status = 'authenticated';
@@ -96,7 +96,7 @@ class OAuthEngine {
    * @param token The OAuth response from the authorization code exchange or refresh token exchange
    */
   protected normalizeOAuthToken(token: IOAuthToken): IOAuthToken {
-    if (token.refresh_token && isNaN(token.expires_in)) {
+    if (token.refresh_token && isNaN(Number(token.expires_in))) {
       token.expires_in = 3600;
     }
     return token;
@@ -144,7 +144,8 @@ class OAuthEngine {
       client_secret: this.cfg.clientSecret,
       redirect_uri: this.getRedirectUri(),
     };
-    return { refresh_token: refreshToken, ...(await this.fetchOAuthToken(ctx, params)) };
+    const fetchedToken = await this.fetchOAuthToken(ctx, params);
+    return { refresh_token: refreshToken, ...fetchedToken };
   }
 
   /**
@@ -219,8 +220,8 @@ class OAuthEngine {
 
         token = await this.refreshAccessToken(token.refresh_token, ctx);
 
-        if (!isNaN(token.expires_in)) {
-          token.expires_at = Date.now() + +token.expires_in * 1000;
+        if (!isNaN(Number(token.expires_in))) {
+          token.expires_at = Date.now() + +Number(token.expires_in) * 1000;
         }
 
         token.status = 'authenticated';
@@ -246,8 +247,6 @@ class OAuthEngine {
       }
     }
 
-    // Access token expired, but no refresh token; deleting.
-    await tokenRw.delete(lookupKey);
     throw new Error('Access token is expired and cannot be refreshed because the refresh token is not present.');
   }
 
