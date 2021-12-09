@@ -71,7 +71,7 @@ class OAuthEngine {
   public async convertAccessCodeToToken(ctx: Internal.Types.Context, lookupKey: string, code: string) {
     const token = await this.getAccessToken(code, ctx);
     if (!isNaN(Number(token.expires_in))) {
-      token.expires_at = Date.now() + +Number(token.expires_in) * 1000;
+      token.expires_at = Date.now() + Number(token.expires_in) * 1000;
     }
 
     token.status = 'authenticated';
