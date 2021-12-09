@@ -19,6 +19,11 @@ export default class LinearProvider extends Internal.ProviderActivator<FusebitLi
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitLinearClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitLinearClient = new Client({ accessToken: credentials.access_token });
+    client.fusebit = {
+      credentials,
+      lookupKey,
+      connectorId: this.config.entityId,
+    };
     return client;
   }
 }
