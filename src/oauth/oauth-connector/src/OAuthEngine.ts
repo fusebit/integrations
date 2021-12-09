@@ -145,7 +145,8 @@ class OAuthEngine {
       redirect_uri: this.getRedirectUri(),
     };
     const fetchedToken = await this.fetchOAuthToken(ctx, params);
-    return { refresh_token: refreshToken, ...fetchedToken };
+
+    return { ...params, ...fetchedToken };
   }
 
   /**
