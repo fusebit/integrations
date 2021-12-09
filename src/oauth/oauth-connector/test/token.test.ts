@@ -15,20 +15,32 @@ const token = {
   expires_in: 100000,
   scope: '',
   status: 'authenticated',
-  timestamp: Date.now().toString(),
+  timestamp: Date.now(),
   refreshErrorCount: 0,
+  unique_original_value: 'unique_original_value',
 };
-const tokenWithRefresh = {
+
+type Token = typeof token;
+interface IRefreshToken extends Omit<Token, 'unique_original_value'> {
+  refresh_token: string;
+  unique_original_value?: null;
+}
+
+const tokenWithRefresh: IRefreshToken = {
   ...token,
   refresh_token: 'refresh_token',
+  unique_original_value: null,
 };
+delete tokenWithRefresh.unique_original_value;
+
 const expiredToken = {
   ...tokenWithRefresh,
-  expires_at: Date.now().toString(),
+  expires_at: Date.now(),
 };
 const updatedToken = {
   ...token,
   access_token: 'updated_access_token',
+  unique_updated_value: 'unique_updated_value',
 };
 const updatedTokenWithRefresh = {
   ...updatedToken,
@@ -74,11 +86,14 @@ describe('Refresh-Tokens', () => {
 
     // first put updates expires_at, can ignore
     fusebitApiIdentityScope.put(`${connectorUri}/identity/${identityId}`).reply(200);
-    // verify that updated token includes previous refresh token
     fusebitApiIdentityScope
       .put(`${connectorUri}/identity/${identityId}`, (body) => {
-        expect(body.data.token.refresh_token).toEqual(tokenWithRefresh.refresh_token);
+        // verify that new token includes previous refresh token but updated access_token
+        expect(body.data.token.refresh_token).toEqual(expiredToken.refresh_token);
         expect(body.data.token.access_token).toEqual(updatedToken.access_token);
+        // verify that returned token reflects exact overwrite spread with no additional values
+        const expectedToken = { ...expiredToken, ...updatedToken, expires_at: body.data.token.expires_at };
+        expect(body.data.token).toEqual(expectedToken);
         return true;
       })
       .reply(200);
@@ -110,11 +125,13 @@ describe('Refresh-Tokens', () => {
 
     // first put updates expires_at, can ignore
     fusebitApiIdentityScope.put(`${connectorUri}/identity/${identityId}`).reply(200);
-    // verify that updated token includes new refresh token
     fusebitApiIdentityScope
       .put(`${connectorUri}/identity/${identityId}`, (body) => {
         expect(body.data.token.refresh_token).toEqual(updatedTokenWithRefresh.refresh_token);
         expect(body.data.token.access_token).toEqual(updatedTokenWithRefresh.access_token);
+        // verify that returned token reflects exact overwrite spread with no additional values
+        const expectedToken = { ...expiredToken, ...updatedTokenWithRefresh, expires_at: body.data.token.expires_at };
+        expect(body.data.token).toEqual(expectedToken);
         return true;
       })
       .reply(200);

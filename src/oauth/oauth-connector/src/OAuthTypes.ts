@@ -28,6 +28,10 @@ interface IOAuthToken {
   refreshErrorCount: number;
 }
 
+interface IOAuthTokenWithRefresh extends IOAuthToken {
+  refresh_token: string;
+}
+
 interface ITags extends Record<string, string | null> {}
 
 interface IIdentityClientParams {
@@ -39,4 +43,4 @@ interface IIdentityClientParams {
   createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
 }
 
-export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams };
+export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams, IOAuthTokenWithRefresh };

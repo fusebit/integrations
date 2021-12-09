@@ -1,7 +1,7 @@
 import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 
-import { IOAuthConfig, IOAuthToken } from './OAuthTypes';
+import { IOAuthConfig, IOAuthToken, IOAuthTokenWithRefresh } from './OAuthTypes';
 
 class OAuthEngine {
   public cfg: IOAuthConfig;
@@ -136,17 +136,17 @@ class OAuthEngine {
    * @param {*} token An object representing the result of the getAccessToken call. It contains refresh_token.
    * @param {Connector.Types.Context} ctx Request context
    */
-  public async refreshAccessToken(refreshToken: string, ctx: Connector.Types.Context) {
+  public async refreshAccessToken(existingToken: IOAuthTokenWithRefresh, ctx: Connector.Types.Context) {
     const params = {
       grant_type: 'refresh_token',
-      refresh_token: refreshToken,
+      refresh_token: existingToken.refresh_token,
       client_id: this.cfg.clientId,
       client_secret: this.cfg.clientSecret,
       redirect_uri: this.getRedirectUri(),
     };
     const fetchedToken = await this.fetchOAuthToken(ctx, params);
 
-    return { ...params, ...fetchedToken };
+    return { ...existingToken, ...fetchedToken };
   }
 
   /**
@@ -219,7 +219,7 @@ class OAuthEngine {
       try {
         await tokenRw.put(token, lookupKey);
 
-        token = await this.refreshAccessToken(token.refresh_token, ctx);
+        token = await this.refreshAccessToken(token as IOAuthTokenWithRefresh, ctx);
 
         if (!isNaN(Number(token.expires_in))) {
           token.expires_at = Date.now() + +Number(token.expires_in) * 1000;
