@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@fusebit-int/discord-provider": "^7.23.1",
-    "@fusebit-int/framework": "^7.23.1"
+    "@fusebit-int/framework": "^7.23.1",
+    "superagent": "^6.1.0"
   },
   "files": [
     "./integration.js",
