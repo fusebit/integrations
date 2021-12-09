@@ -16,23 +16,23 @@ const token = {
   scope: '',
   status: 'authenticated',
   timestamp: Date.now().toString(),
-  refreshErrorCount: 0
+  refreshErrorCount: 0,
 };
 const tokenWithRefresh = {
   ...token,
-  refresh_token: 'refresh_token'
+  refresh_token: 'refresh_token',
 };
 const expiredToken = {
   ...tokenWithRefresh,
-  expires_at: Date.now().toString()
+  expires_at: Date.now().toString(),
 };
 const updatedToken = {
   ...token,
-  access_token: 'updated_access_token'
+  access_token: 'updated_access_token',
 };
 const updatedTokenWithRefresh = {
   ...updatedToken,
-  refresh_token: 'updated_refresh_token'
+  refresh_token: 'updated_refresh_token',
 };
 
 const config = {
@@ -41,7 +41,7 @@ const config = {
     ...cfg.configuration,
     tokenUrl: `${service_url}${token_path}`,
     authorizationUrl: `${service_url}${authorize_path}`,
-  }
+  },
 };
 
 const manager = new Internal.Manager();
@@ -56,7 +56,6 @@ const connectorUri = `/v2${mockRequest.baseUrl.split('/v1')[1]}`;
 
 describe('Refresh-Tokens', () => {
   test('validate Refresh Token preserved when absent on refresh', async () => {
-
     const serviceScope = nock(service_url);
 
     // return a token w/o a refresh_token value when refreshing
@@ -70,7 +69,7 @@ describe('Refresh-Tokens', () => {
       .get(`${connectorUri}/identity/${identityId}`)
       .twice()
       .reply(200, {
-        data: { token: expiredToken }
+        data: { token: expiredToken },
       });
 
     // first put updates expires_at, can ignore
@@ -90,11 +89,9 @@ describe('Refresh-Tokens', () => {
     // verify that mocked routes have been called
     expect(fusebitApiIdentityScope.isDone()).toBeTruthy();
     expect(serviceScope.isDone()).toBeTruthy();
-
   });
 
   test('validate Refresh Token updates when provided by refresh', async () => {
-
     const serviceScope = nock(service_url);
 
     // return a token w/ a refresh_token value when refreshing
@@ -108,7 +105,7 @@ describe('Refresh-Tokens', () => {
       .get(`${connectorUri}/identity/${identityId}`)
       .twice()
       .reply(200, {
-        data: { token: expiredToken }
+        data: { token: expiredToken },
       });
 
     // first put updates expires_at, can ignore
@@ -128,11 +125,9 @@ describe('Refresh-Tokens', () => {
     // verify that mocked routes have been called
     expect(fusebitApiIdentityScope.isDone()).toBeTruthy();
     expect(serviceScope.isDone()).toBeTruthy();
-
   });
 
   test('validate token does not refresh if expires_at not passed', async () => {
-
     const serviceScope = nock(service_url);
 
     // mocked route to verify refresh is not requested
@@ -142,11 +137,9 @@ describe('Refresh-Tokens', () => {
     const fusebitApiIdentityScope = nock(fusebit_url);
 
     // return a non-expired token from fusebit storage
-    fusebitApiIdentityScope
-      .get(`${connectorUri}/identity/${identityId}`)
-      .reply(200, {
-        data: { tokenWithRefresh }
-      });
+    fusebitApiIdentityScope.get(`${connectorUri}/identity/${identityId}`).reply(200, {
+      data: { tokenWithRefresh },
+    });
 
     const tokenResult = await handle('GET', `/api/${identityId}/token`);
     expect(tokenResult.status).toBe(200);
@@ -155,6 +148,5 @@ describe('Refresh-Tokens', () => {
     expect(fusebitApiIdentityScope.isDone()).toBeTruthy();
     // verify that refresh has not been requested
     expect(serviceScope.isDone()).toBeFalsy();
-
   });
 });
