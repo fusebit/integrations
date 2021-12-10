@@ -33,6 +33,7 @@
     "dev:version": "lerna version --no-git-tag-version prerelease -y --conventional-prerelease",
     "prettier:fix": "git ls-tree -r `git branch --show-current` --name-only | grep -E \"\\.[tj]?sx?$|\\.yaml$|\\.json$\" | grep -v assets | grep -v lerna.json | xargs -P 1 prettier --write",
     "prettier:check": "git ls-tree -r `git branch --show-current` --name-only | grep -E \"\\.[tj]?sx?$|\\.yaml$|\\.json$\" | grep -v assets | grep -v lerna.json | xargs -P 1 -I \"{}\" sh -c '[ -f {} ] && echo {} || true' | xargs prettier --check",
+    "style:fix": "lerna run lint:fix && lerna run prettier:fix",
     "serve:integration": "./scripts/serve_entity.sh integration",
     "serve:connector": "./scripts/serve_entity.sh connector",
     "clean": "rm ./**/tsconfig.tsbuildinfo; rm -rf ./**/libc;"
