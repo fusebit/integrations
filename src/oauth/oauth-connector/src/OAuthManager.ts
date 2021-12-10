@@ -74,6 +74,43 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     return ctx.state.engine || new this.OAuthEngine(ctx.state.manager.config.configuration as IOAuthConfig);
   }
 
+  /**
+   *
+   * @param ctx Connector context
+   * @param configurationSection The section to configure (i.e Fusebit Connector Configuration)
+   * @param propertyScope A JSON schema reference value
+   * @param format How to display the control (i.e string, radio, password)
+   */
+  protected addConfigurationElement(
+    ctx: Connector.Types.Context,
+    configurationSection: string,
+    propertyScope: string,
+    format = 'string'
+  ): void {
+    const element = ctx.body.uischema.elements.find(
+      (element: { label: string }) => element.label == configurationSection
+    );
+    if (element) {
+      const newControl = {
+        type: 'Control',
+        scope: `#/properties/${propertyScope}`,
+        options: {
+          format,
+        },
+      };
+      const oddRow = element.elements[0].elements.find(
+        (rowElement: { elements: string | any[] }) => rowElement.elements.length !== 2
+      );
+      if (oddRow) {
+        oddRow?.elements.push(newControl);
+      } else {
+        element.elements[0].elements.push({ type: 'VerticalLayout', elements: [newControl] });
+      }
+    } else {
+      ctx.body = ctx.throw(`Invalid configuration section ${configurationSection}`);
+    }
+  }
+
   constructor() {
     super();
 

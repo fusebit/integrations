@@ -7,6 +7,7 @@ const TOKEN_URL = 'https://discord.com/api/oauth2/token';
 const AUTHORIZATION_URL = 'https://discord.com/api/oauth2/authorize';
 const REVOCATION_URL = 'https://discord.com/api/oauth2/token/revoke';
 const SERVICE_NAME = 'Discord';
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;
@@ -44,22 +45,9 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Discord Configuration';
 
-      ctx.body.uischema.elements
-        .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
-        .elements[0].elements[1].elements.push({
-          type: 'Control',
-          scope: '#/properties/botToken',
-          options: {
-            format: 'password',
-          },
-        });
-
-      ctx.body.uischema.elements
-        .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
-        .elements[0].elements[1].elements.push({
-          type: 'Control',
-          scope: '#/properties/applicationPublicKey',
-        });
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'botToken', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationPublicKey');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'extraParams');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Discord App';
@@ -69,9 +57,13 @@ class ServiceConnector extends OAuthConnector {
         title: 'Discord Application Bot Token',
         type: 'string',
       };
-      ctx.body.schema.properties.botToken = {
+      ctx.body.schema.properties.applicationPublicKey = {
         title: 'Discord Public Key',
         type: 'string',
+      };
+      ctx.body.schema.properties.extraParams = {
+        title: 'Bot Permissions',
+        type: 'integer',
       };
     });
 
