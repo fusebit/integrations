@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/linear-formIntegration/properties/id",
+      "scope": "#/properties/linearIntegration/properties/id",
       "label": "Name"
     },
     {
@@ -16,8 +16,8 @@
     },
     {
       "type": "Control",
-      "scope": "#/properties/linear-formConnector/properties/id",
-      "label": "Linear-form Connector name",
+      "scope": "#/properties/linearConnector/properties/id",
+      "label": "Linear Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

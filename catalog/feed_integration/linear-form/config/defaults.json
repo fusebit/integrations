@@ -1,5 +1,5 @@
 {
-  "linear-formConnector": {
-    "linear-formName": "linear-form-connector"
+  "linearConnector": {
+    "linearName": "linear-connector"
   }
 }

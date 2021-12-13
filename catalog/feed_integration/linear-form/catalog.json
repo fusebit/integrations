@@ -20,7 +20,7 @@
         "entityType": "connector",
         "path": "connector/"
       },
-      "linear-formIntegration": {
+      "linearIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }

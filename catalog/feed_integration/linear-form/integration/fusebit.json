@@ -1,7 +1,7 @@
 {
   "id": "<% this.id %>",
   "tags": {
-    "fusebit.service": "Linear-form"
+    "fusebit.service": "Linear"
   },
   "handler": "./integration",
   "components": [

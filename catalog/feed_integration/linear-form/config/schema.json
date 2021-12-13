@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "linear-formIntegration": {
+    "linearIntegration": {
       "type": "object",
       "properties": {
         "id": {
@@ -10,7 +10,7 @@
         }
       }
     },
-    "linear-formConnector": {
+    "linearConnector": {
       "type": "object",
       "properties": {
         "id": {
