@@ -7,69 +7,31 @@ import {
   IAtlassianMe,
   IFusebitCredentials,
 } from './Types';
+import { HttpMethodTypes } from '../../../discord/discord-provider/src/Types';
 
-class AtlassianClient {
-  public fusebit: IFusebitCredentials;
+class AtlassianClient extends ApiClient {
 
-  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
-    this.fusebit = fusebit;
+  jira: JiraClient;
+  confluence: ConfluenceClient;
+  constructor(urlToken: string, bearerToken: string) {
+    this.jira = new JiraClient({urlToken, bearerToken});
+    this.confluence = new ConfluenceClient({urlToken, bearerToken});
   }
 
-  public async getAccessibleResources(filterFor?: 'jira' | 'confluence'): Promise<IAtlassianAccessibleResources> {
-    const response = await superagent
-      .get('https://api.atlassian.com/oauth/token/accessible-resources')
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+}
 
-    if (filterFor === 'jira') {
-      return response.body.filter((cloud: IAtlassianAccessibleResource) =>
-        cloud.scopes.find((scope) => scope.includes('jira'))
-      );
-    }
-
-    if (filterFor === 'confluence') {
-      return response.body.filter((cloud: IAtlassianAccessibleResource) =>
-        cloud.scopes.find((scope) => scope.includes('confluence'))
-      );
-    }
-
-    return response.body;
+class JiraClient extends ApiClient {
+  constructor(options: {bearerToken: string, urlToken: string}) {
+    super();
+    this.bearerToken = options.bearerToken;
+    this.baseUrl = `https://api.atlassian.com/ex/${options.urlToken}/jira`;
   }
+}
 
-  public async me(): Promise<IAtlassianMe> {
-    const response = await superagent
-      .get('https://api.atlassian.com/me')
-      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
-    return response.body;
-  }
-
-  public makeApiClient(cloudId: string, token: string, suffix: string): IApiClient {
-    const makeUrl = (cloudId: string, url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${suffix}${url}`;
-
-    const makeRequest = (verb: string) => async (url: string) =>
-      (
-        await (superagent as any)
-          [verb](makeUrl(cloudId, url))
-          .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`)
-      ).body;
-
-    const api: IApiClient = {
-      get: makeRequest('get'),
-      put: makeRequest('put'),
-      post: makeRequest('post'),
-      delete: makeRequest('delete'),
-      head: makeRequest('head'),
-      patch: makeRequest('patch'),
-    };
-
-    return api;
-  }
-
-  public jira(cloudId: string): IApiClient {
-    return this.makeApiClient(cloudId, 'jira', '/rest/api/3');
-  }
-
-  public confluence(cloudId: string): IApiClient {
-    return this.makeApiClient(cloudId, 'confluence', '/rest/api');
+class ConfluenceClient extends ApiClient {
+  constructor(options: {bearerToken: string, urlToken: string}) {
+    super();
+    this.baseUrl = `https://api.atlassian.com/ex/${options.urlToken}/confluence`;
   }
 }
 

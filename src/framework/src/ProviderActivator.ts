@@ -1,6 +1,7 @@
 import superagent from 'superagent';
 import { FusebitContext } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
+import { HttpMethodTypes } from '../../discord/discord-provider/src/Types';
 
 export abstract class WebhookClient<C = any> {
   abstract create: (...args: any[]) => Promise<any>;
@@ -26,6 +27,31 @@ export abstract class WebhookClient<C = any> {
 export interface Token {
   access_token: string;
   instance_url: string;
+}
+
+export abstract class ApiClient {
+  baseUrl = 'www.serviceurl.com';
+  bearerToken?: string;
+
+  // add additional constructor args in sub-class as needed
+  // for atlassian, this would include the `token` and setting `this.baseUrl` using such
+  protected constructor(options: {bearerToken: string}) {
+    this.bearerToken = options.bearerToken;
+  }
+
+  get: (path: string) => this.makeRequest('GET', path);
+  post: (path: string, body: Record<string, any>) => this.makeRequest('POST', path, body);
+
+  async makeRequest(method: HttpMethodTypes, path: string, body: Record<string, any>) {
+    const request = superagent[method](this.baseUrl);
+    return await this.authenticate(request).send(body);
+  }
+
+  // override in sub-class with differing
+  authenticate(request: superagent.Request) {
+    return request.set('authorization', `Bearer ${this.bearerToken}`);
+  }
+
 }
 
 export default abstract class ProviderActivator<T> {
