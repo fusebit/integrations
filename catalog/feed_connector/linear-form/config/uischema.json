@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/linear-formConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

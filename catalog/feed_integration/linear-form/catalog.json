@@ -1,0 +1,29 @@
+{
+  "id": "linear-form",
+  "name": "Linear-form",
+  "smallIcon": "#/assets/linear-form.svg",
+  "largeIcon": "#/assets/linear-form.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": ""
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/linear-form#creating-your-own-linear-form-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "linearConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "linear-formIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
