@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@fusebit-int/framework": ">=7.25.0",
-    "@fusebit-int/linear-form-connector": ">=7.25.0"
+    "@fusebit-int/linear-connector": ">=7.25.0"
   }
 }
