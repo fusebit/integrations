@@ -9,13 +9,15 @@
 // to perform specific tasks on behalf of the tenants of your app.
 //
 // Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
+const superagent = require('superagent');
+const client = require('@linear/sdk');
 
 const { Integration } = require('@fusebit-int/framework');
-const superagent = require('superagent');
+
 const schema = require('./schema.json');
 const uiSchema = require('./uiSchema.json');
+
 const integration = new Integration();
-const client = require('@linear/sdk');
 
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
 // to the integration, which you can then call from within your application.
