@@ -1,5 +1,6 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
+import jwt from 'jsonwebtoken';
 
 import { Service } from './Service';
 
@@ -8,6 +9,7 @@ const AUTHORIZATION_URL = 'https://github.com/login/oauth/authorize';
 const REVOCATION_URL = 'https://api.github.com/applications/CLIENT_ID/token';
 const SERVICE_NAME = 'GitHubApp';
 const HUMAN_SERVICE_NAME = 'GitHub';
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;
@@ -28,26 +30,56 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find(
         (element: { label: string }) => element.label == 'OAuth2 Configuration'
       ).label = `${HUMAN_SERVICE_NAME} Configuration`;
+
       // Adjust the ui schema and layout
-      ctx.body.uischema.elements
-        .find((element: { label: string }) => element.label == 'Fusebit Connector Configuration')
-        .elements[0].elements[1].elements.push({
-          type: 'Control',
-          scope: '#/properties/signingSecret',
-          options: {
-            format: 'password',
-          },
-        });
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationId');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookSecret', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'privateKey', 'password');
+
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
-      ctx.body.schema.properties.signingSecret = {
-        title: `Signing Secret from your ${HUMAN_SERVICE_NAME} App`,
+      ctx.body.schema.properties.webhookSecret = {
+        title: `Webhook Secret from your ${HUMAN_SERVICE_NAME} App`,
+        type: 'string',
+      };
+      ctx.body.schema.properties.privateKey = {
+        title: `Private Secret from your ${HUMAN_SERVICE_NAME} App`,
+        type: 'string',
+      };
+      ctx.body.schema.properties.applicationId = {
+        title: `App ID from your ${HUMAN_SERVICE_NAME} App`,
         type: 'string',
       };
     });
+
+    this.router.get(
+      '/api/token/app',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        const privateKey = ctx.state.manager.config.configuration.privateKey;
+
+        if (!privateKey) {
+          ctx.throw(500, 'Missing private key for sign access token requests');
+        }
+
+        const formattedKey = privateKey
+          .replace('-----BEGIN RSA PRIVATE KEY-----', '-----BEGIN RSA PRIVATE KEY-----\n')
+          .replace('-----END RSA PRIVATE KEY-----', '\n-----END RSA PRIVATE KEY-----');
+        const payload = {
+          iat: Math.floor(Date.now() / 1000) - 60, // issued at time, 60 seconds in the past to allow for clock drift
+          exp: Math.floor(Date.now() / 1000) + 60 * 10, // JWT expiration time (10 minutes maximum)
+          iss: ctx.state.manager.config.configuration.applicationId,
+        };
+        const response = jwt.sign(payload, formattedKey, { algorithm: 'RS256' });
+        ctx.body = {
+          jwt: response,
+          expiresAt: payload.exp * 1000, // set expiration in ms
+        };
+      }
+    );
   }
 }
 
