@@ -12,6 +12,14 @@
       "entityId": "<% global.entities.linearConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
+    },
+    {
+      "name": "form",
+      "path": "/api/form",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["<% global.entities.linearConnector.id %> "],
+      "entityType": "integration"
     }
   ],
   "componentTags": {},
