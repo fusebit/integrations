@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "@fusebit-int/framework": ">=7.25.0",
-    "@fusebit-int/linear-provider": ">=7.25.0"
+    "@fusebit-int/linear-provider": ">=7.25.0",
+    "@linear/sdk": "^1.21.0",
+    "superagent": "6.1.0"
   },
   "files": [
     "./integration.js",
