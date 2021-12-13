@@ -4,7 +4,7 @@ import superagent from 'superagent';
 
 export type FusebitAsanaClient = import('asana').Client & { fusebit?: object };
 
-class AsanaWebhook extends Internal.WebhookClient<FusebitAsanaClient> {
+class AsanaWebhook extends Internal.Provider.WebhookClient<FusebitAsanaClient> {
   /**
    * Establishing an Asana webhook with Fusebit is a simple process.  This method functions similarly to the
    * one provided by the Asana client.  However, Fusebit has already handled managing webhook endpoints, validation,

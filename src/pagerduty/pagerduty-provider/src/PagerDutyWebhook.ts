@@ -16,7 +16,7 @@ interface PDWebhookFilter {
   id?: string;
 }
 
-export default class PagerDutyWebhook extends Internal.WebhookClient {
+export default class PagerDutyWebhook extends Internal.Provider.WebhookClient {
   /**
    *
    * @param args The configuration for the pagerduty webhook.

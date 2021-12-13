@@ -1,7 +1,7 @@
 /* tslint:disable:max-classes-per-file no-empty-interface no-namespace */
 import EntityBase from './EntityBase';
 import { FusebitContext } from '../router';
-import { WebhookClient as _WebhookClient } from '../ProviderActivator';
+import { WebhookClient as _WebhookClient } from '../provider';
 import superagent from 'superagent';
 
 /**

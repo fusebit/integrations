@@ -16,7 +16,11 @@ import * as Storage_ from './Storage';
 import { Form as Form_ } from './Form';
 import { Handler as Handler_ } from './Handler';
 import * as Middleware_ from './middleware';
-import ProviderActivator_, { WebhookClient } from './ProviderActivator';
+import {
+  ProviderActivator as ProviderActivator_,
+  WebhookClient as WebhookClient_,
+  HttpClient as HttpClient_,
+} from './provider';
 import { Connector, Integration } from './client/index';
 
 // Objects
@@ -28,8 +32,11 @@ const Internal = {
   Manager: Manager_,
   Middleware: Middleware_,
   Storage: Storage_,
-  ProviderActivator: ProviderActivator_,
-  WebhookClient: WebhookClient,
+  Provider: {
+    Activator: ProviderActivator_,
+    WebhookClient: WebhookClient_,
+    HttpClient: HttpClient_,
+  },
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
 module Internal {
@@ -43,6 +50,11 @@ module Internal {
   export type Middleware = typeof Middleware_;
   export type Storage = typeof Storage_;
   export type ProviderActivator = typeof ProviderActivator_;
+  export namespace Provider {
+    export type Activator = typeof ProviderActivator_;
+    export type WebhookClient = typeof WebhookClient_;
+    export type HttpClient = HttpClient_;
+  }
   export namespace Types {
     export type Context = Context_;
     export type CronContext = CronContext_;

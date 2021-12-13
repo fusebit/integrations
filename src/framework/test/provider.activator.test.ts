@@ -1,5 +1,5 @@
 import nock from 'nock';
-import ProviderActivator from '../src/ProviderActivator';
+import { ProviderActivator } from '../src/provider';
 import { FusebitContext } from '../src/router';
 import { Constants, getContext } from './utilities';
 

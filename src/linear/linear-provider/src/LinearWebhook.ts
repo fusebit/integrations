@@ -7,7 +7,7 @@ interface ILinearWebhookConfig {
   resourceTypes: string[];
 }
 
-class LinearWebhook extends Internal.WebhookClient {
+class LinearWebhook extends Internal.Provider.WebhookClient {
   public create = async (args: ILinearWebhookConfig) => {
     const webhookId = uuidv4();
     const params = this.ctx.state.params;

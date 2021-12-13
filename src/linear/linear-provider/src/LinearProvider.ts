@@ -4,7 +4,7 @@ import LinearWebhook from './LinearWebhook';
 
 type FusebitLinearClient = Client & { fusebit?: any };
 
-export default class LinearProvider extends Internal.ProviderActivator<FusebitLinearClient> {
+export default class LinearProvider extends Internal.Provider.Activator<FusebitLinearClient> {
   /**
    * This function will create an authorized webhook SDK for Linear.
    */
