@@ -12,6 +12,8 @@
   },
   "files": [
     "./integration.js",
-    "README.md"
+    "README.md",
+    "schema.json",
+    "uiSchema.json"
   ]
 }
