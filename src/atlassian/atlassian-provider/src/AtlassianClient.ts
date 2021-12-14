@@ -45,11 +45,12 @@ class AtlassianClient {
   public makeApiClient(cloudId: string, token: string, suffix: string): IApiClient {
     const makeUrl = (cloudId: string, url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${suffix}${url}`;
 
-    const makeRequest = (verb: string) => async (url: string) =>
+    const makeRequest = (verb: string) => async (url: string, body?: Record<string, any>) =>
       (
         await (superagent as any)
           [verb](makeUrl(cloudId, url))
           .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`)
+          .send(body)
       ).body;
 
     const api: IApiClient = {

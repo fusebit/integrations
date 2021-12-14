@@ -14,5 +14,5 @@ export async function authenticate(page: Page) {
   await page.click('button[id="signin_btn"]');
 
   // Accept the permissions page
-  await page.click('button:has-text("Allow")');
+  await Promise.race([page.waitForEvent('close'), page.click('button:has-text("Allow")')]);
 }

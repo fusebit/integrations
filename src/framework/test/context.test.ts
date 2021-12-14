@@ -65,4 +65,26 @@ describe('Context', () => {
     expect(result.headers['set-cookie']).toBe('foobar=muh');
     expect(result.headers['header2']).toBe('header2_val');
   });
+
+  test('Buffers get converted into base64 with a bodyEncoding', async () => {
+    const manager = new Manager();
+
+    const fctx = {
+      path: '/PATH',
+      method: 'GET',
+      accountId: 'accountId',
+      subscriptionId: 'subscriptionId',
+      boundaryId: 'boundaryId',
+      functionId: 'functionId',
+      baseUrl: 'baseUrl',
+    };
+
+    const kctx = manager.createRouteableContext(fctx);
+    const buffer = Buffer.from('AAAAAAA', 'utf8');
+    kctx.body = buffer;
+
+    const result = manager.createResponse(kctx);
+    expect(result.bodyEncoding).toBe('base64');
+    expect(result.body).toBe(buffer.toString('base64'));
+  });
 });

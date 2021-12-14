@@ -48,7 +48,10 @@ class Service extends OAuthConnector.Service {
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    return token.guild.id;
+    // If the Discord application is setup to interact with a Guild (Discord server)
+    if (token.guild) {
+      return token.guild.id;
+    }
   }
 
   public getWebhookEventType(event: any): string {

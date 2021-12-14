@@ -1,0 +1,22 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Discord"
+  },
+  "handler": "@fusebit-int/discord-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "identify webhook.incoming",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500,
+    "extraParams": "permissions=1024",
+    "applicationPublicKey": "<% global.consts.random %>"
+  }
+}
