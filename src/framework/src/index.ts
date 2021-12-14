@@ -19,7 +19,7 @@ import * as Middleware_ from './middleware';
 import {
   ProviderActivator as ProviderActivator_,
   WebhookClient as WebhookClient_,
-  HttpClient as HttpClient_,
+  ApiClient as ApiClient_,
 } from './provider';
 import { Connector, Integration } from './client/index';
 
@@ -35,7 +35,7 @@ const Internal = {
   Provider: {
     Activator: ProviderActivator_,
     WebhookClient: WebhookClient_,
-    HttpClient: HttpClient_,
+    ApiClient: ApiClient_,
   },
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
@@ -53,7 +53,7 @@ module Internal {
   export namespace Provider {
     export type Activator = typeof ProviderActivator_;
     export type WebhookClient = typeof WebhookClient_;
-    export type HttpClient = HttpClient_;
+    export type ApiClient = ApiClient_;
   }
   export namespace Types {
     export type Context = Context_;

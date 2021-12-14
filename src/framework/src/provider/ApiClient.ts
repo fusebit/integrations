@@ -2,7 +2,7 @@ import superagent from 'superagent';
 
 type MakeUrl = (baseUrl: string) => string;
 
-export class HttpClient {
+export class ApiClient {
   protected makeUrl: MakeUrl;
   public token: string;
   public connectorId: string;

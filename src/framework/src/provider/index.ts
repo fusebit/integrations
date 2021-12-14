@@ -1,5 +1,5 @@
 import { ProviderActivator } from './ProviderActivator';
 import { WebhookClient } from './WebhookClient';
-import { HttpClient } from './HttpClient';
+import { ApiClient } from './ApiClient';
 
-export { ProviderActivator, WebhookClient, HttpClient };
+export { ProviderActivator, WebhookClient, ApiClient };

@@ -41,19 +41,19 @@ class AtlassianClient {
     return response.body;
   }
 
-  public makeApiClient(cloudId: string, token: string, path: string): Internal.Provider.HttpClient {
-    return new Internal.Provider.HttpClient(
+  public makeApiClient(cloudId: string, token: string, path: string): Internal.Provider.ApiClient {
+    return new Internal.Provider.ApiClient(
       (url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${path}${url}`,
       this.fusebit.connectorId,
       this.fusebit.credentials.access_token
     );
   }
 
-  public jira(cloudId: string): Internal.Provider.HttpClient {
+  public jira(cloudId: string): Internal.Provider.ApiClient {
     return this.makeApiClient(cloudId, 'jira', '/rest/api/3');
   }
 
-  public confluence(cloudId: string): Internal.Provider.HttpClient {
+  public confluence(cloudId: string): Internal.Provider.ApiClient {
     return this.makeApiClient(cloudId, 'confluence', '/rest/api');
   }
 }

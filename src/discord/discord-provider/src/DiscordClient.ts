@@ -11,12 +11,12 @@ class DiscordClient {
   /**
    * Use Discord API that requires a user token
    */
-  public user!: Internal.Provider.HttpClient;
+  public user!: Internal.Provider.ApiClient;
 
   /**
    * Use Discord API that requires a bot token (i.e fetching a guild, or a channel, or updating permissions on a user)
    */
-  public bot!: Internal.Provider.HttpClient;
+  public bot!: Internal.Provider.ApiClient;
 
   constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
     this.ctx = ctx;
@@ -25,12 +25,12 @@ class DiscordClient {
   }
 
   async initialize() {
-    this.bot = new Internal.Provider.HttpClient(
+    this.bot = new Internal.Provider.ApiClient(
       (url: string) => `${this.baseUrl}/${url}`,
       this.connectorId,
       await this.getBotToken()
     );
-    this.user = new Internal.Provider.HttpClient(
+    this.user = new Internal.Provider.ApiClient(
       (url: string) => `${this.baseUrl}/${url}`,
       this.connectorId,
       this.fusebit.credentials.access_token
