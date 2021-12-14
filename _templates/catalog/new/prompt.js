@@ -6,8 +6,14 @@ module.exports = [
   },
   {
     type: 'input',
-    name: 'svgImage',
-    message: 'SVG Image (two blank lines to finish)\n',
+    name: 'svgImageSmall',
+    message: 'Glyph-only SVG Image (two blank lines to finish)\n',
+    multiline: true,
+  },
+  {
+    type: 'input',
+    name: 'svgImageLarge',
+    message: 'Glyph and Wordmark SVG Image (two blank lines to finish)\n',
     multiline: true,
   },
   {

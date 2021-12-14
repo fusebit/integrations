@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "stackoverflow"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "stackoverflowConnector",
+      "skip": false,
+      "provider": "@fusebit-int/stackoverflow-provider",
+      "entityId": "<% global.entities.stackoverflowConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

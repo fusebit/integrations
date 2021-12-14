@@ -1,0 +1,35 @@
+{
+  "id": "stackoverflow",
+  "name": "Stack Overflow",
+  "smallIcon": "#/assets/stackoverflow.svg",
+  "largeIcon": "#/assets/stackoverflowLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": ""
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/stackoverflow#creating-your-own-stackoverflow-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "stackoverflowConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/stackoverflow-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

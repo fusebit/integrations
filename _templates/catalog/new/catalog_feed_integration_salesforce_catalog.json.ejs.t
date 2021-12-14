@@ -5,7 +5,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/catalog.json
   "id": "<%= name.toLowerCase() %>",
   "name": "<%= h.capitalize(name) %>",
   "smallIcon": "#/assets/<%= name.toLowerCase() %>.svg",
-  "largeIcon": "#/assets/<%= name.toLowerCase() %>.svg",
+  "largeIcon": "#/assets/<%= name.toLowerCase() %>Large.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
