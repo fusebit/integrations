@@ -29,7 +29,7 @@ ${slackSendMessage.toString()}
 `;
 
 module.exports = {
-  name: 'Send message to channel',
-  description: 'Send message to a Slack channel.',
+  name: 'Send a message to a channel',
+  description: 'Send a message to a Slack channel.',
   code,
 };
