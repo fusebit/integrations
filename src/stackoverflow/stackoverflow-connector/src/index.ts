@@ -5,6 +5,7 @@ const TOKEN_URL = 'https://stackoverflow.com/oauth/access_token';
 const AUTHORIZATION_URL = 'https://stackoverflow.com/oauth';
 const REVOCATION_URL = 'https://stackoverflow.com/oauth/unsupported';
 const SERVICE_NAME = 'StackOverflow';
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector {
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
@@ -19,10 +20,19 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'StackOverflow Configuration';
 
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationKey');
+
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your StackOverflow App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your StackOverflow App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your StackOverflow App';
+    });
+
+    // Add the Application Key, which is used to control quotas, in Stack Overflow.
+    this.router.get('/api/:lookupKey/token', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+      ctx.body.application_key = ctx.state.manager.config.configuration.applicationKey;
+
+      return next();
     });
   }
 }

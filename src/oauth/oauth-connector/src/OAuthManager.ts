@@ -198,7 +198,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     this.router.get(
       '/api/session/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
-      async (ctx: Connector.Types.Context) => {
+      async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
         try {
           ctx.body = this.sanitizeCredentials(
             await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey, false)
@@ -209,13 +209,15 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         if (!ctx.body) {
           ctx.throw(404);
         }
+
+        return next();
       }
     );
 
     this.router.get(
       '/api/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
-      async (ctx: Connector.Types.Context) => {
+      async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
         try {
           ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
         } catch (error) {
@@ -224,6 +226,8 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         if (!ctx.body) {
           ctx.throw(404);
         }
+
+        return next();
       }
     );
 

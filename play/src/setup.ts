@@ -18,6 +18,9 @@ export interface IConfiguration {
   audience?: string;
   oauthScopes?: string;
   extraParams?: string;
+
+  adjustIntegrationConfiguration?: (integrationConfiguration: any) => Promise<any>;
+  adjustConnectorConfiguration?: (connectorConfiguration: any) => Promise<any>;
 }
 
 export const {
@@ -36,28 +39,29 @@ export const {
   OAUTH_AUDIENCE,
 } = process.env;
 
-const makeIntegration = (configuration: IConfiguration, integrationVariables: IIntegrationVariable[] = []) => ({
-  id: configuration.integrationId,
-  data: {
-    componentTags: {},
-    configuration: {},
+const makeIntegration = (configuration: IConfiguration, integrationVariables: IIntegrationVariable[] = []) =>
+  configuration.adjustIntegrationConfiguration!({
+    id: configuration.integrationId,
+    data: {
+      componentTags: {},
+      configuration: {},
 
-    handler: './integration',
-    components: [
-      {
-        name: configuration.connectorId,
-        entityType: 'connector',
-        entityId: configuration.connectorId,
-        dependsOn: [],
-        provider: configuration.packageProvider,
+      handler: './integration',
+      components: [
+        {
+          name: configuration.connectorId,
+          entityType: 'connector',
+          entityId: configuration.connectorId,
+          dependsOn: [],
+          provider: configuration.packageProvider,
+        },
+      ],
+      files: {
+        'integration.js': readIntegrationFile(integrationVariables),
+        'package.json': JSON.stringify({ dependencies: { superagent: '*' } }),
       },
-    ],
-    files: {
-      'integration.js': readIntegrationFile(integrationVariables),
-      'package.json': JSON.stringify({ dependencies: { superagent: '*' } }),
     },
-  },
-});
+  });
 
 const readIntegrationFile = (integrationVariables: IIntegrationVariable[] = []): string => {
   let fileContents = fs.readFileSync('./play/mock/integration.js', 'utf8');
@@ -69,29 +73,33 @@ const readIntegrationFile = (integrationVariables: IIntegrationVariable[] = []):
   return fileContents;
 };
 
-const makeConnector = (configuration: IConfiguration) => ({
-  id: configuration.connectorId,
-  data: {
-    handler: configuration.packageConnector,
-    configuration: {
-      scope: configuration.oauthScopes,
-      authorizationUrl: configuration.authorizationUrl,
-      tokenUrl: configuration.tokenUrl,
-      clientId: configuration.clientId,
-      clientSecret: configuration.clientSecret,
-      signingSecret: configuration.signingSecret,
-      audience: configuration.audience,
-      extraParams: configuration.extraParams,
-      accessTokenExpirationBuffer: 500,
+const makeConnector = (configuration: IConfiguration) =>
+  configuration.adjustConnectorConfiguration!({
+    id: configuration.connectorId,
+    data: {
+      handler: configuration.packageConnector,
+      configuration: {
+        scope: configuration.oauthScopes,
+        authorizationUrl: configuration.authorizationUrl,
+        tokenUrl: configuration.tokenUrl,
+        clientId: configuration.clientId,
+        clientSecret: configuration.clientSecret,
+        signingSecret: configuration.signingSecret,
+        audience: configuration.audience,
+        extraParams: configuration.extraParams,
+        accessTokenExpirationBuffer: 500,
+      },
     },
-  },
-});
+  });
 
 export const ensureEntities = async (
   account: IAccount,
   configuration: IConfiguration,
   integrationVariables: IIntegrationVariable[] = []
 ) => {
+  configuration.adjustConnectorConfiguration = configuration.adjustConnectorConfiguration || ((x: any) => x);
+  configuration.adjustIntegrationConfiguration = configuration.adjustIntegrationConfiguration || ((x: any) => x);
+
   const recreateIntegration = async () => {
     let result = await fusebitRequest(account, RequestMethod.delete, `/integration/${configuration.integrationId}`);
     result = await waitForOperation(account, `/integration/${configuration.integrationId}`);

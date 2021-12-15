@@ -5,15 +5,11 @@ const connectorName = '##CONNECTOR_NAME##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  // TODO: Perform SDK check here
-});
 
-integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
-  // Save something in storage to look up later on.
-  await integration.storage.setData(ctx, `/test/stackoverflow/webhook/${Math.random() * 10000000}`, {
-    data: ctx.req.body,
-    expires: new Date(Date.now() + 60 * 1000).toISOString(),
-  });
+  const user = await sdk.site('stackoverflow').get('/me');
+  const networkAchievements = await sdk.network().get('/me/achievements');
+
+  ctx.body = { userCount: user.items.length, networkAchievementsQuota: networkAchievements.quota_remaining };
 });
 
 module.exports = integration;
