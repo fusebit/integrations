@@ -17,7 +17,7 @@
     {
       "type": "Control",
       "scope": "#/properties/stackoverflowConnector/properties/id",
-      "label": "Stackoverflow Connector name",
+      "label": "Stack Overflow Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

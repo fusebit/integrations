@@ -1,6 +1,11 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import { AuthorizationType, IDiscordMethods, IFusebitCredentials, SuperAgentType, HttpMethodTypes } from './Types';
+
+interface IFusebitCredentials {
+  credentials: { access_token: string };
+  lookupKey: string;
+  connectorId: string;
+}
 
 class DiscordClient {
   public fusebit: IFusebitCredentials;
