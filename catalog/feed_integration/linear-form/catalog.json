@@ -1,8 +1,8 @@
 {
   "id": "linear-form",
   "name": "Linear-form",
-  "smallIcon": "#/assets/linear-form.svg",
-  "largeIcon": "#/assets/linear-form.svg",
+  "smallIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linear.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
