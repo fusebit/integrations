@@ -1,9 +1,0 @@
-{
-  "type": "object",
-  "properties": {
-    "team-name": {
-      "type": "string",
-      "enum": []
-    }
-  }
-}
