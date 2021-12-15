@@ -25,7 +25,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // For the Stack Overflow SDK documentation, see https://jsforce.github.io/.
   const stackoverflowClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const user = stackoverflowClient.get('/me');
+  const user = (await stackoverflowClient.site('stackoverflow').get('/me')).items[0];
 
   ctx.body = {
     message: `You have ${user.reputation} reputation points with Stack Overflow`,
