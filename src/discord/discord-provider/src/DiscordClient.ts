@@ -7,6 +7,10 @@ interface IFusebitCredentials {
   connectorId: string;
 }
 
+class BotApiClient extends Internal.Provider.ApiClient {
+  protected addAuthorization = (request: superagent.Request) => request.set('Authorization', `Bot ${this.token}`);
+}
+
 class DiscordClient {
   public fusebit: IFusebitCredentials;
   private baseUrl = 'https://discord.com/api';
@@ -30,11 +34,7 @@ class DiscordClient {
   }
 
   async initialize() {
-    this.bot = new Internal.Provider.ApiClient(
-      (url: string) => `${this.baseUrl}/${url}`,
-      this.connectorId,
-      await this.getBotToken()
-    );
+    this.bot = new BotApiClient((url: string) => `${this.baseUrl}/${url}`, this.connectorId, await this.getBotToken());
     this.user = new Internal.Provider.ApiClient(
       (url: string) => `${this.baseUrl}/${url}`,
       this.connectorId,

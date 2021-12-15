@@ -7,13 +7,13 @@ export class ApiClient {
   public token: string;
   public connectorId: string;
 
+  protected addAuthorization = (request: superagent.Request) => request.set('Authorization', `Bearer ${this.token}`);
+
   protected makeRequest = (verb: string) => async (url: string, body?: any) =>
     (
-      await (superagent as any)
-        [verb](this.makeUrl(url))
-        .set('User-Agent', `fusebit/${this.connectorId}`)
-        .set('Authorization', `Bearer ${this.token}`)
-        .send(body)
+      await this.addAuthorization(
+        (superagent as any)[verb](this.makeUrl(url)).set('User-Agent', `fusebit/${this.connectorId}`)
+      ).send(body)
     ).body;
 
   public get: (url: string) => Promise<any>;

@@ -26,6 +26,7 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your StackOverflow App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your StackOverflow App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your StackOverflow App';
+      ctx.body.schema.properties.applicationKey = { description: 'Application Key', type: 'string' };
     });
 
     // Add the Application Key, which is used to control quotas, in Stack Overflow.
