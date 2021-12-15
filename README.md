@@ -88,5 +88,6 @@ lerna run build
 | `lenra run test --scope @fusebit-int/oauth-connector` | Run the tests for just the `oauth-connector` package |
 | `lerna run build --scope @fusebit-int/slack-connector` | Build and run the tests for a specific package |
 | `npx hygen service new` | Create a new connector and provider, using the results of the prompts |
+| `npx hygen snippet new` | Create a new snippet for an existing connector, using the results of the prompts |
 | `npx hygen catalog new` | Create a new catalog entry for the connector and provider, using the results of the prompts |
 | `npx hygen help` | See available actions |
