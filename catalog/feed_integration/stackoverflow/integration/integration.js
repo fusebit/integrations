@@ -22,7 +22,7 @@ const connectorName = 'stackoverflowConnector';
 // The sample test endpoint of this integration gets all contacts stored in the Stack Overflow account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Stack Overflow client pre-configured with credentials necessary to communicate with your tenant's Stack Overflow account.
-  // For the Stack Overflow SDK documentation, see https://jsforce.github.io/.
+  // For the Stack Overflow SDK documentation, see https://api.stackexchange.com/docs.
   const stackoverflowClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const user = (await stackoverflowClient.site('stackoverflow').get('/me')).items[0];
