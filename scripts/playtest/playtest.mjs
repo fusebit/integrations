@@ -129,6 +129,7 @@ const getGitCommits = async () => {
 
 const createSlackBlocks = (services, unknown, title, specTest) => {
   const results = collectResults(services);
+  console.log(`results: ${JSON.stringify(results, null, 2)}`);
 
   // It's inefficient, but so what.
   const specs = convertResultsToSpecs(results);
@@ -176,7 +177,7 @@ const createSlackBlocks = (services, unknown, title, specTest) => {
     ],
   };
 
-  if (fail.length) {
+  if (true || fail.length) {
     block.blocks.push(
       {
         type: 'divider',
@@ -184,6 +185,16 @@ const createSlackBlocks = (services, unknown, title, specTest) => {
       {
         type: 'section',
         fields: [
+          {
+            type: 'mrkdwn',
+            text: '*Passed Tests*:',
+          },
+          { type: 'mrkdwn', text: pass.map((p) => p.serviceName).join('\n') },
+          {
+            type: 'mrkdwn',
+            text: '*Unknown Tests*:',
+          },
+          { type: 'mrkdwn', text: unknown.join('\n') },
           {
             type: 'mrkdwn',
             text: '*Failed Tests*:',
