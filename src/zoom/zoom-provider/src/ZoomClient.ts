@@ -15,7 +15,7 @@ export class ZoomClient {
   public v2() {
     return new Internal.Provider.ApiClient(
       () => {
-        return 'https://api.zoom.us/v2/';
+        return 'https://api.zoom.us/v2';
       },
       this.fusebit.connectorId,
       this.fusebit.credentials.access_token
