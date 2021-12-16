@@ -262,7 +262,7 @@ const addSlackTrailer = (block, timeStamp) => {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '\n ```./scripts/access_pw_logs.sh ' + `${timeStamp}` + ' <service-name>```',
+        text: '\n ```./scripts/access_pw_logs.mjs ' + `${timeStamp}` + ' <service-name>```',
       },
     }
   );
