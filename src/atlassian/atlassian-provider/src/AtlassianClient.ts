@@ -1,7 +1,6 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
 import {
-  IApiClient,
   IAtlassianAccessibleResources,
   IAtlassianAccessibleResource,
   IAtlassianMe,
@@ -42,34 +41,19 @@ class AtlassianClient {
     return response.body;
   }
 
-  public makeApiClient(cloudId: string, token: string, suffix: string): IApiClient {
-    const makeUrl = (cloudId: string, url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${suffix}${url}`;
-
-    const makeRequest = (verb: string) => async (url: string, body?: Record<string, any>) =>
-      (
-        await (superagent as any)
-          [verb](makeUrl(cloudId, url))
-          .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`)
-          .send(body)
-      ).body;
-
-    const api: IApiClient = {
-      get: makeRequest('get'),
-      put: makeRequest('put'),
-      post: makeRequest('post'),
-      delete: makeRequest('delete'),
-      head: makeRequest('head'),
-      patch: makeRequest('patch'),
-    };
-
-    return api;
+  public makeApiClient(cloudId: string, token: string, path: string): Internal.Provider.ApiClient {
+    return new Internal.Provider.ApiClient(
+      (url: string) => `https://api.atlassian.com/ex/${token}/${cloudId}${path}${url}`,
+      this.fusebit.connectorId,
+      this.fusebit.credentials.access_token
+    );
   }
 
-  public jira(cloudId: string): IApiClient {
+  public jira(cloudId: string): Internal.Provider.ApiClient {
     return this.makeApiClient(cloudId, 'jira', '/rest/api/3');
   }
 
-  public confluence(cloudId: string): IApiClient {
+  public confluence(cloudId: string): Internal.Provider.ApiClient {
     return this.makeApiClient(cloudId, 'confluence', '/rest/api');
   }
 }

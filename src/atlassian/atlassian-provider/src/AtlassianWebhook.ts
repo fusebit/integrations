@@ -8,7 +8,7 @@ import {
   IWebhookRegisterResponses,
 } from './Types';
 
-export class AtlassianWebhook extends Internal.WebhookClient {
+export class AtlassianWebhook extends Internal.Provider.WebhookClient {
   // Right now it looks like only Jira webhooks have a published Webhook SDK.  When that changes, support an
   // additional parameter in the integration.webhook.getSdk, or a parameter on this object, to specify the
   // cloudId and the type of cloud to use for these calls.

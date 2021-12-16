@@ -3,7 +3,7 @@ import { Octokit as Client } from 'octokit';
 
 type FusebitGitHubClient = Client & { fusebit?: any };
 
-export default class GitHubProvider extends Internal.ProviderActivator<FusebitGitHubClient> {
+export default class GitHubProvider extends Internal.Provider.Activator<FusebitGitHubClient> {
   /*
    * This function will create an authorized wrapper of the GitHub SDK client.
    */

@@ -7,7 +7,7 @@ import PagerDutyWebhook from './PagerDutyWebhook';
 // PartialCall is the type of return when you run `await api()`
 type FusebitPagerDutyClient = PartialCall & { fusebit?: any };
 
-export default class PagerDutyProvider extends Internal.ProviderActivator<FusebitPagerDutyClient> {
+export default class PagerDutyProvider extends Internal.Provider.Activator<FusebitPagerDutyClient> {
   /**
    * This function will create an authorized webhook SDK for PagerDuty.
    */

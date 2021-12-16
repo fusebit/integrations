@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import { AtlassianWebhook } from './AtlassianWebhook';
 import { AtlassianClient } from './AtlassianClient';
 
-export default class AtlassianProvider extends Internal.ProviderActivator<AtlassianClient> {
+export default class AtlassianProvider extends Internal.Provider.Activator<AtlassianClient> {
   public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {
     const client = await this.instantiate(ctx, lookupKey);
     return new AtlassianWebhook(ctx, lookupKey, installId, this.config, client);

@@ -32,7 +32,7 @@ class ClaimsIdentity {
   }
 }
 
-export default class MicrosoftBotProvider extends Internal.ProviderActivator<FusebitBotFrameworkAdapter> {
+export default class MicrosoftBotProvider extends Internal.Provider.Activator<FusebitBotFrameworkAdapter> {
   protected async requestConnectorCredentials({
     ctx,
   }: {
