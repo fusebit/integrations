@@ -1,15 +1,15 @@
 import { Internal } from '@fusebit-int/framework';
-import { ZoomClient as Client, IZoomConfiguration, IZoomCredentials } from './ZoomClient';
-
-type FusebitZoomClient = Client & { fusebit?: any };
-
-export default class ZoomProvider extends Internal.Provider.Activator<FusebitZoomClient> {
+export default class ZoomProvider extends Internal.Provider.Activator<Internal.Provider.ApiClient> {
   /*
    * This function will create an authorized wrapper of the Zoom SDK client.
    */
-  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitZoomClient> {
-    const credentials = (await this.requestConnectorToken({ ctx, lookupKey })) as IZoomCredentials;
-    const client: FusebitZoomClient = new Client({ connectorId: this.config.entityId, credentials });
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<Internal.Provider.ApiClient> {
+    const credentials = await this.requestConnectorToken({ ctx, lookupKey });
+    const client: Internal.Provider.ApiClient = new Internal.Provider.ApiClient(
+      (url) => `https://api.zoom.us/v2${url}`,
+      this.config.entityId,
+      credentials.access_token
+    );
 
     return client;
   }
