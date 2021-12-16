@@ -67,7 +67,7 @@
     "accessTokenExpirationBuffer": {
       "type": "integer"
     },
-    "immediateResponse": {
+    "immediateResponseHandler": {
       "title": "The Integration ID that will handle the immediate response",
       "type": "string"
     }

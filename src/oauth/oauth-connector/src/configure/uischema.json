@@ -38,7 +38,7 @@
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/immediateResponse"
+                  "scope": "#/properties/immediateResponseHandler"
                 }
               ]
             },

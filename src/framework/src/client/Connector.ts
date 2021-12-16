@@ -173,15 +173,15 @@ export class Service extends EntityBase.ServiceDefault {
     ctx: Connector.Types.Context,
     processPromise?: Promise<FanoutResponse_>
   ): Promise<void> {
-    const { immediateResponse } = ctx.state.manager.config.configuration;
+    const { immediateResponseHandler } = ctx.state.manager.config.configuration;
 
-    if (immediateResponse) {
+    if (immediateResponseHandler) {
       const params = ctx.state.params;
       const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-      const immediateResponseUrl = `${baseUrl}/integration/${immediateResponse}/api/fusebit/webhook/event/immediate-response`;
+      const immediateResponseHandlerUrl = `${baseUrl}/integration/${immediateResponseHandler}/api/fusebit/webhook/event/immediate-response`;
 
       const res = await superagent
-        .post(immediateResponseUrl)
+        .post(immediateResponseHandlerUrl)
         .set('Authorization', `Bearer ${params.functionAccessToken}`)
         .send(ctx.req.body);
       ctx.body = res.body;
@@ -231,12 +231,6 @@ class Connector<S extends Connector.Service = Connector.Service> extends EntityB
         await this.service.handleWebhookEvent(ctx);
       }
     );
-
-    this.router.post('/api/fusebit/webhook/event/immediate-response', async (ctx: Connector.Types.Context) => {
-      ctx.body = {
-        text: ':hourglass_flowing_sand: Running...',
-      };
-    });
   }
 
   protected createService(): S {
