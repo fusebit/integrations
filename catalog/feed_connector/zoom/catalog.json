@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": ""
+    "catalog": "Video Conferencing"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/zoom#creating-your-own-zoom-app"
