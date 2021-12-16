@@ -14,35 +14,39 @@ const sampleCtx: any = {
 
 const sampleAccessToken = 'sample_access_token';
 
+const sampleMe = {
+  account_id: '123',
+};
+
 let service: Service;
 beforeEach(() => {
   service = new ServiceConnector().service;
 });
 
 describe('Zoom Webhook Events', () => {
-  test.todo('Validate: getEventsFromPayload', async () => {
+  test('Validate: getEventsFromPayload', async () => {
     expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
 
-  test.todo('Validate: getAuthIdFromEvent', async () => {
-    expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.user.accountId);
+  test('Validate: getAuthIdFromEvent', async () => {
+    expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(sampleHeaders.authorization);
   });
 
-  test.todo('Validate: validateWebhookEvent', async () => {
+  test('Validate: validateWebhookEvent', async () => {
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
   });
 
-  test.todo('Validate: initializationChallenge false', async () => {
-    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
+  test('Validate: initializationChallenge false', async () => {
+    expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
-  test.todo('Validate: getTokenAuthId', async () => {
-    const scope = nock('https://api.zoom.com');
-    scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get('/me').reply(200, sampleMe);
+  test('Validate: getTokenAuthId', async () => {
+    const scope = nock('https://api.zoom.us');
+    scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get('/v2/users/me').reply(200, sampleMe);
 
     expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(
-      '616e378a5800630069f43cb6'
+      sampleMe.account_id
     );
   });
 
