@@ -37,9 +37,9 @@ const getServicesWithPlay = async () => {
 
 const installAwsCli = async () => {
   // Installing latest AWS CLIv2
-  await $`apt install -y zip unzip`;
-  await $`curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`;
-  await $`unzip awscliv2.zip`;
+  await $`apt install -q -y zip unzip`;
+  await $`curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`;
+  await $`unzip -q awscliv2.zip`;
   await $`./aws/install`;
 };
 
@@ -103,7 +103,7 @@ const uploadPlaywrightTraces = async (services) => {
   // Send output to AWS
   await Promise.all(
     services.map((service) => {
-      return $`aws s3 sync ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${timeStamp}/${service}/ || true`;
+      return $`aws s3 sync --no-progress ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${timeStamp}/${service}/ || true`;
     })
   );
 
