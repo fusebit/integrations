@@ -5,8 +5,8 @@ const fs = require('fs');
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
-const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY;
-const PROFILE_NAME = process.env.PROFILE_NAME;
+const DEPLOYMENT_KEY = argv._[1];
+const PROFILE_NAME = argv._[2];
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
@@ -16,6 +16,19 @@ const getServicesWithPlay = async () => {
     let files = fs.readdirSync(`./src/${filename}/${filename}-provider/`);
     return files.includes('play');
   });
+};
+
+const me = async () => {
+  if (process.env.JOB_NAME) {
+    return 'CICD';
+  } else {
+    const user = await $`whoami`;
+    if (user.includes('root')) {
+      console.log('Do not use root user to execute this test!');
+      process.exit(1);
+    }
+    return user;
+  }
 };
 
 (async () => {
