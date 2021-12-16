@@ -25,6 +25,4 @@ publish()
   done
 }
 
-build
-
-publish benn
+publish $1
