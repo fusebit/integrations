@@ -2,12 +2,18 @@
   "name": "@fusebit-int/zoom-provider",
   "version": "7.25.6",
   "description": "Zoom provider",
-  "keywords": ["Fusebit", "Zoom"],
+  "keywords": [
+    "Fusebit",
+    "Zoom"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/*.js", "libc/*.d.ts"],
+  "files": [
+    "libc/*.js",
+    "libc/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
@@ -46,7 +52,5 @@
     "jest": "^27.2.4",
     "typescript": "^4.4.3"
   },
-  "dependencies": {
-    "zoom": "1.2.3"
-  }
+  "dependencies": {}
 }

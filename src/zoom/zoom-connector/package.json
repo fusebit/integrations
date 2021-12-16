@@ -2,12 +2,19 @@
   "name": "@fusebit-int/zoom-connector",
   "version": "7.25.6",
   "description": "Zoom Connector",
-  "keywords": ["Fusebit", "Zoom"],
+  "keywords": [
+    "Fusebit",
+    "Zoom"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
