@@ -109,11 +109,13 @@ export const commitSession = async (account: IAccount, integrationId: string, se
 export const updateIntegrationConnector = async (account: IAccount, integrationEntity: any, connectorEntity: any) => {
   const putIntegration = async () => {
     const response = await putAndWait(account, `/integration/${integrationEntity.id}`, integrationEntity);
+    console.log(response);
     expect(response).toBeHttp({ statusCode: 200, data: { operationState: { status: 'success' } } });
   };
 
   const putConnector = async () => {
     const response = await putAndWait(account, `/connector/${connectorEntity.id}`, connectorEntity);
+    console.log(response);
     expect(response).toBeHttp({ statusCode: 200, data: { operationState: { status: 'success' } } });
   };
 
