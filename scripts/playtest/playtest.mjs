@@ -177,7 +177,7 @@ const createSlackBlocks = (services, unknown, title, specTest) => {
     ],
   };
 
-  if (true || fail.length) {
+  if (fail.length) {
     block.blocks.push(
       {
         type: 'divider',
