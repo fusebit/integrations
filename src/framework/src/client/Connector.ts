@@ -182,10 +182,9 @@ export class Service extends EntityBase.ServiceDefault {
 
       const res = await superagent
         .post(immediateResponseUrl)
-        .set('Authorization', `Bearer ${params.functionAccessToken}`);
-      console.log('=-=-=-=-=-=-=-=');
-      console.log(res.body);
-      console.log('=-=-=-=-=-=-=-=');
+        .set('Authorization', `Bearer ${params.functionAccessToken}`)
+        .send(ctx.req.body);
+      ctx.body = res.body;
     }
   }
 
