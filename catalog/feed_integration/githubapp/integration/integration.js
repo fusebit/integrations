@@ -25,8 +25,10 @@ router.post('/api/tenant/:tenantId/test', async (ctx) => {
   const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   // Use the authorizing user credentials
   const userClient = githubapp.user();
-  const { data } = await userClient.rest.users.getAuthenticated();
-  ctx.body = data;
+  const {
+    data: { login, public_repos, followers },
+  } = await userClient.rest.users.getAuthenticated();
+  ctx.body = `Your GitHub login is ${login} with ${public_repos} public repositories and ${followers} followers`;
 });
 
 // List repository issues
@@ -49,7 +51,7 @@ router.get('/api/tenant/:tenantId/:org/:repo/issues', async (ctx) => {
   ctx.body = issuesList;
 });
 
-// Create a new GitHub issue
+// Create a new GitHub issue authenticated as the authorizing user
 router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
   const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const userClient = githubapp.user();
@@ -62,26 +64,33 @@ router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
 });
 
 // Create a new GitHub issue authenticated as a GitHub App Installation
-router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
+router.post('/api/tenant/:tenantId/app/:owner/:repo/issue', async (ctx) => {
   const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  // Ensure you have configured your GitHub Connector properly in order to Authenticate as a GitHub Application.
-  // see our developer docs for more information https://developer.fusebit.io/docs/githubapp
+  // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
+  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
   const appClient = await githubapp.app();
-  // You use the GitHub App client to list your GitHub App installations
-  const installations = await appClient.rest.apps.listInstallations();
+  const { data: installations } = await appClient.rest.apps.listInstallations();
 
-  if (installations.length) {
-    // Now you have your installation, you can request an access token to the specific installation
-    // We perform all that work for you and you get back an authenticated SDK as a GitHub installation.
-    const installationClient = await appClient.installation(installations[0].id);
-
-    const { data } = await installationClient.rest.issues.create({
-      owner: ctx.params.owner,
-      repo: ctx.params.repo,
-      title: 'Hello world from Fusebit',
-    });
-    ctx.body = data;
+  if (!installations.length) {
+    ctx.throw(500, 'This application has no installations');
   }
+
+  const installation = installations.find((installation) => installation.account.login === ctx.params.owner);
+
+  if (!installation) {
+    ctx.throw(404, `Installation not found for account ${ctx.params.owner}`);
+  }
+
+  // Now you have your installation, you can request an access token to the specific installation
+  // We perform all that work for you and you get back an authenticated SDK as a GitHub installation.
+  const installationClient = await appClient.installation(installation.id);
+
+  const { data } = await installationClient.rest.issues.create({
+    owner: ctx.params.owner,
+    repo: ctx.params.repo,
+    title: 'Hello world from Fusebit',
+  });
+  ctx.body = data;
 });
 
 // Subscribe to events

@@ -1,7 +1,7 @@
 import { Internal } from '@fusebit-int/framework';
 import { GitHubClient } from './GitHubClient';
 
-export default class GitHubProvider extends Internal.ProviderActivator<GitHubClient> {
+export default class GitHubProvider extends Internal.Provider.Activator<GitHubClient> {
   /*
    * This function will create an authorized wrapper of the GitHub SDK client.
    */

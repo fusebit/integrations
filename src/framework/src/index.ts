@@ -20,6 +20,7 @@ import {
   ProviderActivator as ProviderActivator_,
   WebhookClient as WebhookClient_,
   ApiClient as ApiClient_,
+  IFusebitCredentials,
 } from './provider';
 import { Connector, Integration } from './client/index';
 
@@ -54,6 +55,7 @@ module Internal {
     export type Activator = typeof ProviderActivator_;
     export type WebhookClient = typeof WebhookClient_;
     export type ApiClient = ApiClient_;
+    export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
   }
   export namespace Types {
     export type Context = Context_;
@@ -64,6 +66,7 @@ module Internal {
     export interface IOnStartup extends IOnStartup_ {}
     export type WebhookClient = Integration.Types.WebhookClient;
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
+    export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
   }
 }
 

@@ -62,9 +62,15 @@ class ServiceConnector extends OAuthConnector {
         const privateKey = ctx.state.manager.config.configuration.privateKey;
 
         if (!privateKey) {
-          ctx.throw(500, 'Missing private key for sign access token requests');
+          ctx.throw(500, 'Missing Private Secret for sign access token requests');
         }
 
+        if (!ctx.state.manager.config.configuration.applicationId) {
+          ctx.throw(500, 'Missing App ID');
+        }
+
+        // Ideally the private key section should render as a textarea, but since this is a secret,
+        // we may need to add some extra work to support hiding the value from it, hence we need to add back the new lines.
         const formattedKey = privateKey
           .replace('-----BEGIN RSA PRIVATE KEY-----', '-----BEGIN RSA PRIVATE KEY-----\n')
           .replace('-----END RSA PRIVATE KEY-----', '\n-----END RSA PRIVATE KEY-----');

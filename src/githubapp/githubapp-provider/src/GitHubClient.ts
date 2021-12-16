@@ -6,6 +6,7 @@ export interface GitHubAppJwt {
   jwt: string;
   expiresAt: number;
 }
+
 class GitHubClient {
   private ctx: Internal.Types.Context;
   private fusebit: Internal.Types.IFusebitCredentials;
@@ -36,7 +37,7 @@ class GitHubClient {
     if (!this.appJwt) {
       return true;
     }
-    return new Date() >= new Date(this.appJwt.expiresAt);
+    return Date.now() >= this.appJwt.expiresAt;
   }
 
   private async getInstallationToken(gitHubInstallationId: number): Promise<any> {

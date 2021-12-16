@@ -9,6 +9,12 @@ export interface Token {
   instance_url: string;
 }
 
+export interface IFusebitCredentials {
+  credentials: Token;
+  lookupKey: string;
+  connectorId: string;
+}
+
 export abstract class ProviderActivator<T> {
   public abstract instantiate(ctx: FusebitContext, lookupKey?: string, installId?: string): Promise<T>;
   public instantiateWebhook = async (
