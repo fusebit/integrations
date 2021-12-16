@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Zoom"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "zoomConnector",
+      "skip": false,
+      "provider": "@fusebit-int/zoom-provider",
+      "entityId": "<% global.entities.zoomConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

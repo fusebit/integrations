@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/zoomConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}
