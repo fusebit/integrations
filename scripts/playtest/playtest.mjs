@@ -189,17 +189,17 @@ const createSlackBlocks = (services, unknown, title, specTest) => {
             type: 'mrkdwn',
             text: '*Passed Tests*:',
           },
-          { type: 'mrkdwn', text: pass.map((p) => p.serviceName).join('\n') },
+          { type: 'mrkdwn', text: ' ' + pass.map((p) => p.serviceName).join('\n') },
           {
             type: 'mrkdwn',
             text: '*Unknown Tests*:',
           },
-          { type: 'mrkdwn', text: unknown.join('\n') },
+          { type: 'mrkdwn', text: ' ' + unknown.join('\n') },
           {
             type: 'mrkdwn',
             text: '*Failed Tests*:',
           },
-          { type: 'mrkdwn', text: fail.map((f) => f.serviceName).join('\n') },
+          { type: 'mrkdwn', text: ' ' + fail.map((f) => f.serviceName).join('\n') },
         ],
       }
     );
