@@ -25,6 +25,6 @@ const help = () => {
   }
 
   console.log('');
-  console.log(`Display the trace:`)
+  console.log(`Display the trace:`);
   console.log(`npx playwright show-trace logs/test-${serviceName}-provider-test/trace.zip`);
 })();
