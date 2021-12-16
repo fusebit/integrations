@@ -1,7 +1,6 @@
 {
   "id": "e2e-hubspot-slack-bot",
   "name": "HubSpot Slack Bot",
-  "private": true,
   "smallIcon": "/images/hubspot.svg",
   "largeIcon": "/images/hubspot.svg",
   "version": "5.2.0",
@@ -10,7 +9,7 @@
     "catalog": "Messaging,CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app"
+    "configureAppDocUrl": "https://fusebit.io/blog/slack-bot-hubspot-integration/"
   },
   "configuration": {
     "schema": "config/schema.json",
