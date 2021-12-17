@@ -2,11 +2,22 @@
 
 const fs = require('fs');
 
+const getDeploymentKey = () => {
+  switch (argv._[1]) {
+    case 'prod': {
+      return 'on.fusebit.io';
+    }
+    default: {
+      return argv._[1];
+    }
+  }
+};
+
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
-const DEPLOYMENT_KEY = argv._[1];
-const PROFILE_NAME = argv._[2];
+const DEPLOYMENT_KEY = getDeploymentKey();
+const forced = argv.forced;
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
@@ -56,5 +67,11 @@ const me = async () => {
   await $`npm i && lerna bootstrap && lerna run build`;
   await $`./scripts/publish_all_force.sh ${PROFILE_NAME}`;
   await $`lerna run play:install --concurrency 1`;
+  if (forced) {
+    await unlock();
+  }
+
+  await acquireLock();
   await $`lerna run play --no-bail || true`;
+  await unlock();
 })();
