@@ -5,8 +5,7 @@ export interface IStackOverflowCredentials {
   application_key: string;
 }
 
-export interface IStackOverflowConfiguration {
-  connectorId: string;
+export interface IStackOverflowConfiguration extends Omit<Internal.Types.IFusebitCredentials, 'lookupKey'> {
   credentials: IStackOverflowCredentials;
 }
 

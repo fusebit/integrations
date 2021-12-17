@@ -10,7 +10,9 @@ export interface Token {
 }
 
 export interface IFusebitCredentials {
-  credentials: Token;
+  credentials: {
+    access_token: string;
+  };
   lookupKey: string;
   connectorId: string;
 }

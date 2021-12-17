@@ -1,16 +1,11 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
-import {
-  IAtlassianAccessibleResources,
-  IAtlassianAccessibleResource,
-  IAtlassianMe,
-  IFusebitCredentials,
-} from './Types';
+import { IAtlassianAccessibleResources, IAtlassianAccessibleResource, IAtlassianMe } from './Types';
 
 class AtlassianClient {
-  public fusebit: IFusebitCredentials;
+  public fusebit: Internal.Types.IFusebitCredentials;
 
-  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
+  constructor(ctx: Internal.Types.Context, fusebit: Internal.Types.IFusebitCredentials) {
     this.fusebit = fusebit;
   }
 
