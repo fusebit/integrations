@@ -52,7 +52,8 @@ class Service extends OAuthConnector.Service {
 
   public getWebhookEventType(event: any) {
     if (event.command) {
-      return `slash-command/${event.command}`;
+      // event.command starts with / (e.g., /fusebot), hence not needed after slash-command
+      return `slash-command${event.command}`;
     }
     return event.type;
   }
