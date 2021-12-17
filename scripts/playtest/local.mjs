@@ -2,21 +2,10 @@
 
 const fs = require('fs');
 
-const getDeploymentKey = () => {
-  switch (argv._[1]) {
-    case 'prod': {
-      return 'on.fusebit.io';
-    }
-    default: {
-      return argv._[1];
-    }
-  }
-};
-
 // The name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
-const DEPLOYMENT_KEY = getDeploymentKey();
+const DEPLOYMENT_KEY = argv._[1];
 const forced = argv.forced;
 const LOCK_NAME = 'lock/playwright';
 
