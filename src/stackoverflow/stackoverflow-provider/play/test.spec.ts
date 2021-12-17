@@ -34,7 +34,7 @@ test.beforeAll(async () => {
       clientSecret: Constants.SECRET_CLIENTSECRET,
       signingSecret: Constants.SIGNING_SECRET,
       adjustConnectorConfiguration: (cfg: any): any => {
-        cfg.data.configuration.applicationKey = process.env.SECRET_CLIENTKEY as string;
+        cfg.data.configuration.clientKey = process.env.SECRET_CLIENTKEY as string;
         return cfg;
       },
     },

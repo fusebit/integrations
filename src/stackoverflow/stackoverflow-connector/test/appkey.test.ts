@@ -31,7 +31,7 @@ const config = {
     ...cfg.configuration,
     tokenUrl: `${serviceUrl}${tokenPath}`,
     authorizationUrl: `${serviceUrl}${authorizePath}`,
-    applicationKey: 'TEST_CONNECTOR_APPLICATION_KEY',
+    clientKey: 'TEST_CONNECTOR_CLIENT_KEY',
   },
 };
 
@@ -41,8 +41,8 @@ const handle = (method: string, path: string, headers?: any, query?: any, body?:
   return manager.handle(request(method, path, headers, query, body));
 };
 
-describe('AppKey', () => {
-  test('Validate connector application key is returned when token does not include the key', async () => {
+describe('Client Key', () => {
+  test('Validate connector client key is returned when token does not include the key', async () => {
     const identityId = 'identityId';
     const fusebitApiIdentityScope = nock(fusebitUrl);
 
@@ -53,13 +53,13 @@ describe('AppKey', () => {
 
     const tokenResult = await handle('GET', `/api/${identityId}/token`);
     expect(tokenResult.status).toBe(200);
-    expect(tokenResult.body.application_key).toBe(config.configuration.applicationKey);
+    expect(tokenResult.body.client_key).toBe(config.configuration.clientKey);
 
     // verify that mocked routes have been called
     expect(fusebitApiIdentityScope.isDone()).toBeTruthy();
   });
 
-  test('Validate token application key is returned on a token request when token includes the key', async () => {
+  test('Validate token client key is returned on a token request when token includes the key', async () => {
     const identityId = 'identityId';
     const fusebitApiIdentityScope = nock(fusebitUrl);
 
@@ -68,12 +68,12 @@ describe('AppKey', () => {
       .get(`${connectorUri}/identity/${identityId}`)
       .twice()
       .reply(200, {
-        data: { token: { ...token, application_key: 'TEST_TOKEN_APPLICATION_KEY' } },
+        data: { token: { ...token, client_key: 'TEST_TOKEN_CLIENT_KEY' } },
       });
 
     const tokenResult = await handle('GET', `/api/${identityId}/token`);
     expect(tokenResult.status).toBe(200);
-    expect(tokenResult.body.application_key).toBe('TEST_TOKEN_APPLICATION_KEY');
+    expect(tokenResult.body.client_key).toBe('TEST_TOKEN_CLIENT_KEY');
 
     // verify that mocked routes have been called
     expect(fusebitApiIdentityScope.isDone()).toBeTruthy();

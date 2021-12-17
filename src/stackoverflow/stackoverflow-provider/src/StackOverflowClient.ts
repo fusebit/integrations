@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 
 export interface IStackOverflowCredentials {
   access_token: string;
-  application_key: string;
+  client_key: string;
 }
 
 export interface IStackOverflowConfiguration extends Omit<Internal.Types.IFusebitCredentials, 'lookupKey'> {
@@ -20,7 +20,7 @@ export class StackOverflowClient {
       (url: string) => {
         const parsed = new URL(`https://api.stackexchange.com/2.3${url}`);
         parsed.searchParams.set('site', siteName);
-        parsed.searchParams.set('key', this.fusebit.credentials.application_key);
+        parsed.searchParams.set('key', this.fusebit.credentials.client_key);
         parsed.searchParams.set('access_token', this.fusebit.credentials.access_token);
 
         return parsed.toString();
@@ -34,7 +34,7 @@ export class StackOverflowClient {
     return new Internal.Provider.ApiClient(
       (url: string) => {
         const parsed = new URL(`https://api.stackexchange.com/2.3${url}`);
-        parsed.searchParams.set('key', this.fusebit.credentials.application_key);
+        parsed.searchParams.set('key', this.fusebit.credentials.client_key);
         parsed.searchParams.set('access_token', this.fusebit.credentials.access_token);
         return parsed.toString();
       },

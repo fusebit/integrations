@@ -20,22 +20,22 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'StackOverflow Configuration';
 
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationKey');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'clientKey');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your StackOverflow App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your StackOverflow App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your StackOverflow App';
-      ctx.body.schema.properties.applicationKey = { description: 'Application Key', type: 'string' };
+      ctx.body.schema.properties.clientKey = { description: 'Client Key', type: 'string' };
     });
 
-    // Add the Application Key, which is used to control quotas, in Stack Overflow.
+    // Add the Client Key, which is used to control quotas, in Stack Overflow.
     this.router.get('/api/:lookupKey/token', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       await next();
 
       // If the OAuth server supplies it (for example, via the proxy) then use that value instead of the
       // configured value.
-      ctx.body.application_key = ctx.body.application_key || ctx.state.manager.config.configuration.applicationKey;
+      ctx.body.client_key = ctx.body.client_key || ctx.state.manager.config.configuration.clientKey;
     });
   }
 }
