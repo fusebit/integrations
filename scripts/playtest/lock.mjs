@@ -27,7 +27,7 @@ const pollEnsureLock = async () => {
     if (lock.data.locked === 'false') {
       return lock;
     }
-  } while (locked);
+  } while (true);
 };
 
 const tryGetLock = async () => {
