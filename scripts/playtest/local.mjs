@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-// The name of the deployment
+// The domain name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
 const DEPLOYMENT_KEY = argv._[1];
