@@ -48,7 +48,7 @@ class ServiceConnector extends OAuthConnector {
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'botToken', 'password');
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationPublicKey');
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'extraParams');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationId');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'interactionCallbackType');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Discord App';
@@ -66,15 +66,41 @@ class ServiceConnector extends OAuthConnector {
         title: 'Bot Permissions',
         type: 'string',
       };
-      ctx.body.schema.properties.applicationId = {
-        title: 'Application Id',
-        type: 'string',
+      ctx.body.schema.properties.interactionCallbackType = {
+        title: 'Interaction Callback Type',
+        type: 'number',
+        oneOf: [
+          {
+            const: 1,
+            title: 'PONG',
+          },
+          {
+            const: 4,
+            title: 'CHANNEL_MESSAGE_WITH_SOURCE',
+          },
+          {
+            const: 5,
+            title: 'DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE',
+          },
+          {
+            const: 6,
+            title: 'DEFERRED_UPDATE_MESSAGE',
+          },
+          {
+            const: 7,
+            title: 'UPDATE_MESSAGE',
+          },
+          {
+            const: 8,
+            title: 'APPLICATION_COMMAND_AUTOCOMPLETE_RESULT',
+          },
+        ],
       };
     });
 
-    // Expose the applicationId to the credentials so it can be used from the integration.
+    // Expose the applicationId (same as clientId) to the credentials so it can be used from the integration.
     this.router.get('/api/:lookupKey/token', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      ctx.body.applicationId = ctx.state.manager.config.configuration.applicationId;
+      ctx.body.applicationId = ctx.state.manager.config.configuration.clientId;
       return next();
     });
 

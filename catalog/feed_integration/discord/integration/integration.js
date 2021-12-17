@@ -69,10 +69,9 @@ router.post(
       type: 1,
       description: 'Ping slash commmand example',
     };
-    // Ensure you have the Application Id properly configured in your Discord connector settings.
-    // The application needs to authorize the applications.commands scope in order to create slash commands.
-    // You will need to use a bot token, ensure you provide a Discord Application Bot Token.
 
+    // Using the Discord Bot SDK requires an Application ID, Application Bot Token,
+    // and the 'applications.commands' scope in the Connector configuration.
     if (!discordSdk.fusebit.credentials.applicationId) {
       ctx.throw(404, 'Application Id not found');
     }
@@ -85,7 +84,7 @@ router.post(
   }
 );
 
-// Create a new global slash command
+// Create a new global command. New global commands will be available in all guilds after 1 hour
 router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const discordSdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const command = {
@@ -94,9 +93,8 @@ router.post('/api/tenant/:tenantId/slash-command', integration.middleware.author
     description: 'Ping slash commmand example',
   };
 
-  // Ensure you have the Application Id properly configured in your Discord connector settings.
-  // The application needs to authorize the applications.commands scope in order to create slash commands.
-  // You will need to use a bot token, ensure you provide a Discord Application Bot Token.
+  // Using the Discord Bot SDK requires an Application ID, Application Bot Token,
+  // and the 'applications.commands' scope in the Connector configuration.
   const response = await discordSdk.bot.post(
     `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
     command

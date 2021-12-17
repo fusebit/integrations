@@ -99,7 +99,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         },
       };
       const oddRow = element.elements[0].elements.find(
-        (rowElement: { elements: string | any[] }) => rowElement.elements.length !== 2
+        (rowElement: { elements: string | any[] }) => rowElement.elements.length !== 3
       );
       if (oddRow) {
         oddRow?.elements.push(newControl);

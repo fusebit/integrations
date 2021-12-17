@@ -9,6 +9,9 @@ import crypto from 'crypto';
  */
 const ED25519_PUBLIC_KEY_PREFIX = '302a300506032b6570032100';
 
+// DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: ACK an interaction and edit a response later, the user sees a loading state
+const DEFAULT_INTERACTION_CALLBACK_TYPE = 5;
+
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     return [ctx.req.body];
@@ -19,9 +22,9 @@ class Service extends OAuthConnector.Service {
   }
 
   public async createWebhookResponse(ctx: Connector.Types.Context): Promise<void> {
-    // DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: ACK an interaction and edit a response later, the user sees a loading state
+    // See docs https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
     ctx.body = {
-      type: 5,
+      type: ctx.state.manager.config.configuration.interactionCallbackType || DEFAULT_INTERACTION_CALLBACK_TYPE,
     };
   }
 
