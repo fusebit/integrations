@@ -73,4 +73,5 @@ const getServicesWithPlay = async () => {
   await lock(me);
   await $`lerna run play --no-bail || true`;
   await unlock();
+  await $`git stash`;
 })();
