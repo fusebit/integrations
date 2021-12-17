@@ -10,19 +10,19 @@ const NORENAME = argv['norename'];
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
+
   // Framework doesn't have a provider.
   files = files.filter((file) => file !== 'framework');
+
   return files.filter((filename) => {
-    let files = fs.readdirSync(`./src/${filename}/${filename}-provider/`);
-    return files.includes('play');
+    const dirList = fs.readdirSync(`./src/${filename}/${filename}-provider/`);
+    return dirList.includes('play');
   });
 };
 
-(async () => {
-  let storageErrors = [];
-  let servicesWithPlay = await getServicesWithPlay();
-  console.log(servicesWithPlay);
-  for (const service of servicesWithPlay) {
+const writeEnvFiles = async (services) => {
+  const storageErrors = [];
+  for (const service of services) {
     let storageKeys;
     try {
       storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DOMAIN_KEY}`);
@@ -34,9 +34,14 @@ const getServicesWithPlay = async () => {
       }
     } catch (_) {
       storageErrors.push(service);
-      servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service);
+      services = services.filter((svc) => svc !== service);
     }
   }
+
+  return { services, storageErrors };
+};
+
+(async () => {
   try {
     await $`git diff --exit-code`;
   } catch (_) {
@@ -44,6 +49,8 @@ const getServicesWithPlay = async () => {
     process.exit(1);
   }
   if (!NORENAME) {
+    const allServices = await getServicesWithPlay();
+    await writeEnvFiles(allServices);
     await $`LANG=c find ./ ! -name '*.mjs' ! -name '*.sh' -type f -exec sed -i '' 's/fusebit-int/stage-fusebit/g' {} \\;`;
   }
   await $`npm i && lerna bootstrap && lerna run build`;
