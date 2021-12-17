@@ -71,7 +71,12 @@ const writeEtag = (etag) => {
 };
 
 const getEtag = () => {
-  return fs.readFileSync('.playwright.lock', 'utf-8');
+  try {
+    return fs.readFileSync('.playwright.lock', 'utf-8');
+  } catch (_) {
+    console.log('WARNING - No lock found!');
+    return 'THISISAIMPOSSIBLETOGETETAGBLAHBLAHBLAH';
+  }
 };
 
 const acquireLock = async (force) => {
