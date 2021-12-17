@@ -84,7 +84,7 @@ router.post(
   }
 );
 
-// Create a new global command. New global commands will be available in all guilds after 1 hour
+// Create a new global command. New global commands will be available in all guilds after 1 hour.
 router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const discordSdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const command = {
