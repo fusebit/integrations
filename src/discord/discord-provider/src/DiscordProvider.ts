@@ -15,8 +15,6 @@ export default class DiscordProvider extends Internal.Provider.Activator<Fusebit
       connectorId: this.config.entityId,
     });
     await client.initialize();
-
-    client.fusebit = { credentials };
     return client;
   }
 }

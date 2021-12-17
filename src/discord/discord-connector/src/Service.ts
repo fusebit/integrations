@@ -18,6 +18,13 @@ class Service extends OAuthConnector.Service {
     return event.guild_id;
   }
 
+  public async createWebhookResponse(ctx: Connector.Types.Context): Promise<void> {
+    // DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: ACK an interaction and edit a response later, the user sees a loading state
+    ctx.body = {
+      type: 5,
+    };
+  }
+
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const payload = ctx.req.body;
     const signatureHeader = ctx.req.headers['x-signature-ed25519'] as string;

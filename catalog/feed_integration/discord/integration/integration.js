@@ -58,10 +58,71 @@ router.post(
   }
 );
 
-// This event handler responds to interactions events
+// Create a new slash command in a specific Guild
+router.post(
+  '/api/tenant/:tenantId/:guild/slash-command',
+  integration.middleware.authorizeUser('install:get'),
+  async (ctx) => {
+    const discordSdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+    const command = {
+      name: 'ping',
+      type: 1,
+      description: 'Ping slash commmand example',
+    };
+    // Ensure you have the Application Id properly configured in your Discord connector settings.
+    // The application needs to authorize the applications.commands scope in order to create slash commands.
+    // You will need to use a bot token, ensure you provide a Discord Application Bot Token.
+
+    if (!discordSdk.fusebit.credentials.applicationId) {
+      ctx.throw(404, 'Application Id not found');
+    }
+
+    const response = await discordSdk.bot.post(
+      `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/guilds/${ctx.params.guild}/commands`,
+      command
+    );
+    ctx.body = response;
+  }
+);
+
+// Create a new global slash command
+router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const discordSdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const command = {
+    name: 'ping',
+    type: 1,
+    description: 'Ping slash commmand example',
+  };
+
+  // Ensure you have the Application Id properly configured in your Discord connector settings.
+  // The application needs to authorize the applications.commands scope in order to create slash commands.
+  // You will need to use a bot token, ensure you provide a Discord Application Bot Token.
+  const response = await discordSdk.bot.post(
+    `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
+    command
+  );
+  ctx.body = response;
+});
+
+// Respond to a Slash command
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
-  const { data } = ctx.req.body.data;
-  console.log('Command received', data);
+  const {
+    data: { data: event },
+  } = ctx.req.body;
+  console.log('received event', event);
+  const {
+    data: { application_id, token },
+  } = ctx.req.body;
+  /**
+   * You can use the following endpoints to edit your initial response or send followup messages:
+    PATCH /webhooks/<application_id>/<interaction_token>/messages/@original to edit your initial response to an Interaction
+    DELETE /webhooks/<application_id>/<interaction_token>/messages/@original to delete your initial response to an Interaction
+    POST /webhooks/<application_id>/<interaction_token> to send a new followup message
+    PATCH /webhooks/<application_id>/<interaction_token>/messages/<message_id> to edit a message sent with that token
+   */
+  await superagent.post(`https://discord.com/api/v8/webhooks/${application_id}/${token}`).send({
+    content: 'It works!',
+  });
 });
 
 module.exports = integration;
