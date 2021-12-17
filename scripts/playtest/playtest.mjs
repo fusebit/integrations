@@ -7,7 +7,6 @@ const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY;
 const successWebhook = process.env.SUCCESS_WEBHOOK;
 const failureWebhook = process.env.FAILURE_WEBHOOK;
 const repositoryCommitUrl = 'https://github.com/fusebit/integrations/commit/';
-const LOCK_NAME = 'lock/playwright';
 
 const nameToMention = {
   'Matthew Zhao': '<@U01UDTF3VQR>',
@@ -22,29 +21,6 @@ const nameToMention = {
   'Liz Parody': '<@U02EJPA1MCJ>',
 };
 
-const lock = async (me) => {
-  // Check if lock exists
-  let get;
-  while (true) {
-    get = JSON.parse(await $`fuse storage get --storageId ${LOCK_NAME} -o json`);
-    if (get.data.locked === 'false') {
-      break;
-    }
-    await new Promise((res) => setTimeout(res, 3000));
-  }
-  fs.writeFileSync('/tmp/lock', JSON.stringify({ data: { name: me, locked: 'true' }, etag: get.etag }));
-  try {
-    await $`cat /tmp/lock | fuse storage put - --storageId ${LOCK_NAME}`;
-  } catch (_) {
-    // This will fail if there is a race condition, try to lock again
-    await lock(me);
-  }
-};
-
-const unlock = async () => {
-  fs.writeFileSync('/tmp/lock', JSON.parse({ data: { locked: 'false' } }));
-  await $`cat /tmp/lock | fuse storage put - --storageId ${LOCK_NAME}`;
-};
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
 
@@ -313,9 +289,9 @@ const sendSlackBlocks = async (blocks, numFail) => {
 
   // Run tests
   await $`lerna run play:install --concurrency 1`;
-  await lock('CICD');
+  await $`./scripts/playtest/lock.mjs lock --long-poll`;
   await $`lerna run play --no-bail || true`;
-  await unlock();
+  await $`./scripts/playtest/lock.mjs unlock`;
   // Upload results to S3
   const timeStamp = await uploadPlaywrightTraces(services);
 
