@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-github-oauth-integration",
-  "version": "7.27.0",
+  "version": "7.28.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.27.0",
-    "@fusebit-int/githuboauth-provider": "^7.27.0"
+    "@fusebit-int/framework": "^7.28.0",
+    "@fusebit-int/githuboauth-provider": "^7.28.0"
   },
   "files": [
     "./integration.js",
