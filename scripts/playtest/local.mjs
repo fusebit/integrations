@@ -18,6 +18,27 @@ const getDeploymentKey = () => {
 // only need to match up with how storage is set.
 const DEPLOYMENT_KEY = getDeploymentKey();
 const forced = argv.forced;
+const LOCK_NAME = 'lock/playwright';
+
+const lock = async (me) => {
+  // Check if lock exists
+  const get = JSON.parse(await $`fuse storage get --storageId ${LOCK_NAME} -o json`);
+  if (get.data.locked === 'true') {
+    console.log(`${get.data.name} is currently using playwright to perform tests, please wait...`);
+    process.exit(1);
+  }
+  fs.writeFileSync('/tmp/lock', JSON.stringify({ data: { name: me, locked: 'true' }, etag: get.etag }));
+  try {
+    await $`cat /tmp/lock | fuse storage put - --storageId ${LOCK_NAME}`;
+  } catch (_) {
+    // This will fail if there is a race condition, try to lock again
+    await lock(me);
+  }
+};
+
+const unlock = async () => {
+  fs.writeFileSync('/tmp/lock', JSON.parse({ data: { locked: 'false' } }));
+};
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
@@ -29,20 +50,9 @@ const getServicesWithPlay = async () => {
   });
 };
 
-const me = async () => {
-  if (process.env.JOB_NAME) {
-    return 'CICD';
-  } else {
-    const user = await $`whoami`;
-    if (user.includes('root')) {
-      console.log('Do not use root user to execute this test!');
-      process.exit(1);
-    }
-    return user;
-  }
-};
-
 (async () => {
+  let me = (await $`whoami`).toString();
+  me = me.split('\n')[0];
   let storageErrors = [];
   let servicesWithPlay = await getServicesWithPlay();
   console.log(servicesWithPlay);
@@ -70,8 +80,8 @@ const me = async () => {
   if (forced) {
     await unlock();
   }
-
-  await acquireLock();
+  await lock(me);
+  await $`sleep 1000000`;
   await $`lerna run play --no-bail || true`;
   await unlock();
 })();
