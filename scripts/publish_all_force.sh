@@ -7,9 +7,6 @@ PKGS="src/framework src/*/*-connector src/*/*-provider"
 
 publish()
 {
-  TARGET_PROFILE=$1
-
-  fuse profile set ${TARGET_PROFILE} > /dev/null
   echo > ~/.npmrc
   fuse npm login > /dev/null
 
@@ -18,11 +15,11 @@ publish()
 
     if [ -e ${pkgPath}/package.json ]; then
       cd ${pkgPath};
-      echo ${TARGET_PROFILE}: PUBLISHING ${pkgPath}
+      echo PUBLISHING ${pkgPath}
       npm publish > /dev/null 2>/dev/null
       cd ${BASE}
     fi
   done
 }
 
-publish $1
+publish
