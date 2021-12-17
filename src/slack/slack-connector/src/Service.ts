@@ -21,6 +21,7 @@ class Service extends OAuthConnector.Service {
 
     let rawBody;
     if (contentType?.toLocaleLowerCase() === 'application/x-www-form-urlencoded') {
+      // Slash commands are sent in this content type
       rawBody = formurlencoded(requestBody);
     } else {
       rawBody = JSON.stringify(requestBody)
