@@ -31,9 +31,11 @@ class ServiceConnector extends OAuthConnector {
 
     // Add the Application Key, which is used to control quotas, in Stack Overflow.
     this.router.get('/api/:lookupKey/token', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      ctx.body.application_key = ctx.state.manager.config.configuration.applicationKey;
+      await next();
 
-      return next();
+      // If the OAuth server supplies it (for example, via the proxy) then use that value instead of the
+      // configured value.
+      ctx.body.application_key = ctx.body.application_key || ctx.state.manager.config.configuration.applicationKey;
     });
   }
 }
