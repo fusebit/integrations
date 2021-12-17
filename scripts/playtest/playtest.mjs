@@ -2,9 +2,7 @@
 
 const fs = require('fs');
 
-// The name of the deployment
-// api.us-west-1 on.us-west-1 etc.
-// only need to match up with how storage is set.
+// The domain name of the deployment
 const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY;
 const successWebhook = process.env.SUCCESS_WEBHOOK;
 const failureWebhook = process.env.FAILURE_WEBHOOK;
@@ -45,6 +43,7 @@ const lock = async (me) => {
 
 const unlock = async () => {
   fs.writeFileSync('/tmp/lock', JSON.parse({ data: { locked: 'false' } }));
+  await $`cat /tmp/lock | fuse storage put - --storageId ${LOCK_NAME}`;
 };
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');

@@ -27,6 +27,7 @@ const lock = async (me) => {
 
 const unlock = async () => {
   fs.writeFileSync('/tmp/lock', JSON.parse({ data: { locked: 'false' } }));
+  await $`cat /tmp/lock | fuse storage put - --storageId ${LOCK_NAME}`;
 };
 
 const getServicesWithPlay = async () => {
@@ -40,7 +41,7 @@ const getServicesWithPlay = async () => {
 };
 
 (async () => {
-  let me = (await $`whoami`).toString();
+  let me = (await $`git config --global --get user.name`).toString();
   me = me.split('\n')[0];
   let storageErrors = [];
   let servicesWithPlay = await getServicesWithPlay();
@@ -70,7 +71,6 @@ const getServicesWithPlay = async () => {
     await unlock();
   }
   await lock(me);
-  await $`sleep 1000000`;
   await $`lerna run play --no-bail || true`;
   await unlock();
 })();

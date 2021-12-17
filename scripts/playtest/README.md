@@ -1,6 +1,6 @@
 ## Executing PlayWright Tests Locally
 
-1. Import PlayWright on.fusebit.io (in 1password) fusebit profile. Encoded profile export is in fuse profile field.
+1. Import P`layWright on.fusebit.io` (in 1password) fusebit profile. Encoded profile export is in fuse profile field.
 
 `echo ${fuse profile} | base64 -d | fuse profile import playwright`
 
