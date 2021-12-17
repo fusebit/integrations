@@ -3,7 +3,7 @@
 const fs = require('fs');
 
 // The domain name of the deployment
-const DEPLOYMENT_KEY = process.env.DEPLOYMENT_KEY;
+const DOMAIN_KEY = process.env.DOMAIN_KEY;
 const successWebhook = process.env.SUCCESS_WEBHOOK;
 const failureWebhook = process.env.FAILURE_WEBHOOK;
 const repositoryCommitUrl = 'https://github.com/fusebit/integrations/commit/';
@@ -68,9 +68,7 @@ const writeEnvFiles = async (services) => {
   for (const service of services) {
     let storageKeys;
     try {
-      storageKeys = JSON.parse(
-        await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`
-      );
+      storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DOMAIN_KEY}`);
       for (const storageKey of Object.keys(storageKeys.data)) {
         await fs.promises.appendFile(
           `src/${service}/${service}-provider/.env.playwright`,

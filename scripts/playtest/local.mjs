@@ -5,7 +5,7 @@ const fs = require('fs');
 // The domain name of the deployment
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
-const DEPLOYMENT_KEY = argv._[1];
+const DOMAIN_KEY = argv._[1];
 const NORENAME = argv['norename'];
 
 const getServicesWithPlay = async () => {
@@ -25,9 +25,7 @@ const getServicesWithPlay = async () => {
   for (const service of servicesWithPlay) {
     let storageKeys;
     try {
-      storageKeys = JSON.parse(
-        await $`fuse storage get -o json --storageId playwright/creds/${service}/${DEPLOYMENT_KEY}`
-      );
+      storageKeys = JSON.parse(await $`fuse storage get -o json --storageId playwright/creds/${service}/${DOMAIN_KEY}`);
       for (const storageKey of Object.keys(storageKeys.data)) {
         await fs.promises.appendFile(
           `src/${service}/${service}-provider/.env.playwright`,
