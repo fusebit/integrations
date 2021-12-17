@@ -1,15 +1,16 @@
 #!/usr/bin/env zx
 
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 const LOCK_KEY = `lock/playwright`;
 const LONG_POLL = argv['long-poll'];
 const FORCE = argv['force'];
 
 const makeTmpFile = () => {
-  const name = fs.mkdtempSync('fusebit-playwright-lock');
-  fs.mkdirSync('/tmp/' + name);
-  return '/tmp/' + name + '/lock';
+  const name = fs.mkdtempSync(path.join(os.tmpdir(), 'fusebit-playwright-lock'));
+  return path.join(name, 'lock');
 };
 
 const tryEnsureLock = async () => {
