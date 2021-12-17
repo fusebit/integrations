@@ -52,7 +52,7 @@ class Service extends OAuthConnector.Service {
 
   public getWebhookEventType(event: any) {
     if (event.command) {
-      return 'slash-command';
+      return `slash-command/${event.command}`;
     }
     return event.type;
   }

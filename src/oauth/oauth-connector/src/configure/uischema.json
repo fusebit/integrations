@@ -38,7 +38,7 @@
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/immediateResponseHandler"
+                  "scope": "#/properties/defaultEventHandler"
                 }
               ]
             },

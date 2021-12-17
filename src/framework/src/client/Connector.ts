@@ -173,18 +173,23 @@ export class Service extends EntityBase.ServiceDefault {
     ctx: Connector.Types.Context,
     processPromise?: Promise<FanoutResponse_>
   ): Promise<void> {
-    const { immediateResponseHandler } = ctx.state.manager.config.configuration;
+    const { defaultEventHandler } = ctx.state.manager.config.configuration;
 
-    if (immediateResponseHandler) {
+    if (defaultEventHandler) {
       const params = ctx.state.params;
       const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-      const immediateResponseHandlerUrl = `${baseUrl}/integration/${immediateResponseHandler}/api/fusebit/webhook/event/immediate-response`;
+      const defaultEventHandlerUrl = `${baseUrl}/integration/${defaultEventHandler}/api/fusebit/webhook/event/immediate-response`;
 
-      const res = await superagent
-        .post(immediateResponseHandlerUrl)
-        .set('Authorization', `Bearer ${params.functionAccessToken}`)
-        .send(ctx.req.body);
-      ctx.body = res.body;
+      try {
+        const res = await superagent
+          .post(defaultEventHandlerUrl)
+          .set('Authorization', `Bearer ${params.functionAccessToken}`)
+          .send(ctx.req.body)
+          .ok(() => true);
+        ctx.body = res.body;
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 

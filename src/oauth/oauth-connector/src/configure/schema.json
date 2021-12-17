@@ -67,8 +67,8 @@
     "accessTokenExpirationBuffer": {
       "type": "integer"
     },
-    "immediateResponseHandler": {
-      "title": "The Integration ID that will handle the immediate response",
+    "defaultEventHandler": {
+      "title": "The Integration ID that will act as the default event handler",
       "type": "string"
     }
   },
