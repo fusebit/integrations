@@ -66,6 +66,10 @@
     },
     "accessTokenExpirationBuffer": {
       "type": "integer"
+    },
+    "defaultEventHandler": {
+      "title": "The Integration ID that will act as the default event handler",
+      "type": "string"
     }
   },
   "required": ["scope", "clientId", "clientSecret"]
