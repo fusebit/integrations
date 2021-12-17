@@ -130,4 +130,4 @@ workspace/connector-*
 test-results/
 
 # Fusebit tooling locks
-.lock
+.playwright.lock

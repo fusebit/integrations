@@ -41,16 +41,24 @@ const getServicesWithPlay = async () => {
     await $`git diff --exit-code`;
   } catch (_) {
     console.log('WARNING WARNING WARNING: Your Branch Is Not Clean, Commit Before Testing WARNING WARNING WARNING');
-    await new Promise((res) => setTimeout(res, 3000));
+    process.exit(1);
   }
-  if (NORENAME) {
+  if (!NORENAME) {
     await $`LANG=c find ./ ! -name '*.mjs' ! -name '*.sh' -type f -exec sed -i '' 's/fusebit-int/stage-fusebit/g' {} \\;`;
   }
   await $`npm i && lerna bootstrap && lerna run build`;
+  if (JSON.parse(fs.readFileSync('package.json')).name.includes('fusebit-int')) {
+    console.log(
+      'WARNING WARNING WARNING your packages are not renamed, so you are publishing to fusebit-int. Please rename your files'
+    );
+    process.exit(1);
+  }
   await $`./scripts/publish_all_force.sh`;
   await $`lerna run play:install --concurrency 1`;
   await $`./scripts/playtest/lock.mjs lock`;
   await $`lerna run play --no-bail || true`;
   await $`./scripts/playtest/lock.mjs unlock`;
-  await $`git stash`;
+  if (!NORENAME) {
+    await $`git stash`;
+  }
 })();

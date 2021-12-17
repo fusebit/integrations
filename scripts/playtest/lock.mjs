@@ -2,9 +2,15 @@
 
 const fs = require('fs');
 
-const LOCK_KEY = 'lock/playwright';
+const LOCK_KEY = `lock/playwright`;
 const LONG_POLL = argv['long-poll'];
 const FORCE = argv['force'];
+
+const makeTmpFile = () => {
+  const name = fs.mkdtempSync('fusebit-playwright-lock');
+  fs.mkdirSync('/tmp/' + name);
+  return '/tmp/' + name + '/lock';
+};
 
 const tryEnsureLock = async () => {
   const lock = await tryGetLock();
@@ -16,13 +22,11 @@ const tryEnsureLock = async () => {
 };
 
 const pollEnsureLock = async () => {
-  let locked = true;
   do {
     const lock = await tryGetLock();
     if (lock.data.locked === 'false') {
       return lock;
     }
-    locked = true;
   } while (locked);
 };
 
@@ -37,24 +41,24 @@ const tryGetLock = async () => {
 
 // Sometimes the lock can be accidentally deleted, recreate lock here if it isn't found
 const createNewLock = async () => {
-  fs.writeFileSync('tmp', JSON.stringify({ data: { locked: 'false', user: 'Matthew Zhao' } }));
-  await $`cat tmp | fuse storage put - --storageId ${LOCK_KEY}`;
-  fs.rmSync('tmp');
+  const fileName = makeTmpFile();
+  fs.writeFileSync(fileName, JSON.stringify({ data: { locked: 'false', user: 'Matthew Zhao' } }));
+  await $`cat ${fileName} | fuse storage put - --storageId ${LOCK_KEY}`;
 };
 
 const gainLock = async (lock) => {
   lock.data.user = await whoami();
   lock.data.locked = 'true';
-  fs.writeFileSync('tmp', JSON.stringify(lock));
-  await $`cat tmp | fuse storage put - --storageId ${LOCK_KEY}`;
-  fs.rmSync('tmp');
+  const fileName = makeTmpFile();
+  fs.writeFileSync(fileName, JSON.stringify(lock));
+  await $`cat ${fileName} | fuse storage put - --storageId ${LOCK_KEY}`;
 };
 
 const loseLock = async (lock) => {
   lock.data.locked = 'false';
-  fs.writeFileSync('tmp', JSON.stringify(lock));
-  await $`cat tmp | fuse storage put - --storageId ${LOCK_KEY} -o json`;
-  fs.rmSync('tmp');
+  const fileName = makeTmpFile();
+  fs.writeFileSync(fileName, JSON.stringify(lock));
+  await $`cat ${fileName} | fuse storage put - --storageId ${LOCK_KEY} -o json`;
 };
 
 const whoami = async () => {
@@ -62,11 +66,11 @@ const whoami = async () => {
 };
 
 const writeEtag = (etag) => {
-  fs.writeFileSync('.lock', etag);
+  fs.writeFileSync('.playwright.lock', etag);
 };
 
 const getEtag = () => {
-  return fs.readFileSync('.lock', 'utf-8');
+  return fs.readFileSync('.playwright.lock', 'utf-8');
 };
 
 const acquireLock = async (force) => {
