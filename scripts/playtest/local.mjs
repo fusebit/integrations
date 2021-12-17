@@ -63,6 +63,12 @@ const getServicesWithPlay = async () => {
       servicesWithPlay = servicesWithPlay.filter((svc) => svc !== service);
     }
   }
+  try {
+    await $`git diff --exit-code`;
+  } catch (_) {
+    console.log('WARNING WARNING WARNING: Your Branch Is Not Clean, Commit Before Testing WARNING WARNING WARNING');
+    await new Promise((res) => setTimeout(res, 3000));
+  }
   await $`LANG=c find ./ ! -name '*.mjs' ! -name '*.sh' -type f -exec sed -i '' 's/fusebit-int/stage-fusebit/g' {} \\;`;
   await $`npm i && lerna bootstrap && lerna run build`;
   await $`./scripts/publish_all_force.sh ${PROFILE_NAME}`;
