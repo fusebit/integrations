@@ -1,9 +1,3 @@
-export interface IFusebitCredentials {
-  credentials: { access_token: string };
-  lookupKey: string;
-  connectorId: string;
-}
-
 export interface IAtlassianMe {
   account_type: string;
   account_id: string;

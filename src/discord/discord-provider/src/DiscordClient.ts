@@ -1,18 +1,12 @@
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
 
-interface IFusebitCredentials {
-  credentials: { access_token: string };
-  lookupKey: string;
-  connectorId: string;
-}
-
 class BotApiClient extends Internal.Provider.ApiClient {
   protected addAuthorization = (request: superagent.Request) => request.set('Authorization', `Bot ${this.token}`);
 }
 
 class DiscordClient {
-  public fusebit: IFusebitCredentials;
+  public fusebit: Internal.Types.IFusebitCredentials;
   private baseUrl = 'https://discord.com/api';
   private ctx: Internal.Types.Context;
   private connectorId: string;
@@ -27,7 +21,7 @@ class DiscordClient {
    */
   public bot!: Internal.Provider.ApiClient;
 
-  constructor(ctx: Internal.Types.Context, fusebit: IFusebitCredentials) {
+  constructor(ctx: Internal.Types.Context, fusebit: Internal.Types.IFusebitCredentials) {
     this.ctx = ctx;
     this.fusebit = fusebit;
     this.connectorId = fusebit.connectorId;
