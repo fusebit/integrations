@@ -6,7 +6,7 @@ const fs = require('fs');
 // api.us-west-1 on.us-west-1 etc.
 // only need to match up with how storage is set.
 const DEPLOYMENT_KEY = argv._[1];
-const forced = argv.forced;
+const NO_RENAME = argv['no-rename'];
 
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
@@ -47,8 +47,9 @@ const getServicesWithPlay = async () => {
     console.log('WARNING WARNING WARNING: Your Branch Is Not Clean, Commit Before Testing WARNING WARNING WARNING');
     await new Promise((res) => setTimeout(res, 3000));
   }
-
-  await $`LANG=c find ./ ! -name '*.mjs' ! -name '*.sh' -type f -exec sed -i '' 's/fusebit-int/stage-fusebit/g' {} \\;`;
+  if (!NO_RENAME) {
+    await $`LANG=c find ./ ! -name '*.mjs' ! -name '*.sh' -type f -exec sed -i '' 's/fusebit-int/stage-fusebit/g' {} \\;`;
+  }
   await $`npm i && lerna bootstrap && lerna run build`;
   await $`./scripts/publish_all_force.sh ${PROFILE_NAME}`;
   await $`lerna run play:install --concurrency 1`;
