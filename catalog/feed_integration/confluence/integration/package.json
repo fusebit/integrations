@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-atlassian-integration",
-  "version": "7.25.6",
+  "version": "7.26.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/atlassian-provider": "^7.25.6",
-    "@fusebit-int/framework": "^7.25.6"
+    "@fusebit-int/atlassian-provider": "^7.26.0",
+    "@fusebit-int/framework": "^7.26.0"
   },
   "files": [
     "./integration.js",
