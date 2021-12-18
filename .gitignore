@@ -128,3 +128,6 @@ workspace/connector-*
 
 # ignoring test-results created by playwright
 test-results/
+
+# Fusebit tooling locks
+.playwright.lock
