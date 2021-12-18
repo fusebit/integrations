@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "read_inbox private_info",
+    "scope": "read_inbox private_info no_expiry",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
