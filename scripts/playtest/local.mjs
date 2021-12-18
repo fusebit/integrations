@@ -8,6 +8,8 @@ const fs = require('fs');
 const DOMAIN_KEY = argv._[1];
 const NORENAME = argv['norename'];
 
+$.verbose = false;
+
 const getServicesWithPlay = async () => {
   let files = await fs.promises.readdir('./src');
 

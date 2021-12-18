@@ -8,6 +8,8 @@ const LOCK_KEY = `lock/playwright`;
 const LONG_POLL = argv['long-poll'];
 const FORCE = argv['force'];
 
+$.verbose = false;
+
 const makeTmpFile = () => {
   const name = fs.mkdtempSync(path.join(os.tmpdir(), 'fusebit-playwright-lock'));
   return path.join(name, 'lock');
