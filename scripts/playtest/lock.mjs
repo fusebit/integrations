@@ -65,7 +65,12 @@ const loseLock = async (lock) => {
 };
 
 const whoami = async () => {
-  return (await $`git config --global --get user.name`).toString().split('\n')[0];
+  try {
+    return (await $`git config --global --get user.name`).toString().split('\n')[0];
+  } catch (_) {
+    // Jenkins doesn't have git configured for user.name
+    return 'jenkins';
+  }
 };
 
 const writeEtag = (etag) => {
