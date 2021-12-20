@@ -1,8 +1,8 @@
 {
   "id": "e2e-hubspot-slack-bot",
   "name": "HubSpot Slack Bot",
-  "smallIcon": "/images/hubspot.svg",
-  "largeIcon": "/images/hubspot.svg",
+  "smallIcon": "#/assets/hubspot.svg",
+  "largeIcon": "#/assets/hubspotlarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
