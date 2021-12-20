@@ -210,7 +210,7 @@ const createSlackBlocks = (timeStamp, services, unknown, title, specTest) => {
           },
           {
             type: 'mrkdwn',
-            text: ' ' + fail.map((p) => `<${makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`).join('\n'),
+            text: ' ' + fail.map((p) => `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`).join('\n'),
           },
         ],
       }
