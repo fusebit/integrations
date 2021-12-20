@@ -8,7 +8,7 @@ export async function authenticate(page: Page): Promise<Boolean | undefined> {
   await page.click('button[name="submit-button"]');
   await Promise.race([
     page.waitForSelector('text=Human verification'),
-    page.waitForSelector('button[name="approve"]'),
+    page.waitForSelector('text=Approve'),
     page.waitForEvent('close'),
     page.waitForURL(/.*oauthTest/),
   ]);
@@ -23,16 +23,15 @@ export async function authenticate(page: Page): Promise<Boolean | undefined> {
     return;
   }
 
+  // Is there an app approval button visible?
+  if (await page.isVisible('text=Approve')) {
+    page.click('text=Approve');
+    return;
+  }
+
   // Did it get blocked by a captcha?
   if (page.waitForSelector('text=Human verification')) {
     console.log('WARNING: Blocked by Captcha');
     return true;
-  }
-
-  // Is there an app approval button visible?
-  if (await page.isVisible('button[name="approve"]')) {
-    page.click('button[name="approve"]');
-  } else {
-    throw 'Approve Button Not Found';
   }
 }
