@@ -8,6 +8,8 @@ const successWebhook = process.env.SUCCESS_WEBHOOK;
 const failureWebhook = process.env.FAILURE_WEBHOOK;
 const repositoryCommitUrl = 'https://github.com/fusebit/integrations/commit/';
 
+$.verbose = false;
+
 const nameToMention = {
   'Matthew Zhao': '<@U01UDTF3VQR>',
   'Benn Bollay': '<@UUPT2SQN7>',
