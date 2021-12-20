@@ -16,7 +16,12 @@ import * as Storage_ from './Storage';
 import { Form as Form_ } from './Form';
 import { Handler as Handler_ } from './Handler';
 import * as Middleware_ from './middleware';
-import ProviderActivator_, { WebhookClient } from './ProviderActivator';
+import {
+  ProviderActivator as ProviderActivator_,
+  WebhookClient as WebhookClient_,
+  ApiClient as ApiClient_,
+  IFusebitCredentials,
+} from './provider';
 import { Connector, Integration } from './client/index';
 
 // Objects
@@ -28,8 +33,11 @@ const Internal = {
   Manager: Manager_,
   Middleware: Middleware_,
   Storage: Storage_,
-  ProviderActivator: ProviderActivator_,
-  WebhookClient: WebhookClient,
+  Provider: {
+    Activator: ProviderActivator_,
+    WebhookClient: WebhookClient_,
+    ApiClient: ApiClient_,
+  },
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
 module Internal {
@@ -43,6 +51,12 @@ module Internal {
   export type Middleware = typeof Middleware_;
   export type Storage = typeof Storage_;
   export type ProviderActivator = typeof ProviderActivator_;
+  export namespace Provider {
+    export type Activator = typeof ProviderActivator_;
+    export type WebhookClient = typeof WebhookClient_;
+    export type ApiClient = ApiClient_;
+    export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
+  }
   export namespace Types {
     export type Context = Context_;
     export type CronContext = CronContext_;
@@ -52,6 +66,7 @@ module Internal {
     export interface IOnStartup extends IOnStartup_ {}
     export type WebhookClient = Integration.Types.WebhookClient;
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
+    export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
   }
 }
 

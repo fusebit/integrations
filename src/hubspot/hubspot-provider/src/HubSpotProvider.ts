@@ -3,7 +3,7 @@ import { Client } from '@hubspot/api-client';
 
 type FusebitHubSpotClient = Client & { fusebit?: any };
 
-export default class HubSpotProvider extends Internal.ProviderActivator<FusebitHubSpotClient> {
+export default class HubSpotProvider extends Internal.Provider.Activator<FusebitHubSpotClient> {
   /*
    * This function will create an authorized wrapper of the HubSpot SDK client.
    */

@@ -4,7 +4,7 @@ import LinearWebhook from './LinearWebhook';
 
 type FusebitLinearClient = Client & { fusebit?: any };
 
-export default class LinearProvider extends Internal.ProviderActivator<FusebitLinearClient> {
+export default class LinearProvider extends Internal.Provider.Activator<FusebitLinearClient> {
   /**
    * This function will create an authorized webhook SDK for Linear.
    */
@@ -19,6 +19,11 @@ export default class LinearProvider extends Internal.ProviderActivator<FusebitLi
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitLinearClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitLinearClient = new Client({ accessToken: credentials.access_token });
+    client.fusebit = {
+      credentials,
+      lookupKey,
+      connectorId: this.config.entityId,
+    };
     return client;
   }
 }

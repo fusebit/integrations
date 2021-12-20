@@ -1,18 +1,3 @@
-export interface IApiClient {
-  get: (url: string) => Promise<any>;
-  put: (url: string) => Promise<any>;
-  post: (url: string) => Promise<any>;
-  delete: (url: string) => Promise<any>;
-  head: (url: string) => Promise<any>;
-  patch: (url: string) => Promise<any>;
-}
-
-export interface IFusebitCredentials {
-  credentials: { access_token: string };
-  lookupKey: string;
-  connectorId: string;
-}
-
 export interface IAtlassianMe {
   account_type: string;
   account_id: string;

@@ -4,10 +4,21 @@ import { ServiceConnector } from '../src';
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
 
-import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
+import {
+  sampleEvent,
+  sampleHeaders,
+  sampleConfig,
+  slashCommandSampleHeaders,
+  slashCommandSampleBody,
+} from './sampleData';
 
 const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
+  state: { manager: { config: { configuration: sampleConfig.configuration } } },
+};
+
+const sampleCtxSlashCommand = {
+  req: { headers: { ...slashCommandSampleHeaders }, body: slashCommandSampleBody },
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
 };
 
@@ -20,13 +31,17 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: getAuthIdFromEvent', async () => {
     const service: any = new ServiceConnector.Service();
-
-    expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(sampleEvent.authorizations[0].user_id);
+    expect(service.getAuthIdFromEvent({}, sampleEvent)).toBe(`${sampleEvent.team_id}/${sampleEvent.api_app_id}`);
   });
 
   test('Validate: validateWebhookEvent', async () => {
     const service: any = new ServiceConnector.Service();
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+  });
+
+  test('Validate: validateWebhookEvent when content type is form-urlencoded', async () => {
+    const service: any = new ServiceConnector.Service();
+    expect(await service.validateWebhookEvent(sampleCtxSlashCommand)).toBeTruthy();
   });
 
   test('Validate: initializationChallenge false', async () => {
@@ -43,7 +58,9 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: getTokenAuthId', async () => {
     const service: any = new ServiceConnector.Service();
-    expect(service.getTokenAuthId(sampleCtx, { bot_user_id: 'userid' })).resolves.toBe('userid');
+    expect(
+      service.getTokenAuthId(sampleCtx, { app_id: sampleEvent.api_app_id, team: { id: sampleEvent.team_id } })
+    ).resolves.toBe(`${sampleEvent.team_id}/${sampleEvent.api_app_id}`);
   });
 
   test('Validate: getWebhookEventType', async () => {

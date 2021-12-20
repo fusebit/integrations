@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import snoowrap from 'snoowrap';
 type FusebitRedditClient = snoowrap & { fusebit?: any };
 
-export default class RedditProvider extends Internal.ProviderActivator<FusebitRedditClient> {
+export default class RedditProvider extends Internal.Provider.Activator<FusebitRedditClient> {
   /*
    * This function will create an authorized wrapper of the Reddit SDK client.
    */

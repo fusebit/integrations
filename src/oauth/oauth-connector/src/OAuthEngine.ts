@@ -102,10 +102,15 @@ class OAuthEngine {
     return token;
   }
 
-  protected async fetchOAuthToken(ctx: Connector.Types.Context, params: Record<string, string>) {
+  protected async fetchOAuthToken(ctx: Connector.Types.Context, params: Record<string, string>): Promise<IOAuthToken> {
     const tokenUrl = this.getTokenUrl(ctx);
     try {
-      const response = await superagent.post(tokenUrl).set('Accept', 'application/json').type('form').send(params);
+      const response = await superagent
+        .post(tokenUrl)
+        .set('User-Agent', 'fusebit/oauth')
+        .set('Accept', 'application/json')
+        .type('form')
+        .send(params);
 
       return this.normalizeOAuthToken(response.body);
     } catch (error) {

@@ -5,7 +5,7 @@ import { Internal } from '@fusebit-int/framework';
  * the OAuthConnector (for those that are fairly generic in their OAuth usage).  There's no expectation nor
  * need for them to derive from this particular instance.
  */
-export default class OAuthProvider extends Internal.ProviderActivator<{ accessToken: string }> {
+export default class OAuthProvider extends Internal.Provider.Activator<{ accessToken: string }> {
   /*
    * The ctx is needed so that the integration can hook out auth tokens from the request.
    *

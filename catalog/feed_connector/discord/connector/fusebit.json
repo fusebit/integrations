@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "",
+    "scope": "identify webhook.incoming",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
@@ -17,6 +17,7 @@
     "refreshBackoffIncrement": 100000,
     "accessTokenExpirationBuffer": 500,
     "extraParams": "permissions=1024",
-    "applicationPublicKey": "<% global.consts.random %>"
+    "applicationPublicKey": "<% global.consts.random %>",
+    "interactionCallbackType": 5
   }
 }

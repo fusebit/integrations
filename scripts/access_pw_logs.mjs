@@ -23,4 +23,8 @@ const help = () => {
   } else {
     await $`aws s3 sync s3://fusebit-playwright-output/${timeStamp}/${serviceName}/ logs/`;
   }
+
+  console.log('');
+  console.log(`Display the trace:`);
+  console.log(`npx playwright show-trace logs/test-${serviceName}-provider-test/trace.zip`);
 })();

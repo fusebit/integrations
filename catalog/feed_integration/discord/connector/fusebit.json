@@ -17,6 +17,7 @@
     "refreshBackoffIncrement": 100000,
     "accessTokenExpirationBuffer": 500,
     "extraParams": "permissions=1024",
-    "applicationPublicKey": "<% global.consts.random %>"
+    "applicationPublicKey": "<% global.consts.random %>",
+    "interactionCallbackType": 5
   }
 }

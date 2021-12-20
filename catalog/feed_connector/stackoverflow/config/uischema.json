@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/stackoverflowConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { DiscordClient as Client } from './DiscordClient';
 
 type FusebitDiscordClient = Client & { fusebit?: any };
 
-export default class DiscordProvider extends Internal.ProviderActivator<FusebitDiscordClient> {
+export default class DiscordProvider extends Internal.Provider.Activator<FusebitDiscordClient> {
   /*
    * This function will create an authorized wrapper of the Discord SDK client.
    */
@@ -14,8 +14,7 @@ export default class DiscordProvider extends Internal.ProviderActivator<FusebitD
       lookupKey,
       connectorId: this.config.entityId,
     });
-
-    client.fusebit = { credentials };
+    await client.initialize();
     return client;
   }
 }

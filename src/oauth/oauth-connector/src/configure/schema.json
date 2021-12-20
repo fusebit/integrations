@@ -19,12 +19,14 @@
             "callbackUrl": {
               "title": "OAuth2 Redirect URL",
               "type": "string",
-              "readOnly": true
+              "readOnly": true,
+              "copy": true
             },
             "webhookUrl": {
               "title": "Webhook URL",
               "type": "string",
-              "readOnly": true
+              "readOnly": true,
+              "copy": true
             }
           }
         }
@@ -64,6 +66,10 @@
     },
     "accessTokenExpirationBuffer": {
       "type": "integer"
+    },
+    "defaultEventHandler": {
+      "title": "The Integration ID that will act as the default event handler",
+      "type": "string"
     }
   },
   "required": ["scope", "clientId", "clientSecret"]

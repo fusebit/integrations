@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "stackoverflow"
+  },
+  "handler": "@fusebit-int/stackoverflow-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "read_inbox private_info no_expiry",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

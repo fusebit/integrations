@@ -1,3 +1,25 @@
+export const slashCommandSampleBody = {
+  token: 'aWJnInDZoROCN543GIvv6SE0',
+  team_id: 'TDFBLCJV9',
+  team_domain: '5qtrs',
+  channel_id: 'C02J5HZJZS5',
+  channel_name: 'bk-integration-test-2',
+  user_id: 'U027X5JG8QG',
+  user_name: 'bruno',
+  command: '/hey-bald-bot',
+  text: '',
+  api_app_id: 'A02BDHGU9DZ',
+  is_enterprise_install: 'false',
+  response_url: 'https://hooks.slack.com/commands/TDFBLCJV9/2868734501313/uqT8deVyX8on7Vj8UBjBvXIm',
+  trigger_id: '2856088061058.457394426995.f5e471381a49cae00d33720fc3c58006',
+};
+
+export const slashCommandSampleHeaders = {
+  'x-slack-signature': 'v0=ca96c767181907a391e6356a0ca5c7fb9e328efb6e7ee790461c8f6e35a9af83',
+  'x-slack-request-timestamp': '1639750369',
+  'content-type': 'application/x-www-form-urlencoded',
+};
+
 export const sampleEvent = {
   token: 'R5ZUGOrzYpNHhR2bxtrTcqld',
   team_id: 'TDFBLCJV9',

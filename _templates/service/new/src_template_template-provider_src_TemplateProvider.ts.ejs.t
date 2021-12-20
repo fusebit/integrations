@@ -10,10 +10,14 @@ export default class <%= h.capitalize(name) %>Provider extends Internal.Provider
   /*
    * This function will create an authorized wrapper of the <%= h.capitalize(name) %> SDK client.
    */
-  protected async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<Fusebit<%= h.capitalize(name) %>Client> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<Fusebit<%= h.capitalize(name) %>Client> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: Fusebit<%= h.capitalize(name) %>Client = new Client({ accessToken: credentials.access_token });
-    client.fusebit = { credentials };
+    client.fusebit = {
+      credentials,
+      lookupKey,
+      connectorId: this.config.entityId,
+    };
     return client;
   }
 }
