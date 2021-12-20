@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-zoom-integration",
-  "version": "7.29.5",
+  "version": "7.30.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.29.5",
-    "@fusebit-int/zoom-provider": "^7.29.5"
+    "@fusebit-int/framework": "^7.30.0",
+    "@fusebit-int/zoom-provider": "^7.30.0"
   },
   "files": [
     "./integration.js",
