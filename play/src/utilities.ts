@@ -13,25 +13,14 @@ export const runProxyTest = async (
     `https://manage.fusebit.io/callback?silentAuth=false&requestedPath=/#access_token=${account.accessToken}&scope=openid%20profile%20email&expires_in=86400&token_type=Bearer`
   );
 
-  // Click button:has-text("New integration")
   await page.focus('button:has-text("New integration")');
   await page.click('button:has-text("New integration")');
-
-  // Click text=Atlassian Confluence
-  await page.click(`.MuiDialog-container :text("${integrationName}")`);
-
-  // Click button:has-text("Create")
+  await page.click(`.MuiDialog-container :text-is("${integrationName}")`);
   await page.click('button:has-text("Create")');
+  await page.click('button:has-text("Edit")', { timeout: 180000 });
 
-  // Click button:has-text("Edit")
-  await page.click('button:has-text("Edit")', {
-    timeout: 180000,
-  });
-
-  // Click button:has-text("Run")
   await page.click('button:has-text("Run")');
 
-  // Click button:has-text("Start")
   const [oauthPage] = await Promise.all([page.waitForEvent('popup'), page.click('button:has-text("Start")')]);
 
   await doOAuthLogin(oauthPage);
