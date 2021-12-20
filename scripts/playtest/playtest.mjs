@@ -125,7 +125,18 @@ const getGitCommits = async () => {
     .slice(0, 3);
 };
 
-const createSlackBlocks = (services, unknown, title, specTest) => {
+const makeTraceUrl = async (timeStamp, service) => {
+  const signedUrl = (
+    await $`aws s3 --region us-west-2 presign s3://fusebit-playwright-output/${timeStamp}/${service}/test-${service}-provider-test/trace.zip --region=us-west-2`
+  ).stdout;
+
+  const traceUrl = new URL('https://trace.playwright.dev/next');
+  traceUrl.searchParams.set('trace', signedUrl);
+
+  return traceUrl.toString();
+};
+
+const createSlackBlocks = (timeStamp, services, unknown, title, specTest) => {
   const results = collectResults(services);
   console.log(`results: ${JSON.stringify(results, null, 2)}`);
 
@@ -197,7 +208,10 @@ const createSlackBlocks = (services, unknown, title, specTest) => {
             type: 'mrkdwn',
             text: '*Failed Tests*:',
           },
-          { type: 'mrkdwn', text: ' ' + fail.map((f) => f.serviceName).join('\n') },
+          {
+            type: 'mrkdwn',
+            text: ' ' + fail.map((p) => `<${makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`).join('\n'),
+          },
         ],
       }
     );
@@ -292,6 +306,7 @@ const sendSlackBlocks = async (blocks, numFail) => {
   await $`./scripts/playtest/lock.mjs lock --long-poll`;
   await $`lerna run play --no-bail || true`;
   await $`./scripts/playtest/lock.mjs unlock`;
+
   // Upload results to S3
   const timeStamp = await uploadPlaywrightTraces(services);
 
@@ -306,7 +321,7 @@ const sendSlackBlocks = async (blocks, numFail) => {
 
   await Promise.all(
     Object.entries(resultSets).map(async ([name, filter]) => {
-      let [blocks, numFail] = createSlackBlocks(services, storageErrors, name, filter);
+      let [blocks, numFail] = createSlackBlocks(timeStamp, services, storageErrors, name, filter);
       if (numFail) {
         blocks = addCommitterBlock(blocks, commits);
         blocks = addSlackTrailer(blocks, timeStamp);
