@@ -69,7 +69,7 @@ const whoami = async () => {
     return (await $`git config --global --get user.name`).toString().split('\n')[0];
   } catch (_) {
     // Jenkins doesn't have git configured for user.name
-    return 'jenkins';
+    return (await $`whoami`).toString();
   }
 };
 
