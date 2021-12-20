@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-stackoverflow-connector",
-  "version": "7.29.4",
+  "version": "7.29.5",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.29.4",
-    "@fusebit-int/stackoverflow-connector": "^7.29.4"
+    "@fusebit-int/framework": "^7.29.5",
+    "@fusebit-int/stackoverflow-connector": "^7.29.5"
   }
 }
