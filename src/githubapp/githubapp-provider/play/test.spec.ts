@@ -35,7 +35,7 @@ test.beforeAll(async () => {
       tokenUrl: Constants.TOKEN_URL,
       clientId: Constants.SECRET_CLIENTID,
       clientSecret: Constants.SECRET_CLIENTSECRET,
-      signingSecret: Constants.SIGNING_SECRET,
+      webhookSecret: Constants.WEBHOOK_SECRET,
     },
     [
       {
@@ -48,6 +48,7 @@ test.beforeAll(async () => {
       },
     ]
   );
+  await new Promise((resolve) => setTimeout(resolve, 120000));
 });
 
 test.beforeEach(async ({ page }) => {
