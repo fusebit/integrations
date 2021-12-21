@@ -78,3 +78,5 @@ libm/
 base-eslintrc.js
 .prettierrc.js
 package-lock.json
+
+*.mjs
