@@ -167,6 +167,8 @@ class Tenant extends EntityBase.TenantBase {
     }
     return this.utilities.getConnectorSdkByName(ctx, connectorName, installs[0].id);
   };
+
+  public getTenantInstalls = this.utilities.getTenantInstalls;
 }
 
 type _Service = Service;
