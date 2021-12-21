@@ -136,7 +136,7 @@ const makeTraceUrl = async (timeStamp, service) => {
   return traceUrl.toString();
 };
 
-const createSlackBlocks = (timeStamp, services, unknown, title, specTest) => {
+const createSlackBlocks = async (timeStamp, services, unknown, title, specTest) => {
   const results = collectResults(services);
   console.log(`results: ${JSON.stringify(results, null, 2)}`);
 
@@ -187,6 +187,10 @@ const createSlackBlocks = (timeStamp, services, unknown, title, specTest) => {
   };
 
   if (fail.length) {
+    const failList = (
+      await Promise.all(fail.map(async (p) => `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`))
+    ).join('\n');
+
     block.blocks.push(
       {
         type: 'divider',
@@ -210,7 +214,7 @@ const createSlackBlocks = (timeStamp, services, unknown, title, specTest) => {
           },
           {
             type: 'mrkdwn',
-            text: ' ' + fail.map((p) => `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`).join('\n'),
+            text: ` ${failList}`,
           },
         ],
       }
@@ -321,7 +325,7 @@ const sendSlackBlocks = async (blocks, numFail) => {
 
   await Promise.all(
     Object.entries(resultSets).map(async ([name, filter]) => {
-      let [blocks, numFail] = createSlackBlocks(timeStamp, services, storageErrors, name, filter);
+      let [blocks, numFail] = await createSlackBlocks(timeStamp, services, storageErrors, name, filter);
       if (numFail) {
         blocks = addCommitterBlock(blocks, commits);
         blocks = addSlackTrailer(blocks, timeStamp);
