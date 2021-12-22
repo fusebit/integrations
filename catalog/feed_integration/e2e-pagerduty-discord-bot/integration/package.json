@@ -9,7 +9,8 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.31.0",
     "@fusebit-int/discord-provider": "^7.31.0",
-    "@fusebit-int/pagerduty-provider": "^7.31.0"
+    "@fusebit-int/pagerduty-provider": "^7.31.0",
+    "superagent": "^6.1.0"
   },
   "files": [
     "./integration.js",
