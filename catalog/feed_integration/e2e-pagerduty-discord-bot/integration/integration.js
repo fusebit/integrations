@@ -38,16 +38,16 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
 
   if (!ctx.req.body.data.hasOwnProperty('message')) {
     // The registered slash command is three levels deep
-    incident_title = event?.options[0]?.options[0]?.options[0]?.value;
-    incident_description = event?.options[0]?.options[0]?.options[1]?.value;
+    incidentTitle = event?.options[0]?.options[0]?.options[0]?.value;
+    incidentDescription = event?.options[0]?.options[0]?.options[1]?.value;
 
     // Get list of Services from PagerDuty
     const pdServices = await pagerdutyClient.get('/services');
-    const service_details = pdServices.data.services.map((service) => ({
+    const serviceDetails = pdServices.data.services.map((service) => ({
       label: service.name,
       value: JSON.stringify({
-        title: incident_title,
-        description: incident_description,
+        title: incidentTitle,
+        description: incidentDescription,
         serviceid: service.id,
       }),
     }));
@@ -62,7 +62,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
             {
               type: 3,
               custom_id: 'pd_services',
-              options: service_details,
+              options: serviceDetails,
               placeholder: 'Choose one',
               min_values: 1,
               max_values: 1,
@@ -95,6 +95,18 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
       content: `${createIncident.data.incident.title} has been created!`,
     });
   }
+});
+
+// Get Guild Name & IDs for user
+router.get('/api/tenant/:tenantId/guilds', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const guilds = await discordClient.user.get(`users/@me/guilds`);
+
+  const guildDetails = guilds.map((guild) => ({
+    guildName: guild.name,
+    guildID: guild.id,
+  }));
+  ctx.body = guildDetails;
 });
 
 // Create a new slash command in a specific Guild
