@@ -7,45 +7,52 @@ const router = integration.router;
 const discordConnector = 'discordConnector';
 const pagerDutyConnector = 'pagerdutyConnector';
 
+//Test Endpoint to demonstrate how to retrieve information from PagerDuty and send it to Discord
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, pagerDutyConnector, ctx.params.tenantId);
   const discordClient = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
-  const { id, username, avatar } = await discordClient.user.get('users/@me');
-  ctx.body = {
-    id,
-    username,
-    avatar,
-  };
+
+  const sinceDate = new Date();
+  const days = 7;
+  sinceDate.setDate(sinceDate.getDate() - days);
+
+  const incidents = await pagerdutyClient.get(`/incidents?statuses[]=triggered&since=${sinceDate}`);
+
+  await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
+    content: `There have been ${incidents.resource.length} incidents triggered in the last ${days} days.`,
+  });
+  ctx.body = 'Message posted successfully to Discord!';
 });
 
-// Respond to a Slash command
+// Webhook that listens to & responds to incoming messages
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   const pagerdutyClient = await integration.service.getSdk(ctx, pagerDutyConnector, ctx.req.body.installIds[0]);
 
   const {
-    data: { data: event },
-  } = ctx.req.body;
-
-  console.log('received event', event);
-
-  const {
-    data: { application_id, token },
+    data: { data: event, application_id, token },
   } = ctx.req.body;
 
   // If there is no interaction object, then it's the top level message and we need to send a followup message to get more information
-  // if there is an interaction object, then we are ok to proceed and
+  // if there is an interaction object, then we are ok to proceed and perform the final action
+  // Read more about interactions here: https://discord.com/developers/docs/interactions/receiving-and-responding
 
   if (!ctx.req.body.data.hasOwnProperty('message')) {
-    // they are nested options objects due to the command structure being grouped.
-    //should programmatically go deep until we find the name 'create' and type '3'
-    incident_title = event.options[0].options[0].options[0].value;
-    incident_description = event.options[0].options[0].options[1].value;
+    // The registered slash command is three levels deep
+    incident_title = event?.options[0]?.options[0]?.options[0]?.value;
+    incident_description = event?.options[0]?.options[0]?.options[1]?.value;
 
+    // Get list of Services from PagerDuty
     const pdServices = await pagerdutyClient.get('/services');
     const service_details = pdServices.data.services.map((service) => ({
       label: service.name,
-      value: `{"title": "${incident_title}", "description": "${incident_description}", "serviceid":"${service.id}"}`,
+      value: JSON.stringify({
+        title: incident_title,
+        description: incident_description,
+        serviceid: service.id,
+      }),
     }));
 
+    // Send back a drop-down list to select the service from
     await superagent.post(`https://discord.com/api/v8/webhooks/${application_id}/${token}`).send({
       content: 'What service is this incident for?',
       components: [
@@ -66,7 +73,6 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
     });
   } else {
     const values = JSON.parse(event.values);
-    //createIncidentandRespond(application_id, token, pagerdutyClient);
     const createIncident = await pagerdutyClient.post('/incidents', {
       data: {
         incident: {
@@ -84,7 +90,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
       },
     });
 
-    // consider adding details on the person who is on call and a link to the incident
+    // consider adding more details on the person who is on call and a link to the incident
     await superagent.patch(`https://discord.com/api/v8/webhooks/${application_id}/${token}/messages/@original`).send({
       content: `${createIncident.data.incident.title} has been created!`,
     });
@@ -92,12 +98,14 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
 });
 
 // Create a new slash command in a specific Guild
-//https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type
 router.post(
   '/api/tenant/:tenantId/:guild/slash-command',
   integration.middleware.authorizeUser('install:get'),
   async (ctx) => {
     const discordSdk = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
+
+    //Create your Slash Command with the Discord Bot
+    //Learn more: https://discord.com/developers/docs/interactions/application-commands#slash-commands
     const command = {
       name: 'pd',
       description: 'PagerDuty Commands',
@@ -137,9 +145,10 @@ router.post(
       ctx.throw(404, 'Application Id not found');
     }
 
+    //if you want to post globally instead of guild specific: `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
+    //learn more about registering commands here: https://discord.com/developers/docs/interactions/application-commands#registering-a-command
     const response = await discordSdk.bot.post(
       `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/guilds/${ctx.params.guild}/commands`,
-      //if you want to post globally: `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
       command
     );
     ctx.body = response;
