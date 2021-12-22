@@ -16,7 +16,7 @@ router.get('/api/check/:installId', async (ctx) => {
 router.get('/api/issues/:installId', async (ctx) => {
   const githubapp = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
   const userClient = githubapp.user();
-  const iterator = userClient.paginate.iterator(githubapp.rest.issues.listForRepo, {
+  const iterator = userClient.paginate.iterator(userClient.rest.issues.listForRepo, {
     owner: OWNER,
     repo: REPOSITORY,
     per_page: 100,
