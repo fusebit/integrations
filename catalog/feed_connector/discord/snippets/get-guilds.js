@@ -21,7 +21,7 @@ ${discordGetGuilds.toString()}
 `;
 
 module.exports = {
-  name: 'Get Discord guilds',
+  name: 'Get guilds',
   description: 'Get the Discord guilds the bot is a member of.',
   code,
 };

@@ -22,7 +22,7 @@ ${discordGetChannels.toString()}
 `;
 
 module.exports = {
-  name: 'Get Discord channels',
+  name: 'Get channels',
   description: 'Get the Discord channels in a guild.',
   code,
 };
