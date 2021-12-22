@@ -1,0 +1,8 @@
+{
+  "discordConnector": {
+    "discordName": "discord-connector"
+  },
+  "pagerdutyConnector": {
+    "pagerdutyName": "pagerduty-connector"
+  }
+}

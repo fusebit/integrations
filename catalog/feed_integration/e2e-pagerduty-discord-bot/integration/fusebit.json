@@ -1,0 +1,27 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Discord + PagerDuty"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "discordConnector",
+      "skip": false,
+      "provider": "@fusebit-int/discord-provider",
+      "entityId": "<% global.entities.discordConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    },
+    {
+      "name": "pagerdutyConnector",
+      "skip": false,
+      "provider": "@fusebit-int/pagerduty-provider",
+      "entityId": "<% global.entities.pagerdutyConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
