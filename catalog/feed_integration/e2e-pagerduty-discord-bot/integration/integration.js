@@ -77,7 +77,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
             type: 'service',
           },
           body: {
-            type: values.description,
+            type: 'incident_body',
             details: values.description,
           },
         },
