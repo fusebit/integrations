@@ -18,7 +18,6 @@ export interface IConfiguration {
   audience?: string;
   oauthScopes?: string;
   extraParams?: string;
-  webhookSecret: string;
 
   adjustIntegrationConfiguration?: (integrationConfiguration: any) => Promise<any>;
   adjustConnectorConfiguration?: (connectorConfiguration: any) => Promise<any>;
@@ -38,7 +37,6 @@ export const {
   SIGNING_SECRET,
   OAUTH_SCOPES,
   OAUTH_AUDIENCE,
-  WEBHOOK_SECRET,
 } = process.env;
 
 const makeIntegration = (configuration: IConfiguration, integrationVariables: IIntegrationVariable[] = []) =>
@@ -90,7 +88,6 @@ const makeConnector = (configuration: IConfiguration) =>
         audience: configuration.audience,
         extraParams: configuration.extraParams,
         accessTokenExpirationBuffer: 500,
-        webhookSecret: configuration.webhookSecret,
       },
     },
   });
