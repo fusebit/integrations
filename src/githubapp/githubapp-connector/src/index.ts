@@ -33,7 +33,7 @@ class ServiceConnector extends OAuthConnector {
 
       // Adjust the ui schema and layout
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationId');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookSecret', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'signingSecret', 'password');
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'privateKey', 'password');
 
       // Adjust the data schema
@@ -41,7 +41,7 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${HUMAN_SERVICE_NAME} App`;
-      ctx.body.schema.properties.webhookSecret = {
+      ctx.body.schema.properties.signingSecret = {
         title: `Webhook Secret from your ${HUMAN_SERVICE_NAME} App`,
         type: 'string',
       };

@@ -31,7 +31,7 @@ describe('GitHub App Connector Webhooks Test Suite', () => {
 
   test('Validate: validateWebhookEvent', async () => {
     const service: any = new ServiceConnector().service;
-    sampleCtx.state.manager.config.configuration.webhookSecret = 'secret';
+    sampleCtx.state.manager.config.configuration.signingSecret = 'secret';
 
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
     expect(sampleCtx.throw).not.toBeCalled();
@@ -69,7 +69,7 @@ describe('GitHub App Connector Webhooks Test Suite', () => {
   test('Validate: Event to Fanout', async () => {
     const ctx = getContext();
     ctx.state = { ...ctx.state, ...sampleCtx.state };
-    ctx.state.manager.config.configuration.webhookSecret = 'secret';
+    ctx.state.manager.config.configuration.signingSecret = 'secret';
     ctx.req = sampleCtx.req;
 
     const connector: any = new ServiceConnector();

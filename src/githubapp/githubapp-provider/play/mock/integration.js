@@ -7,14 +7,16 @@ const REPOSITORY = '##REPOSITORY##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const { data } = await sdk.rest.users.getAuthenticated();
+  const userClient = sdk.user();
+  const { data } = await userClient.rest.users.getAuthenticated();
   ctx.body = data;
 });
 
 // List repository issues
 router.get('/api/issues/:installId', async (ctx) => {
   const githubapp = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const iterator = githubapp.paginate.iterator(githubapp.rest.issues.listForRepo, {
+  const userClient = githubapp.user();
+  const iterator = userClient.paginate.iterator(githubapp.rest.issues.listForRepo, {
     owner: OWNER,
     repo: REPOSITORY,
     per_page: 100,
@@ -32,7 +34,8 @@ router.get('/api/issues/:installId', async (ctx) => {
 // Create a new GitHub issue
 router.post('/api/issues/:installId', async (ctx) => {
   const githubapp = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const { data } = await githubapp.rest.issues.create({
+  const userClient = githubapp.user();
+  const { data } = await userClient.rest.issues.create({
     owner: OWNER,
     repo: REPOSITORY,
     title: 'Hello world from Fusebit',
@@ -42,7 +45,8 @@ router.post('/api/issues/:installId', async (ctx) => {
 
 router.put('/api/issues/:installId/:issueNumber', async (ctx) => {
   const githubapp = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
-  const { data } = await githubapp.rest.issues.update({
+  const userClient = githubapp.user();
+  const { data } = await userClient.rest.issues.update({
     owner: OWNER,
     repo: REPOSITORY,
     issue_number: ctx.params.issueNumber,
