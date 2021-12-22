@@ -37,5 +37,8 @@
     "serve:integration": "./scripts/serve_entity.sh integration",
     "serve:connector": "./scripts/serve_entity.sh connector",
     "clean": "rm ./**/tsconfig.tsbuildinfo; rm -rf ./**/libc;"
+  },
+  "dependencies": {
+    "superagent": "^6.1.0"
   }
 }
