@@ -20,7 +20,7 @@ async function asanaUpdateTask(ctx, taskGid, propertiesToUpdate) {
 
 const code = `
 /**
- * Create a new Asana task. 
+ * Update an existing Asana task. 
  * 
  * @param ctx {FusebitContext} Fusebit Context of the request
  * @param taskGid {string} Task Id
