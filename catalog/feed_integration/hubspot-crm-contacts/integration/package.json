@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-hubspot-crm-contacts-integration",
-  "version": "7.30.1",
+  "version": "7.31.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.30.1",
-    "@fusebit-int/hubspot-provider": "^7.30.1"
+    "@fusebit-int/framework": "^7.31.0",
+    "@fusebit-int/hubspot-provider": "^7.31.0"
   },
   "files": [
     "./integration.js",
