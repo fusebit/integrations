@@ -7,6 +7,7 @@ const DOMAIN_KEY = process.env.DOMAIN_KEY;
 const successWebhook = process.env.SUCCESS_WEBHOOK;
 const failureWebhook = process.env.FAILURE_WEBHOOK;
 const repositoryCommitUrl = 'https://github.com/fusebit/integrations/commit/';
+const s3Bucket = 'fusebit-playwright-output';
 
 $.verbose = false;
 
@@ -101,11 +102,18 @@ const uploadPlaywrightTraces = async (services) => {
   // Send output to AWS
   await Promise.all(
     services.map((service) => {
-      return $`aws s3 sync --no-progress ./src/${service}/${service}-provider/test-results/ s3://fusebit-playwright-output/${timeStamp}/${service}/ || true`;
+      return $`aws s3 sync --no-progress ./src/${service}/${service}-provider/test-results/ s3://${s3Bucket}/${timeStamp}/${service}/ || true`;
     })
   );
 
   return timeStamp;
+};
+
+const getS3PathToTraceZip = async (service, timeStamp) => {
+  const names = (
+    await $`cd ./src/${service}/${service}-provider/test-results/ && find . -name trace.zip | head -1 | sed 's^./^^'`
+  ).stdout.trim();
+  return `s3://${s3Bucket}/${timeStamp}/${service}/${names}`;
 };
 
 const getGitCommits = async () => {
@@ -127,7 +135,7 @@ const getGitCommits = async () => {
 
 const makeTraceUrl = async (timeStamp, service) => {
   const signedUrl = (
-    await $`aws s3 --region us-west-2 presign s3://fusebit-playwright-output/${timeStamp}/${service}/test-${service}-provider-test/trace.zip --region=us-west-2`
+    await $`aws s3 --region us-west-2 presign ${await getS3PathToTraceZip(service, timeStamp)} --region=us-west-2`
   ).stdout;
 
   const traceUrl = new URL('https://trace.playwright.dev/next');

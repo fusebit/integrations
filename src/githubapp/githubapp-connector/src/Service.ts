@@ -7,7 +7,8 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any {
     const event = ctx.req.headers['x-github-event'];
-    const type = `${event}.${ctx.req.body.action}`;
+    const action = ctx.req.body.action || ctx.req.body.ref_type;
+    const type = `${event}.${action}`;
     return [{ data: ctx.req.body, type }];
   }
 
