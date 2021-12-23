@@ -8,7 +8,7 @@ class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any {
     const event = ctx.req.headers['x-github-event'];
     const action = ctx.req.body.action || ctx.req.body.ref_type;
-    const type = `${event}.${action}`;
+    const type = action ? `${event}.${action}` : event;
     return [{ data: ctx.req.body, type }];
   }
 
