@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-zoom-connector",
-  "version": "7.32.1",
+  "version": "7.32.2",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.32.1",
-    "@fusebit-int/zoom-connector": "^7.32.1"
+    "@fusebit-int/framework": "^7.32.2",
+    "@fusebit-int/zoom-connector": "^7.32.2"
   }
 }
