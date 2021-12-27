@@ -151,7 +151,7 @@ class Tenant extends EntityBase.TenantBase {
    * Connector service on behalf of your user
    * @example
    * router.post('/api/:connectorName/:tenant', async (ctx) => {
-   *    const client = await integration.service.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
+   *    const client = await integration.tenant.getSdkByTenant(ctx, ctx.params.connectorName, ctx.params.tenant);
    *    // use client methods . . .
    * });
    */
@@ -167,7 +167,18 @@ class Tenant extends EntityBase.TenantBase {
     }
     return this.utilities.getConnectorSdkByName(ctx, connectorName, installs[0].id);
   };
-
+  /**
+   * Get a list of Integration Installs associated with a given Tenant
+   * @param ctx The context object provided by the route function
+   * @param {string} tenantId Represents a single user of this Integration,
+   * usually corresponding to a user or account in your own system
+   * @returns {Promise<EntityBase.IInstallResponse>} An enveloped list of Installs
+   * @example
+   * router.post('/api/:tenant', async (ctx) => {
+   *    const installResponse = await integration.service.getTenantInstalls(ctx, ctx.params.tenant);
+   *    const installs = installResponse.items;
+   * });
+   */
   public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => this.utilities.getTenantInstalls(ctx, tenantId);
 }
 
