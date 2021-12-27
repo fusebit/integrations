@@ -168,7 +168,7 @@ class Tenant extends EntityBase.TenantBase {
     return this.utilities.getConnectorSdkByName(ctx, connectorName, installs[0].id);
   };
 
-  public getTenantInstalls = (ctx: FusebitContext, tenantId: string) => this.utilities.getTenantInstalls(ctx, tenantId);
+  public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => this.utilities.getTenantInstalls(ctx, tenantId);
 }
 
 type _Service = Service;
