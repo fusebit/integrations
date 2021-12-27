@@ -179,7 +179,8 @@ class Tenant extends EntityBase.TenantBase {
    *    const installs = installResponse.items;
    * });
    */
-  public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => this.utilities.getTenantInstalls(ctx, tenantId);
+  public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) =>
+    this.utilities.getTenantInstalls(ctx, tenantId);
 }
 
 type _Service = Service;
