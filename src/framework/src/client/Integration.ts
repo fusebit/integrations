@@ -172,11 +172,10 @@ class Tenant extends EntityBase.TenantBase {
    * @param ctx The context object provided by the route function
    * @param {string} tenantId Represents a single user of this Integration,
    * usually corresponding to a user or account in your own system
-   * @returns {Promise<EntityBase.IInstallResponse>} An enveloped list of Installs
+   * @returns {Promise<EntityBase.IInstall[]>} An array of Installs
    * @example
    * router.post('/api/:tenant', async (ctx) => {
-   *    const installResponse = await integration.service.getTenantInstalls(ctx, ctx.params.tenant);
-   *    const installs = installResponse.items;
+   *    const installs = await integration.service.getTenantInstalls(ctx, ctx.params.tenant);
    * });
    */
   public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) =>
