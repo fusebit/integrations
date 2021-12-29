@@ -2,12 +2,19 @@
   "name": "@fusebit-int/google-connector",
   "version": "7.32.3",
   "description": "Google Connector",
-  "keywords": ["Fusebit", "Google"],
+  "keywords": [
+    "Fusebit",
+    "Google"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
