@@ -1,0 +1,21 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Google"
+  },
+  "handler": "@fusebit-int/google-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "openid https://www.googleapis.com/auth/userinfo.email",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "extraParams": "access_type=offline&prompt=consent",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}
