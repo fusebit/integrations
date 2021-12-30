@@ -246,7 +246,7 @@ const createSlackFailBlocks = async (timeStamp, title, pass, fail, unknown) => {
         fail.map(async (p) => ({
           type: 'section',
           fields: [
-            { type: 'mkrdwn', text: ' ' },
+            { type: 'mrkdwn', text: ' ' },
             { type: 'mrkdwn', text: `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>` },
           ],
         }))
