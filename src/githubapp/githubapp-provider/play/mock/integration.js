@@ -4,6 +4,7 @@ const router = integration.router;
 const connectorName = 'githubapp';
 const OWNER = '##OWNER##';
 const REPOSITORY = '##REPOSITORY##';
+const storageKey = '/test/githubapp/webhook/##STORAGE_KEY##';
 
 router.get('/api/check/:installId', async (ctx) => {
   const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
@@ -55,12 +56,17 @@ router.put('/api/issues/:installId/:issueNumber', async (ctx) => {
   ctx.body = data;
 });
 
+// Endpoint used to check a storage item is properly saved.
+router.get('/api/storage', async (ctx) => {
+  ctx.body = await integration.storage.getData(ctx, storageKey);
+});
+
 // Listen all issues related webhooks
 integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   // Save something in storage to look up later on.
-  await integration.storage.setData(ctx, `/test/githubapp/webhook/${Math.random() * 10000000}`, {
+  await integration.storage.setData(ctx, storageKey, {
     data: ctx.req.body,
-    expires: new Date(Date.now() + 60 * 3000).toISOString(),
+    expires: new Date(Date.now() + 60 * 1000).toISOString(),
   });
 });
 
