@@ -60,7 +60,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   // Save something in storage to look up later on.
   await integration.storage.setData(ctx, `/test/githubapp/webhook/${Math.random() * 10000000}`, {
     data: ctx.req.body,
-    expires: new Date(Date.now() + 60 * 1000).toISOString(),
+    expires: new Date(Date.now() + 60 * 3000).toISOString(),
   });
 });
 
