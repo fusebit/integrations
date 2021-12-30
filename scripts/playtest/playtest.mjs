@@ -219,10 +219,6 @@ const createSlackFailBlocks = async (timeStamp, title, pass, fail, unknown) => {
   };
 
   if (fail.length) {
-    const failList = (
-      await Promise.all(fail.map(async (p) => `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>`))
-    ).join('\n');
-
     block.blocks.push(
       {
         type: 'divider',
@@ -240,17 +236,27 @@ const createSlackFailBlocks = async (timeStamp, title, pass, fail, unknown) => {
             text: '*Unknown Tests*:',
           },
           { type: 'mrkdwn', text: ' ' + unknown.join('\n') },
-          {
-            type: 'mrkdwn',
-            text: '*Failed Tests*:',
-          },
-          {
-            type: 'mrkdwn',
-            text: ` ${failList}`,
-          },
         ],
       }
     );
+
+    let results = [];
+    results.push(
+      ...(await Promise.all(
+        fail.map(async (p) => ({
+          type: 'section',
+          fields: [
+            { type: 'mkrdwn', text: ' ' },
+            { type: 'mrkdwn', text: `<${await makeTraceUrl(timeStamp, p.serviceName)}|${p.serviceName}>` },
+          ],
+        }))
+      ))
+    );
+
+    // Add the header for the first one
+    results[0].fields[0].text = '*Failed tests*:';
+
+    block.blocks.push(...results);
   }
 
   return block;
