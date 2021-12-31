@@ -3,9 +3,7 @@
   "version": "7.32.3",
   "private": true,
   "description": "Fusebit Example Package Catalog",
-  "keywords": [
-    "Fusebit"
-  ],
+  "keywords": ["Fusebit"],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
@@ -24,7 +22,8 @@
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../.eslintignore",
-    "test": "node libc/index.js feed_integration > /dev/null && node libc/index.js feed_connector > /dev/null"
+    "test": "node libc/index.js feed_integration > /dev/null && node libc/index.js feed_connector > /dev/null",
+    "demo": "./scripts/quickServe.sh"
   },
   "bugs": {
     "url": "https://github.com/fusebit/packages/issues"

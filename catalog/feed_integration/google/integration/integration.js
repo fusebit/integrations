@@ -31,7 +31,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   });
 
   ctx.body = {
-    message: `Successfully loaded your profile with ${Object.keys(me)} information!`,
+    message: `Your email address has ${me.data.emailAddresses[0].value.length} characters`,
   };
 });
 

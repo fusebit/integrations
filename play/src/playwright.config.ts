@@ -21,6 +21,7 @@ if (cfg.error) {
     'AUTHORIZATION_URL=',
     'TOKEN_URL=',
     'SIGNING_SECRET=',
+    'EXTRA_PARAMS=',
     '',
     'Many systems require a consistent and predictable id for webhooks, callback',
     "urls, etc.  Choose an integration id and a connector id that won't conflict",
@@ -37,6 +38,8 @@ export const playWrightConfig: PlaywrightTestConfig = {
     ['line', {}],
   ],
   use: {
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/98.0.4695.0 Safari/537.36',
     trace: 'on',
     screenshot: 'on',
     video: 'on',

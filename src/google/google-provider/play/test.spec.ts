@@ -33,6 +33,7 @@ test.beforeAll(async () => {
       clientId: Constants.SECRET_CLIENTID,
       clientSecret: Constants.SECRET_CLIENTSECRET,
       signingSecret: Constants.SIGNING_SECRET,
+      extraParams: Constants.EXTRA_PARAMS,
     },
     [
       {
@@ -76,9 +77,5 @@ test('google-provider test', async ({ page }) => {
     `/integration/${Constants.INTEGRATION_ID}/api/check/${installId}`
   );
 
-  expect(response).toBeHttp({ statusCode: 200 });
-
-  // TODO: Perform additional checks here: Use connector SDK, Webhooks, etc.
-  const filter = (entry) => entry.body.data.eventType === 'event_callback'; // update the event type here
-  await waitForWebhook(account, filter);
+  expect(response).toBeHttp({ statusCode: 200, body: { emailAddress: `${Constants.OAUTH_USERNAME}@gmail.com` } });
 });

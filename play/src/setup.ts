@@ -37,6 +37,7 @@ export const {
   SIGNING_SECRET,
   OAUTH_SCOPES,
   OAUTH_AUDIENCE,
+  EXTRA_PARAMS,
 } = process.env;
 
 const makeIntegration = (configuration: IConfiguration, integrationVariables: IIntegrationVariable[] = []) =>
