@@ -9,8 +9,6 @@ test.beforeAll(async () => {
   account = getAccount();
 });
 
-test('Proxy: Google', async ({ page }) => {
-  // TODO: update the 'some message' param with the message Daisy will get on the
-  // log console on our portal/editor when clicking the run button.
-  await Utilities.runProxyTest(account, page, 'Google', authenticate, 'some message');
+test('Proxy: Slack Bot', async ({ page }) => {
+  await Utilities.runProxyTest(account, page, 'Google', authenticate, 'Your email address has');
 }, 180000);
