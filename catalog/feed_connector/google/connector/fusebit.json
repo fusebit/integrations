@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "openid https://www.googleapis.com/auth/userinfo.email",
+    "scope": "openid profile https://www.googleapis.com/auth/userinfo.email",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "extraParams": "access_type=offline&prompt=consent",
