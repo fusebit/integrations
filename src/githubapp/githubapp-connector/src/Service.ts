@@ -8,11 +8,17 @@ class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any {
     const event = ctx.req.headers['x-github-event'];
     const action = ctx.req.body.action || ctx.req.body.ref_type;
-    const type = `${event}.${action}`;
+    const type = action ? `${event}.${action}` : event;
     return [{ data: ctx.req.body, type }];
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string {
+    // GitHub will send automatically a Webhook when a GitHub user authorization is revoked
+    // Notice this is a different concept of Uninstalling a GitHub App.
+    if (event.data.action === 'revoked') {
+      // Since this is a specific user operation, return the user id
+      return event.data.sender.id;
+    }
     return event.data.installation.id;
   }
 
@@ -24,7 +30,7 @@ class Service extends OAuthConnector.Service {
       const signatureBuffer = Buffer.from(signatureHeader);
       const signingAlgorithm = 'sha256';
       const sign = `${signingAlgorithm}=${crypto
-        .createHmac(signingAlgorithm, ctx.state.manager.config.configuration.webhookSecret)
+        .createHmac(signingAlgorithm, ctx.state.manager.config.configuration.signingSecret)
         .update(requestBody)
         .digest('hex')}`;
       const verificationBuffer = Buffer.from(sign);

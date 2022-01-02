@@ -153,6 +153,30 @@ const createSlackBlocks = async (timeStamp, services, unknown, title, specTest) 
   const pass = specs.filter((spec) => spec.ok && specTest(spec));
   const fail = specs.filter((spec) => !spec.ok && specTest(spec));
 
+  if (fail.length) {
+    return [await createSlackFailBlocks(timeStamp, title, pass, fail, unknown), fail.length];
+  }
+
+  const block = {
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text:
+            `${title} Full Pass - ` +
+            ':white_check_mark:'.repeat(pass.length) +
+            '/' +
+            ':grey_question:'.repeat(unknown.length),
+        },
+      },
+    ],
+  };
+
+  return [block, 0];
+};
+
+const createSlackFailBlocks = async (timeStamp, title, pass, fail, unknown) => {
   const block = {
     blocks: [
       {
@@ -229,7 +253,7 @@ const createSlackBlocks = async (timeStamp, services, unknown, title, specTest) 
     );
   }
 
-  return [block, fail.length];
+  return block;
 };
 
 const addCommitterBlock = (block, commits) => {
@@ -281,13 +305,6 @@ const addSlackTrailer = (block, timeStamp) => {
           text: `:gear: <${process.env.BUILD_URL}|Logs>`,
         },
       ],
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '\n ```./scripts/access_pw_logs.mjs ' + `${timeStamp}` + ' <service-name>```',
-      },
     }
   );
 
