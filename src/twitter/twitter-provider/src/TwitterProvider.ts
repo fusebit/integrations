@@ -1,15 +1,18 @@
 import { Internal } from '@fusebit-int/framework';
-import { TwitterClient as Client } from 'twitter-api-v2';
+import TwitterApi, { TwitterApiv2 } from 'twitter-api-v2';
 
-type FusebitTwitterClient = Client & { fusebit?: any };
+type FusebitTwitterClient = TwitterApiv2 & { fusebit?: any };
 
-export default class TwitterProvider extends Internal.ProviderActivator<FusebitTwitterClient> {
+export default class TwitterProvider extends Internal.Provider.Activator<FusebitTwitterClient> {
   /*
    * This function will create an authorized wrapper of the Twitter SDK client.
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitTwitterClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitTwitterClient = new Client({ accessToken: credentials.access_token });
+    const twitterClient = new TwitterApi(credentials.access_token);
+
+    const client: FusebitTwitterClient = twitterClient.v2;
+
     client.fusebit = {
       credentials,
       lookupKey,
