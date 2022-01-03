@@ -22,7 +22,7 @@ const connectorName = 'googleConnector';
 // The sample test endpoint of this integration gets the openid and email of the currently authenticated user.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Google client pre-configured with credentials necessary to communicate with your tenant's Google account.
-  // For the Google SDK documentation, see https://jsforce.github.io/.
+  // For the Google SDK documentation, see https://developers.google.com/apis-explorer.
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const me = await googleClient.people('v1').people.get({
