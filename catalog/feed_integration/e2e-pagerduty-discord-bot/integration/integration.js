@@ -7,7 +7,7 @@ const router = integration.router;
 const discordConnector = 'discordConnector';
 const pagerDutyConnector = 'pagerdutyConnector';
 
-//Test Endpoint to demonstrate how to retrieve information from PagerDuty and send it to Discord
+// Test Endpoint to demonstrate how to retrieve information from PagerDuty and send it to Discord
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const pagerdutyClient = await integration.tenant.getSdkByTenant(ctx, pagerDutyConnector, ctx.params.tenantId);
   const discordClient = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
@@ -23,14 +23,16 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     return;
   }
 
-  await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
+  const guildChannelId = discordClient.fusebit.credentials.webhook.channel_id;
+  const response = await discordClient.bot.post(`channels/${guildChannelId}/messages`, {
     content: `There have been ${incidents.resource.length} incidents triggered in the last ${days} days.`,
   });
-  ctx.body = 'Message posted successfully to Discord!';
+
+  ctx.body = response;
 });
 
-//Configure a new Slash Command for the Discord Bot
-//Learn more: https://discord.com/developers/docs/interactions/application-commands#slash-commands
+// Configure a new Slash Command for the Discord Bot
+// Learn more: https://discord.com/developers/docs/interactions/application-commands#slash-commands
 function slashCommandConfiguration() {
   const command = {
     name: 'pd',
@@ -68,7 +70,8 @@ function slashCommandConfiguration() {
   return command;
 }
 
-// Register a new slash command in a specific Guild
+// Register a new Slash Command in a specific Guild
+// How to Retrieve your Guild ID: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
 router.post(
   '/api/tenant/:tenantId/:guild/slash-command',
   integration.middleware.authorizeUser('install:get'),
@@ -82,8 +85,8 @@ router.post(
       ctx.throw(404, 'Application Id not found');
     }
 
-    //if you want to post globally instead of guild specific: `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
-    //learn more about registering commands here: https://discord.com/developers/docs/interactions/application-commands#registering-a-command
+    // Learn more about registering commands
+    // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
     const response = await discordSdk.bot.post(
       `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/guilds/${ctx.params.guild}/commands`,
       command
@@ -92,16 +95,24 @@ router.post(
   }
 );
 
-// Get Guild Name & IDs for user
-router.get('/api/tenant/:tenantId/guilds', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const guilds = await discordClient.user.get(`users/@me/guilds`);
+// Register a new Slash Command globally
+router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const discordSdk = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
+  const command = slashCommandConfiguration();
 
-  const guildDetails = guilds.map((guild) => ({
-    guildName: guild.name,
-    guildID: guild.id,
-  }));
-  ctx.body = guildDetails;
+  // Using the Discord Bot SDK requires an Application ID, Application Bot Token,
+  // and the 'applications.commands' scope in the Connector configuration.
+  if (!discordSdk.fusebit.credentials.applicationId) {
+    ctx.throw(404, 'Integration not configured with the necessary scope');
+  }
+
+  // Learn more about registering commands
+  // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
+  const response = await discordSdk.bot.post(
+    `/v8/applications/${discordSdk.fusebit.credentials.applicationId}/commands`,
+    command
+  );
+  ctx.body = response;
 });
 
 // Listen to and Respond to a Slash Command
@@ -113,7 +124,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   } = ctx.req.body;
 
   // If there is no message object, then it's the top level message and we can send a followup message to get more information
-  // if there is a message object, then we can assume it's the followup message with more details
+  // If there is a message object, then we can assume it's the followup message with more details
   // Read more about interactions here: https://discord.com/developers/docs/interactions/receiving-and-responding
 
   if (!ctx.req.body.data.hasOwnProperty('message')) {
@@ -153,7 +164,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
     const values = JSON.parse(event.values);
     let content = '';
     try {
-      //Create Incident with the received details from the followup message
+      // Create Incident with the received details from the followup message
       const createdIncident = await pagerdutyClient.post('/incidents', {
         data: {
           incident: {
@@ -170,7 +181,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
           },
         },
       });
-      // consider adding more details on the person who is on call and a link to the incident
+      // Consider adding more details on the person who is on call and a link to the incident
       content = `${createdIncident.data.incident.title} has been created!`;
     } catch (e) {
       content = `Incident creation failed, reason: ${e.message}`;
@@ -182,9 +193,9 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   }
 });
 
-// Handle the values from the slash command
+// Handle the values from the Slash Command
 function getSlashCommandValues(event) {
-  // The registered slash command is three levels deep
+  // The registered Slash Command is three levels deep
   const [title, description] = event?.options[0]?.options[0]?.options;
   return { incidentTitle: title.value, incidentDescription: description.value };
 }
