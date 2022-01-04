@@ -4,9 +4,9 @@ to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/src/<%= h.c
 import { Internal } from '@fusebit-int/framework';
 import { <%= h.capitalize(name) %>Client as Client } from '<%= provider.package %>';
 
-type Fusebit<%= h.capitalize(name) %>Client = Client & { fusebit?: any };
+type Fusebit<%= h.capitalize(name) %>Client = Client & { fusebit?: Internal.Types.IFusebitCredentials };
 
-export default class <%= h.capitalize(name) %>Provider extends Internal.ProviderActivator<Fusebit<%= h.capitalize(name) %>Client> {
+export default class <%= h.capitalize(name) %>Provider extends Internal.Provider.Activator<Fusebit<%= h.capitalize(name) %>Client> {
   /*
    * This function will create an authorized wrapper of the <%= h.capitalize(name) %> SDK client.
    */

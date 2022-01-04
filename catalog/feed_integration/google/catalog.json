@@ -1,0 +1,29 @@
+{
+  "id": "google",
+  "name": "Google",
+  "smallIcon": "#/assets/google.svg",
+  "largeIcon": "#/assets/googleLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": ""
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "googleConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "googleIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

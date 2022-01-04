@@ -131,3 +131,5 @@ test-results/
 
 # Fusebit tooling locks
 .playwright.lock
+
+catalog/demo
