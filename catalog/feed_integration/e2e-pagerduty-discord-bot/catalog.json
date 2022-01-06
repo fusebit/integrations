@@ -1,0 +1,34 @@
+{
+  "id": "e2e-pagerduty-discord-bot",
+  "name": "PagerDuty Discord Bot",
+  "private": true,
+  "smallIcon": "#/assets/discord.svg",
+  "largeIcon": "#/assets/discord.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging,Dev Tools,Operations"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "pagerdutyDiscordBotIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      },
+      "discordConnector": {
+        "entityType": "connector",
+        "path": "../discord/connector/"
+      },
+      "pagerdutyConnector": {
+        "entityType": "connector",
+        "path": "../pagerduty/connector/"
+      }
+    }
+  }
+}
