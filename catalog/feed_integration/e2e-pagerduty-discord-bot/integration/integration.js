@@ -18,17 +18,15 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
   const incidents = await pagerdutyClient.get(`/incidents?statuses[]=triggered&since=${sinceDate}`);
 
-  if (!discordClient.fusebit.credentials.webhook) {
-    ctx.body = 'Discord Channel Webhook is not configured';
-    return;
-  }
-
-  const guildChannelId = discordClient.fusebit.credentials.webhook.channel_id;
-  const response = await discordClient.bot.post(`channels/${guildChannelId}/messages`, {
+  const { id, username } = await discordClient.user.get('users/@me');
+  const directMessage = await discordClient.bot.post('users/@me/channels', {
+    recipient_id: id,
+  });
+  await discordClient.bot.post(`channels/${directMessage.id}/messages`, {
     content: `There have been ${incidents.resource.length} incidents triggered in the last ${days} days.`,
   });
 
-  ctx.body = response;
+  ctx.body = { message: `Successfully sent a message to Discord user ${username}!` };
 });
 
 // Configure a new Slash Command for the Discord Bot
@@ -79,12 +77,6 @@ router.post(
     const discordSdk = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
     const command = slashCommandConfiguration();
 
-    // Using the Discord Bot SDK requires an Application ID, Application Bot Token,
-    // and the 'applications.commands' scope in the Connector configuration.
-    if (!discordSdk.fusebit.credentials.applicationId) {
-      ctx.throw(404, 'Application Id not found');
-    }
-
     // Learn more about registering commands
     // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
     const response = await discordSdk.bot.post(
@@ -99,12 +91,6 @@ router.post(
 router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const discordSdk = await integration.tenant.getSdkByTenant(ctx, discordConnector, ctx.params.tenantId);
   const command = slashCommandConfiguration();
-
-  // Using the Discord Bot SDK requires an Application ID, Application Bot Token,
-  // and the 'applications.commands' scope in the Connector configuration.
-  if (!discordSdk.fusebit.credentials.applicationId) {
-    ctx.throw(404, 'Integration not configured with the necessary scope');
-  }
 
   // Learn more about registering commands
   // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
