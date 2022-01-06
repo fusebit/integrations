@@ -16,7 +16,7 @@
     "refreshWaitCountLimit": 100000,
     "refreshBackoffIncrement": 100000,
     "accessTokenExpirationBuffer": 500,
-    "extraParams": "permissions=2048",
+    "extraParams": "permissions=3072",
     "applicationPublicKey": "<% global.consts.random %>",
     "interactionCallbackType": 5
   }
