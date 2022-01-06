@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog",
-  "version": "7.33.0",
+  "version": "7.33.1-alpha.0",
   "private": true,
   "description": "Fusebit Example Package Catalog",
   "keywords": [

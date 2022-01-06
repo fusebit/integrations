@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/reddit-provider",
-  "version": "7.33.0",
+  "version": "7.33.1-alpha.0",
   "description": "Reddit provider",
   "keywords": [
     "Fusebit",

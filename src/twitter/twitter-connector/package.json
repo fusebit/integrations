@@ -1,13 +1,20 @@
 {
   "name": "@fusebit-int/twitter-connector",
-  "version": "7.33.0",
+  "version": "7.33.1-alpha.0",
   "description": "Twitter Connector",
-  "keywords": ["Fusebit", "Twitter"],
+  "keywords": [
+    "Fusebit",
+    "Twitter"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
@@ -28,11 +35,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": ">=7.33.0",
+    "@fusebit-int/oauth-connector": "^7.33.1-alpha.0",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": ">=7.33.0",
+    "@fusebit-int/framework": "^7.33.1-alpha.0",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
