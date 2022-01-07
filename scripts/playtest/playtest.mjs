@@ -9,7 +9,7 @@ const failureWebhook = process.env.FAILURE_WEBHOOK;
 const repositoryCommitUrl = 'https://github.com/fusebit/integrations/commit/';
 const s3Bucket = 'fusebit-playwright-output';
 
-$.verbose = false;
+// $.verbose = false;
 
 const nameToMention = {
   'Matthew Zhao': '<@U01UDTF3VQR>',
