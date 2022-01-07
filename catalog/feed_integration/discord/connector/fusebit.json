@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "identify webhook.incoming bot",
+    "scope": "identify bot",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
