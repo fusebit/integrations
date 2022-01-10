@@ -1,0 +1,29 @@
+{
+  "id": "google-drive",
+  "name": "Google Drive",
+  "smallIcon": "#/assets/google-drive.svg",
+  "largeIcon": "#/assets/google-driveLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Storage,Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-drive#creating-your-own-google-drive-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "googleConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "googleIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
