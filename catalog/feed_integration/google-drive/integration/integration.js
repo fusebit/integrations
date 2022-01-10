@@ -25,9 +25,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // For the Google SDK documentation, see https://developers.google.com/apis-explorer.
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const files = await googleClient.drive({
-    version: "v3"
-  }).files.list()
+  const files = await googleClient
+    .drive({
+      version: 'v3',
+    })
+    .files.list();
 
   ctx.body = {
     message: `Your drive containes ${files.data.files.length} files and folders.`,
