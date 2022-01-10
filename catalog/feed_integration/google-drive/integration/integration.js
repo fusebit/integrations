@@ -32,7 +32,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     .files.list();
 
   ctx.body = {
-    message: `Your drive containes ${files.data.files.length} files and folders.`,
+    message: `Your drive contains ${files.data.files.length} files and folders.`,
   };
 });
 
