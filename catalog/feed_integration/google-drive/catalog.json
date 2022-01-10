@@ -20,7 +20,7 @@
         "entityType": "connector",
         "path": "connector/"
       },
-      "googleIntegration": {
+      "google-driveIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }
