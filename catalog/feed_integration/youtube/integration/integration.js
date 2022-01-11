@@ -19,7 +19,7 @@ const integration = new Integration();
 const router = integration.router;
 const connectorName = 'googleConnector';
 
-// The sample test endpoint of this integration gets all contacts stored in the YouTube account associated with your tenant.
+// The sample test endpoint of this integration searchs for videos on YouTube with the Fusebit keyword.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a YouTube client pre-configured with credentials necessary to communicate with your tenant's YouTube account.
   // For the YouTube SDK documentation, see https://developers.google.com/youtube/v3/docs/ and
