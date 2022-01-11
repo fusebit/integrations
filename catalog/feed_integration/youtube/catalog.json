@@ -1,0 +1,48 @@
+{
+  "id": "google-youtube",
+  "name": "YouTube",
+  "smallIcon": "#/assets/youtube.svg",
+  "largeIcon": "#/assets/youtubeLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Video"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/youtube#creating-your-own-youtube-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "YouTube GET failed",
+        "itemName": "Video",
+        "properties": [
+          {
+            "name": "name",
+            "label": "Name"
+          },
+          {
+            "name": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "youtubeConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "youtubeIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

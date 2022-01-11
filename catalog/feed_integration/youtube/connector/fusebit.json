@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Google"
+  },
+  "handler": "@fusebit-int/google-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": true
+    },
+    "scope": "openid profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/youtube.readonly",
+    "clientId": "",
+    "clientSecret": "",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

@@ -18,6 +18,11 @@ module.exports = [
   },
   {
     type: 'input',
+    name: 'connectorName',
+    message: 'Name of the connector to use (i.e. "Slack", or "HubSpot")',
+  },
+  {
+    type: 'input',
     name: 'svgImageSmall',
     message: 'Glyph-only SVG Image (two blank lines to finish)\n',
     multiline: true,
