@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-youtube-connector",
+  "version": "7.34.2",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.34.2",
+    "@fusebit-int/google-connector": ">=7.34.2"
+  }
+}
