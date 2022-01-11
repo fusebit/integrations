@@ -18,15 +18,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
   const incidents = await pagerdutyClient.get(`/incidents?statuses[]=triggered&since=${sinceDate}`);
 
-  const { id, username } = await discordClient.user.get('users/@me');
-  const directMessage = await discordClient.bot.post('users/@me/channels', {
-    recipient_id: id,
-  });
-  await discordClient.bot.post(`channels/${directMessage.id}/messages`, {
+  await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
     content: `There have been ${incidents.resource.length} incidents triggered in the last ${days} days.`,
   });
 
-  ctx.body = { message: `Successfully sent a message to Discord user ${username}!` };
+  ctx.body = 'Message posted successfully to Discord!';
 });
 
 // Configure a new Slash Command for the Discord Bot
