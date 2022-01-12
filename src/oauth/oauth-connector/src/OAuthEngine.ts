@@ -66,6 +66,11 @@ class OAuthEngine {
   }
 
   /**
+   * Enrich the token with any additional attributes from the ctx.
+   */
+  protected async enrichInitialToken(ctx: Internal.Types.Context, token: IOAuthToken) {}
+
+  /**
    * Convert the successful callback into a token via getAccessToken.
    */
   public async convertAccessCodeToToken(ctx: Internal.Types.Context, lookupKey: string, code: string) {
@@ -76,6 +81,8 @@ class OAuthEngine {
 
     token.status = 'authenticated';
     token.timestamp = Date.now();
+
+    await this.enrichInitialToken(ctx, token);
 
     await ctx.state.identityClient?.saveTokenToSession(token, lookupKey);
 
@@ -305,4 +312,4 @@ class OAuthEngine {
   }
 }
 
-export { OAuthEngine, IOAuthConfig };
+export { OAuthEngine, IOAuthConfig, IOAuthToken };

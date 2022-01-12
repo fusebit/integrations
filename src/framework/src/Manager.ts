@@ -205,6 +205,7 @@ class Manager {
 
   /** Derived from the Koa.context.onerror implementation - do intelligent things when errors happen. */
   protected onError(ctx: FusebitContext, err: any) {
+    const expose = err.expose;
     if (err == null) {
       return;
     }
@@ -214,7 +215,7 @@ class Manager {
     // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
     const isNativeError = Object.prototype.toString.call(err) === '[object Error]' || err instanceof Error;
     if (!isNativeError) {
-      err = new Error(util.format('non-error thrown: %j', err));
+      err = new Error(util.format('%j', err));
     }
 
     const { res } = ctx;
@@ -239,7 +240,7 @@ class Manager {
     }
 
     // respond
-    const message = err.expose ? err.message : `${statusCode}`;
+    const message = expose ? err.toString() : `${statusCode}`;
     ctx.status = err.status = statusCode;
     ctx.length = Buffer.byteLength(message);
     ctx.body = { status: err.status, message, details: err.details };
