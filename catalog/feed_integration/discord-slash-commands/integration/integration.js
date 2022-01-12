@@ -79,7 +79,7 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
 
   // Retrieve the parameters and handle them
   const [parameterOne, parameterTwo] = event.options;
-  const responseMessage = `You sent me ${parameterone.value} and ${parametertwo.value} as your parameters!`;
+  const responseMessage = `You sent me ${parameterOne.value} and ${parameterTwo.value} as your parameters!`;
 
   // Send back a message to respond
   // Read more about interactions here: https://discord.com/developers/docs/interactions/receiving-and-responding
