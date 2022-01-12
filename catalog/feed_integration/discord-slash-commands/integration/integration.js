@@ -19,7 +19,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
 // Configure a new Slash Command for the Discord Bot
 // Learn more: https://discord.com/developers/docs/interactions/application-commands#slash-commands
-function configureSlashCommand() {
+const configureSlashCommand = () => {
   const command = {
     name: 'command',
     description: 'Command that gets triggered',
@@ -40,7 +40,7 @@ function configureSlashCommand() {
     ],
   };
   return command;
-}
+};
 
 // Register a new Slash Command in a specific Guild
 // How to Retrieve your Guild ID: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
