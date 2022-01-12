@@ -1,0 +1,32 @@
+{
+  "id": "discord-slash-commands",
+  "name": "Discord-slash-commands",
+  "smallIcon": "#/assets/discord.svg",
+  "largeIcon": "#/assets/discord.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": ""
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord-slash-commands#creating-your-own-discord-slash-commands-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "discordConnector": {
+        "entityType": "connector",
+        "path": "../discord/connector/"
+      },
+      "discord-slash-commandsIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
