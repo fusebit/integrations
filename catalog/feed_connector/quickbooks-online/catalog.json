@@ -1,0 +1,35 @@
+{
+  "id": "quickbooks-online",
+  "name": "QuickBooks Online",
+  "smallIcon": "#/assets/quickbooks-online.svg",
+  "largeIcon": "#/assets/quickbooks-onlineLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": ""
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/quickbooks-online#creating-your-own-quickbooks-online-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "quickbooksConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/quickbooks-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
