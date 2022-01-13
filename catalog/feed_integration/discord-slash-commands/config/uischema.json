@@ -1,0 +1,30 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/discord-slash-commandsIntegration/properties/id",
+      "label": "Name"
+    },
+    {
+      "type": "Control",
+      "label": "Customize",
+      "scope": "#/properties/ui/properties/toggle",
+      "options": {
+        "toggle": true
+      }
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/discord-slash-commandsConnector/properties/id",
+      "label": "Discord-slash-commands Connector name",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/ui/properties/toggle",
+          "schema": { "const": true }
+        }
+      }
+    }
+  ]
+}

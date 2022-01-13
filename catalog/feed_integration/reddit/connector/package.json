@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-reddit-connector",
-  "version": "7.34.5",
+  "version": "7.35.1",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.34.5",
-    "@fusebit-int/reddit-connector": "^7.34.5"
+    "@fusebit-int/framework": "^7.35.1",
+    "@fusebit-int/reddit-connector": "^7.35.1"
   }
 }
