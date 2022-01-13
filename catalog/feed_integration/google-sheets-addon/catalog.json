@@ -1,0 +1,22 @@
+{
+  "id": "google-sheets-addon",
+  "name": "Google Sheets Add-On",
+  "smallIcon": "#/assets/google-sheets.svg",
+  "largeIcon": "#/assets/google-sheets.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Project Management,Dev Tools,Office,Spreadsheets,Operations,Sales Automation"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "customIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

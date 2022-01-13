@@ -1,0 +1,12 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Google Sheets Add-On"
+  },
+  "handler": "./integration",
+  "components": [],
+  "componentTags": {},
+  "configuration": {
+    "apiKey": "<% global.query.apiKey %>"
+  }
+}
