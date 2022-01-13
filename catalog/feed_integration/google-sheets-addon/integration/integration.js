@@ -84,13 +84,13 @@ const googleSheetsFunctions = {
 const { Integration } = require('@fusebit-int/framework');
 const integration = (module.exports = new Integration());
 
-const isAuthorized = (ctx) => {
+const authorize = async (ctx, next) => {
   const expectedApiKey = ctx.state.manager.config.configuration.apiKey;
   if (!expectedApiKey) {
-    return true;
+    return next();
   }
   const actualApiKey = ((ctx.req.headers['authorization'] || '').match(/^bearer\s+(.+)$/i) || [])[1];
-  return expectedApiKey === actualApiKey;
+  return expectedApiKey === actualApiKey ? next() : ctx.throw(403);
 };
 
 integration.router.get('/api/function', async (ctx) => {
@@ -102,10 +102,7 @@ integration.router.get('/api/function', async (ctx) => {
   ctx.body = { data: data.sort() };
 });
 
-integration.router.post('/api/run', async (ctx) => {
-  if (!isAuthorized(ctx)) {
-    ctx.throw(403);
-  }
+integration.router.post('/api/run', authorize, async (ctx) => {
   console.log('RUNNING GOOGLE SHEETS FUNCTION', ctx.req.body);
   try {
     const functionName = ctx.req.body.functionName || 'default';
