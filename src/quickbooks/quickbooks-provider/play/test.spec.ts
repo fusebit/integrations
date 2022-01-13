@@ -32,7 +32,10 @@ test.beforeAll(async () => {
       tokenUrl: Constants.TOKEN_URL,
       clientId: Constants.SECRET_CLIENTID,
       clientSecret: Constants.SECRET_CLIENTSECRET,
-      signingSecret: Constants.SIGNING_SECRET,
+      adjustConnectorConfiguration: (cfg: any): any => {
+        cfg.data.configuration.verifierToken = process.env.SIGNING_SECRET as string;
+        return cfg;
+      },
     },
     [
       {
