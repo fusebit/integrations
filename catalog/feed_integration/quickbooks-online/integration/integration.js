@@ -14,7 +14,9 @@ const { Integration } = require('@fusebit-int/framework');
 
 const integration = new Integration();
 
-// Remove this line when using production credentials for QuickBooks
+// Remove this line when using production credentials for QuickBooks.  This flag enables using the
+// sandbox (https://developer.intuit.com/app/developer/qbo/docs/develop/sandboxes) endpoints when
+// using credentials registered with this integration.
 process.env.QUICKBOOKS_USE_SANDBOX = '1';
 
 // Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
