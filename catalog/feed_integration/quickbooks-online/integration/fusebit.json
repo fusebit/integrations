@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "quickbooks-online"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "quickbooksConnector",
+      "skip": false,
+      "provider": "@fusebit-int/quickbooks-provider",
+      "entityId": "<% global.entities.quickbooksConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
