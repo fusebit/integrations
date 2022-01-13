@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/quickbooksConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}
