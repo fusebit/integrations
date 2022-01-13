@@ -9,7 +9,6 @@ import {
   commitSession,
   fusebitRequest,
   RequestMethod,
-  generateTotpToken,
   waitForWebhook,
 } from '@fusebit-int/play';
 

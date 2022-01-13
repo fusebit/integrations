@@ -60,7 +60,7 @@ describe('Routes', () => {
 
     const result = await manager.handle(request('GET', '/hello'));
 
-    expect(result.body).toEqual({ message: 'Not Found', status: 404 });
+    expect(result.body).toEqual({ message: 'NotFoundError: Not Found', status: 404 });
     expect(result.status).toBe(404);
   });
 
