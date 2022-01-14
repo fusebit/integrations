@@ -1,0 +1,1 @@
+Our Oracle NetSuite connector allows your application to access, including Chart of Accounts, Profit and Loss, and Journal Entries 
