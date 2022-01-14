@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-google-sheets-add-on-integration",
+  "version": "7.34.2",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "^7.34.2",
+    "superagent": "7.0.1"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}
