@@ -1,0 +1,13 @@
+{
+  "id": "netsuite-planned",
+  "name": "NetSuite",
+  "smallIcon": "#/assets/netsuite.svg",
+  "largeIcon": "#/assets/netsuite-large.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Accounting"
+  },
+  "configuration": {}
+}
