@@ -1,7 +1,6 @@
 {
   "id": "e2e-pagerduty-discord-bot",
   "name": "PagerDuty Discord Bot",
-  "private": true,
   "smallIcon": "#/assets/discord.svg",
   "largeIcon": "#/assets/discord.svg",
   "version": "5.2.0",
