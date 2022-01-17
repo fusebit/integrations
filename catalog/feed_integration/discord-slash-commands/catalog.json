@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": ""
+    "catalog": "Messaging,Dev Tools"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/discord-slash-commands#creating-your-own-discord-slash-commands-app",
