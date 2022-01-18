@@ -10,7 +10,7 @@
         }
       }
     },
-    "discord-slash-commandsConnector": {
+    "discordConnector": {
       "type": "object",
       "properties": {
         "id": {
