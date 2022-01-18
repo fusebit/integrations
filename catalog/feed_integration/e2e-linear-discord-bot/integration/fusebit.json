@@ -1,0 +1,27 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Discord + Linear"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "discordConnector",
+      "skip": false,
+      "provider": "@fusebit-int/discord-provider",
+      "entityId": "<% global.entities.discordConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    },
+    {
+      "name": "linearConnector",
+      "skip": false,
+      "provider": "@fusebit-int/linear-provider",
+      "entityId": "<% global.entities.linearConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
