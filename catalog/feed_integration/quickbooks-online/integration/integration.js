@@ -29,7 +29,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // Create a QuickBooks Online client pre-configured with credentials necessary to communicate with your tenant's QuickBooks Online account.
   // For the QuickBooks Online SDK documentation, see https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/account
   // and https://www.npmjs.com/package/node-quickbooks.
-  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const accounts = await sdk.findAccounts();
 
@@ -38,7 +38,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
 // Used by the sample application to get customers in the account.
 router.get('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const customers = await sdk.findCustomers({ fetchAll: true });
 
@@ -47,7 +47,7 @@ router.get('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('i
 
 // Used by the sample application to add customers to the account.
 router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const sdk = await integration.service.getSdk(ctx, connectorName, ctx.params.installId);
+  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const customer = await sdk.createCustomer(ctx.req.body);
 
