@@ -18,7 +18,6 @@ export default class QuickBooksProvider extends Internal.Provider.Activator<Fuse
       oauthversion: '2.0',
     };
 
-    console.log(JSON.stringify({ ...params, token: params.token.length }, null, 3));
     const client: FusebitQuickBooksClient = new Client(params);
 
     const sdk: any = {};
