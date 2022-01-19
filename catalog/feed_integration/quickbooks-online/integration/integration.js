@@ -37,12 +37,16 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 // Used by the sample application to get customers in the account.
-router.get('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const customers = await sdk.findCustomers({ fetchAll: true });
+  const customersList = customers.QueryResponse.Customer.map((customers) => ({
+    GivenName: customers.GivenName,
+    FamilyName: customers.FamilyName,
+  }));
 
-  ctx.body = customers;
+  ctx.body = customersList;
 });
 
 // Used by the sample application to add customers to the account.
