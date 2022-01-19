@@ -124,7 +124,6 @@ namespace EntityBase {
      * @property {string} [body.version] Version coming from the original getData in order
      * to prevent conflicts when multiple writers may attempt to write at the same time
      * @property {string} [body.expires] Set an expiration date (ISO 8601 format) for your data
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString} for further information.
      * @returns {Promise<Storage.IStorageBucketResponse>}
      */
     public setData = this.utilities.setData;
