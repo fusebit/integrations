@@ -16,16 +16,16 @@
       "isPostEnabled": true,
       "terms": {
         "postSuccess": "Your customer was successfully added to QuickBooks!",
-        "postFail": "Oops! Something went wrong and we couldn&#39;t add your customers.",
-        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your customers.",
-        "itemName": "Customers",
+        "postFail": "Oops! Something went wrong and we couldn't add your customers.",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your customers.",
+        "itemName": "Customer",
         "properties": [
           {
-            "name": "givenName",
+            "name": "GivenName",
             "label": "First Name"
           },
           {
-            "name": "familyName",
+            "name": "FamilyName",
             "label": "Last Name"
           }
         ]
