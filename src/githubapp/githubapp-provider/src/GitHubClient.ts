@@ -19,15 +19,28 @@ class GitHubClient {
     this.fusebit = fusebit;
   }
 
+  /**
+   * Authenticate as the authorizing user
+   * Your GitHub App can perform actions on behalf of a user, like creating an issue
+   * creating a deployment, and using other supported endpoints.
+   */
   public user() {
     return new Client({ auth: this.fusebit.credentials.access_token });
   }
 
+  /**
+   * Authenticate as a GitHub App.
+   * You can use this to retrieve high-level management information about your GitHub App
+   */
   public async app() {
     await this.checkJwtCache();
     return new Client({ auth: this.appJwt.jwt });
   }
 
+  /**
+   * Authenticate as a GitHub App installation.
+   * Ensure that you have already installed your GitHub App to at least one repository
+   */
   public async installation(gitHubInstallationId: number) {
     const gitHubInstallationToken = await this.getInstallationToken(gitHubInstallationId);
     return new Client({ auth: gitHubInstallationToken });
