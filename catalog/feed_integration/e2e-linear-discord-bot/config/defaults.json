@@ -1,0 +1,8 @@
+{
+  "discordConnector": {
+    "discordName": "discord-connector"
+  },
+  "linearConnector": {
+    "linearName": "linear-connector"
+  }
+}

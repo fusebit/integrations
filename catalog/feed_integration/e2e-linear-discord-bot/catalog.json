@@ -1,22 +1,25 @@
 {
-  "id": "e2e-pagerduty-discord-bot",
-  "name": "PagerDuty Discord Bot",
-  "smallIcon": "#/assets/pagerduty.svg",
-  "largeIcon": "#/assets/pagerduty.svg",
+  "id": "e2e-linear-discord-bot",
+  "name": "Linear Discord Bot",
+  "smallIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linear.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Messaging,Dev Tools,Operations"
+    "catalog": "Project Management, Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord",
+    "sampleConfig": {
+      "isEnabled": false
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "pagerdutyDiscordBotIntegration": {
+      "e2e-linear-discord-botIntegration": {
         "entityType": "integration",
         "path": "integration/"
       },
@@ -24,9 +27,9 @@
         "entityType": "connector",
         "path": "../discord/connector/"
       },
-      "pagerdutyConnector": {
+      "linearConnector": {
         "entityType": "connector",
-        "path": "../pagerduty/connector/"
+        "path": "../linear/connector/"
       }
     }
   }
