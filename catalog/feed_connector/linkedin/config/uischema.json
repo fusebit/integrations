@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/linkedinConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

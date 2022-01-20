@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "LinkedIn"
+  },
+  "handler": "@fusebit-int/linkedin-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "r_liteprofile r_emailaddress",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

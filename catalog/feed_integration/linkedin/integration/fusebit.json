@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "LinkedIn"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "linkedinConnector",
+      "skip": false,
+      "provider": "@fusebit-int/linkedin-provider",
+      "entityId": "<% global.entities.linkedinConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
