@@ -15,14 +15,6 @@ type MiddlewareAdjustUrlConfiguration = (
 class OAuthConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
 
-  private validateUrl(url: string): void {
-    try {
-      new URL(url);
-    } catch {
-      throw new Error(`Invalid URL ${url}`);
-    }
-  }
-
   protected sanitizeCredentials(credentials: { refresh_token: string }): object {
     const result = { ...credentials };
     delete result.refresh_token;
@@ -34,9 +26,6 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   }
 
   protected adjustUrlConfiguration(defaultTokenUrl: string, defaultAuthorizationUrl: string, proxyKey?: string) {
-    this.validateUrl(defaultTokenUrl);
-    this.validateUrl(defaultAuthorizationUrl);
-
     return async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
       const { config: cfg } = ctx.state.manager;
 
