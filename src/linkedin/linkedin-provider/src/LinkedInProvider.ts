@@ -14,7 +14,6 @@ export default class LinkedInProvider extends Internal.Provider.Activator<Fusebi
       lookupKey,
       connectorId: this.config.entityId,
     });
-    await client.initialize();
     return client;
   }
 }

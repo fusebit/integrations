@@ -26,7 +26,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // For the LinkedIn SDK documentation, see https://developer.linkedin.com/.
   const linkedInClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const { id, localizedLastName, localizedFirstName } = await linkedInClient.api.get('me');
+  const { id, localizedLastName, localizedFirstName } = await linkedInClient.get('me');
 
   ctx.body = {
     message: `The user with id ${id} is ${localizedFirstName} ${localizedLastName} on LinkedIn`,
