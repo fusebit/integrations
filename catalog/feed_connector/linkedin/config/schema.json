@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "linkedinConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  }
+}
