@@ -4,10 +4,13 @@ import { IInstanceConnectorConfig } from '../ConnectorManager';
 
 import { WebhookClient } from './WebhookClient';
 
-export interface Token {
+interface IToken {
   access_token: string;
   instance_url: string;
+  params?: Record<string, string>;
 }
+
+export type Token = IToken & Record<string, string>;
 
 export interface IFusebitCredentials {
   credentials: {

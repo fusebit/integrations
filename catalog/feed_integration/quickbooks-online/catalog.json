@@ -1,0 +1,50 @@
+{
+  "id": "quickbooks-online",
+  "name": "QuickBooks Online",
+  "smallIcon": "#/assets/quickbooks-online.svg",
+  "largeIcon": "#/assets/quickbooks-onlineLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Accounting"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/quickbooks-online#creating-your-own-quickbooks-online-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your customer was successfully added to QuickBooks!",
+        "postFail": "Oops! Something went wrong and we couldn't add your customers.",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your customers.",
+        "itemName": "Customer",
+        "properties": [
+          {
+            "name": "GivenName",
+            "label": "First Name"
+          },
+          {
+            "name": "FamilyName",
+            "label": "Last Name"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "quickbooksConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "quickbooksIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

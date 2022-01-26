@@ -16,8 +16,8 @@
     },
     {
       "type": "Control",
-      "scope": "#/properties/discord-slash-commandsConnector/properties/id",
-      "label": "Discord-slash-commands Connector name",
+      "scope": "#/properties/discordConnector/properties/id",
+      "label": "Discord Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

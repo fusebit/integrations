@@ -1,0 +1,32 @@
+{
+  "id": "linkedin",
+  "name": "LinkedIn",
+  "smallIcon": "#/assets/linkedin.svg",
+  "largeIcon": "#/assets/linkedinLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Community,Social"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/linkedin#creating-your-own-linkedin-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "linkedinConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "linkedinIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

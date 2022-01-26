@@ -1,5 +1,5 @@
 {
-  "discord-slash-commandsConnector": {
-    "discord-slash-commandsName": "discord-slash-commands-connector"
+  "discordConnector": {
+    "discordName": "discord-connector"
   }
 }

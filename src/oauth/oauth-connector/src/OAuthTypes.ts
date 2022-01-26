@@ -26,6 +26,7 @@ interface IOAuthToken {
   status: string;
   timestamp: number;
   refreshErrorCount: number;
+  params: Record<string, string>;
 }
 
 interface IOAuthTokenWithRefresh extends IOAuthToken {

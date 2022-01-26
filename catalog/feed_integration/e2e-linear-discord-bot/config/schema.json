@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "e2e-linear-discord-botIntegration": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "discordConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "linearConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "toggle": {
+          "type": "boolean",
+          "description": "The \"toggle\" option renders boolean values as a toggle."
+        }
+      }
+    }
+  }
+}

@@ -44,18 +44,22 @@ const configureSlashCommand = () => {
 
 // Register a new Slash Command in a specific Guild
 // How to Retrieve your Guild ID: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const command = configureSlashCommand();
+router.post(
+  '/api/tenant/:tenantId/:guild/slash-command',
+  integration.middleware.authorizeUser('install:get'),
+  async (ctx) => {
+    const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+    const command = configureSlashCommand();
 
-  // Learn more about registering commands
-  // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
-  const response = await discordClient.bot.post(
-    `/v8/applications/${discordClient.fusebit.credentials.applicationId}/guilds/${ctx.params.guild}/commands`,
-    command
-  );
-  ctx.body = response;
-});
+    // Learn more about registering commands
+    // https://discord.com/developers/docs/interactions/application-commands#registering-a-command
+    const response = await discordClient.bot.post(
+      `/v8/applications/${discordClient.fusebit.credentials.applicationId}/guilds/${ctx.params.guild}/commands`,
+      command
+    );
+    ctx.body = response;
+  }
+);
 
 // Register a new Slash Command globally
 router.post('/api/tenant/:tenantId/slash-command', integration.middleware.authorizeUser('install:get'), async (ctx) => {

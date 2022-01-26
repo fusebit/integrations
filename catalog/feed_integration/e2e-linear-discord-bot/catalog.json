@@ -1,0 +1,36 @@
+{
+  "id": "e2e-linear-discord-bot",
+  "name": "Linear Discord Bot",
+  "smallIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linear.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Project Management, Messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "e2e-linear-discord-botIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      },
+      "discordConnector": {
+        "entityType": "connector",
+        "path": "../discord/connector/"
+      },
+      "linearConnector": {
+        "entityType": "connector",
+        "path": "../linear/connector/"
+      }
+    }
+  }
+}
