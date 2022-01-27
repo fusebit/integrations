@@ -12,10 +12,11 @@ const googleSheetsFunctions = {
    *
    * @param context Fusebit request context
    * @param {string|number|Array<Array<string|number>>} data A Google Sheets cell or cell range.
+   * @param {object} charts A map of a chart title to a base64 encoded PNG image of the chart.
    * @returns A single value or a two-dimensional range of values
    */
-  default: async (ctx, data) => {
-    return 'Almost there! Go to Extensions | Fusebit | Open to make this function do something useful.';
+  default: async (ctx, data, charts) => {
+    return 'Almost there! Go to Extensions | Fusebit | Open and click Edit to implement this function in Node.js';
   },
 
   /**
@@ -24,9 +25,10 @@ const googleSheetsFunctions = {
    *
    * @param context Fusebit request context
    * @param {string|number|Array<Array<string|number>>} data A Google Sheets cell or cell range.
+   * @param {object} charts A map of a chart title to a base64 encoded PNG image of the chart.
    * @returns A single value or a two-dimensional range of values
    */
-  double: async (ctx, data) => {
+  double: async (ctx, data, charts) => {
     return Array.isArray(data) ? data.map((row) => row.map((cell) => cell * 2)) : data * 2;
   },
 
@@ -36,9 +38,10 @@ const googleSheetsFunctions = {
    *
    * @param context Fusebit request context
    * @param {string|number|Array<Array<string|number>>} data A Google Sheets cell or cell range with US state symbols.
+   * @param {object} charts A map of a chart title to a base64 encoded PNG image of the chart.
    * @returns A single value or a two-dimensional range of values
    */
-  covidNewCasesByState: async (ctx, data) => {
+  covidNewCasesByState: async (ctx, data, charts) => {
     const response = await Superagent.get(
       'https://api.covidactnow.org/v2/states.json?apiKey=175f5ee1a558415fbe4ba2ecfd9a6ea1'
     );
@@ -57,9 +60,10 @@ const googleSheetsFunctions = {
    *
    * @param context Fusebit request context
    * @param {string|number|Array<Array<string|number>>} data A range with one row and two cells with desired [lat,long]
+   * @param {object} charts A map of a chart title to a base64 encoded PNG image of the chart.
    * @returns Weather forecast for the location
    */
-  weather: async (ctx, data) => {
+  weather: async (ctx, data, charts) => {
     if (!Array.isArray(data) || data.length !== 1 || data[0].length < 2) {
       throw new Error("The 'weather' function requires a range with one row and two cells with lat and long as input");
     }
@@ -102,8 +106,16 @@ integration.router.get('/api/function', async (ctx) => {
   ctx.body = { data: data.sort() };
 });
 
+integration.router.post('/api/tenant/:tenantId/test', async (ctx) => {
+  ctx.body = { message: `Success!` };
+});
+
 integration.router.post('/api/run', authorize, async (ctx) => {
-  console.log('RUNNING GOOGLE SHEETS FUNCTION', ctx.req.body);
+  console.log('RUNNING GOOGLE SHEETS FUNCTION', {
+    functionName: ctx.req.body?.functionName,
+    data: ctx.req.body?.data,
+    charts: Object.keys(ctx.req.body?.charts || {}),
+  });
   try {
     const functionName = ctx.req.body.functionName || 'default';
     const f = googleSheetsFunctions[functionName];
@@ -116,7 +128,7 @@ integration.router.post('/api/run', authorize, async (ctx) => {
           .join(', ')}.`
       );
     }
-    const data = await f(ctx, ctx.req.body.data);
+    const data = await f(ctx, ctx.req.body?.data, ctx.req.body?.charts || {});
     console.log('RESULT', data);
     ctx.body = { data };
   } catch (e) {

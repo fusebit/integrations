@@ -1,4 +1,4 @@
-async function sfdcRunQuery(ctx, jql) {
+async function sfdcRunQuery(ctx, soql) {
   // For the Salesforce SDK documentation, see https://jsforce.github.io/.
   const sfdcClient = await integration.tenant.getSdkByTenant(
     ctx,
@@ -6,21 +6,40 @@ async function sfdcRunQuery(ctx, jql) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  return await sfdcClient.query(jql || 'SELECT count() FROM Contact');
+  return await sfdcClient.query(soql || 'SELECT count() FROM Contact');
+}
+
+async function sfdcRunQueryMore(ctx, nextRecordsUrl) {
+  // For the Salesforce SDK documentation, see https://jsforce.github.io/.
+  const sfdcClient = await integration.tenant.getSdkByTenant(
+    ctx,
+    '<% connectorName %>',
+    ctx.params.tenantId || '<% defaultTenantId %>'
+  );
+
+  return await sfdcClient.queryMore(nextRecordsUrl);
 }
 
 const code = `
 /**
- * Run Salesforce JQL query.
+ * Run Salesforce SOQL query.
  * 
  * @param ctx {FusebitContext} Fusebit Context
- * @param jql {string} Salesforce JQL query
+ * @param soql {string} Salesforce SOQL query
  */
 ${sfdcRunQuery.toString()}
+
+/**
+ * Get more results for a previously ran Salesforce SOQL query.
+ * 
+ * @param ctx {FusebitContext} Fusebit Context
+ * @param nextRecordsUrl {string} The nextRecordsUrl returned from previous, partial query result.
+ */
+${sfdcRunQueryMore.toString()}
 `;
 
 module.exports = {
-  name: 'Run JQL query',
-  description: 'Run a JQL query in Salesforce.',
+  name: 'Run SOQL query',
+  description: 'Run a SOQL query in Salesforce.',
   code,
 };

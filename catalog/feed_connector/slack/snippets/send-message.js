@@ -11,10 +11,15 @@ async function slackSendMessage(ctx, message, channel) {
     channel = slackClient.fusebit.credentials.authed_user.id;
   }
 
-  return slackClient.chat.postMessage({
-    text: message || 'Hello world from Fusebit!',
-    channel,
-  });
+  return typeof message === 'object'
+    ? slackClient.chat.postMessage({
+        channel,
+        ...message,
+      })
+    : slackClient.chat.postMessage({
+        channel,
+        text: message || 'Hello world from Fusebit!',
+      });
 }
 
 const code = `
@@ -22,7 +27,7 @@ const code = `
  * Sends a message to a Slack channel. 
  * 
  * @param ctx {FusebitContext} Fusebit Context of the request
- * @param message {string} The message (in Slack markdown) to send
+ * @param message {string|object} The message (in Slack markdown) to send, or the postMessage payload (advanced).
  * @param {channel} [undefined] Optional Slack channel ID or channel name to send the message to. If not specified, a DM is sent.
  */
 ${slackSendMessage.toString()}
