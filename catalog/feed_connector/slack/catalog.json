@@ -1,8 +1,8 @@
 {
   "id": "slack",
   "name": "Slack",
-  "smallIcon": "/images/slack.svg",
-  "largeIcon": "/images/slack.svg",
+  "smallIcon": "#/assets/slack.svg",
+  "largeIcon": "#/assets/slackLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
