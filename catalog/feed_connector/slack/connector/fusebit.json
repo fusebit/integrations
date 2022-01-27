@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "chat:write users:read channels:read channels:join chat:write.public",
+    "scope": "chat:write users:read channels:read channels:join chat:write.public files:write",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
