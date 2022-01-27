@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/google-provider",
-  "version": "7.38.4",
+  "version": "7.39.0",
   "description": "Google provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.38.4",
-    "@fusebit-int/play": "^7.38.4",
+    "@fusebit-int/framework": "^7.39.0",
+    "@fusebit-int/play": "^7.39.0",
     "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
