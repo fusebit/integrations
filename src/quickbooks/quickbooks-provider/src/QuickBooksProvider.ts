@@ -27,7 +27,7 @@ export default class QuickBooksProvider extends Internal.Provider.Activator<Fuse
         return new Promise((resolve, reject) =>
           client[fn](...params, (e: any, v: any) => {
             if (e) {
-              reject(e.fault.error);
+              reject(e.fault?.error || e);
             }
             resolve(v);
           })
