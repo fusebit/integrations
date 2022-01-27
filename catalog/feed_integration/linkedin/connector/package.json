@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-linkedin-connector",
-  "version": "7.38.3",
+  "version": "7.38.4",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.38.3",
-    "@fusebit-int/linkedin-connector": "^7.38.3"
+    "@fusebit-int/framework": "^7.38.4",
+    "@fusebit-int/linkedin-connector": "^7.38.4"
   }
 }
