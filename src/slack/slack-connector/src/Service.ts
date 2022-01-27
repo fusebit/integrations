@@ -6,11 +6,11 @@ import crypto from 'crypto';
 
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context) {
-    return [ctx.req.body];
+    return [(ctx.req.body.payload && JSON.parse(ctx.req.body.payload)) || ctx.req.body];
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
-    return `${event.team_id}/${event.api_app_id}`;
+    return `${event.team_id || event.team?.id}/${event.api_app_id}`;
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context) {
@@ -56,6 +56,13 @@ class Service extends OAuthConnector.Service {
       // event.command starts with / (e.g., /fusebot), hence not needed after slash-command
       return `slash-command${event.command}`;
     }
+
+    // Handle interactive payload (Read more at https://api.slack.com/interactivity/handling#payloads)
+    if (event.payload) {
+      const payload = JSON.parse(event.payload);
+      return `interactive-message/${payload.type}`;
+    }
+
     return event.type;
   }
 }
