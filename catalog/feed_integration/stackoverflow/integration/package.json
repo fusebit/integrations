@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-stackoverflow-integration",
-  "version": "7.39.2",
+  "version": "7.39.3",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.39.2",
-    "@fusebit-int/stackoverflow-provider": "^7.39.2"
+    "@fusebit-int/framework": "^7.39.3",
+    "@fusebit-int/stackoverflow-provider": "^7.39.3"
   },
   "files": [
     "./integration.js",
