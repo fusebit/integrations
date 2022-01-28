@@ -57,12 +57,6 @@ class Service extends OAuthConnector.Service {
       return `slash-command${event.command}`;
     }
 
-    // Handle interactive payload (Read more at https://api.slack.com/interactivity/handling#payloads)
-    if (event.payload) {
-      const payload = JSON.parse(event.payload);
-      return `interactive-message/${payload.type}`;
-    }
-
     return event.type;
   }
 }
