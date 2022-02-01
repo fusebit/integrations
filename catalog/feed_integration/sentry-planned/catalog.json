@@ -1,0 +1,16 @@
+{
+  "id": "sentry-ph",
+  "name": "Sentry",
+  "smallIcon": "#/assets/sentry.svg",
+  "largeIcon": "#/assets/sentryLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Dev Tools"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/sentry#creating-your-own-sentry-app"
+  },
+  "configuration": {}
+}
