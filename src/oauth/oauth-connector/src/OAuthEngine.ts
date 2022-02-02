@@ -121,7 +121,9 @@ class OAuthEngine {
 
       return this.normalizeOAuthToken(response.body);
     } catch (error) {
-      throw new Error(`Unable to connect to tokenUrl ${tokenUrl}: ${error}`);
+      throw new Error(
+        `Unable to connect to tokenUrl ${tokenUrl}: ${error}, ${(error as any).response?.body?.error_description}`
+      );
     }
   }
 
