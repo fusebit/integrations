@@ -1,0 +1,35 @@
+{
+  "id": "gitlab",
+  "name": "GitLab",
+  "smallIcon": "#/assets/gitlab.svg",
+  "largeIcon": "#/assets/gitlabLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Dev Tools,Operations"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/gitlab#creating-your-own-gitlab-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "gitlabConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/gitlab-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

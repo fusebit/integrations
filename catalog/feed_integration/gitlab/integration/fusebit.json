@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "GitLab"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "gitlabConnector",
+      "skip": false,
+      "provider": "@fusebit-int/gitlab-provider",
+      "entityId": "<% global.entities.gitlabConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

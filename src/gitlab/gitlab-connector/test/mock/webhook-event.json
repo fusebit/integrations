@@ -1,0 +1,26 @@
+{
+  "body": {
+    "object_kind": "push",
+    "event_name": "push",
+    "before": "ed75b7f93cff77678627066df2ed325e5561f91d",
+    "after": "ed75b7f93cff77678627066df2ed325e5561f91d",
+    "ref": "refs/heads/main",
+    "checkout_sha": "ed75b7f93cff77678627066df2ed325e5561f91d",
+    "user_id": 10830299,
+    "user_name": "Fusebit Demo",
+    "user_username": "it_proxy_gitlab",
+    "user_avatar": "https://secure.gravatar.com/avatar/f13dcad159bc0547cb586ed0d68205d3?s=80&d=identicon",
+    "project_id": 33499447,
+    "project": {
+      "id": 33499447,
+      "name": "demo",
+      "web_url": "https://gitlab.com/f2909/demo",
+      "namespace": "fusebit"
+    },
+    "total_commits_count": 1,
+    "repository": {
+      "name": "demo",
+      "homepage": "https://gitlab.com/f2909/demo"
+    }
+  }
+}
