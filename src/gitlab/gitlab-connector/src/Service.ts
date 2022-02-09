@@ -12,7 +12,7 @@ class Service extends OAuthConnector.Service {
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const webhookSecret = ctx.req.headers['x-gitlab-token'] as string;
+    const webhookSecret = ctx.req.headers['x-gitlab-token'];
     return webhookSecret === ctx.state.manager.config.configuration.webhookSecret;
   }
 

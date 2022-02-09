@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Dev Tools,Operations"
+    "catalog": "Dev Tools,Project Management"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/gitlab#creating-your-own-gitlab-app"
