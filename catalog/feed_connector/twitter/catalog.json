@@ -1,0 +1,35 @@
+{
+  "id": "twitter",
+  "name": "twitter",
+  "smallIcon": "#/assets/twitter.svg",
+  "largeIcon": "#/assets/twitter.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Social,Community"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/twitter#creating-your-own-twitter-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "twitterConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/twitter-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

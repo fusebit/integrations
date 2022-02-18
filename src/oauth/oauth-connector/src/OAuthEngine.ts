@@ -34,6 +34,10 @@ class OAuthEngine {
     if (this.cfg.audience) {
       params.append('audience', this.cfg.audience);
     }
+    if (this.cfg.codeChallenge) {
+      params.append('code_challenge', this.cfg.codeChallenge);
+      params.append('code_challenge_method', this.cfg.codeChallengeMethod || 'plain');
+    }
 
     const query = `${params.toString()}${this.cfg.extraParams ? `&${this.cfg.extraParams}` : ''}`;
 
@@ -134,13 +138,17 @@ class OAuthEngine {
    * @param {string} ctx Request context
    */
   public async getAccessToken(authorizationCode: string, ctx: Connector.Types.Context): Promise<IOAuthToken> {
-    const params = {
+    const params: Record<string, string> = {
       grant_type: 'authorization_code',
       code: authorizationCode,
       client_id: this.cfg.clientId,
       client_secret: this.cfg.clientSecret,
       redirect_uri: this.getRedirectUri(),
     };
+
+    if (this.cfg.codeChallenge) {
+      params.code_verifier = this.cfg.codeChallenge;
+    }
 
     return this.fetchOAuthToken(ctx, params);
   }
