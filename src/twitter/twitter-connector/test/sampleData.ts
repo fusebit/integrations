@@ -5,7 +5,7 @@ export const sampleHeaders = {};
 export const sampleConfig = {
   handler: '@fusebit-int/twitter-connector',
   configuration: {
-    scope: '',
+    scope: 'users.read tweet.read offline.access',
     clientId: 'id',
     clientSecret: 'secret',
     tokenUrl: 'https://api.twitter.com/oauth/request_token',
