@@ -17,7 +17,7 @@
     {
       "type": "Control",
       "scope": "#/properties/twitterConnector/properties/id",
-      "label": "twitter Connector name",
+      "label": "Twitter Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

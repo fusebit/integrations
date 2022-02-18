@@ -34,10 +34,6 @@ class OAuthEngine {
     if (this.cfg.audience) {
       params.append('audience', this.cfg.audience);
     }
-    if (this.cfg.codeChallenge) {
-      params.append('code_challenge', this.cfg.codeChallenge);
-      params.append('code_challenge_method', this.cfg.codeChallengeMethod || 'plain');
-    }
 
     const query = `${params.toString()}${this.cfg.extraParams ? `&${this.cfg.extraParams}` : ''}`;
 
@@ -145,10 +141,6 @@ class OAuthEngine {
       client_secret: this.cfg.clientSecret,
       redirect_uri: this.getRedirectUri(),
     };
-
-    if (this.cfg.codeChallenge) {
-      params.code_verifier = this.cfg.codeChallenge;
-    }
 
     return this.fetchOAuthToken(ctx, params);
   }

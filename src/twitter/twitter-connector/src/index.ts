@@ -30,9 +30,13 @@ class ServiceConnector extends OAuthConnector {
         'Twitter Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Twitter App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your Twitter App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Twitter App';
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.title = `The Client ID from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.challengeCode = {
+        title: 'Challenge Code',
+        type: 'string',
+      };
     });
   }
 }

@@ -1,4 +1,4 @@
-import { OAuthEngine } from '@fusebit-int/oauth-connector';
+import { IOAuthToken, OAuthEngine } from '@fusebit-int/oauth-connector';
 import { Connector } from '@fusebit-int/framework';
 import superagent from 'superagent';
 
@@ -24,8 +24,25 @@ class TwitterOAuthEngine extends OAuthEngine {
   public async getAuthorizationUrl(ctx: Connector.Types.Context) {
     const defaultAuthorizationUrl = await super.getAuthorizationUrl(ctx);
     const url = new URL(defaultAuthorizationUrl);
-    url.searchParams.set('duration', 'permanent');
+    url.searchParams.append('code_challenge', this.cfg.codeChallenge as string);
+    url.searchParams.append('code_challenge_method', this.cfg.codeChallengeMethod || 'plain');
     return url.toString();
+  }
+
+  public async getAccessToken(authorizationCode: string, ctx: Connector.Types.Context): Promise<IOAuthToken> {
+    const params: Record<string, string> = {
+      grant_type: 'authorization_code',
+      code: authorizationCode,
+      client_id: this.cfg.clientId,
+      client_secret: this.cfg.clientSecret,
+      redirect_uri: this.getRedirectUri(),
+    };
+
+    if (this.cfg.codeChallenge) {
+      params.code_verifier = this.cfg.codeChallenge;
+    }
+
+    return this.fetchOAuthToken(ctx, params);
   }
 }
 

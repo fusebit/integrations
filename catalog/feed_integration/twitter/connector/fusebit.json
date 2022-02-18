@@ -9,9 +9,9 @@
       "useProduction": false
     },
     "scope": "users.read tweet.read offline.access",
-    "clientId": "cGRUZ3VHNjFJMGdsY0IzSk5qUnQ6MTpjaQ",
-    "clientSecret": "9gQkwDZLoxF7gelt0bzaicTb1RuKRh22EBqmWO2vU3Vzf5KcVL",
-    "codeChallenge": "test123456",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "codeChallenge": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,

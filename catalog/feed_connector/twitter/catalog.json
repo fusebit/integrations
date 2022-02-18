@@ -1,8 +1,8 @@
 {
   "id": "twitter",
-  "name": "twitter",
+  "name": "Twitter",
   "smallIcon": "#/assets/twitter.svg",
-  "largeIcon": "#/assets/twitter.svg",
+  "largeIcon": "#/assets/twitterLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

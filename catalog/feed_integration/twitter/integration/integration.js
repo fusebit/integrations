@@ -1,8 +1,8 @@
-// Fusebit twitter Integration
+// Fusebit Twitter Integration
 //
-// This simple twitter integration allows you to call twitter APIs on behalf of the tenants of your
-// application. Fusebit manages the twitter authorization process and maps tenants of your application
-// to their twitter credentials, so that you can focus on implementing the integration logic.
+// This simple Twitter integration allows you to call Twitter APIs on behalf of the tenants of your
+// application. Fusebit manages the Twitter authorization process and maps tenants of your application
+// to their Twitter credentials, so that you can focus on implementing the integration logic.
 //
 // A Fusebit integration is a microservice running on the Fusebit platform.
 // You control the endpoints exposed from the microservice. You call those endpoints from your application
@@ -20,13 +20,12 @@ const router = integration.router;
 
 const connectorName = 'twitterConnector';
 
-// This sample test endpoint provides the twitter karma held by the tenant
+// This sample test endpoint provides the logged in user's most recent tweet
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const twitterClient = await integration.tenant.getSdkByTenant(ctx, 'twitter-connector', ctx.params.tenantId);
-  const v2TwitterClient = twitterClient.v2;
-  const me = await v2TwitterClient.me();
-  const tweets = await v2TwitterClient.userTimeline(me.data.id);
-  ctx.body = tweets.data.data;
+  const twitterClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const me = await twitterClient.v2.me();
+  const tweets = await twitterClient.v2.userTimeline(me.data.id);
+  ctx.body = `{USER NAME}'s most recent tweet was: "${tweets.data.data[0].text}"`;
 });
 
 module.exports = integration;
