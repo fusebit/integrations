@@ -134,7 +134,7 @@ class OAuthEngine {
    * @param {string} ctx Request context
    */
   public async getAccessToken(authorizationCode: string, ctx: Connector.Types.Context): Promise<IOAuthToken> {
-    const params: Record<string, string> = {
+    const params = {
       grant_type: 'authorization_code',
       code: authorizationCode,
       client_id: this.cfg.clientId,

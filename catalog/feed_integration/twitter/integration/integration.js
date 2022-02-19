@@ -25,7 +25,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const twitterClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await twitterClient.v2.me();
   const tweets = await twitterClient.v2.userTimeline(me.data.id);
-  ctx.body = `{USER NAME}'s most recent tweet was: "${tweets.data.data[0].text}"`;
+  ctx.body = `${me.data.name}'s most recent tweet was: "${tweets.data.data?.[0].text}"`;
 });
 
 module.exports = integration;
