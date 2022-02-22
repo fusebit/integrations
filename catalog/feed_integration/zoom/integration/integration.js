@@ -24,10 +24,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // Create a Zoom client pre-configured with credentials necessary to communicate with your tenant's Zoom account.
   const zoomClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
+  const me = await zoomClient.get('/users/me');
   const meetings = await zoomClient.get('/users/me/meetings');
 
   ctx.body = {
-    message: `You have ${meetings.total_records} meetings scheduled.`,
+    message: `${me.first_name} ${me.last_name} has ${meetings.total_records} meetings scheduled.`,
   };
 });
 
