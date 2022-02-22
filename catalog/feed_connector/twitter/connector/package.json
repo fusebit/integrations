@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-twitter-connector",
-  "version": "7.41.0",
+  "version": "7.41.2",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.41.0",
-    "@fusebit-int/twitter-connector": "^7.41.0"
+    "@fusebit-int/framework": "^7.41.2",
+    "@fusebit-int/twitter-connector": "^7.41.2"
   }
 }
