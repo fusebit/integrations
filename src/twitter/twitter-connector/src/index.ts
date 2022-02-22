@@ -1,17 +1,16 @@
----
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/src/index.ts
----
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
+import TwitterOAuthEngine from './Engine';
 
-const TOKEN_URL = '<%= connector.tokenUrl %>';
-const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
-const REVOCATION_URL = '<%= connector.revokeUrl %>';
-const SERVICE_NAME = '<%= h.capitalize(name) %>';
+const TOKEN_URL = 'https://api.twitter.com/2/oauth2/token';
+const AUTHORIZATION_URL = 'https://twitter.com/i/oauth2/authorize';
+const REVOCATION_URL = 'https://twitter.com/i/oauth2/invalidate_token';
+const SERVICE_NAME = 'Twitter';
 
 class ServiceConnector extends OAuthConnector {
+  protected readonly OAuthEngine = TwitterOAuthEngine;
   static Service = Service;
 
   protected createService() {
@@ -28,12 +27,16 @@ class ServiceConnector extends OAuthConnector {
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
-        '<%= h.capitalize(name) %> Configuration';
+        'Twitter Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your ${SERVICE_NAME} App';
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.title = `The Client ID from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.title = `The Client Secret from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.challengeCode = {
+        title: 'Challenge Code',
+        type: 'string',
+      };
     });
   }
 }

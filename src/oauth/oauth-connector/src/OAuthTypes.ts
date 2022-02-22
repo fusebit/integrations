@@ -1,6 +1,8 @@
 interface IOAuthConfig {
   authorizationUrl: string;
   audience?: string;
+  codeChallenge?: string;
+  codeChallengeMethod?: string;
   tokenUrl: string;
   clientId: string;
   clientSecret: string;

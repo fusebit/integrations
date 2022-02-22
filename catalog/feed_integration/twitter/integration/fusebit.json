@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "twitter"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "twitterConnector",
+      "skip": false,
+      "provider": "@fusebit-int/twitter-provider",
+      "entityId": "<% global.entities.twitterConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

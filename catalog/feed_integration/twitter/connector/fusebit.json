@@ -1,0 +1,21 @@
+{
+  "id": "twitter-connector",
+  "tags": {
+    "fusebit.service": "twitter"
+  },
+  "handler": "@fusebit-int/twitter-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "users.read tweet.read offline.access",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "codeChallenge": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}
