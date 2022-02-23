@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/zoom-provider",
-  "version": "7.41.2",
+  "version": "7.42.0",
   "description": "Zoom provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.41.2",
-    "@fusebit-int/play": "^7.41.2",
+    "@fusebit-int/framework": "^7.42.0",
+    "@fusebit-int/play": "^7.42.0",
     "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
