@@ -1,5 +1,5 @@
 {
-  "id": "twitter-connector",
+  "id": "<% this.id %>",
   "tags": {
     "fusebit.service": "twitter"
   },
