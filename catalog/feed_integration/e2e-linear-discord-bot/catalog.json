@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Project Management, Messaging"
+    "catalog": "Project Management,Messaging"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/discord",
