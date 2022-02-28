@@ -1,8 +1,8 @@
-// Fusebit Google-docs Integration
+// Fusebit Google Docs Integration
 //
-// This simple Google-docs integration allows you to call Google-docs APIs on behalf of the tenants of your
-// application. Fusebit manages the Google-docs authorization process and maps tenants of your application
-// to their Google-docs credentials, so that you can focus on implementing the integration logic.
+// This simple Google Docs integration allows you to call Google Docs APIs on behalf of the tenants of your
+// application. Fusebit manages the Google Docs authorization process and maps tenants of your application
+// to their Google Docs credentials, so that you can focus on implementing the integration logic.
 //
 // A Fusebit integration is a microservice running on the Fusebit platform.
 // You control the endpoints exposed from the microservice. You call those endpoints from your application
@@ -19,7 +19,7 @@ const integration = new Integration();
 const router = integration.router;
 const connectorName = 'googleConnector';
 
-// The sample test endpoint of this integration gets all contacts stored in the Google-docs account associated with your tenant.
+// The sample test endpoint of this integration gets all contacts stored in the Google Docs account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Create a Google client pre-configured with credentials necessary to communicate with your tenant's Google account.
   // For the Google SDK documentation, see https://developers.google.com/apis-explorer.

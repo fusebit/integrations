@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-google-connector",
+  "name": "@fusebit-int/catalog-feed-integration-google-docs-connector",
   "version": "7.43.0",
   "private": true,
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "id": "google-docs",
-  "name": "Google-Docs",
+  "name": "Google Docs",
   "smallIcon": "#/assets/google-docs.svg",
   "largeIcon": "#/assets/google-docsLarge.svg",
   "version": "5.2.0",
