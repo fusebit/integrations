@@ -1,0 +1,32 @@
+{
+  "id": "google-docs",
+  "name": "Google Docs",
+  "smallIcon": "#/assets/google-docs.svg",
+  "largeIcon": "#/assets/google-docsLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-docs#creating-your-own-google-docs-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "googleConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "google-docsIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

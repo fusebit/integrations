@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Google Docs"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "googleConnector",
+      "skip": false,
+      "provider": "@fusebit-int/google-provider",
+      "entityId": "<% global.entities.googleConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
