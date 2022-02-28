@@ -29,7 +29,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     title: 'Fusebit Hello World',
   });
 
-  const writeResult = await googleClient.docs('v1').documents.batchUpdate({
+  await googleClient.docs('v1').documents.batchUpdate({
     documentId: file.data.documentId,
     requestBody: {
       requests: [
