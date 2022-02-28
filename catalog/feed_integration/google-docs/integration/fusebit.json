@@ -9,7 +9,7 @@
       "name": "googleConnector",
       "skip": false,
       "provider": "@fusebit-int/google-provider",
-      "entityId": "<% global.entities.google-docsConnector.id %>",
+      "entityId": "<% global.entities.googleConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
     }

@@ -10,7 +10,7 @@
         }
       }
     },
-    "google-docsConnector": {
+    "googleConnector": {
       "type": "object",
       "properties": {
         "id": {
