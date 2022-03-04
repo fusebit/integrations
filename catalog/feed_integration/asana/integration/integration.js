@@ -68,6 +68,12 @@ router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('
   ctx.body = tasks;
 });
 
+// Please refer to snippets to see more code examples to work with the Asana API!
+
+//
+//
+//
+//
 // The sample test endpoint registers a new webhook for use with this integration
 router.post(
   '/api/tenant/:tenantId/webhook/-/resource/:resourceId',
