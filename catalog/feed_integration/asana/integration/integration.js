@@ -1,39 +1,30 @@
-// Fusebit Asana Integration
-//
-// This simple Asana integration allows you to call Asana APIs on behalf of the tenants of your
-// application. Fusebit manages the Asana authorization process and maps tenants of your application
-// to their Asana credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
+// Asana API Docs: https://developers.asana.com/docs
+// Fusebit API Docs: https://developer.fusebit.io/reference/fusebit-int-framework-integration
 
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
-
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from witin your application.
 const router = integration.router;
-
 const connectorName = 'asanaConnector';
 
-// This sample test endpoint provides the number of tasks within the tenant's first workspace
+// Endpoint for Testing Purposes
+// Return number of tasks assigned to user
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration#getsdkbytenant-1
   const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
   const me = await asanaClient.users.me();
   const workspace = me.workspaces[0].gid;
   const assignee = me.gid;
+
+  // API Reference: https://developers.asana.com/docs/get-multiple-tasks
   const tasks = await asanaClient.tasks.getTasks({ workspace, assignee });
   ctx.body = {
     message: `Found ${tasks.data.length} tasks in the Asana Workspace ${me.workspaces[0].name}`,
   };
 });
 
+// Endpoint for Sample App
 // Retrieve tasks from your Asana Workspace
-// Note: This endpoint is also used by the sample app
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await asanaClient.users.me();
@@ -58,14 +49,15 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   ctx.body = taskDetails;
 });
 
+// Endpoint for Sample App
 // Add new task to your Asana workspace
-// Note: This endpoint is also used by the sample app
 router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const asanaClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const me = await asanaClient.users.me();
   const workspace = me.workspaces[0].gid;
   const assignee = me.gid;
 
+  // API Reference: https://developers.asana.com/docs/create-a-task
   const tasks = await asanaClient.tasks.createTask({
     name: ctx.req.body.taskName,
     notes: ctx.req.body.taskNotes,
