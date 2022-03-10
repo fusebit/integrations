@@ -5,7 +5,7 @@ const integration = new Integration();
 const router = integration.router;
 const connectorName = 'atlassianConnector';
 
-/// Test Endpoint: Geta all available Atlassian resources for your tenant.
+/// Test Endpoint: Get all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
