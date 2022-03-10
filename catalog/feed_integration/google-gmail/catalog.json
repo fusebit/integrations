@@ -1,0 +1,32 @@
+{
+  "id": "google-gmail",
+  "name": "Google Gmail",
+  "smallIcon": "#/assets/google-gmail.svg",
+  "largeIcon": "#/assets/google-gmail.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Email,Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google gmail#creating-your-own-google-gmail-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "gmailConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "gmailIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

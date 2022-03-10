@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Google-Gmail"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "gmailConnector",
+      "skip": false,
+      "provider": "@fusebit-int/google-provider",
+      "entityId": "<% global.entities.gmailConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
