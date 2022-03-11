@@ -17,7 +17,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference: https://developers.asana.com/docs/get-multiple-tasks
   const tasks = await asanaClient.tasks.getTasks({ workspace, assignee });
   ctx.body = {
-    message: `Found ${tasks.data.length} tasks in the Asana Workspace ${me.workspaces[0].name}`,
+    message: `Success! Found ${tasks.data.length} tasks in the Asana Workspace ${me.workspaces[0].name}`,
   };
 });
 
