@@ -22,7 +22,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const result = await confluence.get('/space');
 
   ctx.body = {
-    message: `Found ${result.size} spaces in Confluence Cloud ${confluenceCloud.id}`,
+    message: `Success! Found ${result.size} spaces in Confluence Cloud ${confluenceCloud.id}`,
   };
 });
 
