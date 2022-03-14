@@ -14,7 +14,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const workspace = me.workspaces[0].gid;
   const assignee = me.gid;
 
-  // API Reference: https://developers.asana.com/docs/get-multiple-tasks
+  // API Reference: https://github.com/Asana/node-asana
   const tasks = await asanaClient.tasks.getTasks({ workspace, assignee });
   ctx.body = {
     message: `Success! Found ${tasks.data.length} tasks in the Asana Workspace ${me.workspaces[0].name}`,
@@ -53,7 +53,6 @@ router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('
   const workspace = me.workspaces[0].gid;
   const assignee = me.gid;
 
-  // API Reference: https://developers.asana.com/docs/create-a-task
   const tasks = await asanaClient.tasks.createTask({
     name: ctx.req.body.taskName,
     notes: ctx.req.body.taskNotes,
