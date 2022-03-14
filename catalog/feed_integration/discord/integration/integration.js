@@ -15,11 +15,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference: https://discord.com/developers/docs/reference
   const { id, username, avatar } = await discordClient.user.get('users/@me');
   console.log('Success!');
-  ctx.body = {
-    id,
-    username,
-    avatar,
-  };
+
+  // Send a message using the Discord Channel Webhook
+  await superagent.post(discordClient.fusebit.credentials.webhook.url).send({
+    content: `Hello from Fusebit! Here is your ${id}, this is your ${username}.`,
+  });
 });
 
 module.exports = integration;
