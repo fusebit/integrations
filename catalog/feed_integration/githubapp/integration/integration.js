@@ -10,7 +10,7 @@ router.post('/api/tenant/:tenantId/test', async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  // API Reference: https://docs.github.com/en/rest
+  // API Reference: https://github.com/octokit/octokit.js
   const userClient = githubapp.user();
   const {
     data: { login, public_repos, followers },
