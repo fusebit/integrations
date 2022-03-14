@@ -7,7 +7,7 @@ const integration = new Integration();
 const router = integration.router;
 const connectorName = 'discordConnector';
 
-// Test Endpoint: Get User Object of Tenant's Discord Account and Send
+// Test Endpoint: Get User Object of Tenant's Discord Account and Send a Message
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const discordClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
