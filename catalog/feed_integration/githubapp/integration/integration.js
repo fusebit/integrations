@@ -1,118 +1,24 @@
-// Fusebit GitHub Integration
-//
-// This simple GitHub integration allows you to call GitHub APIs on behalf of the tenants of your
-// application. Fusebit manages the GitHub authorization process and maps tenants of your application
-// to their GitHub credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
-
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
 
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from within your application.
+// Koa Router: https://koajs.com/
 const router = integration.router;
-
 const connectorName = 'githubappConnector';
 
-// The sample test endpoint of this integration gets the user account details in the GitHub account associated with your tenant.
+// Test Endpoint: Gets user account details in the GitHub account associated with your tenant.
 router.post('/api/tenant/:tenantId/test', async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  // Use the authorizing user credentials
+
+  // API Reference: https://docs.github.com/en/rest
   const userClient = githubapp.user();
   const {
     data: { login, public_repos, followers },
   } = await userClient.rest.users.getAuthenticated();
-  ctx.body = `Your GitHub login is ${login} with ${public_repos} public repositories and ${followers} followers`;
+  ctx.body = `Success! Your GitHub login is ${login} with ${public_repos} public repositories and ${followers} followers`;
 });
 
-// List repository issues
-router.get('/api/tenant/:tenantId/:org/:repo/issues', async (ctx) => {
-  const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const userClient = githubapp.user();
-  const iterator = userClient.paginate.iterator(githubapp.rest.issues.listForRepo, {
-    owner: ctx.params.org,
-    repo: ctx.params.repo,
-    per_page: 100,
-  });
-
-  // iterate through each response
-  const issuesList = [];
-  for await (const { data: issues } of iterator) {
-    for (const issue of issues) {
-      issuesList.push(issue);
-    }
-  }
-  ctx.body = issuesList;
-});
-
-// Create a new GitHub issue authenticated as the authorizing user
-router.post('/api/tenant/:tenantId/:owner/:repo/issue', async (ctx) => {
-  const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const userClient = githubapp.user();
-  const { data } = await userClient.rest.issues.create({
-    owner: ctx.params.owner,
-    repo: ctx.params.repo,
-    title: 'Hello world from Fusebit',
-  });
-  ctx.body = data;
-});
-
-// Create a new GitHub issue authenticated as a GitHub App Installation
-router.post('/api/tenant/:tenantId/app/:owner/:repo/issue', async (ctx) => {
-  const githubapp = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
-  // Setup properly the Client Secret and App ID from your GitHub app in your Connector configuration.
-  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
-  const appClient = await githubapp.app();
-  const { data: installations } = await appClient.rest.apps.listInstallations();
-
-  if (!installations.length) {
-    ctx.throw(404, 'This application has no installations');
-  }
-
-  const installation = installations.find((installation) => installation.account.login === ctx.params.owner);
-
-  if (!installation) {
-    ctx.throw(404, `Installation not found for account ${ctx.params.owner}`);
-  }
-
-  // Now you have your installation, you can request an access token to the specific installation
-  // We perform all that work for you and you get back an authenticated SDK as a GitHub installation.
-  const installationClient = await appClient.installation(installation.id);
-
-  const { data } = await installationClient.rest.issues.create({
-    owner: ctx.params.owner,
-    repo: ctx.params.repo,
-    title: 'Hello world from Fusebit',
-  });
-  ctx.body = data;
-});
-
-// Subscribe to events
-integration.event.on('/:componentName/webhook/issue_comment.created', async (ctx) => {
-  const {
-    data: { comment },
-  } = ctx.req.body.data;
-  console.log('comment', comment);
-});
-
-integration.event.on('/:componentName/webhook/issues.reopened', async (ctx) => {
-  const { data } = ctx.req.body.data;
-  console.log('issues.reopened', data);
-});
-
-integration.event.on('/:componentName/webhook/issues.closed', async (ctx) => {
-  const { data } = ctx.req.body.data;
-  console.log('issues.closed', data);
-});
-
-// Listen all issues related webhooks
+// Receive Webhook Events
 integration.event.on('/:componentName/webhook/(issues.*)', async (ctx) => {
   const { data } = ctx.req.body.data;
   console.log('captured webhook', data);
