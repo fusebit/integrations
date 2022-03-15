@@ -15,7 +15,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const myIssues = await me.assignedIssues();
   if (!myIssues.nodes.length) {
     ctx.body = {
-      message: 'You have no issues!',
+      message: 'Success! However, you have no issues in Linear!',
     };
     return;
   } else {
