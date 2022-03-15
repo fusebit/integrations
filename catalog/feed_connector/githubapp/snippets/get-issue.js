@@ -7,7 +7,7 @@ async function githubappGetIssue(ctx, owner, repo, issueNumber) {
 
   // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
   // Setup properly the Client Secret and App ID from your GitHub app in your Connector configuration.
-  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
+  // See our developer docs for more information https://developer.fusebit.io/docs/github
   const appClient = await githubapp.app();
   const { data: installations } = await appClient.rest.apps.listInstallations();
 
@@ -43,7 +43,7 @@ ${githubappGetIssue.toString()}
 `;
 
 module.exports = {
-  name: 'Get issue details',
+  name: 'Get Github issue details',
   description: 'Get Github issue details.',
   code,
 };

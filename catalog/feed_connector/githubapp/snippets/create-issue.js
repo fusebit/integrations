@@ -8,7 +8,7 @@ async function githubappCreateIssue(ctx, owner, repo, title, otherProperties) {
 
   // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
   // Setup properly the Client Secret and App ID from your GitHub app in your Connector configuration.
-  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
+  // See our developer docs for more information https://developer.fusebit.io/docs/github
   const appClient = await githubapp.app();
   const { data: installations } = await appClient.rest.apps.listInstallations();
 
@@ -44,13 +44,13 @@ const code = `
  * @param repo {string} Repository name.
  * @param title {string} New issue title.
  * @param otherProperties {object} [undefined] Optional additional issue properties. 
- * @returns {object} Newly created issue.
+ * @returns {object} Newly created Github issue.
  */
 ${githubappCreateIssue.toString()}
 `;
 
 module.exports = {
-  name: 'Create a new issue',
+  name: 'Create a new Github issue',
   description: 'Create a new Github issue.',
   code,
 };

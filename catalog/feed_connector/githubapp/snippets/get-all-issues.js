@@ -7,7 +7,7 @@ async function githubappGetAllIssues(ctx, ownerOrOrg, repo, otherProperties) {
 
   // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
   // Setup properly the Client Secret and App ID from your GitHub app in your Connector configuration.
-  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
+  // See our developer docs for more information https://developer.fusebit.io/docs/github
   const appClient = await githubapp.app();
   const { data: installations } = await appClient.rest.apps.listInstallations();
 
@@ -68,7 +68,7 @@ ${githubappGetAllIssues.toString()}
 `;
 
 module.exports = {
-  name: 'Get all issues',
+  name: 'Get all Github issues',
   description: 'Get all Github issues matching the search criteria.',
   code,
 };

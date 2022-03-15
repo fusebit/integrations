@@ -8,7 +8,7 @@ async function githubappCloseIssue(ctx, owner, repo, issueNumber) {
 
   // Ensure you have configured your GitHub Connector properly in order to authenticate as a GitHub Application.
   // Setup properly the Client Secret and App ID from your GitHub app in your Connector configuration.
-  // See our developer docs for more information https://developer.fusebit.io/docs/githubapp
+  // See our developer docs for more information https://developer.fusebit.io/docs/github
   const appClient = await githubapp.app();
   const { data: installations } = await appClient.rest.apps.listInstallations();
 
@@ -42,14 +42,14 @@ const code = `
  * @param ctx {FusebitContext} Fusebit Context of the request
  * @param owner {string} Repository owner. 
  * @param repo {string} Repository name.
- * @param issueNumber {number} Issue number.
+ * @param issueNumber {number} Github Issue number.
  * @returns {object} Closed issue.
  */
 ${githubappCloseIssue.toString()}
 `;
 
 module.exports = {
-  name: 'Close an existing issue',
+  name: 'Close an existing Github issue',
   description: 'Close an existing Github issue.',
   code,
 };
