@@ -13,7 +13,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference https://github.com/HubSpot/hubspot-api-nodejs
   const contacts = await hubspotClient.crm.contacts.getAll();
 
-  ctx.body = `Successfully loaded ${contacts.length} Contacts from HubSpot`;
+  ctx.body = `Success! There are ${contacts.length} Contacts in HubSpot`;
 });
 
 // Sample App Endpoint: Add a new contact to HubSpot
