@@ -1,1 +1,1 @@
-This Integration enables you to create new events with Google Meet by closely leveraging the features from Google Calendar.
+This Integration works closely with Google Calendar and enables you to create new events with Google Meet.
