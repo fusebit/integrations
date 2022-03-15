@@ -1,0 +1,1 @@
+Many of the features that make Google Sheets so successful are available through this integration. It lets you read and write spreadsheets programmatically so that you can integrate data from various sources leveraging the power of Google Sheets.

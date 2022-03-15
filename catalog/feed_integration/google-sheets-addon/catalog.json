@@ -1,6 +1,7 @@
 {
   "id": "google-sheets-addon",
   "name": "Google Sheets Add-On",
+  "private": true,
   "smallIcon": "#/assets/google-sheets.svg",
   "largeIcon": "#/assets/google-sheets.svg",
   "version": "5.2.0",
