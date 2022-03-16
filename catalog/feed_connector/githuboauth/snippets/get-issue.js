@@ -1,11 +1,10 @@
 async function githubGetIssue(ctx, owner, repo, issueNumber) {
   // For the Github API documentation, see https://github.com/octokit/octokit.js.
-  const asanaClient = await integration.tenant.getSdkByTenant(
+  const githubClient = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
-  const githubClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const { data } = await githubClient.rest.issues.get({ owner, repo, issue_number: issueNumber });
   return data;
 }
