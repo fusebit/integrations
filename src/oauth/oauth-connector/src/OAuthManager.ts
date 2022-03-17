@@ -4,7 +4,7 @@ import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 import IdentityClient from './IdentityClient';
 
 import * as ConfigurationUI from './configure';
-import { IOAuthToken, ITags } from './OAuthTypes';
+import { IOAuthToken, ITags, ICreateTags } from './OAuthTypes';
 
 type MiddlewareAdjustUrlConfiguration = (
   defaultTokenUrl: string,
@@ -111,6 +111,23 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     }
   }
 
+  protected createTags(ctx: Connector.Types.Context): ICreateTags {
+    return async (token: IOAuthToken): Promise<ITags | undefined> => {
+      const webhookIds = await this.service.getWebhookTokenId(ctx, token);
+      const result: ITags = {};
+      if (webhookIds) {
+        if (Array.isArray(webhookIds)) {
+          webhookIds.forEach((webhookId) => {
+            result[webhookId] = null;
+          });
+        } else {
+          result[webhookIds] = null;
+        }
+      }
+      return result;
+    };
+  }
+
   constructor() {
     super();
 
@@ -124,20 +141,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         return;
       }
 
-      const createTags = async (token: IOAuthToken): Promise<ITags | undefined> => {
-        const webhookIds = await this.service.getWebhookTokenId(ctx, token);
-        const result: ITags = {};
-        if (webhookIds) {
-          if (Array.isArray(webhookIds)) {
-            webhookIds.forEach((webhookId) => {
-              result[webhookId] = null;
-            });
-          } else {
-            result[webhookIds] = null;
-          }
-        }
-        return result;
-      };
+      const createTags = this.createTags(ctx);
 
       ctx.state.engine = this.createEngine(ctx);
       ctx.state.engine.setMountUrl(ctx.state.params.baseUrl);

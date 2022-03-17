@@ -1,5 +1,6 @@
 import connector, { OAuthConnector } from './OAuthManager';
-import { OAuthEngine, IOAuthConfig, IOAuthToken } from './OAuthEngine';
+import { OAuthEngine } from './OAuthEngine';
+import { IOAuthConfig, IOAuthToken, ITags, ICreateTags } from './OAuthTypes';
 
 export default connector;
-export { OAuthEngine, IOAuthConfig, OAuthConnector, IOAuthToken };
+export { OAuthEngine, IOAuthConfig, OAuthConnector, IOAuthToken, ITags, ICreateTags };

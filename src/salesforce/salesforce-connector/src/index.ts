@@ -1,13 +1,30 @@
 import { Connector } from '@fusebit-int/framework';
-import { OAuthConnector } from '@fusebit-int/oauth-connector';
+import { OAuthConnector, ITags, IOAuthToken, ICreateTags } from '@fusebit-int/oauth-connector';
 
 const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 const SERVICE_NAME = 'Salesforce';
 
+interface ISalesforceOAuthToken extends IOAuthToken {
+  instance_url: string;
+}
+
 class ServiceConnector extends OAuthConnector {
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  }
+
+  // Add the insance url to the created installs/identities tags
+  protected createTags(ctx: Connector.Types.Context): ICreateTags {
+    const createTags = super.createTags(ctx);
+    return async (token: IOAuthToken): Promise<ITags | undefined> => {
+      let result = await createTags(token);
+      if (!result) {
+        result = {};
+      }
+      result['salesforce.instanceUrl'] = (token as ISalesforceOAuthToken).instance_url;
+      return result;
+    };
   }
 
   constructor() {
