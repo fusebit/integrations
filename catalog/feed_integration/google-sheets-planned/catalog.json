@@ -1,0 +1,13 @@
+{
+  "id": "google-sheets-planned",
+  "name": "Google Sheets",
+  "smallIcon": "#/assets/google-sheets.svg",
+  "largeIcon": "#/assets/google-sheets.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "outOfPlan": true,
+  "tags": {
+    "catalog": "Project Management,Dev Tools,Office,Spreadsheets"
+  },
+  "configuration": {}
+}
