@@ -134,11 +134,10 @@ export class Service extends EntityBase.ServiceBase {
 
   /**
    * Get a list of installs that match a tag, with an optional value.
-   *
    * @param ctx The context object provided by the route function
    * @param {string} installId
    * @param {string} tagKey
-   * @param {string} tagValue (optional)
+   * @param {string} [tagValue]
    * @example
    * router.post('/api/test', async (ctx) => {
    *    const installs = await integration.service.listInstalls(ctx, 'serviceTag');
