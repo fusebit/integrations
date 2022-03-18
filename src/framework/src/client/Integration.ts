@@ -131,6 +131,27 @@ export class Service extends EntityBase.ServiceBase {
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     return response.body;
   };
+
+  /**
+   * Get a list of installs that match a tag, with an optional value.
+   * @param ctx The context object provided by the route function
+   * @param {string} installId
+   * @param {string} tagKey
+   * @param {string} [tagValue]
+   * @example
+   * router.post('/api/test', async (ctx) => {
+   *    const installs = await integration.service.listInstalls(ctx, 'serviceTag');
+   *    const client = await integration.service.getSdk(ctx, connectorName, installs[0].id);
+   *    // use the client . . .
+   * });
+   */
+  public listInstalls = async (
+    ctx: FusebitContext,
+    tagKey: string,
+    tagValue?: string
+  ): Promise<EntityBase.Types.IInstall[]> => {
+    return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
+  };
 }
 
 /**

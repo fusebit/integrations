@@ -1,13 +1,21 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+import { Service } from './Service';
+
 const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 const SERVICE_NAME = 'Salesforce';
 
 class ServiceConnector extends OAuthConnector {
+  static Service = Service;
+
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+  }
+
+  protected createService() {
+    return new ServiceConnector.Service();
   }
 
   constructor() {
