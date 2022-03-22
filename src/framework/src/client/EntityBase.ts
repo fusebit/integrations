@@ -47,6 +47,7 @@ namespace EntityBase {
     }
     export interface IInstall {
       id: string;
+      parentId: string;
       tags: Record<string, string>;
       data: Record<string, IInstallData | Record<string, any>>;
       expires?: string;
