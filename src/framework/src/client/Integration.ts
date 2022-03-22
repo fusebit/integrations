@@ -133,9 +133,9 @@ export class Service extends EntityBase.ServiceBase {
   };
 
   /**
-   * Get a list of installs that match a tag, with an optional value.
+   * List all Integration Installs, or only Installs that match a particular tag with an optional value.
    * @param ctx The context object provided by the route function
-   * @param {string} tagKey
+   * @param {string} [tagKey]
    * @param {string} [tagValue]
    * @example
    * router.post('/api/test', async (ctx) => {
@@ -146,7 +146,7 @@ export class Service extends EntityBase.ServiceBase {
    */
   public listInstalls = async (
     ctx: FusebitContext,
-    tagKey: string,
+    tagKey?: string,
     tagValue?: string
   ): Promise<EntityBase.Types.IInstall[]> => {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);

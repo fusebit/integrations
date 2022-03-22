@@ -22,11 +22,11 @@ class Utilities {
     return body.items;
   };
 
-  public listByTag = async (ctx: FusebitContext, subComponent: string, tagKey: string, tagValue?: string) => {
+  public listByTag = async (ctx: FusebitContext, subComponent: string, tagKey?: string, tagValue?: string) => {
     const response = await superagent
       .get(
-        `${ctx.state.params.baseUrl}/${subComponent}?tag=${encodeURIComponent(tagKey)}${
-          tagValue ? `%3D${encodeURIComponent(tagValue)}` : ''
+        `${ctx.state.params.baseUrl}/${subComponent}${
+          tagKey ? `?tag=${encodeURIComponent(tagKey)}${tagValue ? `%3D${encodeURIComponent(tagValue)}` : ''}` : ''
         }`
       )
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
