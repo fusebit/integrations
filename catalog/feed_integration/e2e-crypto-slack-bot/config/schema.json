@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "properties": {
+    "cryptoSlackBotIntegration": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "coinApiKey": {
+          "type": "string",
+          "minLength": 3,
+          "description": "Get API key from https://docs.coinapi.io"
+        }
+      }
+    },
+    "slackConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "toggle": {
+          "type": "boolean",
+          "description": "The \"toggle\" option renders boolean values as a toggle."
+        }
+      }
+    }
+  }
+}
