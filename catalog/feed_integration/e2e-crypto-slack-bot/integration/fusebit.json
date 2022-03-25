@@ -4,13 +4,6 @@
     "fusebit.service": "Slack Crypto"
   },
   "handler": "./integration",
-  "schedule": [
-    {
-      "cron": "0 * * * *",
-      "endpoint": "/check-delta",
-      "timezone": "America/Los_Angeles"
-    }
-  ],
   "components": [
     {
       "name": "slackConnector",

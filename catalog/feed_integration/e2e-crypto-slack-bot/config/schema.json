@@ -13,7 +13,8 @@
           "minLength": 3,
           "description": "Get API key from https://docs.coinapi.io"
         }
-      }
+      },
+      "required": ["id", "coinApiKey"]
     },
     "slackConnector": {
       "type": "object",

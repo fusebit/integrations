@@ -24,7 +24,17 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   ctx.body = { message: message };
 });
 
-// Run this on a schedule
+// This function is a scheduled job that will execute the check and let you know in a Slack DM.
+// You need to add the following section in the Configuration/fusebit.json file to enable the job
+// to run every hour.
+//
+// "schedule": [
+//   {
+//     "cron": "0 * * * *",
+//     "endpoint": "/check-delta",
+//     "timezone": "America/Los_Angeles"
+//   }
+// ]
 integration.cron.on('/check-delta', async (ctx) => {
   // Get ticker range
   const range = await get10dayRange(ctx, ticker);
