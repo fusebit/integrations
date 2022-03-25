@@ -9,9 +9,7 @@ const ticker = 'BTC';
 
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // Get ticker info and generate message
-  const range = await get10dayRange(ctx, ticker);
-  const rate = await getRate(ctx, ticker);
-  const message = printTickerMessage(ticker, rate, range.high, range.low);
+  const { message } = await getTickerData(ctx, ticker);
 
   // Send message as a Slack DM
   const slackClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
@@ -37,20 +35,19 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 // ]
 integration.cron.on('/check-delta', async (ctx) => {
   // Get ticker range
-  const range = await get10dayRange(ctx, ticker);
-  const rate = await getRate(ctx, ticker);
+  const { message, outsideRange } = await getTickerData(ctx, ticker);
 
   // If the ticker is on a 10-day high/low, notify user
-  if (rate > range.high || rate < range.low) {
+  if (outsideRange) {
     // Get installs
-    const installs = await integration.service.listInstalls(ctx, 'fusebit.parentEntityId', 'crypto-notification-bot');
+    const installs = await integration.service.listInstalls(ctx);
 
     // Send a Slack DM to all users who installed this bot
     const promises = installs.items.map(async (install) => {
       const slackClient = await integration.service.getSdk(ctx, connectorName, install.id);
       const slackUserId = slackClient.fusebit.credentials.authed_user.id;
       const result = await slackClient.chat.postMessage({
-        text: printTickerMessage(ticker, rate, range.high, range.low),
+        text: message,
         channel: slackUserId,
       });
     });
@@ -59,16 +56,22 @@ integration.cron.on('/check-delta', async (ctx) => {
   }
 });
 
-function printTickerMessage(ticker, rate, high, low) {
-  const isOver = rate > high;
-  const isUnder = rate < low;
+async function getTickerData(ctx, ticker) {
+  const range = await get10dayRange(ctx, ticker);
+  const rate = await getRate(ctx, ticker);
 
-  return `${ticker}
+  const isOver = rate > range.high;
+  const isUnder = rate < range.low;
+
+  return {
+    outsideRange: isOver || isUnder,
+    message: `${ticker}
     ${isOver ? `Above 10-day range` : isUnder ? `Below 10-day range` : `Within 10-day range`}
     
-    10-day high: $${high}
-    10-day low: $${low}
-    Current: $${rate}`;
+    10-day high: $${range.high}
+    10-day low: $${range.low}
+    Current: $${rate}`,
+  };
 }
 
 async function getRate(ctx, ticker) {
