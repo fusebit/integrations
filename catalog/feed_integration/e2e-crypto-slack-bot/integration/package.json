@@ -4,8 +4,8 @@
     "get": "fuse integration get crypto-notification-bot -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "7.45.4",
-    "@fusebit-int/slack-provider": "7.45.4",
+    "@fusebit-int/framework": "^7.45.6",
+    "@fusebit-int/slack-provider": "^7.45.6",
     "undici": "^4.15.1"
   },
   "files": [
