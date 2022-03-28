@@ -1,32 +1,16 @@
-// Fusebit Atlassian Jira Integration
-//
-// This simple Atlassian integration allows you to call Atlassian APIs on behalf of the tenants of your
-// application. Fusebit manages the Atlassian authorization process and maps tenants of your application
-// to their Atlassian credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
-
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
 
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from within your application.
+// Koa Router: https://koajs.com/
 const router = integration.router;
-
 const connectorName = 'atlassianConnector';
 
-// The sample test endpoint of this integration gets all available Atlassian resources for your tenant.
+// Test Endpoint: Get all available Atlassian resources for your tenant.
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // Create an Atlassian client pre-configured with credentials necessary to communicate with your tenant's
-  // Jira account.
-  //
-  // For the Atlassian SDK documentation, see https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/.
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  // API Reference: https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/
   const resources = await atlassianClient.getAccessibleResources('jira');
   if (resources.length === 0) {
     ctx.throw(404, 'No Matching Account found in Atlassian');
@@ -37,12 +21,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const result = await jira.get('/search');
 
   ctx.body = {
-    message: `Found ${result.total} issues in Jira Cloud ${resources[0].id}`,
+    message: `Success! Found ${result.total} issues in Jira Cloud ${resources[0].id}`,
   };
 });
 
-// Retrieve Issue IDs and Summaries from Jira
-// Note: This endpoint is also used by the sample app
+// Sample App Endpoint: Retrieve Issue IDs and Summaries from Jira
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const atlassianClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const resources = await atlassianClient.getAccessibleResources('jira');
