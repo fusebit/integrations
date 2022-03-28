@@ -1,0 +1,21 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Slack Crypto"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "slackConnector",
+      "skip": false,
+      "provider": "@fusebit-int/slack-provider",
+      "entityId": "<% global.entities.slackConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {
+    "coinApiKey": "<% global.entities.cryptoSlackBotIntegration.coinApiKey %>"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "deploy": "fuse integration deploy crypto-notification-bot -d .",
+    "get": "fuse integration get crypto-notification-bot -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "7.45.4",
+    "@fusebit-int/slack-provider": "7.45.4",
+    "undici": "^4.15.1"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ],
+  "name": "@fusebit-int/catalog-feed-integration-e2e-crypto-slack-bot",
+  "version": "7.45.4",
+  "private": true
+}

@@ -1,0 +1,29 @@
+{
+  "id": "e2e-crypto-slack-bot",
+  "name": "Slack Crypto Bot",
+  "smallIcon": "#/assets/slack.svg",
+  "largeIcon": "#/assets/slackLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://fusebit.io/blog/slack-crypto-bot/"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "cryptoSlackBotIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      },
+      "slackConnector": {
+        "entityType": "connector",
+        "path": "../slack-bot/connector/"
+      }
+    }
+  }
+}
