@@ -9,7 +9,8 @@
     "catalog": ""
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "connectorSDKDocUrl": "https://github.com/googleapis/google-api-nodejs-client"
   },
   "configuration": {
     "schema": "config/schema.json",

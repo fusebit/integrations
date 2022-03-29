@@ -9,7 +9,8 @@
     "catalog": "Social,Community"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/reddit#creating-your-own-reddit-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/reddit#creating-your-own-reddit-app",
+    "connectorSDKDocUrl": "https://github.com/not-an-aardvark/snoowrap"
   },
   "configuration": {
     "schema": "config/schema.json",

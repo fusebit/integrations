@@ -9,7 +9,8 @@
     "catalog": ""
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/quickbooks-online#creating-your-own-quickbooks-online-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/quickbooks-online#creating-your-own-quickbooks-online-app",
+    "connectorSDKDocUrl": "https://github.com/mcohen01/node-quickbooks"
   },
   "configuration": {
     "schema": "config/schema.json",

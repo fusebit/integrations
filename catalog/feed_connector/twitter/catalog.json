@@ -9,7 +9,8 @@
     "catalog": "Social,Community"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/twitter#creating-your-own-twitter-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/twitter#creating-your-own-twitter-app",
+    "connectorSDKDocUrl": "https://github.com/plhery/node-twitter-api-v2"
   },
   "configuration": {
     "schema": "config/schema.json",

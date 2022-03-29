@@ -9,7 +9,8 @@
     "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app",
+    "connectorSDKDocUrl": "https://github.com/Asana/node-asana"
   },
   "configuration": {
     "schema": "config/schema.json",

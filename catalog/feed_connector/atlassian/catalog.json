@@ -9,7 +9,8 @@
     "catalog": "Project Management,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/atlassian#creating-your-own-atlassian-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/atlassian#creating-your-own-atlassian-app",
+    "connectorSDKDocUrl": "https://developer.atlassian.com/cloud/"
   },
   "configuration": {
     "schema": "config/schema.json",

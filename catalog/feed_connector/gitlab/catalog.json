@@ -9,7 +9,8 @@
     "catalog": "Dev Tools,Project Management"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/gitlab#creating-your-own-gitlab-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/gitlab#creating-your-own-gitlab-app",
+    "connectorSDKDocUrl": "https://github.com/jdalrymple/gitbeaker"
   },
   "configuration": {
     "schema": "config/schema.json",

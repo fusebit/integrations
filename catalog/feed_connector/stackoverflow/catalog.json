@@ -9,7 +9,8 @@
     "catalog": "Social,Community,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/stackoverflow#creating-your-own-stackoverflow-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/stackoverflow#creating-your-own-stackoverflow-app",
+    "connectorSDKDocUrl": "https://api.stackexchange.com/docs"
   },
   "configuration": {
     "schema": "config/schema.json",
