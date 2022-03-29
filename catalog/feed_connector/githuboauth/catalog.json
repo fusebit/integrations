@@ -9,7 +9,8 @@
     "catalog": "Dev Tools,Project Management"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/githuboauth#creating-your-own-githuboauth"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/githuboauth#creating-your-own-githuboauth",
+    "connectorSDKDocUrl": "https://github.com/octokit/octokit.js"
   },
   "configuration": {
     "schema": "config/schema.json",

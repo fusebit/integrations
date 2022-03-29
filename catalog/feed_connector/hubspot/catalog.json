@@ -9,7 +9,8 @@
     "catalog": "CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app",
+    "connectorSDKDocUrl": "https://github.com/HubSpot/hubspot-api-nodejs"
   },
   "configuration": {
     "schema": "config/schema.json",

@@ -9,7 +9,8 @@
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app",
+    "connectorSDKDocUrl": "https://slack.dev/node-slack-sdk/web-api"
   },
   "configuration": {
     "schema": "config/schema.json",

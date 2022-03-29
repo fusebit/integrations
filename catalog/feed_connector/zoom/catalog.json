@@ -9,7 +9,8 @@
     "catalog": "Video Conferencing"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/zoom#creating-your-own-zoom-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/zoom#creating-your-own-zoom-app",
+    "connectorSDKDocUrl": "https://marketplace.zoom.us/docs/api-reference/zoom-api/methods"
   },
   "configuration": {
     "schema": "config/schema.json",

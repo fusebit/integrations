@@ -9,7 +9,8 @@
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-bot-framework#creating-your-own-microsoft-bot-framework-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-bot-framework#creating-your-own-microsoft-bot-framework-app",
+    "connectorSDKDocUrl": "https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-overview?view=azure-bot-service-4.0"
   },
   "configuration": {
     "schema": "config/schema.json",

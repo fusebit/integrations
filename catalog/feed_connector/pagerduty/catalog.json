@@ -9,7 +9,8 @@
     "catalog": "Dev Tools,Operations"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app",
+    "connectorSDKDocUrl": "https://github.com/PagerDuty/pdjs"
   },
   "configuration": {
     "schema": "config/schema.json",

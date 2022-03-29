@@ -9,7 +9,8 @@
     "catalog": ""
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/linkedin#creating-your-own-linkedin-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/linkedin#creating-your-own-linkedin-app",
+    "connectorSDKDocUrl": "https://docs.microsoft.com/en-us/linkedin/consumer/"
   },
   "configuration": {
     "schema": "config/schema.json",
