@@ -3,7 +3,6 @@ const integration = new Integration();
 
 // Koa Router: https://koajs.com/
 const router = integration.router;
-
 const connectorName = 'twitterConnector';
 
 // Test Endpoint: Get the logged in user's most recent tweet
