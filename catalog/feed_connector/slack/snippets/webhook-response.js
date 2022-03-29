@@ -18,7 +18,7 @@ const code = `
  
    const text = ctx.req.body.data.event.text;
    await slackClient.chat.postMessage({
-     text: ``I'm responding via a webhook.  I was alerted when <@\${messagingUser}> sent the message: \n\n "\${text}",
+     text: \`I'm responding via a webhook.  I was alerted when <@\${messagingUser}> sent the message: \n\n "\${text}"\`,
      channel: ctx.req.body.data.event.channel,
    });
  });
