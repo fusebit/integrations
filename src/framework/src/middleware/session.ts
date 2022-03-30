@@ -9,7 +9,7 @@ export interface ISessionOptions {
   startUrlPath: string;
   getTenantId: (ctx: FusebitContext) => string;
   commitUrlPath: string;
-  installUrlPath: string;
+  getTenantInstallUrlPath: string;
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) => string;
 }
 
@@ -22,7 +22,7 @@ interface IFusebitJwt {
 export const defaultSessionOptions: ISessionOptions = {
   healthUrlPath: '/api/health',
   startUrlPath: '/api/service/start',
-  installUrlPath: '/api/service/tenant/:tenantId/install',
+  getTenantInstallUrlPath: '/api/service/tenant/:tenantId/install',
   getTenantId: () => uuidv4(),
   commitUrlPath: '/api/service/commit',
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) =>
@@ -115,7 +115,7 @@ export const session = (router: Internal.Router, options: Partial<ISessionOption
   router.get(`${opts.startUrlPath}`, start(opts));
   router.get(`${opts.commitUrlPath}`, commit(opts));
   router.get(`${opts.healthUrlPath}`, health());
-  router.get(`${opts.installUrlPath}`, getInstallByTenant());
+  router.get(`${opts.getTenantInstallUrlPath}`, getInstallByTenant());
 };
 
 // Share the handlers in case the caller wants to make use of them directly.
