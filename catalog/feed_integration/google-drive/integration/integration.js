@@ -1,30 +1,16 @@
-// Fusebit Google Integration
-//
-// This simple Google integration allows you to call Google APIs on behalf of the tenants of your
-// application. Fusebit manages the Google authorization process and maps tenants of your application
-// to their Google credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
-
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
 
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from within your application.
+// Koa Router: https://koajs.com/
 const router = integration.router;
 const connectorName = 'googleConnector';
 
-// The sample test endpoint of this integration gets the openid and email of the currently authenticated user.
+// Test Endpoint: Returns a count of how many files & folders are in your tenant's Google Drive
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // Create a Google client pre-configured with credentials necessary to communicate with your tenant's Google account.
-  // For the Google SDK documentation, see https://developers.google.com/apis-explorer.
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
+  // API Reference: https://developers.google.com/drive/api/v3/reference
   const files = await googleClient
     .drive({
       version: 'v3',
@@ -32,7 +18,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     .files.list();
 
   ctx.body = {
-    message: `Your drive contains ${files.data.files.length} files and folders.`,
+    message: `Success! Your drive contains ${files.data.files.length} files and folders.`,
   };
 });
 
