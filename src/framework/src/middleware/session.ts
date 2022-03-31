@@ -10,7 +10,7 @@ export interface ISessionOptions {
   getTenantId: (ctx: FusebitContext) => string;
   commitUrlPath: string;
   getSessionStatusPath: string;
-  getSessionFromUrl: (ctx: FusebitContext) => string;
+  getSessionIdFromUrl: (ctx: FusebitContext) => string;
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) => string;
 }
 
@@ -28,7 +28,7 @@ export const defaultSessionOptions: ISessionOptions = {
   commitUrlPath: '/api/service/commit',
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) =>
     `${ctx.state.params.baseUrl}/api/health?install=${installId}&tenant=${tenantId}`,
-  getSessionFromUrl: (ctx: FusebitContext) => ctx.params.sessionId,
+  getSessionIdFromUrl: (ctx: FusebitContext) => ctx.params.sessionId,
 };
 
 const start = (options: ISessionOptions) => async (ctx: FusebitContext) => {
@@ -98,7 +98,7 @@ const getSessionStatus = (opts: ISessionOptions) => async (ctx: FusebitContext) 
   const token = ctx.state.params.functionAccessToken;
   const baseUrl = ctx.state.params.baseUrl;
   const result = await superagent
-    .get(`${baseUrl}/session/${opts.getSessionFromUrl(ctx)}`)
+    .get(`${baseUrl}/session/${opts.getSessionIdFromUrl(ctx)}`)
     .set('Authorization', `Bearer ${token}`);
   return result.body;
 };
