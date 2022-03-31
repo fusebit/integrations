@@ -9,7 +9,8 @@ export interface ISessionOptions {
   startUrlPath: string;
   getTenantId: (ctx: FusebitContext) => string;
   commitUrlPath: string;
-  getTenantInstallUrlPath: string;
+  getSessionStatusPath: string;
+  getSessionFromUrl: (ctx: FusebitContext) => string;
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) => string;
 }
 
@@ -22,11 +23,12 @@ interface IFusebitJwt {
 export const defaultSessionOptions: ISessionOptions = {
   healthUrlPath: '/api/health',
   startUrlPath: '/api/service/start',
-  getTenantInstallUrlPath: '/api/service/tenant/:tenantId/install',
+  getSessionStatusPath: '/api/service/status/:sessionId',
   getTenantId: () => uuidv4(),
   commitUrlPath: '/api/service/commit',
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) =>
     `${ctx.state.params.baseUrl}/api/health?install=${installId}&tenant=${tenantId}`,
+  getSessionFromUrl: (ctx: FusebitContext) => ctx.params.sessionId,
 };
 
 const start = (options: ISessionOptions) => async (ctx: FusebitContext) => {
@@ -77,37 +79,28 @@ export const commit = (options: ISessionOptions) => async (ctx: FusebitContext) 
 
 const health = () => async (ctx: FusebitContext, next: Next) => {
   const token = ctx.state.params.functionAccessToken;
-  const sessionResource = `/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/${ctx.state.params.entityType}/${ctx.state.params.entityId}/session/`;
-  const installResource = `/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/${ctx.state.params.entityType}/${ctx.state.params.entityId}/install/`;
-
+  const resource = `/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/${ctx.state.params.entityType}/${ctx.state.params.entityId}/session/`;
   const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8')) as IFusebitJwt;
 
   const allow = payload['https://fusebit.io/permissions'].allow;
-  if (!allow.some((entry) => entry.action === 'session:add' && entry.resource === sessionResource)) {
+  if (!allow.some((entry) => entry.action === 'session:add' && entry.resource === resource)) {
     throw new Error("Missing 'session:add' permissions on the integration");
   }
 
-  if (!allow.some((entry) => entry.action === 'session:commit' && entry.resource === sessionResource)) {
+  if (!allow.some((entry) => entry.action === 'session:commit' && entry.resource === resource)) {
     throw new Error("Missing 'session:commit' permissions on the integration");
   }
 
-  if (!allow.some((entry) => entry.action === 'install:get' && entry.resource === installResource)) {
-    throw new Error("Missing 'install:get' permissions on the integration");
-  }
   return next();
 };
 
-const getInstallByTenant = () => async (ctx: FusebitContext) => {
-  const baseUrl = ctx.state.params.baseUrl;
+const getSessionStatus = (opts: ISessionOptions) => async (ctx: FusebitContext) => {
   const token = ctx.state.params.functionAccessToken;
-  const tenantId = ctx.params.tenantId;
+  const baseUrl = ctx.state.params.baseUrl;
   const result = await superagent
-    .get(`${baseUrl}/install/?tag=fusebit.tenantId=${tenantId}`)
+    .get(`${baseUrl}/session/${opts.getSessionFromUrl(ctx)}`)
     .set('Authorization', `Bearer ${token}`);
-
-  ctx.body = {
-    installs: result.body.items,
-  };
+  return result.body;
 };
 
 export const session = (router: Internal.Router, options: Partial<ISessionOptions> = defaultSessionOptions) => {
@@ -115,7 +108,7 @@ export const session = (router: Internal.Router, options: Partial<ISessionOption
   router.get(`${opts.startUrlPath}`, start(opts));
   router.get(`${opts.commitUrlPath}`, commit(opts));
   router.get(`${opts.healthUrlPath}`, health());
-  router.get(`${opts.getTenantInstallUrlPath}`, getInstallByTenant());
+  router.get(`${opts.getSessionStatusPath}`, getSessionStatus(opts));
 };
 
 // Share the handlers in case the caller wants to make use of them directly.
