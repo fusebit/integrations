@@ -23,7 +23,7 @@ interface IFusebitJwt {
 export const defaultSessionOptions: ISessionOptions = {
   healthUrlPath: '/api/health',
   startUrlPath: '/api/service/start',
-  getSessionStatusPath: '/api/service/status/:sessionId',
+  getSessionStatusPath: '/api/service/status/session/:sessionId',
   getTenantId: () => uuidv4(),
   commitUrlPath: '/api/service/commit',
   getFinalRedirectUrl: (ctx: FusebitContext, installId: string, tenantId: string, targetUrl: string) =>
@@ -100,7 +100,8 @@ const getSessionStatus = (opts: ISessionOptions) => async (ctx: FusebitContext) 
   const result = await superagent
     .get(`${baseUrl}/session/${opts.getSessionIdFromUrl(ctx)}`)
     .set('Authorization', `Bearer ${token}`);
-  return result.body;
+
+  ctx.body = result.body;
 };
 
 export const session = (router: Internal.Router, options: Partial<ISessionOptions> = defaultSessionOptions) => {
