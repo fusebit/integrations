@@ -79,6 +79,7 @@ export const commit = (options: ISessionOptions) => async (ctx: FusebitContext) 
 
 const health = () => async (ctx: FusebitContext, next: Next) => {
   const token = ctx.state.params.functionAccessToken;
+  
   const resource = `/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/${ctx.state.params.entityType}/${ctx.state.params.entityId}/session/`;
   const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8')) as IFusebitJwt;
 
