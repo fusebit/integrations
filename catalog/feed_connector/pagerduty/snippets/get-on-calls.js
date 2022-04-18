@@ -1,5 +1,5 @@
 async function pagerdutyGetOnCalls(ctx) {
-  // For the Pagerduty SDK documentation, see https://github.com/PagerDuty/pdjs
+  // For the PagerDuty SDK documentation, see https://github.com/PagerDuty/pdjs
   const pagerdutyClient = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',

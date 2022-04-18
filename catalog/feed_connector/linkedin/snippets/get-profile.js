@@ -6,7 +6,7 @@ async function linkedinGetProfile(ctx, personID) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  //To do multiple IDs in one call: `people?ids=List((id:{Person ID1}),(id:{Person ID2}),(id:{Person ID3}))`
+  // To do multiple IDs in one call: `people?ids=List((id:{Person ID1}),(id:{Person ID2}))`
   return await linkedinClient.get(`people/(id:{${personID}})`);
 }
 
