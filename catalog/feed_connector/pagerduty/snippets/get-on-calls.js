@@ -6,7 +6,7 @@ async function pagerdutyGetOnCalls(ctx) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  return await pagerdutyClient.get(`/oncalls?include%5B%5D=users`);
+  return await pagerdutyClient.get(`/oncalls?include[]=users`);
 }
 
 const code = `
