@@ -1,32 +1,20 @@
-// Fusebit Reddit Integration
-//
-// This simple Reddit integration allows you to call Reddit APIs on behalf of the tenants of your
-// application. Fusebit manages the Reddit authorization process and maps tenants of your application
-// to their Reddit credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
-
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
 
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from witin your application.
+// Koa Router: https://koajs.com
 const router = integration.router;
-
 const connectorName = 'redditConnector';
 
-// This sample test endpoint provides the reddit karma held by the tenant
+// Test Endpoint: Get Reddit karma held by the tenant
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const redditClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  // API Reference: https://github.com/not-an-aardvark/snoowrap
   const me = await redditClient.getMe();
   const { link_karma, comment_karma } = me;
   ctx.body = {
-    message: `This tenant has ${link_karma} karma from submitted posts and ${comment_karma} karma from comments.`,
+    message: `Success! This tenant has ${link_karma} karma from submitted posts and ${comment_karma} karma from comments.`,
   };
 });
 
