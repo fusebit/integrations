@@ -1,5 +1,5 @@
 async function linkedinGetProfile(ctx, personID) {
-  // For the Linkedin SDK documentation, see https://docs.microsoft.com/en-us/linkedin/consumer/
+  // For the LinkedIn SDK documentation, see https://docs.microsoft.com/en-us/linkedin/consumer/
   const linkedinClient = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',
