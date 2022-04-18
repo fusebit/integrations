@@ -10,7 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-bot-framework#creating-your-own-microsoft-bot-framework-app",
-    "connectorSDKDocUrl": "https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-overview?view=azure-bot-service-4.0"
+    "connectorSDKDocUrl": "https://www.npmjs.com/package/botbuilder"
   },
   "configuration": {
     "schema": "config/schema.json",
