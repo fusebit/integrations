@@ -1,46 +1,29 @@
-// Fusebit QuickBooks Online Integration
-//
-// This simple QuickBooks Online integration allows you to call QuickBooks Online APIs on behalf of the tenants of your
-// application. Fusebit manages the QuickBooks Online authorization process and maps tenants of your application
-// to their QuickBooks Online credentials, so that you can focus on implementing the integration logic.
-//
-// A Fusebit integration is a microservice running on the Fusebit platform.
-// You control the endpoints exposed from the microservice. You call those endpoints from your application
-// to perform specific tasks on behalf of the tenants of your app.
-//
-// Learn more about Fusebit Integrations at: https://developer.fusebit.io/docs/integration-programming-model
-
 const { Integration } = require('@fusebit-int/framework');
-
 const integration = new Integration();
 
-// Remove this line when using production credentials for QuickBooks.  This flag enables using the
-// sandbox (https://developer.intuit.com/app/developer/qbo/docs/develop/sandboxes) endpoints when
-// using credentials registered with this integration.
-process.env.QUICKBOOKS_USE_SANDBOX = '1';
-
-// Fusebit uses the KoaJS (https://koajs.com/) router to allow you to add custom HTTP endpoints
-// to the integration, which you can then call from within your application.
+// Koa Router: https://koajs.com/
 const router = integration.router;
 const connectorName = 'quickbooksConnector';
 
-// The sample test endpoint of this integration gets all Accounts.
+// Use Sandbox Creds. Remove this line if using Production Creds.
+process.env.QUICKBOOKS_USE_SANDBOX = '1';
+
+// Test Endpoint: Gets all Accounts associated with your tenant
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // Create a QuickBooks Online client pre-configured with credentials necessary to communicate with your tenant's QuickBooks Online account.
-  // For the QuickBooks Online SDK documentation, see https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/account
-  // and https://www.npmjs.com/package/node-quickbooks.
-  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
+  const quickbooksClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const accounts = await sdk.findAccounts();
+  // API Reference: https://github.com/mcohen01/node-quickbooks
+  const accounts = await quickbooksClient.findAccounts();
 
-  ctx.body = { message: `Account total: ${accounts.QueryResponse.Account.length}` };
+  ctx.body = { message: `Success! Account total: ${accounts.QueryResponse.Account.length}` };
 });
 
-// Used by the sample application to get customers in the account.
+// Endpoint for Sample App: Get customers of an account
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const quickbooksClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const customers = await sdk.findCustomers({ fetchAll: true });
+  const customers = await quickbooksClient.findCustomers({ fetchAll: true });
   const customersList = customers.QueryResponse.Customer.map((customers) => ({
     GivenName: customers.GivenName,
     FamilyName: customers.FamilyName,
@@ -49,11 +32,11 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   ctx.body = customersList;
 });
 
-// Used by the sample application to add customers to the account.
+// Endpoint for Sample App: Add Customer to an account
 router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  const sdk = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+  const quickbooksClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const customer = await sdk.createCustomer(ctx.req.body);
+  const customer = await quickbooksClient.createCustomer(ctx.req.body);
 
   ctx.body = customer;
 });
