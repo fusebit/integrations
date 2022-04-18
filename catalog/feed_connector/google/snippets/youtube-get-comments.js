@@ -1,5 +1,5 @@
 async function googleYoutubeGetComments(ctx, commentID) {
-  // For the Google SDK documentation, see https://developers.google.com/youtube/v3/docs/
+  // For the YouTube SDK documentation, see https://developers.google.com/youtube/v3/docs/
   const googleClient = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',
