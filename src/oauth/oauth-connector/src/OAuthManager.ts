@@ -48,6 +48,9 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         },
       };
 
+      // Allow for override of the callback url.
+      cfg.configuration.callbackUrl = cfg.configuration.callbackUrl || cfg.configuration.constants.urls.callbackUrl;
+
       // Make sure there's sensible defaults for the tokenUrl and authorizationUrl, but still allow them to be
       // overwritten if necessary.
       if (cfg.configuration.mode?.useProduction) {

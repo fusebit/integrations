@@ -49,7 +49,7 @@ class OAuthEngine {
    * @returns OAuth redirect URI
    */
   protected getRedirectUri(): string {
-    return `${this.cfg.mountUrl}/api/callback`;
+    return this.cfg.callbackUrl;
   }
 
   /**

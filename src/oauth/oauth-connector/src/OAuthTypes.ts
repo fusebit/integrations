@@ -3,6 +3,7 @@ interface IOAuthConfig {
   audience?: string;
   codeChallenge?: string;
   codeChallengeMethod?: string;
+  callbackUrl: string;
   tokenUrl: string;
   clientId: string;
   clientSecret: string;
