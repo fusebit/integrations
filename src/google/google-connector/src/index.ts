@@ -28,7 +28,7 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Google Configuration';
 
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'callbackUrl', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'callbackUrl');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Google App';
