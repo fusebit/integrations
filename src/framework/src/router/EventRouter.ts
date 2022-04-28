@@ -31,6 +31,9 @@ export class EventRouter {
    * @param {EventHandler[]} middleware
    */
   public on(path: string, ...middleware: EventHandler[]) {
+    if (path[0] !== '/') {
+      console.log(`WARNING: Missing leading '/' on path: ${path}`);
+    }
     this.router.register(path, ['event'], middleware as FusebitHandler[], { name: path });
   }
 }
