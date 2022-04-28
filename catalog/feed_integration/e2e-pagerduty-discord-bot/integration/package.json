@@ -1,15 +1,15 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-e2e-pagerduty-discord-bot-integration",
-  "version": "7.45.14",
+  "version": "7.45.15",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/discord-provider": "^7.45.14",
-    "@fusebit-int/framework": "^7.45.14",
-    "@fusebit-int/pagerduty-provider": "^7.45.14",
+    "@fusebit-int/discord-provider": "^7.45.15",
+    "@fusebit-int/framework": "^7.45.15",
+    "@fusebit-int/pagerduty-provider": "^7.45.15",
     "superagent": "^6.1.0"
   },
   "files": [
