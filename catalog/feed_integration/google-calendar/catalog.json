@@ -1,0 +1,50 @@
+{
+  "id": "google-calendar",
+  "name": "Google-calendar",
+  "smallIcon": "#/assets/google-calendar.svg",
+  "largeIcon": "#/assets/google-calendarLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Calendar, Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-calendar#creating-your-own-google-calendar-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your Event was Successfully added to your Google Calendar",
+        "postFail": "Oops! Something went wrong and we couldn&#39;t add this event to your Google Calendar",
+        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your events from Google",
+        "itemName": "Event",
+        "properties": [
+          {
+            "name": "StartDate",
+            "label": "When?"
+          },
+          {
+            "name": "EventName",
+            "label": "Event Name"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "google-calendarConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "google-calendarIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
