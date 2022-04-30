@@ -23,13 +23,11 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
-// Endpoint for Sample App: Retrieve tasks from your Asana Workspace
+// Endpoint for Sample App: Retrieve Events from your Primary Google Calendar
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const today = new Date();
 
-  // API Reference: https://developers.google.com/calendar/api/v3/reference
   const calendar = await googleClient.calendar({ version: 'v3' });
   const calendarEvents = await calendar.events.list({
     calendarId: 'primary',
@@ -56,9 +54,8 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   ctx.body = calendarEventsList;
 });
 
-// Endpoint for Sample App: Add new task to your Asana workspace
+// Endpoint for Sample App: Use QuickAdd to add a New Event to your Google Calendar
 router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
-  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const quickAddText = ctx.req.body.eventName + ' ' + ctx.req.body.startDate;
 
