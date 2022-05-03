@@ -2,4 +2,4 @@
 
 set -xe
 
-npm run test
+lerna run test
