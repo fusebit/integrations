@@ -1,6 +1,6 @@
 {
   "id": "google-calendar",
-  "name": "Google-calendar",
+  "name": "Google Calendar",
   "smallIcon": "#/assets/google-calendar.svg",
   "largeIcon": "#/assets/google-calendarLarge.svg",
   "version": "5.2.0",
