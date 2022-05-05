@@ -1,93 +1,41 @@
 import superagent from 'superagent';
 import { ObjectEntries } from './Utilities';
-import { Internal } from '@fusebit-int/framework';
-import Context = Internal.Types.Context;
-import { IIdentityClientParams, IOAuthToken, ITags } from './OAuthTypes';
+import { ITags } from './OAuthTypes';
 
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
-class IdentityClient {
-  private readonly params: any;
-  private readonly baseUrl: string;
-  private readonly connectorUrl: string;
-  private readonly functionUrl: URL;
-  private readonly accessToken: string;
-  private readonly connectorId: string;
-  private readonly createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
+type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
+type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
 
-  constructor(params: IIdentityClientParams) {
-    this.params = params;
-    this.functionUrl = new URL(params.baseUrl);
-    this.connectorId = params.entityId;
-    this.connectorUrl = `${this.functionUrl.protocol}//${this.functionUrl.host}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.connectorId}`;
-    this.baseUrl = `${this.connectorUrl}/identity`;
+export interface ITokenParams {
+  accountId: string;
+  subscriptionId: string;
+  baseUrl: string;
+  accessToken: string;
+}
+
+export interface ITokenSessionParams<IToken> extends ITokenParams {
+  createTags: ICreateTags<IToken>;
+  validateToken: IValidateToken<IToken>;
+}
+
+abstract class TokenClient<IToken> {
+  protected readonly baseUrl: string;
+  protected readonly accessToken: string;
+
+  constructor(params: ITokenParams) {
+    this.baseUrl = params.baseUrl;
     this.accessToken = params.accessToken;
-    this.createTags = params.createTags;
   }
 
-  private cleanId = (id?: string) => {
-    return id ? removeTrailingSlash(removeLeadingSlash(id)) : '';
-  };
+  protected cleanId = (id?: string) => (id ? removeTrailingSlash(removeLeadingSlash(id)) : '');
+  protected getUrl = (id: string) => `${this.baseUrl}/${this.cleanId(id)}`;
 
-  private getUrl = (identityId: string) => {
-    identityId = this.cleanId(identityId);
-    return `${this.baseUrl}/${identityId}`;
-  };
-
-  public getToken = async (identityId: string) => {
-    identityId = this.cleanId(identityId);
-    const response = await superagent
-      .get(this.getUrl(identityId))
-      .set('Authorization', `Bearer ${this.accessToken}`)
-      .ok((res) => res.status < 300 || res.status === 404);
-    return response.status === 404 ? undefined : response.body.data.token;
-  };
-
-  public saveTokenToSession = async (token: IOAuthToken, sessionId: string) => {
-    if (!token.access_token && !token.refresh_token) {
-      const error = (token as { error?: string }).error;
-      const errorMessageString = error ? `"${error}". ` : '';
-      throw new Error(
-        `${errorMessageString}Access token and Refresh token are both missing on object: ${JSON.stringify(
-          Object.keys(token)
-        )}`
-      );
-    }
-
-    sessionId = this.cleanId(sessionId);
-    const response = await superagent
-      .put(`${this.connectorUrl}/session/${sessionId}`)
-      .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ output: { token }, tags: await this.createTags(token) });
-    return response.body;
-  };
-
-  public loadTokenFromSession = async (sessionId: string) => {
-    sessionId = this.cleanId(sessionId);
-    const response = await superagent
-      .get(`${this.connectorUrl}/session/${sessionId}`)
-      .set('Authorization', `Bearer ${this.accessToken}`);
-    return response.body.output.token;
-  };
-
-  public updateToken = async (token: IOAuthToken, lookup: string) => {
-    lookup = this.cleanId(lookup);
-    const response = await superagent
-      .put(this.getUrl(lookup))
-      .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ data: { token } });
-    return response.body;
-  };
-
-  public delete = async (identityId: string) => {
-    identityId = this.cleanId(identityId);
-    await superagent
-      .delete(this.getUrl(identityId))
-      .set('Authorization', `Bearer ${this.accessToken}`)
-      .ok((res) => res.status === 404 || res.status === 204);
-    return;
-  };
+  public abstract async get(id: string): Promise<IToken>;
+  public abstract async put(token: IToken, id: string): Promise<IToken>;
+  public abstract async error(error: { error: string; errorDescription?: string }, sessionId: string): Promise<void>;
+  public abstract async delete(identityId: string): Promise<void>;
 
   public list = async (query: { count?: number; next?: string; idPrefix?: string } = {}) => {
     ObjectEntries(query).forEach(([key, value]) => {
@@ -98,21 +46,82 @@ class IdentityClient {
     const response = await superagent.get(this.baseUrl).query(query).set('Authorization', `Bearer ${this.accessToken}`);
     return response.body;
   };
+}
 
-  public saveErrorToSession = async (error: { error: string; errorDescription?: string }, sessionId: string) => {
+class TokenSessionClient<IToken> extends TokenClient<IToken> {
+  protected createTags: ICreateTags<IToken>;
+  protected validateToken: IValidateToken<IToken>;
+
+  constructor(params: ITokenSessionParams<IToken>) {
+    super(params);
+    this.createTags = params.createTags;
+    this.validateToken = params.validateToken;
+  }
+
+  public put = async (token: IToken, sessionId: string): Promise<IToken> => {
+    await this.validateToken(token);
+
     sessionId = this.cleanId(sessionId);
     const response = await superagent
-      .put(`${this.connectorUrl}/session/${sessionId}`)
+      .put(this.getUrl(sessionId))
       .set('Authorization', `Bearer ${this.accessToken}`)
-      .send({ output: error });
-    return response.body;
+      .send({ output: { token }, tags: await this.createTags(token) });
+    return response.body.output.token;
   };
 
-  public getCallbackUrl = async (ctx: Context): Promise<string> => {
-    const url = new URL(`${this.connectorUrl}/session/${ctx.query.state}/callback`);
-    Object.entries<string>(ctx.request.query).forEach(([key, value]) => url.searchParams.append(key, value));
-    return url.toString();
+  public get = async (sessionId: string): Promise<IToken> => {
+    sessionId = this.cleanId(sessionId);
+    const response = await superagent.get(this.getUrl(sessionId)).set('Authorization', `Bearer ${this.accessToken}`);
+    if (response.body.output?.token) {
+      return response.body.output.token;
+    }
+
+    return response.body.input;
+  };
+
+  public error = async (error: { error: string; errorDescription?: string }, sessionId: string) => {
+    sessionId = this.cleanId(sessionId);
+    await superagent
+      .put(this.getUrl(sessionId))
+      .set('Authorization', `Bearer ${this.accessToken}`)
+      .send({ output: error });
+    return;
+  };
+
+  public delete = async (): Promise<void> => {
+    // No sensible operation here; do nothing.
   };
 }
 
-export default IdentityClient;
+class TokenIdentityClient<IToken> extends TokenClient<IToken> {
+  public get = async (identityId: string): Promise<IToken> => {
+    identityId = this.cleanId(identityId);
+    const response = await superagent
+      .get(this.getUrl(identityId))
+      .set('Authorization', `Bearer ${this.accessToken}`)
+      .ok((res) => res.status < 300 || res.status === 404);
+    return response.status === 404 ? undefined : response.body.data.token;
+  };
+
+  public put = async (token: IToken, lookup: string): Promise<IToken> => {
+    const response = await superagent
+      .put(this.getUrl(lookup))
+      .set('Authorization', `Bearer ${this.accessToken}`)
+      .send({ data: { token } });
+    return response.body;
+  };
+
+  public delete = async (identityId: string) => {
+    await superagent
+      .delete(this.getUrl(identityId))
+      .set('Authorization', `Bearer ${this.accessToken}`)
+      .ok((res) => res.status === 404 || res.status === 204);
+    return;
+  };
+
+  public error = async (): Promise<void> => {
+    // No way of recording errors on identities right now.
+  };
+}
+
+export { TokenClient, TokenSessionClient, TokenIdentityClient };

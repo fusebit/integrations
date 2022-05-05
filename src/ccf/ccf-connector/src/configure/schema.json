@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "tokenUrl": {
+      "title": "Override the OAuth2 Token Request URL",
+      "type": "string"
+    }
+  },
+  "required": ["tokenUrl"]
+}

@@ -2,6 +2,9 @@ import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 
 import { IOAuthConfig, IOAuthToken, IOAuthTokenWithRefresh } from './OAuthTypes';
+import { TokenClient } from './IdentityClient';
+
+const getTokenClient = (ctx: Internal.Types.Context): TokenClient<IOAuthToken> => ctx.state.tokenClient;
 
 class OAuthEngine {
   public cfg: IOAuthConfig;
@@ -15,7 +18,7 @@ class OAuthEngine {
   }
 
   public async deleteUser(ctx: Internal.Types.Context, lookupKey: string) {
-    return ctx.state.identityClient?.delete(lookupKey);
+    return getTokenClient(ctx).delete(lookupKey);
   }
 
   /**
@@ -75,6 +78,8 @@ class OAuthEngine {
    */
   public async convertAccessCodeToToken(ctx: Internal.Types.Context, lookupKey: string, code: string) {
     const token = await this.getAccessToken(code, ctx);
+    const tokenClient = getTokenClient(ctx);
+
     if (!isNaN(Number(token.expires_in))) {
       token.expires_at = Date.now() + Number(token.expires_in) * 1000;
     }
@@ -84,7 +89,7 @@ class OAuthEngine {
 
     await this.enrichInitialToken(ctx, token);
 
-    await ctx.state.identityClient?.saveTokenToSession(token, lookupKey);
+    await tokenClient.put(token, lookupKey);
 
     return token;
   }
@@ -93,9 +98,15 @@ class OAuthEngine {
    * Fetches callback url from session that is managing the connector
    */
   public async redirectToCallback(ctx: Internal.Types.Context) {
-    const callbackUrl = await ctx.state.identityClient!.getCallbackUrl(ctx);
+    const callbackUrl = await this.getCallbackUrl(ctx);
     ctx.redirect(callbackUrl);
   }
+
+  public getCallbackUrl = async (ctx: Internal.Types.Context): Promise<string> => {
+    const url = new URL(`${this.cfg.mountUrl}/session/${ctx.query.state}/callback`);
+    Object.entries<string>(ctx.request.query).forEach(([key, value]) => url.searchParams.append(key, value));
+    return url.toString();
+  };
 
   /**
    * Workaround an issue with Salesforce whereby Salesforce does not return the 'expires_in' property.
@@ -170,25 +181,8 @@ class OAuthEngine {
    * access token cannot be returned, an exception is thrown.
    * @param {*} Context The vendor user Context
    */
-  public async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string, identity = true) {
-    let token: IOAuthToken | undefined;
-    const tokenRw = identity
-      ? {
-          get: ctx.state.identityClient!.getToken,
-          put: ctx.state.identityClient!.updateToken,
-          delete: ctx.state.identityClient!.delete,
-        }
-      : {
-          get: ctx.state.identityClient!.loadTokenFromSession,
-          put: ctx.state.identityClient!.saveTokenToSession,
-          delete: () => {},
-        };
-
-    try {
-      token = await tokenRw.get(lookupKey);
-    } catch (e) {
-      throw e;
-    }
+  public async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string) {
+    const token = await getTokenClient(ctx).get(lookupKey);
 
     if (!token) {
       return undefined;
@@ -200,17 +194,17 @@ class OAuthEngine {
         ctx,
         lookupKey,
         this.cfg.refreshWaitCountLimit,
-        this.cfg.refreshInitialBackoff,
-        tokenRw
+        this.cfg.refreshInitialBackoff
       );
     } else {
       // Get access token for "this" OAuth connector
-      return this.ensureLocalAccessToken(ctx, lookupKey, tokenRw);
+      return this.ensureLocalAccessToken(ctx, lookupKey);
     }
   }
 
-  protected async ensureLocalAccessToken(ctx: Internal.Types.Context, lookupKey: string, tokenRw: any) {
-    let token: IOAuthToken = await tokenRw.get(lookupKey);
+  protected async ensureLocalAccessToken(ctx: Internal.Types.Context, lookupKey: string) {
+    const tokenClient = getTokenClient(ctx);
+    let token = await tokenClient.get(lookupKey);
     const accessTokenExpirationBuffer = this.cfg.accessTokenExpirationBuffer || 0;
     if (
       token.access_token &&
@@ -231,7 +225,7 @@ class OAuthEngine {
     if (token.refresh_token) {
       token.status = 'refreshing';
       try {
-        await tokenRw.put(token, lookupKey);
+        await tokenClient.put(token, lookupKey);
 
         token = await this.refreshAccessToken(token as IOAuthTokenWithRefresh, ctx);
 
@@ -242,19 +236,19 @@ class OAuthEngine {
         token.status = 'authenticated';
         token.refreshErrorCount = 0;
 
-        await tokenRw.put(token, lookupKey);
+        await tokenClient.put(token, lookupKey);
 
         return token;
       } catch (e) {
         if (token.refreshErrorCount > this.cfg.refreshErrorLimit) {
-          await ctx.state.identityClient?.delete(lookupKey);
+          await tokenClient.delete(lookupKey);
           throw new Error(
             `Error refreshing access token. Maximum number of attempts exceeded, identity ${lookupKey} has been deleted: ${e.message}`
           );
         } else {
           token.refreshErrorCount = (token.refreshErrorCount || 0) + 1;
           token.status = 'refresh_error';
-          await tokenRw.put(token, lookupKey);
+          await tokenClient.put(token, lookupKey);
           throw new Error(
             `Error refreshing access token, attempt ${token.refreshErrorCount} out of ${this.cfg.refreshErrorLimit}: ${e.message}`
           );
@@ -269,9 +263,10 @@ class OAuthEngine {
     ctx: Internal.Types.Context,
     lookupKey: string,
     count: number,
-    backoff: number,
-    tokenRw: any
+    backoff: number
   ) {
+    const tokenClient = getTokenClient(ctx);
+
     if (count <= 0) {
       throw new Error(
         'Error refreshing access token. Waiting for the access token to be refreshed exceeded the maximum time'
@@ -282,7 +277,7 @@ class OAuthEngine {
       setTimeout(async () => {
         let token: IOAuthToken;
         try {
-          token = await tokenRw.get(lookupKey);
+          token = await tokenClient.get(lookupKey);
           if (!token || token.status === 'refresh_error') {
             throw new Error('Concurrent access token refresh operation failed');
           }
@@ -298,8 +293,7 @@ class OAuthEngine {
             ctx,
             lookupKey,
             count - 1,
-            Math.floor(backoff * this.cfg.refreshBackoffIncrement),
-            tokenRw
+            Math.floor(backoff * this.cfg.refreshBackoffIncrement)
           );
         } catch (e) {
           return reject(e);

@@ -1,7 +1,7 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 
-import IdentityClient from './IdentityClient';
+import { TokenIdentityClient, TokenSessionClient } from './IdentityClient';
 
 import * as ConfigurationUI from './configure';
 import { IOAuthToken, ITags } from './OAuthTypes';
@@ -22,7 +22,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   }
 
   protected async onSessionError(ctx: Connector.Types.Context, error: { error: string; errorDescription?: string }) {
-    await ctx.state.identityClient?.saveErrorToSession({ ...error }, ctx.query.state);
+    await ctx.state.tokenClient.error({ ...error }, ctx.query.state);
   }
 
   protected adjustUrlConfiguration(defaultTokenUrl: string, defaultAuthorizationUrl: string, proxyKey?: string) {
@@ -114,20 +114,28 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     }
   }
 
-  constructor() {
-    super();
+  protected createIdentityClient(ctx: Connector.Types.Context) {
+    const functionUrl = new URL(ctx.state.params.baseUrl);
+    const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    // Adjust the configuration
-    this.router.use(this.addUrlConfigurationAdjustment());
+    return new TokenIdentityClient<IOAuthToken>({
+      accountId: ctx.state.params.accountId,
+      subscriptionId: ctx.state.params.subscriptionId,
+      baseUrl: `${baseUrl}/identity`,
+      accessToken: ctx.state.params.functionAccessToken,
+    });
+  }
 
-    // Adjust the configuration and create an identityClient to manipulate the OAuth state
-    this.router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      // Placeholder until event/cron are on their own routers
-      if (ctx.method === 'EVENT') {
-        return;
-      }
+  protected createSessionClient(ctx: Connector.Types.Context) {
+    const functionUrl = new URL(ctx.state.params.baseUrl);
+    const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-      const createTags = async (token: IOAuthToken): Promise<ITags | undefined> => {
+    return new TokenSessionClient<IOAuthToken>({
+      accountId: ctx.state.params.accountId,
+      subscriptionId: ctx.state.params.subscriptionId,
+      baseUrl: `${baseUrl}/session`,
+      accessToken: ctx.state.params.functionAccessToken,
+      createTags: async (token: IOAuthToken): Promise<ITags | undefined> => {
         const webhookIds = await this.service.getWebhookTokenId(ctx, token);
         const result: ITags = {};
         if (webhookIds) {
@@ -140,15 +148,33 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
           }
         }
         return result;
-      };
+      },
+      validateToken: (token: IOAuthToken) => {
+        if (token.access_token || token.refresh_token) {
+          return;
+        }
 
+        const error = (token as { error?: string }).error;
+        const errorMessageString = error ? `"${error}". ` : '';
+        throw new Error(
+          `${errorMessageString}Access token and Refresh token are both missing on object: ${JSON.stringify(
+            Object.keys(token)
+          )}`
+        );
+      },
+    });
+  }
+
+  constructor() {
+    super();
+
+    // Adjust the configuration
+    this.router.use(this.addUrlConfigurationAdjustment());
+
+    // Adjust the configuration and create an engine to manipulate the OAuth state
+    this.router.use(async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       ctx.state.engine = this.createEngine(ctx);
       ctx.state.engine.setMountUrl(ctx.state.params.baseUrl);
-      ctx.state.identityClient = new IdentityClient({
-        createTags,
-        accessToken: ctx.state.params.functionAccessToken,
-        ...ctx.state.params,
-      });
 
       return next();
     });
@@ -191,6 +217,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       '/api/:lookupKey/health',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
+        ctx.state.tokenClient = this.createIdentityClient(ctx);
         if (!(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey))) {
           ctx.throw(404);
         }
@@ -202,10 +229,9 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       '/api/session/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+        ctx.state.tokenClient = this.createSessionClient(ctx);
         try {
-          ctx.body = this.sanitizeCredentials(
-            await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey, false)
-          );
+          ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
         } catch (error) {
           ctx.throw(500, error.message);
         }
@@ -221,6 +247,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       '/api/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+        ctx.state.tokenClient = this.createIdentityClient(ctx);
         try {
           ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
         } catch (error) {
@@ -238,6 +265,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       '/api/:lookupKey',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
+        ctx.state.tokenClient = this.createIdentityClient(ctx);
         ctx.body = await ctx.state.engine.deleteUser(ctx, ctx.params.lookupKey);
       }
     );
@@ -248,6 +276,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     });
 
     this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
+      ctx.state.tokenClient = this.createSessionClient(ctx);
       const state = ctx.query.state;
 
       if (!state) {
