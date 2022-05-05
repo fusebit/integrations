@@ -24,7 +24,7 @@ class CcfConnector extends Connector<Connector.Service> {
     client_id: token.client_id,
   });
 
-  protected async waitForRefreshedAccessToken(ctx: Internal.Types.Context, lookupKey: string) {
+  protected async waitForRefreshedAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<ICcfToken> {
     const startTime = Date.now();
 
     let backoff = 0;
@@ -42,7 +42,7 @@ class CcfConnector extends Connector<Connector.Service> {
     } while (true);
   }
 
-  protected async refreshToken(ctx: Internal.Types.Context, lookupKey: string, token: ICcfToken) {
+  protected async refreshToken(ctx: Internal.Types.Context, lookupKey: string, token: ICcfToken): Promise<ICcfToken> {
     const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
 
     if (token.status === 'refreshing') {
@@ -78,7 +78,7 @@ class CcfConnector extends Connector<Connector.Service> {
     return token;
   }
 
-  protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string) {
+  protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<ICcfToken> {
     const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
     const token: ICcfToken | undefined = await tokenClient.get(lookupKey);
 
