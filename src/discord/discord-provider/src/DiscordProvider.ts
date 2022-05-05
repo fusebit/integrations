@@ -1,7 +1,7 @@
+import { REST } from '@discordjs/rest';
 import { Internal } from '@fusebit-int/framework';
-import { DiscordClient as Client } from './DiscordClient';
 
-type FusebitDiscordClient = Client & { fusebit?: any };
+type FusebitDiscordClient = REST & { fusebit?: any };
 
 export default class DiscordProvider extends Internal.Provider.Activator<FusebitDiscordClient> {
   /*
@@ -9,12 +9,8 @@ export default class DiscordProvider extends Internal.Provider.Activator<Fusebit
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitDiscordClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitDiscordClient = new Client(ctx, {
-      credentials,
-      lookupKey,
-      connectorId: this.config.entityId,
-    });
-    await client.initialize();
+    const client: FusebitDiscordClient = new REST({ version: '10' }).setToken(credentials.access_token);
+    client.fusebit = credentials;
     return client;
   }
 }
