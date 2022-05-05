@@ -26,7 +26,6 @@ class CcfConnector extends Connector<Connector.Service> {
 
   protected async waitForRefreshedAccessToken(ctx: Internal.Types.Context, lookupKey: string) {
     const startTime = Date.now();
-    const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
 
     let backoff = 0;
     let count = 1;
