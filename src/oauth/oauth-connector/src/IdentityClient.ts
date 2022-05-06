@@ -32,10 +32,10 @@ abstract class TokenClient<IToken> {
   protected cleanId = (id?: string) => (id ? removeTrailingSlash(removeLeadingSlash(id)) : '');
   protected getUrl = (id: string) => `${this.baseUrl}/${this.cleanId(id)}`;
 
-  public abstract async get(id: string): Promise<IToken>;
-  public abstract async put(token: IToken, id: string): Promise<IToken>;
-  public abstract async error(error: { error: string; errorDescription?: string }, sessionId: string): Promise<void>;
-  public abstract async delete(identityId: string): Promise<void>;
+  public abstract get(id: string): Promise<IToken>;
+  public abstract put(token: IToken, id: string): Promise<IToken>;
+  public abstract error(error: { error: string; errorDescription?: string }, sessionId: string): Promise<void>;
+  public abstract delete(identityId: string): Promise<void>;
 
   public list = async (query: { count?: number; next?: string; idPrefix?: string } = {}) => {
     ObjectEntries(query).forEach(([key, value]) => {
