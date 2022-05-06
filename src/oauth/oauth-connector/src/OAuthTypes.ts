@@ -38,13 +38,4 @@ interface IOAuthTokenWithRefresh extends IOAuthToken {
 
 interface ITags extends Record<string, string | null> {}
 
-interface IIdentityClientParams {
-  subscriptionId: string;
-  accountId: string;
-  baseUrl: string;
-  entityId: string;
-  accessToken: string;
-  createTags: (token: IOAuthToken) => Promise<ITags | undefined>;
-}
-
-export { IOAuthConfig, IOAuthToken, ITags, IIdentityClientParams, IOAuthTokenWithRefresh };
+export { IOAuthConfig, IOAuthToken, ITags, IOAuthTokenWithRefresh };

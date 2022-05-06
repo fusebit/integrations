@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/oauth2Connector/properties/id",
+      "label": "Name"
+    }
+  ]
+}
