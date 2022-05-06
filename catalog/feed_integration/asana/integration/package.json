@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-asana-bot-integration",
-  "version": "7.45.16",
+  "version": "7.46.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/asana-provider": "^7.45.16",
-    "@fusebit-int/framework": "^7.45.16"
+    "@fusebit-int/asana-provider": "^7.46.0",
+    "@fusebit-int/framework": "^7.46.0"
   },
   "files": [
     "./integration.js",
