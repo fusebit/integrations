@@ -1,0 +1,35 @@
+{
+  "id": "oauth2-ccf",
+  "name": "Client Credential Flow",
+  "smallIcon": "#/assets/oauth2.svg",
+  "largeIcon": "#/assets/oauth2.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "OAuth"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/oauth-ccf#creating-your-own-oauth2-ccf-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "ccfConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/ccf-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

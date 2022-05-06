@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "OAuth2"
+  },
+  "handler": "@fusebit-int/oauth2-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": true
+    },
+    "scope": "",
+    "clientId": "",
+    "clientSecret": "",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

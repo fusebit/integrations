@@ -1,0 +1,13 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "oauth2-ccf"
+  },
+  "handler": "@fusebit-int/ccf-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": true
+    },
+    "tokenUrl": ""
+  }
+}

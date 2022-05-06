@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/ccfConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

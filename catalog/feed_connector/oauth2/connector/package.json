@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-connector-oauth2-connector",
+  "version": "7.45.16",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.45.16",
+    "@fusebit-int/oauth2-connector": ">=7.45.16"
+  }
+}
