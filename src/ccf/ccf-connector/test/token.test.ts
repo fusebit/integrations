@@ -77,7 +77,7 @@ describe('Token Refresh', () => {
         expect(body.data.token.status).toBeUndefined();
         return true;
       })
-      .reply(200, JSON.stringify({ ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt }));
+      .reply(200, { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt });
 
     const tokenResult = await handle('GET', `/api/${entityId}/token`);
     expect(tokenResult.status).toBe(200);
@@ -103,7 +103,7 @@ describe('Token Refresh', () => {
     // Return an expired token from fusebit storage
     fusebitApi
       .get(`${connectorUri}/identity/${entityId}`)
-      .reply(200, JSON.stringify({ data: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } }));
+      .reply(200, { data: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } });
 
     // The healthcheck returns success
     const tokenResult = await handle('GET', `/api/${entityId}/health`);
@@ -126,10 +126,7 @@ describe('Token Refresh', () => {
     // Return an expired token from fusebit storage
     fusebitApi
       .get(`${connectorUri}/session/${entityId}`)
-      .reply(
-        200,
-        JSON.stringify({ output: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } })
-      );
+      .reply(200, { output: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } });
 
     // The token is returned
     const tokenResult = await handle('GET', `/api/session/${entityId}/token`);
@@ -154,7 +151,7 @@ describe('Token Refresh', () => {
     const expiresAt = Date.now() + 500000;
 
     // Return the supplied input parameters in the session
-    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, JSON.stringify({ input: { ...emptyToken } }));
+    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, { input: { ...emptyToken } });
 
     // First PUT updates status to 'refreshing'
     fusebitApi
@@ -211,7 +208,7 @@ describe('Token Refresh', () => {
     const expiresAt = Date.now() + 500000;
 
     // Return an token without an access_key in the output
-    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, JSON.stringify({ output: { token: emptyToken } }));
+    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, { output: { token: emptyToken } });
 
     // First PUT updates status to 'refreshing'
     fusebitApi
@@ -279,7 +276,7 @@ describe('Token Refresh', () => {
     const expiresAt = Date.now() + 500000;
 
     // Return the supplied input parameters in the session
-    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, JSON.stringify({ input: { ...emptyToken } }));
+    fusebitApi.get(`${connectorUri}/session/${entityId}`).reply(200, { input: { ...emptyToken } });
 
     // PUT updates the output to include the credentials
     fusebitApi
@@ -292,7 +289,7 @@ describe('Token Refresh', () => {
     // Get from ensureAccessToken, return the supplied input parameters in the session
     fusebitApi
       .get(`${connectorUri}/session/${entityId}`)
-      .reply(200, JSON.stringify({ input: { ...emptyToken }, output: { ...emptyToken } }));
+      .reply(200, { input: { ...emptyToken }, output: { ...emptyToken } });
 
     // PUT updates the output to include the credentials but with status==refreshing
     fusebitApi

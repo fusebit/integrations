@@ -6,17 +6,23 @@ import { TokenClient, TokenSessionClient, TokenIdentityClient } from '@fusebit-i
 
 interface ICcfToken {
   expires_at: number;
+  expires_in?: number;
   access_token: string;
   client_id: string;
   client_secret: string;
   status?: string;
+  refresh_at?: number;
 }
 
+const TOKEN_REFRESHING = 'refreshing';
+const TOKEN_REFRESH_ERROR = 'refresh_error';
+
 class CcfConnector extends Connector<Connector.Service> {
-  protected readonly initialBackoff = 100;
-  protected readonly maxWaitTime = 5000;
-  protected readonly defaultExpirationInterval = 120000;
-  protected readonly accessTokenExpirationBuffer = 120000;
+  public readonly initialBackoff = 100;
+  public readonly maxWaitTime = 5000;
+  public readonly defaultExpirationInterval = 120000;
+  public readonly accessTokenExpirationBuffer = 120000;
+  public readonly refreshErrorRetryInterval = 5000;
 
   protected sanitizeCredentials = (token: ICcfToken) => ({
     expires_at: token.expires_at,
@@ -31,8 +37,12 @@ class CcfConnector extends Connector<Connector.Service> {
     let count = 1;
     do {
       const curToken = await ctx.state.tokenClient.get(lookupKey);
-      if (curToken.data.status !== 'refreshing' || startTime + this.maxWaitTime > Date.now()) {
+      if (curToken.status === undefined) {
         return curToken;
+      }
+
+      if (curToken.status === TOKEN_REFRESH_ERROR || startTime + this.maxWaitTime < Date.now()) {
+        ctx.throw(429);
       }
 
       // Wait a while to see if it's finished resolving.
@@ -45,9 +55,9 @@ class CcfConnector extends Connector<Connector.Service> {
   protected async refreshToken(ctx: Internal.Types.Context, lookupKey: string, token: ICcfToken): Promise<ICcfToken> {
     const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
 
-    if (token.status === 'refreshing') {
+    if (token.status === TOKEN_REFRESHING) {
       token = await this.waitForRefreshedAccessToken(ctx, lookupKey);
-      if (token.status !== 'refreshing') {
+      if (token.status === TOKEN_REFRESHING) {
         throw new Error('Error waiting for access token refresh');
       }
       return token;
@@ -57,25 +67,44 @@ class CcfConnector extends Connector<Connector.Service> {
       throw new Error('Missing client_id and client_secret in token');
     }
 
-    token.status = 'refreshing';
+    if (token.status === TOKEN_REFRESH_ERROR && token.refresh_at && Date.now() < token.refresh_at) {
+      ctx.throw(429);
+    }
+
+    token.status = TOKEN_REFRESHING;
+    delete token.refresh_at;
     await tokenClient.put(token, lookupKey);
 
     const url = new URL(ctx.state.manager.config.configuration.tokenUrl);
     url.searchParams.set('client_id', token.client_id);
     url.searchParams.set('client_secret', token.client_secret);
 
-    const response = await superagent.get(url.toString());
-    if (!response.body.access_token) {
-      throw new Error('No access token in response');
+    try {
+      const response = await superagent.get(url.toString());
+      if (!response.body.access_token) {
+        throw new Error('No access token in response');
+      }
+      delete token.status;
+      delete token.refresh_at;
+
+      token.access_token = response.body.access_token;
+      token.expires_in = response.body.expires_in;
+      if (!isNaN(Number(token.expires_in))) {
+        token.expires_at = Date.now() + Number(token.expires_in) * 1000;
+      } else {
+        token.expires_at = response.body.expires_at || this.defaultExpirationInterval + Date.now();
+      }
+
+      await tokenClient.put(token, lookupKey);
+
+      return token;
+    } catch (error) {
+      token.status = TOKEN_REFRESH_ERROR;
+      token.refresh_at = Date.now() + this.refreshErrorRetryInterval;
+
+      await tokenClient.put(token, lookupKey);
+      ctx.throw(429);
     }
-
-    delete token.status;
-    token.access_token = response.body.access_token;
-    token.expires_at = response.body.expires_at || this.defaultExpirationInterval + Date.now();
-
-    await tokenClient.put(token, lookupKey);
-
-    return token;
   }
 
   protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<ICcfToken> {
@@ -216,8 +245,10 @@ class CcfConnector extends Connector<Connector.Service> {
         // Create a new credential based on the details in the session.
         await this.ensureAccessToken(ctx, ctx.query.session);
       } catch (err) {
-        console.log(err);
-        tokenClient.error(err as any, ctx.query.session);
+        await tokenClient.error(
+          { error: (err as any).message, errorDescription: 'Failed to acquire token from token server' },
+          ctx.query.session
+        );
       }
 
       // Immediately send the user on to the next step in the session.
