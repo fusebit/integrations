@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-linear-connector",
-  "version": "7.46.0",
+  "version": "7.46.1",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.46.0",
-    "@fusebit-int/linear-connector": "^7.46.0"
+    "@fusebit-int/framework": "^7.46.1",
+    "@fusebit-int/linear-connector": "^7.46.1"
   }
 }
