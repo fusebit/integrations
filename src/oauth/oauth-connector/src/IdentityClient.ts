@@ -75,6 +75,7 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
     if (response.body.output?.token) {
       return response.body.output.token;
     }
+
     return response.body.input;
   };
 
