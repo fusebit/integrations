@@ -60,13 +60,13 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
 
   public put = async (token: IToken, sessionId: string): Promise<IToken> => {
     await this.validateToken(token);
-
     sessionId = this.cleanId(sessionId);
     const response = await superagent
       .put(this.getUrl(sessionId))
       .set('Authorization', `Bearer ${this.accessToken}`)
       .send({ output: { token }, tags: await this.createTags(token) });
-    return response.body.output.token;
+    console.log(response.body);
+    return response.body;
   };
 
   public get = async (sessionId: string): Promise<IToken> => {
