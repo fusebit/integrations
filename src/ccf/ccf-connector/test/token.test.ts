@@ -165,7 +165,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
@@ -188,7 +188,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     // The token request returns success
@@ -228,7 +228,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
@@ -251,7 +251,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     const tokenResult = await handle('GET', `/api/session/${entityId}/token`);
@@ -298,7 +298,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     // Get from ensureAccessToken, return the supplied input parameters in the session
@@ -316,7 +316,10 @@ describe('Token Refresh', () => {
         });
         return true;
       })
-      .reply(200, {});
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
     serviceApi
@@ -338,7 +341,7 @@ describe('Token Refresh', () => {
       })
       .reply(200, {
         id: entityId,
-        tags: [],
+        tags: {},
       });
 
     // The authorize returns an appropriate 302
