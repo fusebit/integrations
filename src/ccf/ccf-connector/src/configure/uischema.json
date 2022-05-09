@@ -10,7 +10,7 @@
           "elements": [
             {
               "type": "Control",
-              "scope": "#/properties/constants/properties/urls/properties/tokenUrl"
+              "scope": "#/properties/tokenUrl"
             }
           ]
         }
