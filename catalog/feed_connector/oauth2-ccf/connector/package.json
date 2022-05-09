@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-ccf-connector",
-  "version": "7.46.2",
+  "version": "7.46.3",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/ccf-connector": "^7.46.2",
-    "@fusebit-int/framework": "^7.46.2"
+    "@fusebit-int/ccf-connector": "^7.46.3",
+    "@fusebit-int/framework": "^7.46.3"
   }
 }
