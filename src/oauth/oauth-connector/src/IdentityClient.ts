@@ -66,7 +66,6 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
       .put(this.getUrl(sessionId))
       .set('Authorization', `Bearer ${this.accessToken}`)
       .send({ output: { token }, tags: await this.createTags(token) });
-    console.log(response.body);
     return response.body;
   };
 
