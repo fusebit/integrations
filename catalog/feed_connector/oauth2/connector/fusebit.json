@@ -3,7 +3,7 @@
   "tags": {
     "fusebit.service": "OAuth2"
   },
-  "handler": "@fusebit-int/oauth2-connector",
+  "handler": "@fusebit-int/oauth-connector",
   "configuration": {
     "mode": {
       "useProduction": true
