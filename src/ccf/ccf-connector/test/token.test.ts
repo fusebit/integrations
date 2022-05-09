@@ -163,7 +163,10 @@ describe('Token Refresh', () => {
         });
         return true;
       })
-      .reply(200, { output: { token: { ...emptyToken, status: 'refreshing' } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
     serviceApi
@@ -183,7 +186,10 @@ describe('Token Refresh', () => {
         expect(body.output.token.status).toBeUndefined();
         return true;
       })
-      .reply(200, { output: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // The token request returns success
     const tokenResult = await handle('GET', `/api/session/${entityId}/token`);
@@ -220,7 +226,10 @@ describe('Token Refresh', () => {
         });
         return true;
       })
-      .reply(200, { output: { token: { ...emptyToken, status: 'refreshing' } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
     serviceApi
@@ -240,7 +249,10 @@ describe('Token Refresh', () => {
         expect(body.output.token.status).toBeUndefined();
         return true;
       })
-      .reply(200, { output: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     const tokenResult = await handle('GET', `/api/session/${entityId}/token`);
     expect(tokenResult.status).toBe(200);
@@ -284,7 +296,10 @@ describe('Token Refresh', () => {
         expect(body.output.token).toEqual(emptyToken);
         return true;
       })
-      .reply(200, { output: { token: { ...emptyToken } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // Get from ensureAccessToken, return the supplied input parameters in the session
     fusebitApi
@@ -301,7 +316,10 @@ describe('Token Refresh', () => {
         });
         return true;
       })
-      .reply(200, { input: { ...emptyToken }, output: { token: { ...emptyToken, status: 'refreshing' } } });
+      .reply(200, {
+        id: entityId,
+        tags: {},
+      });
 
     // Next, it queries the token URL and gets an access_token with an expires_at
     serviceApi
@@ -322,8 +340,8 @@ describe('Token Refresh', () => {
         return true;
       })
       .reply(200, {
-        input: { ...emptyToken },
-        output: { token: { ...emptyToken, access_token: 'CCCCC', expires_at: expiresAt } },
+        id: entityId,
+        tags: {},
       });
 
     // The authorize returns an appropriate 302
