@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-quickbooks-integration",
-  "version": "7.46.3",
+  "version": "7.46.4",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.46.3",
-    "@fusebit-int/quickbooks-provider": "^7.46.3"
+    "@fusebit-int/framework": "^7.46.4",
+    "@fusebit-int/quickbooks-provider": "^7.46.4"
   },
   "files": [
     "./integration.js",
