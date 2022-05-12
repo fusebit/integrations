@@ -16,16 +16,16 @@
       "isPostEnabled": true,
       "terms": {
         "postSuccess": "Your Event was Successfully added to your Google Calendar",
-        "postFail": "Oops! Something went wrong and we couldn&#39;t add this event to your Google Calendar",
-        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your events from Google",
+        "postFail": "Oops! Something went wrong and we couldn't add this event to your Google Calendar",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your events from Google",
         "itemName": "Event",
         "properties": [
           {
-            "name": "StartDate",
+            "name": "startDate",
             "label": "When?"
           },
           {
-            "name": "EventName",
+            "name": "eventName",
             "label": "Event Name"
           }
         ]
