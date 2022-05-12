@@ -29,23 +29,25 @@ class ServiceConnector extends OAuthConnector {
         'Mailchimp Configuration';
 
       // Adjust the ui schema and layout
-
-      // Mailchimp offers two official APIs: Transactional and Marketing, supporting different use cases.
-      // Marketing API is authenticated using an OAuth Access Token.
-      // Transactional API is authenticated only via API Key - Most of the cases Marketing API is enough -
-      // Certain endpoints are only supported in the Transactional API.
-      // Transactional API is more suitable for single tenancy applications since it requires an API Key.
-      this.addConfigurationElement(ctx, SERVICE_NAME.toLocaleLowerCase(), 'transactionalApiKey', 'password');
+      // The server prefix is part of the URL of the specific Mailchimp account that owns the OAuth Application.
+      this.addConfigurationElement(ctx, SERVICE_NAME.toLocaleLowerCase(), 'serverPrefix');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your ${SERVICE_NAME} App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your ${SERVICE_NAME} App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.transactionalApiKey = {
-        title: 'API Key for the Mailchimp transactional API',
-        type: 'string',
-      };
+      ctx.body.schema.properties.scope.serverPrefix =
+        'The value of the server prefix located in the Mailchimp account URL';
     });
+
+    this.router.get(
+      '/api/oauth/metadata',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        const prefix = ctx.state.manager.config.configuration.serverPrefix;
+        ctx.body = prefix;
+      }
+    );
   }
 }
 
