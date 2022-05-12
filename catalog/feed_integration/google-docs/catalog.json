@@ -5,7 +5,7 @@
   "largeIcon": "#/assets/google-docsLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
-  "parent":["google"],
+  "parent": ["google"],
   "tags": {
     "catalog": "Office"
   },
