@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "identity read",
+    "scope": "identity read history",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
