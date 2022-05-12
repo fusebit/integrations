@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/slackLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent":["slack"],
   "tags": {
     "catalog": "Messaging"
   },

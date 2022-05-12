@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/linear.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent":["linear","discord"],
   "tags": {
     "catalog": "Project Management,Messaging"
   },

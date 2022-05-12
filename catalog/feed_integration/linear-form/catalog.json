@@ -6,6 +6,7 @@
   "version": "5.2.0",
   "private": true,
   "description": "#README.md",
+  "parent":["linear"],
   "tags": {
     "catalog": "Project Management"
   },
