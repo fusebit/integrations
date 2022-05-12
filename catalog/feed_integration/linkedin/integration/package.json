@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-linkedin-integration",
-  "version": "7.46.4",
+  "version": "7.47.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.46.4",
-    "@fusebit-int/linkedin-provider": "^7.46.4"
+    "@fusebit-int/framework": "^7.47.0",
+    "@fusebit-int/linkedin-provider": "^7.47.0"
   },
   "files": [
     "./integration.js",
