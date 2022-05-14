@@ -52,7 +52,7 @@ describe('Event Hook', () => {
 
     // Validate that the event is received but the individual event isn't handled
     const result = await manager.handle(request('POST', '/event/someEvent', { body: { payload: [event] } }));
-    expect(result.status).toBe(200);
+    expect(result.status).toBe(404);
     expect(result.body[0].status).toBe(404);
   });
 
