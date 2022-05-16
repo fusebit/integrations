@@ -1,6 +1,8 @@
 export const sampleEvent = require('./mock/webhook-event.json');
 
-export const sampleHeaders = {};
+export const sampleHeaders = {
+  'user-agent': 'MailChimp',
+};
 
 export const sampleConfig = {
   handler: '@fusebit-int/mailchimp-connector',

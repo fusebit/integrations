@@ -10,6 +10,8 @@ const TOKEN_URL = '<%= connector.tokenUrl %>';
 const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
 const REVOCATION_URL = '<%= connector.revokeUrl %>';
 const SERVICE_NAME = '<%= h.capitalize(name) %>';
+// Configuration section name used to add extra configuration elements via this.addConfigurationElement
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector {
   static Service = Service;

@@ -6,7 +6,6 @@ import mailChimpMarketingClient from '@mailchimp/mailchimp_marketing';
 class MailchimpClient {
   private ctx: Internal.Types.Context;
   public fusebit: Internal.Types.IFusebitCredentials;
-  private metadataPath: string = '/api/oauth/metadata';
   public marketing: any;
 
   constructor(ctx: Internal.Types.Context, fusebit: Internal.Types.IFusebitCredentials) {
@@ -16,22 +15,21 @@ class MailchimpClient {
   }
 
   public async configureMarketingApi(): Promise<void> {
-    // Fetch metadata and get the server prefix
-    const serverPrefix = await this.getMetadata();
+    // Fetch metadata and get the server prefix dynamically for the user.
+    const metadata = await this.getMetadata();
 
     this.marketing.setConfig({
       accessToken: this.fusebit.credentials.access_token,
-      server: serverPrefix,
+      server: metadata.dc,
     });
   }
 
-  private async getMetadata(): Promise<string> {
-    const params = this.ctx.state.params;
-    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.fusebit.connectorId}`;
-    const response = await superagent
-      .get(`${baseUrl}${this.metadataPath}`)
-      .set('Authorization', `Bearer ${params.functionAccessToken}`);
-    return response.body;
+  private async getMetadata(): Promise<any> {
+    const metadataResponse = await superagent
+      .get('https://login.mailchimp.com/oauth2/metadata')
+      .set('Authorization', `Bearer ${this.fusebit.credentials.access_token}`);
+
+    return metadataResponse.body;
   }
 }
 

@@ -8,8 +8,10 @@ const AUTHORIZATION_URL = 'https://login.mailchimp.com/oauth2/authorize';
 // Mailchimp does not implement a revocation URL, this is just a placeholder.
 const REVOCATION_URL = 'https://login.mailchimp.com/oauth2/token/no_supported';
 const SERVICE_NAME = 'Mailchimp';
+// Configuration section name used to add extra configuration elements via this.addConfigurationElement
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
-class ServiceConnector extends OAuthConnector {
+class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
   protected createService() {
@@ -28,26 +30,48 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Mailchimp Configuration';
 
-      // Adjust the ui schema and layout
-      // The server prefix is part of the URL of the specific Mailchimp account that owns the OAuth Application.
-      this.addConfigurationElement(ctx, SERVICE_NAME.toLocaleLowerCase(), 'serverPrefix');
-
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.scope.serverPrefix =
-        'The value of the server prefix located in the Mailchimp account URL';
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
 
-    this.router.get(
-      '/api/oauth/metadata',
+    // Webhook management
+    this.router.post(
+      '/api/fusebit/webhook/create',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        const prefix = ctx.state.manager.config.configuration.serverPrefix;
-        ctx.body = prefix;
+        ctx.body = await this.service.registerWebhook(ctx);
       }
     );
+
+    this.router.delete(
+      '/api/fusebit/webhook/:webhookId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.deleteWebhook(ctx);
+      }
+    );
+
+    this.router.patch(
+      '/api/fusebit/webhook/:webhookId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.updateWebhook(ctx);
+      }
+    );
+
+    this.router.post('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
+      await this.service.handleWebhookEvent(ctx);
+    });
+
+    // Handle Webhook ping (only used at the configuration of the Webhook)
+    this.router.get('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
+      if (!this.service.isPingWebhook(ctx)) {
+        return (ctx.status = 404);
+      }
+      ctx.status = 200;
+    });
   }
 }
 

@@ -1,0 +1,32 @@
+{
+  "id": "mailchimp",
+  "name": "Mailchimp",
+  "smallIcon": "#/assets/mailchimp.svg",
+  "largeIcon": "#/assets/mailchimpLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Email"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "mailchimpConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "mailchimpIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

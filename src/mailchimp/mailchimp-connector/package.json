@@ -2,12 +2,19 @@
   "name": "@fusebit-int/mailchimp-connector",
   "version": "7.46.3",
   "description": "Mailchimp Connector",
-  "keywords": ["Fusebit", "Mailchimp"],
+  "keywords": [
+    "Fusebit",
+    "Mailchimp"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
@@ -28,12 +35,10 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": ">=7.46.3",
-    "superagent": "6.1.0"
+    "@fusebit-int/oauth-connector": ">=7.46.3"
   },
   "devDependencies": {
     "@fusebit-int/framework": ">=7.46.3",
-    "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
