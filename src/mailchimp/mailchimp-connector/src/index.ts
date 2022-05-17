@@ -6,7 +6,7 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://login.mailchimp.com/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.mailchimp.com/oauth2/authorize';
 // Mailchimp does not implement a revocation URL, this is just a placeholder.
-const REVOCATION_URL = 'https://login.mailchimp.com/oauth2/token/no_supported';
+const REVOCATION_URL = 'https://login.mailchimp.com/oauth2/token/not_supported';
 const SERVICE_NAME = 'Mailchimp';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';

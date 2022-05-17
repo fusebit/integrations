@@ -6,7 +6,7 @@ import mailChimpMarketingClient from '@mailchimp/mailchimp_marketing';
 class MailchimpClient {
   private ctx: Internal.Types.Context;
   public fusebit: Internal.Types.IFusebitCredentials;
-  public marketing: any;
+  public marketing: typeof mailChimpMarketingClient;
 
   constructor(ctx: Internal.Types.Context, fusebit: Internal.Types.IFusebitCredentials) {
     this.ctx = ctx;
