@@ -2,8 +2,9 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 interface Event extends Record<string, any> {
-  installId: string;
+  webhookId: string;
 }
+
 class Service extends OAuthConnector.Service {
   public isPingWebhook(ctx: Connector.Types.Context) {
     const userAgent = ctx.req.headers['user-agent'];

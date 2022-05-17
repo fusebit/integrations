@@ -89,7 +89,7 @@ describe('Mailchimp Webhook Events', () => {
     expect(service.getWebhookEventType(sampleEvent)).toBe(sampleEvent.type);
   });
 
-  test.only('Validate: Event to Fanout', async () => {
+  test('Validate: Event to Fanout', async () => {
     const ctx = getContext();
     ctx.state = { ...ctx.state, ...sampleCtx.state };
     ctx.req = sampleCtx.req;
