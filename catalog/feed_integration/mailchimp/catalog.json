@@ -10,8 +10,25 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app",
+    "connectorSDKDocUrl": "https://github.com/mailchimp/mailchimp-marketing-node",
     "sampleConfig": {
-      "isEnabled": false
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your audience list from Mailchimp",
+        "itemName": "Audience",
+        "properties": [
+          {
+            "name": "audienceName",
+            "label": "Audience"
+          },
+          {
+            "name": "activeMembers",
+            "label": "Active members"
+          }
+        ]
+      }
     }
   },
   "configuration": {
