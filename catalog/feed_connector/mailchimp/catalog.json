@@ -9,7 +9,8 @@
     "catalog": ""
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app",
+    "connectorSDKDocUrl": "https://github.com/mailchimp/mailchimp-marketing-node/"
   },
   "configuration": {
     "schema": "config/schema.json",
