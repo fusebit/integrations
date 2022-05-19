@@ -1,0 +1,48 @@
+{
+  "id": "mailchimp",
+  "name": "Mailchimp",
+  "smallIcon": "#/assets/mailchimp.svg",
+  "largeIcon": "#/assets/mailchimpLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Email"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your audience list from Mailchimp",
+        "itemName": "Audience",
+        "properties": [
+          {
+            "name": "audienceName",
+            "label": "Audience"
+          },
+          {
+            "name": "activeMembers",
+            "label": "Active members"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "mailchimpConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "mailchimpIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
