@@ -15,41 +15,53 @@ class Service extends OAuthConnector.Service {
     return `webhook/${webhookId}`;
   };
 
+  public getStorageMailchimpWebhookKey = (webhookId: string) => {
+    return `webhook/mailchimp/${webhookId}`;
+  };
+
   public registerWebhook = async (ctx: Connector.Types.Context) => {
-    const { webhookId, secret } = ctx.req.body;
-    const webhookStorage = await this.getWebhook(ctx, webhookId);
+    const { webhookId, secret, id } = ctx.req.body;
+    const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (webhookStorage) {
       return (ctx.status = 409);
     }
     const createdTime = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { secret, createdTime } });
+    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { secret, createdTime, id } });
+    await this.utilities.setData(ctx, this.getStorageMailchimpWebhookKey(id), { data: { webhookId } });
     return { webhookId, createdTime };
   };
 
   public updateWebhook = async (ctx: Connector.Types.Context) => {
-    const { webhookId } = ctx.params;
+    const { id } = ctx.params;
     const { secret } = ctx.req.body;
-    const webhookStorage = await this.getWebhook(ctx, webhookId);
+    const webhookStorage = await this.getMailchimpWebhook(ctx, id);
     if (!webhookStorage) {
       return (ctx.status = 404);
     }
+    const { webhookId } = webhookStorage.data;
     const lastUpdate = Date.now();
     await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { secret, lastUpdate } });
-    return { webhookId, lastUpdate };
+    return { id, lastUpdate };
   };
 
   public deleteWebhook = async (ctx: Connector.Types.Context) => {
-    const { webhookId } = ctx.params;
-    const webhookStorage = await this.getWebhook(ctx, webhookId);
+    const { id } = ctx.params;
+    const webhookStorage = await this.getMailchimpWebhook(ctx, id);
     if (!webhookStorage) {
       return (ctx.status = 404);
     }
+    const { webhookId } = webhookStorage.data;
     await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
-    return { webhookId };
+    await this.utilities.deleteData(ctx, this.getStorageMailchimpWebhookKey(id));
+    return { id };
   };
 
-  private getWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
+  private getFusebitWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(webhookId));
+  };
+
+  private getMailchimpWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
+    return this.utilities.getData(ctx, this.getStorageMailchimpWebhookKey(webhookId));
   };
 
   public getEventsFromPayload(ctx: Connector.Types.Context) {
@@ -75,7 +87,7 @@ class Service extends OAuthConnector.Service {
     // Mailchimp doesn't support Webhook secrets. Until that, the configured Webhook can send a secret via
     // Query string, this is optional, but a good practice to suggest to our customers.
     const { secret } = ctx.query;
-    const webhookData = await this.utilities.getData(ctx, this.getStorageKey(webhookId));
+    const webhookData = await this.getFusebitWebhook(ctx, webhookId);
 
     // If no webhook is stored, this is probably an illegitimate webhook call.
     if (!webhookData) {

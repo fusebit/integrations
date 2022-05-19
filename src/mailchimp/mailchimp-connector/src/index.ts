@@ -45,6 +45,7 @@ class ServiceConnector extends OAuthConnector<Service> {
         body: Joi.object({
           secret: Joi.string().alphanum().optional(),
           webhookId: Joi.string().required(),
+          id: Joi.string().required(),
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -54,7 +55,7 @@ class ServiceConnector extends OAuthConnector<Service> {
     );
 
     this.router.delete(
-      '/api/fusebit/webhook/:webhookId',
+      '/api/fusebit/webhook/:id',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.deleteWebhook(ctx);
@@ -62,7 +63,7 @@ class ServiceConnector extends OAuthConnector<Service> {
     );
 
     this.router.patch(
-      '/api/fusebit/webhook/:webhookId',
+      '/api/fusebit/webhook/:id',
       this.middleware.validate({
         body: Joi.object({ secret: Joi.string().alphanum().optional() }),
       }),

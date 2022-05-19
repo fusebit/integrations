@@ -25,6 +25,7 @@ declare module '@mailchimp/mailchimp_marketing' {
     events: IMailchimpWebhookEvents;
     sources: IMailchimpWebhookSources;
     secret?: string;
+    url: string;
   }
 
   export interface IMailChimpWebhookResponse extends IMailChimpWebhook {
@@ -45,6 +46,10 @@ declare module '@mailchimp/mailchimp_marketing' {
     lists: ILists[];
   }
 
+  export interface IMailchimpWebhookList {
+    webhooks: IMailChimpWebhookResponse[];
+  }
+
   export namespace lists {
     function createListWebhook(
       listId: string,
@@ -53,7 +58,7 @@ declare module '@mailchimp/mailchimp_marketing' {
 
     function getListWebhook(listId: string, webhookId: string): Promise<IMailChimpWebhook>;
 
-    function getListWebhooks(listId: string): Promise<IMailChimpWebhook[]>;
+    function getListWebhooks(listId: string): Promise<IMailchimpWebhookList>;
 
     function deleteListWebhook(listId: string, webhookId: string): Promise<void>;
 
