@@ -21,7 +21,7 @@ const code = `
   const response = await mailchimpClient.marketing.ping.get();
 
   console.log('received a webhook event', event);
-  console.log('When pinging the Mailchimp Marketing API's ping endpoint, the server responded:', response);
+  console.log('When pinging the Mailchimp Marketing API\'s ping endpoint, the server responded:', response);
  });
  
 
