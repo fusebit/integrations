@@ -28,17 +28,6 @@ const code = `
      * @param listId {string} The audience list identifier
      * @param subscribingUser {object} The contact information (firstName, lastName, email)
      * @returns {object} Newly created audience contact.
-     * 
-     * @example
-     * const listId = 'YOUR_LIST_ID';
-     * const subscribingUser = {
-     *   firstName: 'John',
-     *   lastName: 'Doe',
-     *   email: 'mail@example.com'
-     * };
-     * 
-     *  const addedContact = await mailchimpAddAudienceContact(ctx, listId, subscribingUser);
-     * 
      */
     ${mailchimpAddAudienceContact.toString()}
     `;

@@ -36,9 +36,17 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
 
+    const Joi = this.middleware.validate.joi;
+
     // Webhook management
     this.router.post(
       '/api/fusebit/webhook/create',
+      this.middleware.validate({
+        body: Joi.object({
+          secret: Joi.string().alphanum().optional(),
+          webhookId: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.registerWebhook(ctx);
@@ -55,6 +63,9 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     this.router.patch(
       '/api/fusebit/webhook/:webhookId',
+      this.middleware.validate({
+        body: Joi.object({ secret: Joi.string().alphanum().optional() }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.updateWebhook(ctx);

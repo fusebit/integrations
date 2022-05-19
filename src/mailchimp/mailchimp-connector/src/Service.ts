@@ -48,7 +48,7 @@ class Service extends OAuthConnector.Service {
     return { webhookId };
   };
 
-  public getWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
+  private getWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(webhookId));
   };
 

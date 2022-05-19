@@ -26,27 +26,6 @@ const code = `
    * @param contact {object} The contact information for the event
    * @param campaignDefaults {object} Configure email campaign information
    * @returns {object} Newly created audience.
-   * 
-   * @example
-   *  const footerContactInfo = {
-   *     company: 'Mailchimp',
-   *     address1: '675 Ponce de Leon Ave NE',
-   *     address2: 'Suite 5000',
-   *     city: 'Atlanta',
-   *     state: 'GA',
-   *     zip: '30308',
-   *     country: 'US'
-   *  };
-   * 
-   * const campaignDefaults = {
-   *   from_name: 'Gettin' Together',
-   *   from_email: 'gettintogether@example.com',
-   *   subject: 'JS Developers Meetup',
-   *   language: 'EN_US'
-   * };
-   * 
-   *  const audience = await mailchimpCreateAudience(ctx, 'JS Developers Meetup', footerContactInfo, campaignDefaults);
-   * 
    */
   ${mailchimpCreateAudience.toString()}
   `;

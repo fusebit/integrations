@@ -5,8 +5,8 @@ const integration = new Integration();
 const router = integration.router;
 const connectorName = 'mailchimpConnector';
 
-// Test Endpoint: Get all Contacts Stored in the Mailchimp Account associated with your Tenant
-router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+// Endpoint for Sample App: Retrieve audience list from your Mailchimp account
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const mailchimpClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
@@ -17,6 +17,17 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     audienceName: audience.name,
     activeMembers: audience.stats.member_count,
   }));
+});
+
+// Test Endpoint: Ping the Mailchimp Marketing API
+router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
+  const mailchimpClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  // API Reference: https://mailchimp.com/developer/marketing/guides/access-user-data-oauth-2/
+  const response = await mailchimpClient.marketing.ping.get();
+
+  ctx.body = response;
 });
 
 module.exports = integration;
