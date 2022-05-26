@@ -216,6 +216,11 @@ export class Service extends EntityBase.ServiceDefault {
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
   }
+
+  /**
+   * Override: Add extra tags information associated to a Webhook
+   */
+  public async getWebhookTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {}
 }
 
 /**

@@ -10,6 +10,8 @@ import superagent from 'superagent';
  * @alias integration.webhook
  */
 class Webhook extends EntityBase.WebhookBase {
+  public WEBHOOK_PREFIX = 'webhook';
+
   /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
@@ -61,6 +63,24 @@ class Webhook extends EntityBase.WebhookBase {
     installId: string
   ): Promise<Integration.Types.WebhookClient> => {
     return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
+  };
+
+  public getSdkByTags = async (
+    ctx: FusebitContext,
+    connectorName: string,
+    tags: Record<string, string>
+  ): Promise<Integration.Types.WebhookClient> => {
+    const installs = await this.utilities.listByTags(ctx, 'install', tags, this.WEBHOOK_PREFIX);
+
+    if (!installs || !installs.length) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+    }
+
+    if (installs.length > 1) {
+      ctx.throw(400, `Too many Integration Installs found with tags ${JSON.stringify(tags)}`);
+    }
+
+    return this.getSdk(ctx, connectorName, installs[0].id);
   };
 }
 
@@ -150,6 +170,19 @@ export class Service extends EntityBase.ServiceBase {
     tagValue?: string
   ): Promise<EntityBase.Types.IInstall[]> => {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
+  };
+
+  public listInstallsByTags = async (
+    ctx: FusebitContext,
+    tags: Record<string, string>
+  ): Promise<EntityBase.Types.IInstall[]> => {
+    const installs = await this.utilities.listByTags(ctx, 'install', tags);
+
+    if (!installs || !installs.length) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+    }
+
+    return installs;
   };
 }
 

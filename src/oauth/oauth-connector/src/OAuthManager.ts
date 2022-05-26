@@ -147,6 +147,15 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
             result[webhookIds] = null;
           }
         }
+
+        const webhookTags = await this.service.getWebhookTags(ctx, token);
+
+        if (webhookTags) {
+          Object.keys(webhookTags).forEach((tag) => {
+            result[`webhook.${tag}`] = webhookTags[tag];
+          });
+        }
+
         return result;
       },
       validateToken: (token: IOAuthToken) => {

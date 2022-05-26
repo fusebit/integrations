@@ -33,6 +33,27 @@ class Utilities {
     return response.body;
   };
 
+  public listByTags = async (
+    ctx: FusebitContext,
+    subComponent: string,
+    tags: Record<string, string>,
+    tagPrefix?: string
+  ) => {
+    const url = new URL(`${ctx.state.params.baseUrl}/${subComponent}`);
+
+    Object.keys(tags).forEach((tag) => {
+      const searchTag = `${tagPrefix ? `${tagPrefix}.` : ''}${tag}=${tags[tag]}`;
+      url.searchParams.append('tag', encodeURIComponent(searchTag));
+    });
+
+    const requestUrl = url.toString();
+
+    const response = await superagent
+      .get(requestUrl)
+      .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
+    return response.body;
+  };
+
   public getConnectorSdkByName = async (ctx: FusebitContext, connectorName: string, installId: string) => {
     return ctx.state.manager.connectors.getByName(ctx, connectorName, installId);
   };
