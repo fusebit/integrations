@@ -4,6 +4,7 @@ import * as Storage from '../Storage';
 
 class Utilities {
   public TENANT_TAG_NAME = 'fusebit.tenantId';
+  public INSTALL_CUSTOM_TAG_NAME = 'fusebit.install';
 
   public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => {
     const response = await superagent
@@ -43,13 +44,11 @@ class Utilities {
 
     Object.keys(tags).forEach((tag) => {
       const searchTag = `${tagPrefix ? `${tagPrefix}.` : ''}${tag}=${tags[tag]}`;
-      url.searchParams.append('tag', encodeURIComponent(searchTag));
+      url.searchParams.append('tag', searchTag);
     });
 
-    const requestUrl = url.toString();
-
     const response = await superagent
-      .get(requestUrl)
+      .get(Buffer.from(url.toString(), 'utf-8').toString())
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     return response.body;
   };

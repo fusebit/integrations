@@ -218,9 +218,9 @@ export class Service extends EntityBase.ServiceDefault {
   }
 
   /**
-   * Override: Add extra tags information associated to a Webhook
+   * Override: Add extra tags information associated with an Installation
    */
-  public async getWebhookTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {}
+  public async getInstallTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {}
 }
 
 /**

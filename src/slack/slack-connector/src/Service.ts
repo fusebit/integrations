@@ -60,7 +60,7 @@ class Service extends OAuthConnector.Service {
     return event.type;
   }
 
-  public async getWebhookTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {
+  public async getInstallTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {
     return {
       app_id: token.app_id,
       team_id: token.team.id,
