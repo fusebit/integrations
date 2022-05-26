@@ -22,7 +22,7 @@ const sampleCtxSlashCommand = {
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
 };
 
-describe.only('Slack Webhook Events', () => {
+describe('Slack Webhook Events', () => {
   test('Validate: getEventsFromPayload', async () => {
     const service: any = new ServiceConnector.Service();
 
@@ -68,7 +68,7 @@ describe.only('Slack Webhook Events', () => {
     expect(service.getWebhookEventType({ type: 'eventType' })).toBe('eventType');
   });
 
-  test.only('Validate: getInstallTags', async () => {
+  test('Validate: getInstallTags', async () => {
     const service: any = new ServiceConnector.Service();
     const token = {
       app_id: sampleEvent.api_app_id,
@@ -77,11 +77,16 @@ describe.only('Slack Webhook Events', () => {
       },
       team: { id: sampleEvent.team_id },
     };
-    expect(await service.getInstallTags(sampleCtx, token)).toBe({
+
+    const expectedResponse = {
       app_id: token.app_id,
       team_id: token.team.id,
       user_id: token.authed_user.id,
-    });
+    };
+
+    const installTags = await service.getInstallTags(sampleCtx, token);
+
+    expect(installTags).toEqual(expectedResponse);
   });
 
   test('Validate: Event to Fanout', async () => {

@@ -38,7 +38,7 @@ export const makeFanoutRequester = (
 
     // Errors caught by the Promise.all below, where the request is actually started.
     return superagent
-      .post(Buffer.from(url.toString(), 'utf-8').toString())
+      .post(url.toString())
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
       .send({ payload: webhookEvents })
       .ok(() => true);

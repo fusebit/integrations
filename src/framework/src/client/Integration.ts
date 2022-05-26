@@ -43,6 +43,40 @@ class Webhook extends EntityBase.WebhookBase {
   };
 
   /**
+   * Get an authenticated Webhook SDK for the specified Connector using an Install matching the installation tags.
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {object} tags A key-pair object representing the tags used to search an Install
+   * @returns {Promise<Integration.Types.WebhookClient>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const webhookClient = await integration.webhook.getSdkByTags(ctx, ctx.params.connectorName, {
+   *      tag1: value,
+   *      tag2: value
+   *    });
+   *    // use client methods . . .
+   * });
+   */
+  public getSdkByTags = async (
+    ctx: FusebitContext,
+    connectorName: string,
+    tags: Record<string, string>
+  ): Promise<Integration.Types.WebhookClient> => {
+    const installs = await this.utilities.listByTags(ctx, 'install', tags, this.utilities.INSTALL_CUSTOM_TAG_NAME);
+
+    if (!installs || !installs.total) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+    }
+
+    if (installs.total > 1) {
+      ctx.throw(400, `Too many Integration Installs found with tags ${JSON.stringify(tags)}`);
+    }
+
+    return this.getSdk(ctx, connectorName, installs.items[0].id);
+  };
+
+  /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
    * @param ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
@@ -152,12 +186,28 @@ export class Service extends EntityBase.ServiceBase {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
   };
 
+  /**
+   * Get an authenticated SDK for the specified Connector using an Install matching the tags.
+   * @param ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {object} tags A key-pair object representing the tags used to search an Install
+   * @returns {Promise<Integration.Types.IInstall>} Authenticated SDK you would use to interact with the
+   * Connector service on behalf of your user.
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const webhookClient = await integration.service.getSdkByTags(ctx, ctx.params.connectorName, {
+   *      tag1: value,
+   *      tag2: value
+   *    });
+   *    // use client methods . . .
+   * });
+   */
   public getSdkByTags = async (
     ctx: FusebitContext,
     connectorName: string,
     tags: Record<string, string>
   ): Promise<Integration.Types.IInstall> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags, this.utilities.INSTALL_CUSTOM_TAG_NAME);
+    const installs = await this.utilities.listByTags(ctx, 'install', tags);
 
     if (!installs || !installs.total) {
       ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
@@ -170,31 +220,30 @@ export class Service extends EntityBase.ServiceBase {
     return this.getSdk(ctx, connectorName, installs.items[0].id);
   };
 
+  /**
+   * List all Integration Installs that match a particular set of tags
+   * @param ctx The context object provided by the route function
+   * @param {object} tags A key-pair object representing the tags used to search the Installs
+   * @returns {Promise<Integration.Types.IInstall[]>} An Installs list
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const installs = await integration.service.getInstallsByTags(ctx, {
+   *      tag1: value,
+   *      tag2: value
+   *    });
+   * });
+   */
   public getInstallsByTags = async (
     ctx: FusebitContext,
-    connectorName: string,
     tags: Record<string, string>
   ): Promise<Integration.Types.IInstall> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags, this.utilities.INSTALL_CUSTOM_TAG_NAME);
+    const installs = await this.utilities.listByTags(ctx, 'install', tags);
 
     if (!installs || !installs.total) {
       ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
     }
 
     return installs.items;
-  };
-
-  public listInstallsByTags = async (
-    ctx: FusebitContext,
-    tags: Record<string, string>
-  ): Promise<EntityBase.Types.IInstall[]> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags);
-
-    if (!installs || !installs.length) {
-      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
-    }
-
-    return installs;
   };
 }
 
