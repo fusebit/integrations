@@ -10,15 +10,13 @@ const code = `
   const { resource_type, data } = ctx.req.body.data.event;
   const { title, urgency, html_url, status } = data
 
-  const pagerdutyClient = await integration.tenant.getSdk(
-    ctx,
-    '<% connectorName %>',
-    ctx.req.body.installIds[0]
-  );
-  
   ctx.body = {
-     message: ${`Got a status update of ${status} for a resource of type ${resource_type} with title ${title} with priority ${urgency}, View details at ${html_url}`}
-   };
+    resource_type,
+    title,
+    urgency,
+    html_url,
+    status
+  };
  });
 `;
 
