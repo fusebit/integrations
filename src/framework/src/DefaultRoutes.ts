@@ -1,4 +1,4 @@
-import { HttpRouter, EventRouter, FusebitContext, Next } from './router';
+import { HttpRouter, FusebitContext, Next } from './router';
 import { IInstanceConnectorConfig } from './ConnectorManager';
 import Connector from './client/Connector';
 
@@ -6,7 +6,6 @@ import { validate } from './middleware';
 import { schema as eventSchema } from './validation/event';
 
 const router = new HttpRouter();
-const eventRouter = new EventRouter(router);
 
 /**
  * Annotate the health status with information on whether the vendor code loaded correctly.
@@ -67,7 +66,5 @@ router.post('/event/:eventMode', validate(eventSchema), async (ctx: FusebitConte
 
   ctx.body = result;
 });
-
-eventRouter.on('/lifecycle/startup', async (ctx, next) => next());
 
 export default router;

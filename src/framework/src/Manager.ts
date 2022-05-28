@@ -115,8 +115,6 @@ class Manager {
     // Add the default routes - these will get overruled by any routes added by the vendor or during the
     // startup phase.
     this.router.use(DefaultRoutes.routes());
-
-    this.invoke('/lifecycle/startup', {});
   }
 
   /**
