@@ -186,9 +186,8 @@ class Manager {
         }
       } catch (error) {
         // Log exceptions caught here to generally aid in debugging behaviors in the wild.
-        if (ctx.url.startsWith('/api/')) {
-          console.log(`${ctx.url}: `, error);
-        }
+        console.log(`Exception in ${ctx.request.method} ${ctx.url}: `, error);
+
         const e: { expose: boolean; status: number } = error as any;
         if (e.status !== 404) {
           // TODO replace with a systemtic upgrade to the logging scheme
