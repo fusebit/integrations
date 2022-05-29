@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/mailchimp-connector",
-  "version": "7.47.4",
+  "version": "7.47.5",
   "description": "Mailchimp Connector",
   "keywords": [
     "Fusebit",
@@ -35,10 +35,10 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.47.4"
+    "@fusebit-int/oauth-connector": "^7.47.5"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.47.4",
+    "@fusebit-int/framework": "^7.47.5",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
