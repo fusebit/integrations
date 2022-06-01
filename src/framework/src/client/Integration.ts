@@ -68,6 +68,7 @@ class Webhook extends EntityBase.WebhookBase {
    * @param {object} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
    * @param {object} tags A key-pair object representing the tags used to search the Installs
+   * @throws {NotFoundError} Will throw a NotFoundError with a code of INSTALLATIONS_NOT_FOUND
    * @returns {Promise<Integration.Types.IInstall[]>} An Installs list
    * @example
    * router.post('/api/:connectorName/:installId', async (ctx) => {
@@ -99,7 +100,9 @@ class Webhook extends EntityBase.WebhookBase {
     );
 
     if (!installs || !installs.total) {
-      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`, {
+        code: 'INSTALLATIONS_NOT_FOUND',
+      });
     }
 
     return installs.items;

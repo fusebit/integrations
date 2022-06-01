@@ -47,7 +47,7 @@ class Utilities {
     });
 
     const response = await superagent
-      .get(Buffer.from(url.toString(), 'utf-8').toString())
+      .get(url.toString())
       .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
     return response.body;
   };

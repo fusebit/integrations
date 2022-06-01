@@ -8,7 +8,6 @@ const { IncomingWebhook } = require('@slack/webhook');
  * 
  * @param ctx {FusebitContext} Fusebit Context
  */
-
 router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
     const { command } = ctx.req.body;
     ctx.body = {
@@ -16,14 +15,11 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
       response_type: 'ephemeral',
     };
   });
-
-
 /**
  * Respond to a Slash command
  * 
  * @param ctx {FusebitContext} Fusebit Context
  */
-
  integration.event.on('/:<% connectorName %>/webhook/slash-command/:command', async (ctx) => {
     try {
         const { team_id, user_id, api_app_id: app_id, channel_id } = ctx.req.body.data;
@@ -42,18 +38,22 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
         });
         
       } catch (error) {
-        const response_url = ctx.req.body.data.response_url;
+        const webhook = new IncomingWebhook(ctx.req.body.data.response_url);
 
-        if (response_url) {
-          const webhook = new IncomingWebhook(response_url);
-          await webhook.send({ text: 'You need to authorize the application to access this command', channel:  channel_id});
+        // Detect if the error is coming because no Installs were returned
+        if (error.code === 'INSTALLATIONS_NOT_FOUND') {
+          await webhook.send({ text: 'Please authorize the application to use commands', channel:  channel_id});
+        } else {
+          // Something else failed, inform the user
+          await webhook.send({ text: error.message, channel:  channel_id});
         }
       }
  });
 `;
 
 module.exports = {
-  name: 'Slash commands with required user authorization',
-  description: 'Use Slash commands that require the user to authorize the Slack application to perform commands.',
+  name: 'Respond to Incoming Slash Commands',
+  description:
+    'Respond to incoming Slash Commands using Immediate Response within 3 seconds (required by Slack). Then, check to see if the user has an existing Install in Fusebit and respond accordingly.',
   code,
 };
