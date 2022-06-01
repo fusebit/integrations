@@ -1,0 +1,55 @@
+{
+  "event": {
+    "id": "01CXAGM0EPXI1GGM64HT2YUXQT",
+    "event_type": "incident.escalated",
+    "resource_type": "incident",
+    "occurred_at": "2022-06-01T21:02:04.552Z",
+    "agent": {
+      "html_url": "https://dev-fusebit-demo-test-app.pagerduty.com/users/PHXMQOH",
+      "id": "PHXMQOH",
+      "self": "https://api.pagerduty.com/users/PHXMQOH",
+      "summary": "Matthew Zhao",
+      "type": "user_reference"
+    },
+    "client": null,
+    "data": {
+      "id": "Q0DZBNL27JNRXY",
+      "type": "incident",
+      "self": "https://api.pagerduty.com/incidents/Q0DZBNL27JNRXY",
+      "html_url": "https://dev-fusebit-demo-test-app.pagerduty.com/incidents/Q0DZBNL27JNRXY",
+      "number": 6,
+      "status": "triggered",
+      "incident_key": "105aa95bf89845f185b9e4a022aa99c4",
+      "created_at": "2022-05-26T19:01:53Z",
+      "title": "df fbg",
+      "service": {
+        "html_url": "https://dev-fusebit-demo-test-app.pagerduty.com/services/P9ZH97W",
+        "id": "P9ZH97W",
+        "self": "https://api.pagerduty.com/services/P9ZH97W",
+        "summary": "Matthew",
+        "type": "service_reference"
+      },
+      "assignees": [
+        {
+          "html_url": "https://dev-fusebit-demo-test-app.pagerduty.com/users/PHXMQOH",
+          "id": "PHXMQOH",
+          "self": "https://api.pagerduty.com/users/PHXMQOH",
+          "summary": "Matthew Zhao",
+          "type": "user_reference"
+        }
+      ],
+      "escalation_policy": {
+        "html_url": "https://dev-fusebit-demo-test-app.pagerduty.com/escalation_policies/POSUB8Z",
+        "id": "POSUB8Z",
+        "self": "https://api.pagerduty.com/escalation_policies/POSUB8Z",
+        "summary": "Matthew-ep",
+        "type": "escalation_policy_reference"
+      },
+      "teams": [],
+      "priority": null,
+      "urgency": "high",
+      "conference_bridge": null,
+      "resolve_reason": null
+    }
+  }
+}
