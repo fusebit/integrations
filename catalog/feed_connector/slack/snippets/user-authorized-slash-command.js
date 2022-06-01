@@ -43,8 +43,9 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
         if (error.code === 'INSTALLATIONS_NOT_FOUND') {
           await webhook.send({ text: 'Please authorize the application to use commands' });
         } else {
-          // Something else failed, inform the user
-          await webhook.send({ text: error.message });
+          // Something else failed, log the error and inform the user
+          console.log(error.message);
+          await webhook.send({ text: 'Something went wrong!' });
         }
       }
  });
