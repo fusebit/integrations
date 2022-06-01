@@ -11,9 +11,6 @@ const sampleCtx: any = {
   req: { headers: { ...sampleHeaders }, body: sampleEvent },
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
   params: { webhookId: 'mango' },
-  query: {
-    secret: 'kiwi',
-  },
   throw: jest.fn(),
 };
 

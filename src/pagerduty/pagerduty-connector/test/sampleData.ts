@@ -5,7 +5,7 @@ export const sampleHeaders = {
 };
 
 export const sampleConfig = {
-  handler: '@fusebit-int/mailchimp-connector',
+  handler: '@fusebit-int/pagerduty-connector',
   configuration: {
     scope: '',
     clientId: 'id',
