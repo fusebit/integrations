@@ -22,7 +22,7 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
  */
  integration.event.on('/:<% connectorName %>/webhook/slash-command/:command', async (ctx) => {
     try {
-        const { team_id, user_id, api_app_id: app_id } = ctx.req.body.data;
+        const { team_id, user_id, api_app_id: app_id, channel_id } = ctx.req.body.data;
 
         const installs = await integration.webhook.searchInstalls(ctx, '<% connectorName %>', {
           app_id,
@@ -34,13 +34,14 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
     
         await slackClient.chat.postMessage({
           text: 'Command processing finished',
+          channel: channel_id,
         });
         
       } catch (error) {
         const webhook = new IncomingWebhook(ctx.req.body.data.response_url);
 
         // Detect if the error is coming because no Installs were returned
-        if (error.code === 'INSTALLATIONS_NOT_FOUND') {
+        if (error.statusCode === 404) {
           await webhook.send({ text: 'Please authorize the application to use commands' });
         } else {
           // Something else failed, log the error and inform the user
