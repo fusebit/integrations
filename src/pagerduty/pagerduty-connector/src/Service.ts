@@ -19,7 +19,6 @@ class Service extends OAuthConnector.Service {
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
-    console.log(event);
     if (event.event.data.incident) {
       return new URL(event.event.data.incident.html_url).hostname;
     }
