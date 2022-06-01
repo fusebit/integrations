@@ -4,7 +4,7 @@ import * as Storage from '../Storage';
 
 class Utilities {
   public TENANT_TAG_NAME = 'fusebit.tenantId';
-  public INSTALL_CUSTOM_TAG_NAME = 'fusebit.install';
+  public WEBHOOKS_TAG_PREFIX = 'webhook';
 
   public getTenantInstalls = async (ctx: FusebitContext, tenantId: string) => {
     const response = await superagent
@@ -37,14 +37,13 @@ class Utilities {
   public listByTags = async (
     ctx: FusebitContext,
     subComponent: string,
-    tags: Record<string, string>,
+    tags: Record<string, null>,
     tagPrefix?: string
   ) => {
     const url = new URL(`${ctx.state.params.baseUrl}/${subComponent}`);
 
     Object.keys(tags).forEach((tag) => {
-      const searchTag = `${tagPrefix ? `${tagPrefix}.` : ''}${tag}=${tags[tag]}`;
-      url.searchParams.append('tag', searchTag);
+      url.searchParams.append('tag', `${tagPrefix}${tag}`);
     });
 
     const response = await superagent

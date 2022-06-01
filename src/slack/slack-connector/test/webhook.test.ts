@@ -58,35 +58,25 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: getTokenAuthId', async () => {
     const service: any = new ServiceConnector.Service();
+    const expectedResult = [
+      `${sampleEvent.team_id}/${sampleEvent.api_app_id}`,
+      `app_id/${sampleEvent.api_app_id}`,
+      `team_id/${sampleEvent.team_id}`,
+      `user_id/${sampleEvent.event.user}`,
+    ];
+
     expect(
-      service.getTokenAuthId(sampleCtx, { app_id: sampleEvent.api_app_id, team: { id: sampleEvent.team_id } })
-    ).resolves.toBe(`${sampleEvent.team_id}/${sampleEvent.api_app_id}`);
+      service.getTokenAuthId(sampleCtx, {
+        app_id: sampleEvent.api_app_id,
+        team: { id: sampleEvent.team_id },
+        authed_user: { id: sampleEvent.event.user },
+      })
+    ).resolves.toStrictEqual(expectedResult);
   });
 
   test('Validate: getWebhookEventType', async () => {
     const service: any = new ServiceConnector.Service();
     expect(service.getWebhookEventType({ type: 'eventType' })).toBe('eventType');
-  });
-
-  test('Validate: getInstallTags', async () => {
-    const service: any = new ServiceConnector.Service();
-    const token = {
-      app_id: sampleEvent.api_app_id,
-      authed_user: {
-        id: sampleEvent.event.user,
-      },
-      team: { id: sampleEvent.team_id },
-    };
-
-    const expectedResponse = {
-      app_id: token.app_id,
-      team_id: token.team.id,
-      user_id: token.authed_user.id,
-    };
-
-    const installTags = await service.getInstallTags(sampleCtx, token);
-
-    expect(installTags).toEqual(expectedResponse);
   });
 
   test('Validate: Event to Fanout', async () => {

@@ -162,6 +162,10 @@ class ConnectorManager {
     }, {});
   }
 
+  public getConnector(name: string): IInstanceConnectorConfig | undefined {
+    return this.connectors[name];
+  }
+
   // Only used by test routines.
   public clear() {
     this.connectors = {};

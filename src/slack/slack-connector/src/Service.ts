@@ -48,7 +48,12 @@ class Service extends OAuthConnector.Service {
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    return `${token.team.id}/${token.app_id}`;
+    return [
+      `${token.team.id}/${token.app_id}`,
+      `app_id/${token.app_id}`,
+      `team_id/${token.team.id}`,
+      `user_id/${token.authed_user.id}`,
+    ];
   }
 
   public getWebhookEventType(event: any) {
@@ -58,14 +63,6 @@ class Service extends OAuthConnector.Service {
     }
 
     return event.type;
-  }
-
-  public async getInstallTags(ctx: Connector.Types.Context, token: any): Promise<Record<string, string> | void> {
-    return {
-      app_id: token.app_id,
-      team_id: token.team.id,
-      user_id: token.authed_user.id,
-    };
   }
 }
 

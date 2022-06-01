@@ -43,42 +43,8 @@ class Webhook extends EntityBase.WebhookBase {
   };
 
   /**
-   * Get an authenticated Webhook SDK for the specified Connector using an Install matching the installation tags.
-   * @param ctx The context object provided by the route function
-   * @param {string} connectorName The name of the Connector from the service to interact with
-   * @param {object} tags A key-pair object representing the tags used to search an Install
-   * @returns {Promise<Integration.Types.WebhookClient>} Authenticated SDK you would use to interact with the
-   * Connector service on behalf of your user.
-   * @example
-   * router.post('/api/:connectorName/:installId', async (ctx) => {
-   *    const webhookClient = await integration.webhook.getSdkByTags(ctx, ctx.params.connectorName, {
-   *      tag1: value,
-   *      tag2: value
-   *    });
-   *    // use client methods . . .
-   * });
-   */
-  public getSdkByTags = async (
-    ctx: FusebitContext,
-    connectorName: string,
-    tags: Record<string, string>
-  ): Promise<Integration.Types.WebhookClient> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags, this.utilities.INSTALL_CUSTOM_TAG_NAME);
-
-    if (!installs || !installs.total) {
-      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
-    }
-
-    if (installs.total > 1) {
-      ctx.throw(400, `Too many Integration Installs found with tags ${JSON.stringify(tags)}`);
-    }
-
-    return this.getSdk(ctx, connectorName, installs.items[0].id);
-  };
-
-  /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
-   * @param ctx The context object provided by the route function
+   * @param {object} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
    * @param {string} installId Represents a single installation of this Integration
    * @returns {Promise<any>} Authenticated SDK you would use to interact with the
@@ -95,6 +61,48 @@ class Webhook extends EntityBase.WebhookBase {
     installId: string
   ): Promise<Integration.Types.WebhookClient> => {
     return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
+  };
+
+  /**
+   * List all Integration Installs that match a particular set of webhook tags
+   * @param {object} ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {object} tags A key-pair object representing the tags used to search the Installs
+   * @returns {Promise<Integration.Types.IInstall[]>} An Installs list
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const installs = await integration.webhook.searchInstalls(ctx, ctx.params.connectorName, {
+   *      tag1: value,
+   *      tag2: value
+   *    });
+   * });
+   */
+  public searchInstalls = async (
+    ctx: FusebitContext,
+    connectorName: string,
+    tags: Record<string, string>
+  ): Promise<Integration.Types.IInstall> => {
+    const webhookTags: Record<string, null> = {};
+
+    Object.keys(tags).forEach((key) => {
+      webhookTags[`${key}/${tags[key]}`] = null;
+    });
+
+    // Since the webhooks tags are prefixed with the connector entityId, we need to use the
+    // connectorName to find the entityId
+    const connector = ctx.state.manager.connectors.getConnector(connectorName);
+    const installs = await this.utilities.listByTags(
+      ctx,
+      'install',
+      webhookTags,
+      `${this.utilities.WEBHOOKS_TAG_PREFIX}/${connector.entityId}/`
+    );
+
+    if (!installs || !installs.total) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+    }
+
+    return installs.items;
   };
 }
 
@@ -184,66 +192,6 @@ export class Service extends EntityBase.ServiceBase {
     tagValue?: string
   ): Promise<EntityBase.Types.IInstall[]> => {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
-  };
-
-  /**
-   * Get an authenticated SDK for the specified Connector using an Install matching the tags.
-   * @param ctx The context object provided by the route function
-   * @param {string} connectorName The name of the Connector from the service to interact with
-   * @param {object} tags A key-pair object representing the tags used to search an Install
-   * @returns {Promise<Integration.Types.IInstall>} Authenticated SDK you would use to interact with the
-   * Connector service on behalf of your user.
-   * @example
-   * router.post('/api/:connectorName/:installId', async (ctx) => {
-   *    const webhookClient = await integration.service.getSdkByTags(ctx, ctx.params.connectorName, {
-   *      tag1: value,
-   *      tag2: value
-   *    });
-   *    // use client methods . . .
-   * });
-   */
-  public getSdkByTags = async (
-    ctx: FusebitContext,
-    connectorName: string,
-    tags: Record<string, string>
-  ): Promise<Integration.Types.IInstall> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags);
-
-    if (!installs || !installs.total) {
-      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
-    }
-
-    if (installs.total > 1) {
-      ctx.throw(400, `Too many Integration Installs found with tags ${JSON.stringify(tags)}`);
-    }
-
-    return this.getSdk(ctx, connectorName, installs.items[0].id);
-  };
-
-  /**
-   * List all Integration Installs that match a particular set of tags
-   * @param ctx The context object provided by the route function
-   * @param {object} tags A key-pair object representing the tags used to search the Installs
-   * @returns {Promise<Integration.Types.IInstall[]>} An Installs list
-   * @example
-   * router.post('/api/:connectorName/:installId', async (ctx) => {
-   *    const installs = await integration.service.getInstallsByTags(ctx, {
-   *      tag1: value,
-   *      tag2: value
-   *    });
-   * });
-   */
-  public getInstallsByTags = async (
-    ctx: FusebitContext,
-    tags: Record<string, string>
-  ): Promise<Integration.Types.IInstall> => {
-    const installs = await this.utilities.listByTags(ctx, 'install', tags);
-
-    if (!installs || !installs.total) {
-      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
-    }
-
-    return installs.items;
   };
 }
 
