@@ -19,7 +19,11 @@ class Service extends OAuthConnector.Service {
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
-    return event.event.agent.id;
+    console.log(event);
+    if (event.event.data.incident) {
+      return new URL(event.event.data.incident.html_url).hostname;
+    }
+    return new URL(event.event.data.html_url).hostname;
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context) {
@@ -52,7 +56,7 @@ class Service extends OAuthConnector.Service {
       .get('https://api.pagerduty.com/users/me')
       .set('Authorization', `Bearer ${token.access_token}`)
       .set('Accept', 'application/vnd.pagerduty+json;version=2');
-    return data.body.user.id;
+    return new URL(data.body.user.html_url).hostname;
   }
 
   public getWebhookEventType(event: any): string {
