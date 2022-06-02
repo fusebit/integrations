@@ -31,7 +31,9 @@ const code = `
         ],
         filter: {
             id: ctx.params.serviceId,
-            type: 'service_reference'
+            // Available types: service_reference, team_reference, account_reference
+            // Read more at https://developer.pagerduty.com/docs/ZG9jOjQ1MTg4ODQ0-overview#filter 
+            type: 'service_reference',
         }
     })
       ctx.body = webhook;
