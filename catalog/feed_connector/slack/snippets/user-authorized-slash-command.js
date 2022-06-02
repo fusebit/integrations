@@ -1,7 +1,6 @@
 const code = `
 
-// Ensure you have @slack/webhook specified in your package.json
-const { IncomingWebhook } = require('@slack/webhook');
+const { IncomingWebhook } = require('@fusebit-int/slack-provider');
 
 /**
  * Confirm the command is received
