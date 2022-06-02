@@ -1,5 +1,6 @@
 import { Internal } from '@fusebit-int/framework';
 import { WebClient } from '@slack/web-api';
+import { SlackIncomingWebhook } from './SlackIncomingWebhook';
 
 type FusebitWebClient = WebClient & { fusebit?: any };
 
@@ -13,4 +14,11 @@ export default class SlackProvider extends Internal.Provider.Activator<FusebitWe
     client.fusebit = { credentials };
     return client;
   }
+
+  /*
+   * This function will create an IncomingWebhook implementation to call Slack Incoming Webhooks.
+   */
+  public instantiateIncomingWebhook = async (ctx: Internal.Types.Context): Promise<SlackIncomingWebhook> => {
+    return new SlackIncomingWebhook(ctx);
+  };
 }

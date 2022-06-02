@@ -107,17 +107,20 @@ class Webhook extends EntityBase.WebhookBase {
   };
 
   /**
-   * Send a Webhook request without requiring authentication
+   * Send an Incoming Webhook request
+   * @param {object} ctx The context object provided by the route function
    * @param {string} url The url used for executing the Webhook
    * @param {object} [data] The Webhook data to send
    * @returns {Promise<any>} The response body of the Webhook request
    * @example
    *
-   * await integration.webhook.send('https://example.com/webhook', { text: 'It works!'});
+   * await integration.webhook.send(ctx, { text: 'It works!'});
    */
-  public send = async (url: string, data?: object): Promise<any> => {
-    const response = await superagent.post(url).send(data);
-    return response.body;
+  public send = async (ctx: FusebitContext, data?: object): Promise<any> => {
+    const connectorConfig = ctx.state.manager.connectors.getConnector(ctx.params.componentName);
+    const connectorInstance = ctx.state.manager.connectors.loadConnector(ctx.event.eventSourceId, connectorConfig);
+    const incomingWebhookInstance = await connectorInstance.instantiateIncomingWebhook(ctx);
+    return await incomingWebhookInstance.send(data);
   };
 }
 

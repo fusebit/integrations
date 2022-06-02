@@ -1,4 +1,8 @@
 const code = `
+// This example uses superagent https://www.npmjs.com/package/superagent ensure you have it
+// in your package.json file.
+const superagent = require('superagent');
+
 /**
  * Respond to an incoming Slash Command 
  * 

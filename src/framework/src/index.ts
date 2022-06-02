@@ -20,7 +20,8 @@ import {
   ProviderActivator as ProviderActivator_,
   WebhookClient as WebhookClient_,
   ApiClient as ApiClient_,
-  IFusebitCredentials,
+  IncomingWebhookClient as IncomingWebhookClient_,
+  IncomingWebhookClient,
 } from './provider';
 import { Connector, Integration } from './client/index';
 
@@ -37,6 +38,7 @@ const Internal = {
     Activator: ProviderActivator_,
     WebhookClient: WebhookClient_,
     ApiClient: ApiClient_,
+    IncomingWebhookClient: IncomingWebhookClient_,
   },
 };
 // tslint:disable: ignore no-namespace no-internal-module no-empty-interface
@@ -56,6 +58,7 @@ module Internal {
     export type WebhookClient = typeof WebhookClient_;
     export type ApiClient = ApiClient_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
+    export type IncomingWebhookClient = typeof IncomingWebhookClient_;
   }
   export namespace Types {
     export type Context = Context_;
@@ -67,6 +70,7 @@ module Internal {
     export type WebhookClient = Integration.Types.WebhookClient;
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
+    export type IncomingWebhookClient = typeof IncomingWebhookClient_;
   }
 }
 
