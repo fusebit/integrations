@@ -188,6 +188,10 @@ class OAuthEngine {
       return undefined;
     }
 
+    if (!token.refresh_token && token.status === 'authenticated' && token.expires_in === 0) {
+      return token;
+    }
+
     if (token.status === 'refreshing') {
       // Wait for the currently ongoing refresh operation in a different instance to finish
       return this.waitForRefreshedAccessToken(

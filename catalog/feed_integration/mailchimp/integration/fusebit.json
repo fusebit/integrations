@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Mailchimp"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "mailchimpConnector",
+      "skip": false,
+      "provider": "@fusebit-int/mailchimp-provider",
+      "entityId": "<% global.entities.mailchimpConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

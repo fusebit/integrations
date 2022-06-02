@@ -8,7 +8,7 @@ interface ISalesforceOAuthToken extends IOAuthToken {
 
 class Service extends OAuthConnector.Service {
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
-  public async getWebhookTokenId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const sfToken = token as ISalesforceOAuthToken;
     return [encodeURIComponent(sfToken.instance_url), encodeURIComponent(sfToken.id)];
   }

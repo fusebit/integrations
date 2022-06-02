@@ -55,6 +55,15 @@ router.post('/event/:eventMode', validate(eventSchema), async (ctx: FusebitConte
       return returnVal ? returnVal : { status: 200, message: 'ok' };
     })
   );
+
+  // The invoke call cloaks any exceptions created; promote the highest status code into this request, and log
+  // the message for reference.
+  result.forEach((invocation) => {
+    if (ctx.status < invocation.status) {
+      ctx.status = invocation.status;
+    }
+  });
+
   ctx.body = result;
 });
 

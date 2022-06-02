@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-mailchimp-integration",
+  "version": "7.47.8",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "^7.47.8",
+    "@fusebit-int/mailchimp-provider": "^7.47.8"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}
