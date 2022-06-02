@@ -15,6 +15,7 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
       response_type: 'ephemeral',
     };
   });
+
 /**
  * Respond to a Slash command
  * 
