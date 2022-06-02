@@ -105,6 +105,20 @@ class Webhook extends EntityBase.WebhookBase {
 
     return installs.items;
   };
+
+  /**
+   * Send a Webhook request without requiring authentication
+   * @param {string} url The url used for executing the Webhook
+   * @param {object} [data] The Webhook data to send
+   * @returns {Promise<any>} The response body of the Webhook request
+   * @example
+   *
+   * await integration.webhook.send('https://example.com/webhook', { text: 'It works!'});
+   */
+  public send = async (url: string, data?: object): Promise<any> => {
+    const response = await superagent.post(url).send(data);
+    return response.body;
+  };
 }
 
 /**

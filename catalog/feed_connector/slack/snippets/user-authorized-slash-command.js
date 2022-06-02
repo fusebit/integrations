@@ -1,7 +1,4 @@
 const code = `
-
-const { IncomingWebhook } = require('@fusebit-int/slack-provider');
-
 /**
  * Confirm the command is received
  * 
@@ -38,15 +35,13 @@ router.post('/api/fusebit/webhook/event/immediate-response', (ctx) => {
         });
         
       } catch (error) {
-        const webhook = new IncomingWebhook(ctx.req.body.data.response_url);
-
         // Detect if the error is coming because no Installs were returned
         if (error.statusCode === 404) {
-          await webhook.send({ text: 'Please authorize the application to use commands' });
+          await integration.webhook.send(ctx.req.body.data.response_url, { text: 'Please authorize the application to use commands'});
         } else {
           // Something else failed, log the error and inform the user
           console.log(error.message);
-          await webhook.send({ text: 'Something went wrong!' });
+          await integration.webhook.send(ctx.req.body.data.response_url, { text: 'Something went wrong!' });
         }
       }
  });
