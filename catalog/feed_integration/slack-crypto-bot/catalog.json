@@ -1,5 +1,5 @@
 {
-  "id": "e2e-crypto-slack-bot",
+  "id": "slack-crypto-bot",
   "name": "Slack Crypto Bot",
   "smallIcon": "#/assets/slack.svg",
   "largeIcon": "#/assets/slackLarge.svg",

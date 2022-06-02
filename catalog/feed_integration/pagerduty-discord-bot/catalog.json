@@ -1,5 +1,5 @@
 {
-  "id": "e2e-pagerduty-discord-bot",
+  "id": "pagerduty-discord-bot",
   "name": "PagerDuty Discord Bot",
   "smallIcon": "#/assets/pagerduty.svg",
   "largeIcon": "#/assets/pagerduty.svg",

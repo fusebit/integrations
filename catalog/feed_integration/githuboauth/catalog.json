@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/github.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["github"],
   "tags": {
     "catalog": "Dev Tools,Project Management"
   },
