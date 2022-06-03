@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install toolchain
-        run: npm install -g zx
+        run: npm install -g zx@4.3.0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Patch Version
@@ -77,7 +77,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install toolchain
-        run: npm install -g zx
+        run: npm install -g zx@4.3.0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Minor Version
@@ -135,7 +135,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install toolchain
-        run: npm install -g zx
+        run: npm install -g zx@4.3.0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Bump Major Version
@@ -193,7 +193,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install toolchain
-        run: npm install -g zx
+        run: npm install -g zx@4.3.0
       - name: Build Tree
         run: ./scripts/cicd/build_tree.sh
       - name: Publish Catalog - Stage

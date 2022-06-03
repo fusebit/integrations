@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install toolchain
-        run: npm install -g zx
+        run: npm install -g zx@4.3.0
       - name: Deploy
         run: ./scripts/demoapp/demoapp_deploy.mjs
         env:
