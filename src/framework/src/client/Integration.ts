@@ -44,7 +44,7 @@ class Webhook extends EntityBase.WebhookBase {
 
   /**
    * Get an authenticated Webhook SDK for each Connector in the list, using a given Tenant ID
-   * @param ctx The context object provided by the route function
+   * @param {object} ctx The context object provided by the route function
    * @param {string} connectorName The name of the Connector from the service to interact with
    * @param {string} installId Represents a single installation of this Integration
    * @returns {Promise<any>} Authenticated SDK you would use to interact with the
@@ -61,6 +61,66 @@ class Webhook extends EntityBase.WebhookBase {
     installId: string
   ): Promise<Integration.Types.WebhookClient> => {
     return ctx.state.manager.connectors.getWebhookClientByName(ctx, connectorName, installId);
+  };
+
+  /**
+   * List all Integration Installs that match a particular set of webhook tags
+   * @param {object} ctx The context object provided by the route function
+   * @param {string} connectorName The name of the Connector from the service to interact with
+   * @param {object} tags A key-pair object representing the tags used to search the Installs
+   * @throws {NotFoundError} Will throw a NotFoundError with a statusCode of 404
+   * @returns {Promise<Integration.Types.IInstall[]>} An Installs list
+   * @example
+   * router.post('/api/:connectorName/:installId', async (ctx) => {
+   *    const installs = await integration.webhook.searchInstalls(ctx, ctx.params.connectorName, {
+   *      tag1: value,
+   *      tag2: value
+   *    });
+   * });
+   */
+  public searchInstalls = async (
+    ctx: FusebitContext,
+    connectorName: string,
+    tags: Record<string, string>
+  ): Promise<Integration.Types.IInstall> => {
+    const webhookTags: Record<string, null> = {};
+
+    Object.keys(tags).forEach((key) => {
+      webhookTags[`${key}/${tags[key]}`] = null;
+    });
+
+    // Since the webhooks tags are prefixed with the connector entityId, we need to use the
+    // connectorName to find the entityId
+    const connector = ctx.state.manager.connectors.getConnector(connectorName);
+    const installs = await this.utilities.listByTags(
+      ctx,
+      'install',
+      webhookTags,
+      `${this.utilities.WEBHOOKS_TAG_PREFIX}/${connector.entityId}/`
+    );
+
+    if (!installs || !installs.total) {
+      ctx.throw(404, `Cannot find an Integration Install associated with tags ${JSON.stringify(tags)}`);
+    }
+
+    return installs.items;
+  };
+
+  /**
+   * Send an Incoming Webhook request
+   * @param {object} ctx The context object provided by the route function
+   * @param {string} url The url used for executing the Webhook
+   * @param {object} [data] The Webhook data to send
+   * @returns {Promise<any>} The response body of the Webhook request
+   * @example
+   *
+   * await integration.webhook.send(ctx, { text: 'It works!'});
+   */
+  public send = async (ctx: FusebitContext, data?: object): Promise<any> => {
+    const connectorConfig = ctx.state.manager.connectors.getConnector(ctx.params.componentName);
+    const connectorInstance = ctx.state.manager.connectors.loadConnector(ctx.event.eventSourceId, connectorConfig);
+    const incomingWebhookInstance = await connectorInstance.instantiateIncomingWebhook(ctx);
+    return await incomingWebhookInstance.send(data);
   };
 }
 

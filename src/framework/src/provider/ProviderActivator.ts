@@ -3,6 +3,7 @@ import { FusebitContext } from '../router';
 import { IInstanceConnectorConfig } from '../ConnectorManager';
 
 import { WebhookClient } from './WebhookClient';
+import { IncomingWebhookClient } from './IncomingWebhookClient';
 
 interface IToken {
   access_token: string;
@@ -28,6 +29,10 @@ export abstract class ProviderActivator<T> {
     installId: string
   ): Promise<WebhookClient> => {
     ctx.throw('Dynamic Webhooks are not supported for this connector');
+  };
+
+  public instantiateIncomingWebhook = async <T>(ctx: FusebitContext): Promise<IncomingWebhookClient> => {
+    ctx.throw('Incoming Webhooks are not supported for this connector');
   };
 
   public config: IInstanceConnectorConfig;

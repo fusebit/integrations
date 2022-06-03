@@ -58,9 +58,20 @@ describe('Slack Webhook Events', () => {
 
   test('Validate: getTokenAuthId', async () => {
     const service: any = new ServiceConnector.Service();
+    const expectedResult = [
+      `${sampleEvent.team_id}/${sampleEvent.api_app_id}`,
+      `app_id/${sampleEvent.api_app_id}`,
+      `team_id/${sampleEvent.team_id}`,
+      `user_id/${sampleEvent.event.user}`,
+    ];
+
     expect(
-      service.getTokenAuthId(sampleCtx, { app_id: sampleEvent.api_app_id, team: { id: sampleEvent.team_id } })
-    ).resolves.toBe(`${sampleEvent.team_id}/${sampleEvent.api_app_id}`);
+      service.getTokenAuthId(sampleCtx, {
+        app_id: sampleEvent.api_app_id,
+        team: { id: sampleEvent.team_id },
+        authed_user: { id: sampleEvent.event.user },
+      })
+    ).resolves.toStrictEqual(expectedResult);
   });
 
   test('Validate: getWebhookEventType', async () => {

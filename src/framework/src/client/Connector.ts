@@ -111,7 +111,7 @@ export class Service extends EntityBase.ServiceDefault {
   // Convert a webhook event into the key attached to installs by getWebhookTokenId
   public getWebhookLookupId(ctx: Connector.Types.Context, authId: string): string {
     const connectorId = ctx.state.params.entityId;
-    return ['webhook', connectorId, authId].join('/');
+    return [this.utilities.WEBHOOKS_TAG_PREFIX, connectorId, authId].join('/');
   }
 
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
@@ -120,9 +120,9 @@ export class Service extends EntityBase.ServiceDefault {
     if (authId) {
       const connectorId = ctx.state.params.entityId;
       if (Array.isArray(authId)) {
-        return authId.map((authIdItem) => ['webhook', connectorId, authIdItem].join('/'));
+        return authId.map((authIdItem) => [this.utilities.WEBHOOKS_TAG_PREFIX, connectorId, authIdItem].join('/'));
       }
-      return ['webhook', connectorId, authId].join('/');
+      return [this.utilities.WEBHOOKS_TAG_PREFIX, connectorId, authId].join('/');
     }
   }
 
