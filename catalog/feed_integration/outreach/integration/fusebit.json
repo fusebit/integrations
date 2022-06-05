@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Outreach"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "outreachConnector",
+      "skip": false,
+      "provider": "@fusebit-int/outreach-provider",
+      "entityId": "<% global.entities.outreachConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
