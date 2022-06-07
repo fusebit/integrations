@@ -32,7 +32,7 @@ class ServiceConnector extends OAuthConnector {
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookSecret', 'password');
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your Zoom App';
+      ctx.body.schema.properties.scope.description = 'Comma separated scopes to request from your Zoom App';
       ctx.body.schema.properties.clientId.description = 'The Client ID from your Zoom App';
       ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your Zoom App';
       ctx.body.schema.properties.webhookSecret = {
