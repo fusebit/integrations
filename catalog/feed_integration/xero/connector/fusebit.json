@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Xero"
+  },
+  "handler": "@fusebit-int/xero-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": true
+    },
+    "scope": "accounting.settings.read",
+    "clientId": "",
+    "clientSecret": "",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}

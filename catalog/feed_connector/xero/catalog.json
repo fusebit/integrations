@@ -1,0 +1,35 @@
+{
+  "id": "xero",
+  "name": "Xero",
+  "smallIcon": "#/assets/xero.svg",
+  "largeIcon": "#/assets/xeroLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Finance"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/xero#creating-your-own-xero-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "xeroConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/xero-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
