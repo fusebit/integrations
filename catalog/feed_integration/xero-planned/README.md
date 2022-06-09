@@ -1,1 +1,0 @@
-Our Xero integration exposes accounting and related functions and can be used for a variety of purposes, from creating transactions like invoices and credit notes, to extracting accounting data.
