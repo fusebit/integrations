@@ -222,7 +222,7 @@ export class Service extends EntityBase.ServiceDefault {
    * Override: In case the ctx.req.body needs to be parsed, override this method
    */
   public getWebhookBody(ctx: Connector.Types.Context): any {
-    return ctx.req.body;
+    return ctx.req?.body;
   }
 }
 
