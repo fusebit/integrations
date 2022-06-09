@@ -47,7 +47,7 @@ export class Service extends EntityBase.ServiceDefault {
     const responsePromises = await this.requestAll(ctx, eventsByAuthId);
 
     // Let the createWebhookResponse function decide if it wants to wait for fanout responses
-    return this.createWebhookResponse(ctx, responsePromises.response);
+    return this.createWebhookResponse(ctx, responsePromises.response, this.getWebhookBody(ctx));
   }
 
   // Perform each fanout request, blocking until all of the requests have been sent to prevent Lambda from
@@ -171,7 +171,8 @@ export class Service extends EntityBase.ServiceDefault {
    */
   public async createWebhookResponse(
     ctx: Connector.Types.Context,
-    processPromise?: Promise<FanoutResponse_>
+    processPromise?: Promise<FanoutResponse_>,
+    body?: any
   ): Promise<void> {
     const { defaultEventHandler } = ctx.state.manager.config.configuration;
 
@@ -184,7 +185,7 @@ export class Service extends EntityBase.ServiceDefault {
         const res = await superagent
           .post(defaultEventHandlerUrl)
           .set('Authorization', `Bearer ${params.functionAccessToken}`)
-          .send(ctx.req.body)
+          .send(body)
           .ok(() => true);
         ctx.body = res.body;
       } catch (err) {
@@ -215,6 +216,13 @@ export class Service extends EntityBase.ServiceDefault {
    */
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     ctx.throw(500, 'Webhook Challenge configuration missing. Required for webhook processing.');
+  }
+
+  /**
+   * Override: In case the ctx.req.body needs to be parsed, override this method
+   */
+  public getWebhookBody(ctx: Connector.Types.Context): any {
+    return ctx.req?.body;
   }
 }
 

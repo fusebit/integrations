@@ -6,10 +6,17 @@ import crypto from 'crypto';
 
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context) {
-    return [(ctx.req.body.payload && JSON.parse(ctx.req.body.payload)) || ctx.req.body];
+    return [this.getWebhookBody(ctx)];
+  }
+
+  public getWebhookBody(ctx: Connector.Types.Context) {
+    return (ctx.req.body.payload && JSON.parse(ctx.req.body.payload)) || ctx.req.body;
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
+    if (!event.api_app_id) {
+      return `team_id/${event.team_id || event.team?.id}`;
+    }
     return `${event.team_id || event.team?.id}/${event.api_app_id}`;
   }
 
