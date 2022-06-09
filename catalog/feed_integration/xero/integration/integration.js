@@ -21,4 +21,33 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
+// Endpoint for Sample App: Retrieve a list of contacts from Xero
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
+  const xeroClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  // Include API Reference for Xero
+  await xeroClient.updateTenants();
+  const contacts = await xeroClient.accountingApi.getContacts(xeroClient.tenants[0].tenantId);
+
+  ctx.body = contacts.map((contact) => ({
+    name: contact.name,
+    emailAddress: account.emailAddress,
+  }));
+});
+
+// Endpoint for Sample App: Create a new contact
+router.post('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
+  const xeroClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  // Include API Reference for Xero
+  await xeroClient.updateTenants();
+
+  // Create a new contact
+  await xeroClient.accountingApi.updateOrCreateContact(xeroClient.tenants[0].tenantId, {
+    contacts: [{ name: ctx.req.body.name, emailAddress: ctx.req.body.emailAddress }],
+  });
+});
+
 module.exports = integration;

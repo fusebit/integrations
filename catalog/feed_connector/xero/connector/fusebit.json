@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": true
     },
-    "scope": "accounting.settings.read",
+    "scope": "accounting.settings.read accounting.contacts",
     "clientId": "",
     "clientSecret": "",
     "refreshErrorLimit": 100000,
