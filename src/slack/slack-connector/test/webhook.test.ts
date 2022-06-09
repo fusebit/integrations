@@ -65,7 +65,7 @@ describe('Slack Webhook Events', () => {
       `user_id/${sampleEvent.event.user}`,
     ];
 
-    expect(
+    await expect(
       service.getTokenAuthId(sampleCtx, {
         app_id: sampleEvent.api_app_id,
         team: { id: sampleEvent.team_id },

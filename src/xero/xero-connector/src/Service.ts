@@ -4,6 +4,23 @@ import superagent from 'superagent';
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+interface IXeroEvent {
+  resourceUrl: string;
+  resourceId: string;
+  eventDateUtc: string;
+  eventType: string;
+  eventCategory: string;
+  tenantId: string;
+  tenantType: string;
+}
+
+interface IXeroEventBody {
+  events: IXeroEvent[];
+  firstEventSequence: number;
+  lastEventSequence: number;
+  entropy: string;
+}
+
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     return ctx.req.body.events;
@@ -13,15 +30,37 @@ class Service extends OAuthConnector.Service {
     return event.tenantId;
   }
 
+  protected eventToString(event: IXeroEvent) {
+    return `{"resourceUrl": "${event.resourceUrl}", "resourceId": "${event.resourceId}", "eventDateUtc": "${event.eventDateUtc}", "eventType": "${event.eventType}", "eventCategory": "${event.eventCategory}", "tenantId": "${event.tenantId}", "tenantType": "${event.tenantType}"}`;
+  }
+
+  protected bodyToString(body: IXeroEventBody) {
+    return `{"events":[${body.events.map((event) => this.eventToString(event)).join(', ')}],"firstEventSequence": ${
+      body.firstEventSequence
+    },"lastEventSequence": ${body.lastEventSequence}, "entropy": "${body.entropy}"}`;
+  }
+
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const signingSecret = ctx.state.manager.config.configuration.signingSecret;
     const requestSignature = ctx.req.headers['x-xero-signature'] as string;
-    const body = JSON.stringify(ctx.req.body, null, 3);
-    const calculatedSignature = crypto.createHmac('sha256', signingSecret).update(body).digest('hex');
+    const body = ctx.req.body;
+
+    // Convert the body to a string:
+    const bodyString = this.bodyToString(body);
+
+    const calculatedSignature = crypto.createHmac('sha256', signingSecret).update(bodyString).digest('base64');
     const calculatedSignatureBuffer = Buffer.from(calculatedSignature, 'utf8');
 
     const requestSignatureBuffer = Buffer.from(requestSignature, 'utf8');
-    return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
+
+    const result = crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
+
+    // Xero has specific requirements about the return code: it must be 401, and there must be no body.
+    if (!result) {
+      ctx.throw(401, { hideBody: true });
+    }
+
+    return true;
   }
 
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {

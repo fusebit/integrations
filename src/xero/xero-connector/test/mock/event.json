@@ -1,0 +1,29 @@
+{
+  "signingSecret": "MJbAGqKIvrSX8zpbHi29688Y7eTx5MWsfQ2kvbI0iBzhQu8N6bXEbWOkJrzlUd0f7CW3Ea/NMvSSQYl63qp9Mg==",
+  "requestSignature": "1M9Akd0HZSgDkDY7+U+1SPGd6IR94Exl1L4ynRJANJA=",
+  "body": {
+    "events": [
+      {
+        "resourceUrl": "https://api.xero.com/api.xro/2.0/Contacts/717f2bfc-c6d4-41fd-b238-3f2f0c0cf777",
+        "resourceId": "717f2bfc-c6d4-41fd-b238-3f2f0c0cf777",
+        "eventDateUtc": "2017-06-21T01:15:39.902",
+        "eventType": "Update",
+        "eventCategory": "CONTACT",
+        "tenantId": "c2cc9b6e-9458-4c7d-93cc-f02b81b0594f",
+        "tenantType": "ORGANISATION"
+      },
+      {
+        "resourceUrl": "https://api.xero.com/api.xro/2.0/Contacts/717f2bfc-c6d4-41fd-b238-3f2f0c0cf777",
+        "resourceId": "717f2bfc-c6d4-41fd-b238-3f2f0c0cf777",
+        "eventDateUtc": "2017-06-21T01:15:39.902",
+        "eventType": "Update",
+        "eventCategory": "CONTACT",
+        "tenantId": "c2cc9b6e-9458-4c7d-93cc-f02b81b0594f",
+        "tenantType": "ORGANISATION"
+      }
+    ],
+    "firstEventSequence": 0,
+    "lastEventSequence": 2,
+    "entropy": "CIXOCZMBQXPJOHRCHCBY"
+  }
+}
