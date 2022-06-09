@@ -15,16 +15,16 @@
       "isGetEnabled": true,
       "isPostEnabled": false,
       "terms": {
-        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your Prospects",
-        "itemName": "prospect",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Accounts",
+        "itemName": "Account",
         "properties": [
           {
-            "name": "firstName",
-            "label": "First Name"
+            "name": "id",
+            "label": "ID"
           },
           {
-            "name": "lastName",
-            "label": "Last Name"
+            "name": "name",
+            "label": "Name"
           }
         ]
       }

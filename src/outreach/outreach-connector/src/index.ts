@@ -30,13 +30,22 @@ class ServiceConnector extends OAuthConnector<Service> {
         'Outreach Configuration';
 
       // Adjust the data schema
-      ctx.body.schema.properties.scope.description = 'Space separated scopes to request from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientId.description = 'The Client ID from your ${SERVICE_NAME} App';
-      ctx.body.schema.properties.clientSecret.description = 'The Client Secret from your ${SERVICE_NAME} App';
+      ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
+      ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
+
+    const Joi = this.middleware.validate.joi;
 
     this.router.post(
       '/api/fusebit/webhook/create',
+      this.middleware.validate({
+        body: Joi.object({
+          secret: Joi.string().alphanum().optional(),
+          webhookId: Joi.string().required(),
+          id: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.registerWebhook(ctx);
