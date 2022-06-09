@@ -184,7 +184,7 @@ export class Service extends EntityBase.ServiceDefault {
         const res = await superagent
           .post(defaultEventHandlerUrl)
           .set('Authorization', `Bearer ${params.functionAccessToken}`)
-          .send(ctx.req.body)
+          .send((ctx.req.body.payload && JSON.parse(ctx.req.body.payload)) || ctx.req.body)
           .ok(() => true);
         ctx.body = res.body;
       } catch (err) {

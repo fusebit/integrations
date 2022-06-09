@@ -10,6 +10,9 @@ class Service extends OAuthConnector.Service {
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
+    if (!event.api_app_id) {
+      return `team_id/${event.team_id || event.team?.id}`;
+    }
     return `${event.team_id || event.team?.id}/${event.api_app_id}`;
   }
 
