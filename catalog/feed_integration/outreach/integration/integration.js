@@ -11,11 +11,10 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const outreachClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // API Reference: https://api.outreach.io/api/v2/docs
-  const me = await outreachClient.get('/');
+  const accounts = await outreachClient.get('/accounts');
 
-  // XXX Needs to be changed
   ctx.body = {
-    message: `Current user: ${JSON.stringify(me)}`,
+    message: `Listed ${accounts.data.length} accounts in the system.`,
   };
 });
 

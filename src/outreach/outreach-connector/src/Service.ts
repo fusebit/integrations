@@ -4,6 +4,12 @@ import crypto from 'crypto';
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
+/*
+ * Outreach webhook support requires the connector to arbitrate requests to
+ * https://api.outreach.io/api/v2/docs#webhook
+ *
+ * Add in the future using existing templates.
+ */
 class Service extends OAuthConnector.Service {
   // Get storageKey to put the signing secret.
   public getStorageKey = (webhookId: string) => {
@@ -50,8 +56,7 @@ class Service extends OAuthConnector.Service {
       .set('Authorization', `Bearer ${token.access_token}`)
       .set('Content-Type', 'application/vnd.api+json');
 
-    // XXX return some part of the returned object.
-    return '';
+    return [`instance/${encodeURIComponent(data.body.meta.instanceUrl)}`, `user/${data.body.meta.user.id}`];
   }
 
   public getWebhookEventType(event: any): string {
