@@ -2,12 +2,19 @@
   "name": "@fusebit-int/outreach-connector",
   "version": "7.47.9",
   "description": "Outreach Connector",
-  "keywords": ["Fusebit", "Outreach"],
+  "keywords": [
+    "Fusebit",
+    "Outreach"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"

@@ -11,25 +11,24 @@
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/outreach#creating-your-own-outreach-app",
     "sampleConfig": {
-      "isEnabled": true
-              ,
-        "isGetEnabled": true,
-        "isPostEnabled": false,
-        "terms": {
-                                "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your Prospects",
-                    "itemName": "prospect",
-          "properties": [
-            {
-              "name": "firstName",
-              "label": "First Name"
-            },
-            {
-              "name": "lastName",
-              "label": "Last Name"
-            }
-          ]
-        }
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your Prospects",
+        "itemName": "prospect",
+        "properties": [
+          {
+            "name": "firstName",
+            "label": "First Name"
+          },
+          {
+            "name": "lastName",
+            "label": "Last Name"
           }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
