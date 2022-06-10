@@ -45,6 +45,11 @@ module.exports = [
   },
   {
     type: 'input',
+    name: 'connectorName',
+    message: 'Name of the connector to use (i.e. "Slack", or "HubSpot")',
+  },
+  {
+    type: 'input',
     name: 'connectorSDKLink',
     message: 'Link to the SDK for the connector.',
   },
