@@ -23,5 +23,4 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 
-
 module.exports = integration;
