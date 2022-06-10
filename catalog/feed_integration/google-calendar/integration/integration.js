@@ -46,8 +46,8 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
       startTime = calendarItem.start.date;
     }
     return {
-      StartDate: startTime,
-      EventName: calendarItem.summary,
+      startDate: startTime,
+      eventName: calendarItem.summary,
     };
   });
 
