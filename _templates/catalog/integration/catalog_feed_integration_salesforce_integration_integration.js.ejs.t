@@ -14,7 +14,6 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const <%= name.toLowerCase() %>Client = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-
   // API Reference: <%= connectorSDKLink %>
   const contacts = await <%= name.toLowerCase() %>Client.query('SELECT count() FROM Contact');
 
