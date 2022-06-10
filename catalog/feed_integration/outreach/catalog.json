@@ -1,0 +1,48 @@
+{
+  "id": "outreach",
+  "name": "Outreach",
+  "smallIcon": "#/assets/outreach.svg",
+  "largeIcon": "#/assets/outreachLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "CRM"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/outreach#creating-your-own-outreach-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Accounts",
+        "itemName": "Account",
+        "properties": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "name",
+            "label": "Name"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "outreachConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "outreachIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
