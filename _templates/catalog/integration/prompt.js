@@ -23,6 +23,11 @@ module.exports = [
   },
   {
     type: 'input',
+    name: 'connectorSDKLink',
+    message: 'Link to the SDK for the connector.',
+  },
+  {
+    type: 'input',
     name: 'svgImageSmall',
     message: 'Glyph-only SVG Image (two blank lines to finish)\n',
     multiline: true,

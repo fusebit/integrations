@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/salesforce-connector",
-  "version": "7.47.14",
+  "version": "7.47.16",
   "description": "Fusebit Salesforce connector",
   "keywords": [
     "Fusebit",
@@ -34,11 +34,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.47.14",
+    "@fusebit-int/oauth-connector": "^7.47.16",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.47.14",
+    "@fusebit-int/framework": "^7.47.16",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
