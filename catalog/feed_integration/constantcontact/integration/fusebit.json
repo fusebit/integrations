@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "ConstantContact"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "constantcontactConnector",
+      "skip": false,
+      "provider": "@fusebit-int/constantcontact-provider",
+      "entityId": "<% global.entities.constantcontactConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

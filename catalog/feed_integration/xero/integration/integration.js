@@ -37,7 +37,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
 });
 
 // Endpoint for Sample App: Create a new contact
-router.post('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const xeroClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
