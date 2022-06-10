@@ -129,6 +129,34 @@ describe('Routes', () => {
     expect(result.status).toBe(200);
   });
 
+  test('demonstrate throw', async () => {
+    const router = new Router();
+    router.get('/hello', async (ctx: Internal.Types.Context, next: Internal.Types.Next) => {
+      ctx.throw(400, 'failure');
+    });
+
+    const manager = newManager(router);
+
+    const result = await manager.handle(request('GET', '/hello/', { query: { qp: 'value' } }));
+
+    expect(result.body).toEqual({ details: undefined, message: 'BadRequestError: failure', status: 400 });
+    expect(result.status).toBe(400);
+  });
+
+  test('demonstrate throw with hideBody', async () => {
+    const router = new Router();
+    router.get('/hello', async (ctx: Internal.Types.Context, next: Internal.Types.Next) => {
+      ctx.throw(400, { hideBody: true });
+    });
+
+    const manager = newManager(router);
+
+    const result = await manager.handle(request('GET', '/hello/', { query: { qp: 'value' } }));
+
+    expect(result.body).toBe('');
+    expect(result.status).toBe(400);
+  });
+
   it.todo('Default route healthcheck returns success');
   it.todo('Default route healthcheck returns failure');
 });

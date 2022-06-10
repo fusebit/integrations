@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Xero"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "xeroConnector",
+      "skip": false,
+      "provider": "@fusebit-int/xero-provider",
+      "entityId": "<% global.entities.xeroConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

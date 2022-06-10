@@ -45,7 +45,7 @@ describe('Zoom Webhook Events', () => {
     const scope = nock('https://api.zoom.us');
     scope.matchHeader('authorization', `Bearer ${sampleAccessToken}`).get('/v2/users/me').reply(200, sampleMe);
 
-    expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(
+    await expect(service.getTokenAuthId(sampleCtx, { access_token: `${sampleAccessToken}` })).resolves.toBe(
       sampleMe.account_id
     );
   });

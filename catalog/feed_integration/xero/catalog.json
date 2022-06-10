@@ -1,0 +1,50 @@
+{
+  "id": "xero",
+  "name": "Xero",
+  "smallIcon": "#/assets/xero.svg",
+  "largeIcon": "#/assets/xeroLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Finance"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/xero#creating-your-own-xero-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your Contact was successfully added to Xero!",
+        "postFail": "Oops! Something went wrong and we couldn't add your contact to Xero",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your contacts from Xero",
+        "itemName": "Contacts",
+        "properties": [
+          {
+            "name": "name",
+            "label": "Name"
+          },
+          {
+            "name": "emailAddress",
+            "label": "Email Address"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "xeroConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "xeroIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

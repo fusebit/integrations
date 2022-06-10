@@ -1,0 +1,5 @@
+{
+  "signingSecret": "MJbAGqKIvrSX8zpbHi29688Y7eTx5MWsfQ2kvbI0iBzhQu8N6bXEbWOkJrzlUd0f7CW3Ea/NMvSSQYl63qp9Mg==",
+  "requestSignature": "nDpUXEMvTpFa7ckjerrQBncflee5tqf+fyZoDgNTic0=",
+  "body": { "events": [], "firstEventSequence": 0, "lastEventSequence": 0, "entropy": "CIXOCZMBQXPJOHRCHCBY" }
+}

@@ -244,7 +244,9 @@ class Manager {
     const message = expose ? err.toString() : `${statusCode}`;
     ctx.status = err.status = statusCode;
     ctx.length = Buffer.byteLength(message);
-    ctx.body = { status: err.status, message, details: err.details };
+
+    // Some systems require no body on error.
+    ctx.body = err.hideBody ? '' : { status: err.status, message, details: err.details };
   }
 
   /** Convert from a Fusebit function context into a routable context. */
