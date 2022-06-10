@@ -1,13 +1,13 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-custom-integration",
-  "version": "7.47.14",
+  "version": "7.47.15",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.47.14"
+    "@fusebit-int/framework": "^7.47.15"
   },
   "files": [
     "./integration.js",
