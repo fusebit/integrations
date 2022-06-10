@@ -1,6 +1,11 @@
 const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 
+// dayjs Reference: https://day.js.org/
+const dayjs = require('dayjs');
+const relativeTime = require('dayjs/plugin/relativeTime');
+dayjs.extend(relativeTime);
+
 // Koa Router: https://koajs.com/
 const router = integration.router;
 const connectorName = 'googleConnector';
@@ -46,7 +51,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
       startTime = calendarItem.start.date;
     }
     return {
-      startDate: startTime,
+      startDate: dayjs(startTime).fromNow(),
       eventName: calendarItem.summary,
     };
   });
