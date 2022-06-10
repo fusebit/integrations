@@ -44,6 +44,11 @@ module.exports = [
     message: 'Space separated list of the default connector scopes',
   },
   {
+    type: 'input',
+    name: 'connectorSDKLink',
+    message: 'Link to the SDK for the connector.',
+  },
+  {
     type: 'confirm',
     name: 'isSampleApp',
     message: 'Supported by the Sample App?',
