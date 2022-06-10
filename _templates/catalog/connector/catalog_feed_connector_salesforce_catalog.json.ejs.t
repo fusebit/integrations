@@ -12,7 +12,8 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/catalog.json
     "catalog": "<%= feedTags %>"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>#creating-your-own-<%= name.toLowerCase() %>-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>#creating-your-own-<%= name.toLowerCase() %>-app",
+    "connectorSDKDocUrl": "<%= connectorSDKLink %>"
   },
   "configuration": {
     "schema": "config/schema.json",
