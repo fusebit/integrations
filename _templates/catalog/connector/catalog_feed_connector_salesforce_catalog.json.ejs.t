@@ -13,7 +13,7 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/catalog.json
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>#creating-your-own-<%= name.toLowerCase() %>-app",
-    "connectorSDKDocUrl": "<%= connectorSDKLink %>",
+    "connectorSDKDocUrl": "<%= connectorSDKLink %>"
   },
   "configuration": {
     "schema": "config/schema.json",
