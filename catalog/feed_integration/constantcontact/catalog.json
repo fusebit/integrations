@@ -1,0 +1,50 @@
+{
+  "id": "constantcontact",
+  "name": "Constant Contact",
+  "smallIcon": "#/assets/constantcontact.svg",
+  "largeIcon": "#/assets/constantcontactLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/constantcontact#creating-your-own-constantcontact-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your Contact was successfully added to Constant Contact!",
+        "postFail": "Oops! Something went wrong and we couldn&#39;t add your contact to Constant Contact",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Contacts",
+        "itemName": "contact",
+        "properties": [
+          {
+            "name": "firstName",
+            "label": "First Name"
+          },
+          {
+            "name": "lastName",
+            "label": "Last Name"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "constantcontactConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "constantcontactIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

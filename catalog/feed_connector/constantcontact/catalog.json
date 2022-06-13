@@ -1,0 +1,35 @@
+{
+  "id": "constantcontact",
+  "name": "Constant Contact",
+  "smallIcon": "#/assets/constantcontact.svg",
+  "largeIcon": "#/assets/constantcontactLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/constantcontact#creating-your-own-constantcontact-app"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "constantcontactConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/constantcontact-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
