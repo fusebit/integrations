@@ -21,7 +21,6 @@ class Service extends OAuthConnector.Service {
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    console.log('Attempting to get account summary');
     try {
       const account = await superagent
         .get('https://api.cc.email/v3/account/summary')
@@ -31,7 +30,6 @@ class Service extends OAuthConnector.Service {
         `org/${encodeURIComponent(account.body.organization_name)}`,
       ];
     } catch (err) {
-      console.log('Account Error', err);
       throw err;
     }
   }
