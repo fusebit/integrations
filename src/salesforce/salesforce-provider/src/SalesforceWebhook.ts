@@ -1,10 +1,7 @@
 import { Internal } from '@fusebit-int/framework';
 import { FusebitClient } from './types';
 
-import { createApexClass, createApexTestClass, createApexTrigger } from './webhooks-templates';
-
 import superagent from 'superagent';
-import { v4 as uuidv4 } from 'uuid';
 
 interface IRemoteSiteSetting {
   fullName: string;
@@ -27,47 +24,35 @@ class SalesforceWebhook extends Internal.Provider.WebhookClient<FusebitClient> {
    * @param events {Array<string>} The list of events that trigger the Webhook, Example: ['after insert', 'after update']
    */
   public create = async ({ className, entityId, events }: ICreateWebhookOptions): Promise<any> => {
-    const webhookId = uuidv4();
-    const webhookSecret = uuidv4();
     const params = this.ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const webhookEndpoint = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event`;
-    const createWebhookSecretUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/create-secret`;
+    const createWebhookSecretUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook`;
 
     // Register a Webhook secret in Fusebit storage
-    const webhookSecretResponse = await superagent
+    const {
+      body: { apexClass, apexTestClass, apexTrigger },
+    } = await superagent
       .post(createWebhookSecretUrl)
       .set('Authorization', `Bearer ${params.functionAccessToken}`)
       .send({
-        webhookId,
-        secret: webhookSecret,
+        className,
+        entityId,
+        events,
       });
 
-    // TODO: Validate required fields
     // Creating a Salesforce Webhook involves creating an Apex Class, Apex Trigger and Apex test class.
     const createdClass = await this.client.tooling.sobject('ApexClass').create({
-      body: createApexClass(className, entityId.toLowerCase(), webhookSecret, webhookId),
+      body: apexClass,
     });
 
     const createdTestClass = await this.client.tooling.sobject('ApexClass').create({
-      body: createApexTestClass({
-        testClassName: `${className}Test`,
-        webhookClassName: className,
-        entityId,
-        webhookEndpoint,
-      }),
+      body: apexTestClass,
     });
 
     const createdTrigger = await this.client.tooling.sobject('ApexTrigger').create({
       name: className,
       tableEnumOrId: entityId,
-      body: createApexTrigger({
-        triggerName: `${className}Trigger`,
-        className,
-        entityId,
-        webhookEndpoint,
-        events,
-      }),
+      body: apexTrigger,
     });
 
     return {

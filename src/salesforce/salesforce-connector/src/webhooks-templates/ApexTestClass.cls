@@ -1,14 +1,5 @@
-export interface IApexTestClass {
-  testClassName: string;
-  webhookClassName: string;
-  entityId: string;
-  webhookEndpoint: string;
-}
-
-const createApexTestClass = (options: IApexTestClass) => {
-  return `
-  @isTest
-  public class ${options.testClassName} {
+@isTest
+  public class ${testClassName} {
 
       static SObject mock(String sobjectName) {
           SObjectType t = Schema.getGlobalDescribe().get(sobjectName);
@@ -68,7 +59,7 @@ const createApexTestClass = (options: IApexTestClass) => {
       }
 
       @isTest static void testTrigger() {
-          SObject o = mock('${options.entityId}');
+          SObject o = mock('${entityId}');
 
           Test.startTest();
           insert o;
@@ -76,17 +67,13 @@ const createApexTestClass = (options: IApexTestClass) => {
           delete o;
           Test.stopTest();
 
-          System.assertEquals(200, ${options.webhookClassName}.response.getStatusCode());
-          System.assertEquals('${options.webhookEndpoint}', ${options.webhookClassName}.request.getEndpoint());
+          System.assertEquals(200, ${webhookClassName}.response.getStatusCode());
+          System.assertEquals('${webhookEndpoint}', ${webhookClassName}.request.getEndpoint());
 
-          if (${options.webhookClassName}.request != null) {
-              Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(${options.webhookClassName}.request.getBody());
+          if (${webhookClassName}.request != null) {
+              Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(${webhookClassName}.request.getBody());
               System.assertNotEquals(null, jsonResponse.get('userId'));
           }
       }
 
   }
-`;
-};
-
-export default createApexTestClass;

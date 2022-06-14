@@ -36,11 +36,24 @@ class ServiceConnector extends OAuthConnector<Service> {
     const Joi = this.middleware.validate.joi;
 
     this.router.post(
-      '/api/fusebit/webhook/create-secret',
+      '/api/fusebit/webhook',
       this.middleware.validate({
         body: Joi.object({
-          webhookId: Joi.string().required(),
-          secret: Joi.string().required(),
+          className: Joi.string().required(),
+          entityId: Joi.string().required(),
+          events: Joi.array()
+            .items(
+              Joi.string().valid(
+                'before insert',
+                'before update',
+                'before delete',
+                'after insert',
+                'after update',
+                'after delete',
+                'after undelete'
+              )
+            )
+            .min(1),
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),

@@ -1,7 +1,4 @@
-const createApexClass = (className: string, entityId: string, secret: string, webhookId: string) => {
-  return `
-    
-    public class ${className} implements HttpCalloutMock {
+public class ${className} implements HttpCalloutMock {
 
         public static HttpRequest request;
         public static HttpResponse response;
@@ -24,11 +21,20 @@ const createApexClass = (className: string, entityId: string, secret: string, we
                 oldObjects = JSON.serialize(triggerOld);
             }
     
-            String userId = JSON.serialize(UserInfo.getUserId());
-            String instanceUrl = JSON.serialize(EncodingUtil.urlEncode(URL.getSalesforceBaseUrl().toExternalForm(), 'UTF-8'));
-            String eventType = JSON.serialize('${entityId}');
-            String content = '{"new": ' + newObjects + ', "old": ' + oldObjects + ', "type": ' + eventType +  ', "userId": ' + userId + ', "instanceUrl": ' + instanceUrl + ', "action": ' + JSON.serialize(action) + '}';
-            return content;
+            String userId = UserInfo.getUserId();
+            String instanceUrl = EncodingUtil.urlEncode(URL.getSalesforceBaseUrl().toExternalForm(), 'UTF-8');
+            String eventType = '${entityId}';
+            JSONGenerator gen = JSON.createGenerator(true);
+            gen.writeStartObject();
+            gen.writeStringField('old', oldObjects);
+            gen.writeStringField('new', newObjects);
+            gen.writeStringField('type', eventType);
+            gen.writeStringField('userId', userId);
+            gen.writeStringField('instanceUrl', instanceUrl);
+            gen.writeStringField('action',  action);
+            gen.writeEndObject();
+
+            return gen.getAsString();
         }
     
         @future(callout=true)
@@ -44,13 +50,14 @@ const createApexClass = (className: string, entityId: string, secret: string, we
             req.setEndpoint(url);
             req.setMethod('POST');
             req.setHeader('Content-Type', 'application/json');
+            req.setHeader('User-Agent', 'fusebit/salesforce');
 
             // Webhooks secrets are created for webhook verification purposes only
             String secretKey = '${secret}';
             String signature = generateHmacSHA256Signature('${entityId}', secretKey);
             String webhookId = '${webhookId}';
-            req.setHeader('x-salesforce-signature', signature);
-            req.setHeader('x-salesforce-webhook-id', webhookId);
+            req.setHeader('x-fusebit-salesforce-signature', signature);
+            req.setHeader('x-fusebit-salesforce-webhook-id', webhookId);
             req.setBody(content);
     
             h.send(req);
@@ -63,7 +70,3 @@ const createApexClass = (className: string, entityId: string, secret: string, we
         }
 
     }
-    `;
-};
-
-export default createApexClass;

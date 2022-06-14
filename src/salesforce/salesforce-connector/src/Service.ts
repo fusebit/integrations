@@ -1,8 +1,10 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector, IOAuthToken } from '@fusebit-int/oauth-connector';
+import { createApexClass, createApexTestClass, createApexTrigger } from './apex';
 
 import superagent from 'superagent';
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ISalesforceOAuthToken extends IOAuthToken {
   instance_url: string;
@@ -19,14 +21,37 @@ class Service extends OAuthConnector.Service {
   };
 
   public createWebhookSecret = async (ctx: Connector.Types.Context) => {
-    const { webhookId, secret } = ctx.req.body;
+    const { className, entityId, events } = ctx.req.body;
+    const webhookSecret = uuidv4();
+    const webhookId = uuidv4();
+    const params = ctx.state.params;
+    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
+    const webhookEndpoint = `${baseUrl}/connector/${params.entityId}/api/fusebit/webhook/event`;
+
+    const apexClass = await createApexClass(className, entityId.toLowerCase(), webhookSecret, webhookId);
+
+    const apexTestClass = await createApexTestClass({
+      testClassName: `${className}Test`,
+      webhookClassName: className,
+      entityId,
+      webhookEndpoint,
+    });
+
+    const apexTrigger = await createApexTrigger({
+      triggerName: `${className}Trigger`,
+      className,
+      entityId,
+      webhookEndpoint,
+      events,
+    });
+
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (webhookStorage) {
       return (ctx.status = 409);
     }
     const createdTime = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { secret, createdTime } });
-    return { webhookId, createdTime, secret };
+    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { webhookSecret, createdTime } });
+    return { webhookId, createdTime, webhookSecret, apexClass, apexTestClass, apexTrigger };
   };
 
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
@@ -49,13 +74,13 @@ class Service extends OAuthConnector.Service {
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const signature = ctx.req.headers['x-salesforce-signature'] as string;
-    const webhookId = ctx.req.headers['x-salesforce-webhook-id'] as string;
+    const signature = ctx.req.headers['x-fusebit-salesforce-signature'] as string;
+    const webhookId = ctx.req.headers['x-fusebit-salesforce-webhook-id'] as string;
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (!webhookStorage) {
       return false;
     }
-    const secret = webhookStorage?.data.secret;
+    const secret = webhookStorage.data.webhookSecret;
     const computedSignature = crypto.createHmac('sha256', secret).update(ctx.req.body.type).digest('base64');
     const calculatedSignatureBuffer = Buffer.from(computedSignature, 'utf8');
     const requestSignatureBuffer = Buffer.from(signature, 'utf8');
