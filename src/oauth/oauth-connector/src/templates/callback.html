@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Running configuration ...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Sora" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/4.1.0/superagent.min.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        font-family: 'Sora', sans-serif;
+        color: #fff;
+        background-image: linear-gradient(
+          -105deg,
+          {{configurationScreenBgColorFrom}},
+          {{configurationScreenBgColorTo}}
+        );
+      }
+
+      #container {
+        width: 400px;
+        height: 200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      #spinner {
+        -webkit-animation: rotate 2s linear infinite;
+        animation: rotate 2s linear infinite;
+        z-index: 2;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -25px 0 0 -25px;
+        width: 50px;
+        height: 50px;
+      }
+
+      #spinner .path {
+        stroke: #93bfec;
+        stroke-linecap: round;
+        -webkit-animation: dash 1.5s ease-in-out infinite;
+        animation: dash 1.5s ease-in-out infinite;
+      }
+
+      #error {
+        color: #000;
+        word-wrap: break-word;
+        background-color: #c8bcbc;
+        border-radius: 2px;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+        border: solid 1px #ee0600;
+      }
+
+      @-webkit-keyframes rotate {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @-webkit-keyframes dash {
+        0% {
+          stroke-dasharray: 1, 150;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -35;
+        }
+        100% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -124;
+        }
+      }
+      @keyframes dash {
+        0% {
+          stroke-dasharray: 1, 150;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -35;
+        }
+        100% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -124;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="error" style="display: none;"></div>
+    <div id="container">
+      <div id="loadinState">
+        <p><span id="message"></span></p>
+      </div>
+      <svg id="spinner" style="display: none;" viewBox="0 0 50 50">
+        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+      </svg>
+    </div>
+  </body>
+
+  <script>
+    (async () => {
+      const baseUrl = '{{baseUrl}}';
+      const state = '{{state}}';
+      const code = '{{code}}';
+      const redirectUrl = '{{redirectUrl}}';
+
+      const showSpinner = () => {
+        document.getElementById('spinner').style.display = 'block';
+      };
+
+      const hideSpinner = () => {
+        document.getElementById('spinner').style.display = 'none';
+      };
+
+      const showError = (message) => {
+        const errorElement = document.getElementById('error');
+        errorElement.style.display = 'block';
+        errorElement.innerText = message;
+      };
+
+      const showMessage = (message) => {
+        const errorElement = document.getElementById('message');
+        errorElement.style.display = 'block';
+        errorElement.innerText = message;
+      };
+
+      const hideMessage = (message) => {
+        document.getElementById('loadinState').style.display = 'none';
+      };
+
+      try {
+        showMessage('{{configurationScreenWaitText}}');
+        showSpinner();
+
+        const splashCallbackResponse = await superagent
+          .get(`${baseUrl}/api/callback`)
+          .query({ splash: true })
+          .query({ state })
+          .query({ code });
+        const splashResponse = splashCallbackResponse.body;
+        if (splashResponse && splashResponse.redirect) {
+          showMessage('Done processing, redirecting . . .');
+          window.location = redirectUrl;
+        } else {
+          hideSpinner();
+          showMessage('Invalid response, please try again');
+        }
+      } catch (error) {
+        hideSpinner();
+        hideMessage();
+        showError(error.response.body.message);
+      }
+    })();
+  </script>
+</html>

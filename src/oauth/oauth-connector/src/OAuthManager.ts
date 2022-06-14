@@ -6,6 +6,8 @@ import { TokenIdentityClient, TokenSessionClient } from './IdentityClient';
 import * as ConfigurationUI from './configure';
 import { IOAuthToken, ITags } from './OAuthTypes';
 
+import { loadFilecontent } from './Utilities';
+
 type MiddlewareAdjustUrlConfiguration = (
   defaultTokenUrl: string,
   defaultAuthorizationUrl: string,
@@ -286,14 +288,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
     });
 
-    this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
-      ctx.state.tokenClient = this.createSessionClient(ctx);
-      const state = ctx.query.state;
-
-      if (!state) {
-        ctx.throw(400, 'Missing state');
-      }
-
+    this.router.get('/api/callback', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       if (ctx.query.error) {
         // The OAuth exchange has errored out - send back to callback and pass those parameters along.
         await this.onSessionError(ctx, {
@@ -301,6 +296,11 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
           errorDescription: ctx.query.error_description || ctx.query.errorDescription,
         });
         return ctx.state.engine.redirectToCallback(ctx);
+      }
+
+      const state = ctx.query.state;
+      if (!state) {
+        ctx.throw(400, 'Missing state');
       }
 
       const code = ctx.query.code;
@@ -311,11 +311,43 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       }
 
       try {
-        await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+        ctx.state.tokenClient = this.createSessionClient(ctx);
+
+        // Call is coming from the Splash configuration screen.
+        if (ctx.query.splash) {
+          const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+          ctx.state.tokenInfo = token;
+          // Run callback implementation from the connector
+          next();
+          ctx.body = {
+            redirect: true,
+          };
+        } else {
+          const baseUrl = ctx.state.engine.cfg.mountUrl;
+          const redirectUrl = await ctx.state.engine.getCallbackUrl(ctx);
+          const {
+            configurationScreenBgColorFrom,
+            configurationScreenBgColorTo,
+            configurationScreenWaitText,
+          } = ctx.state.manager.config.configuration;
+          const callbackHtml = await loadFilecontent('callback.html', 'templates', {
+            baseUrl,
+            redirectUrl,
+            state,
+            code,
+            configurationScreenBgColorFrom: configurationScreenBgColorFrom || '#100a2d',
+            configurationScreenBgColorTo: configurationScreenBgColorTo || '#12124f',
+            configurationScreenWaitText:
+              configurationScreenWaitText || 'Configuring your installation, this may take a while, please wait.',
+          });
+          // @ts-ignore
+          return ctx.res.send(callbackHtml);
+        }
       } catch (e) {
-        await this.onSessionError(ctx, { error: `Conversion error: ${e.response?.text} - ${e.stack}` });
+        await this.onSessionError(ctx, {
+          error: `Conversion error: ${e.response ? e.response.text : e.message} - ${e.stack}`,
+        });
       }
-      return ctx.state.engine.redirectToCallback(ctx);
     });
   }
 }

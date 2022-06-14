@@ -34,6 +34,7 @@
   "devDependencies": {
     "@fusebit-int/framework": "^7.49.1",
     "@types/jsforce": "^1.9.35",
+    "@types/superagent": "^4.1.15",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
@@ -44,7 +45,8 @@
     "typescript": "^3.8.0"
   },
   "dependencies": {
-    "jsforce": "1.10.1"
+    "jsforce": "1.10.1",
+    "superagent": "^7.1.6"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"

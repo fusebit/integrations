@@ -25,10 +25,11 @@
   "scripts": {
     "test": "jest --config=./jest.config.ts",
     "tsc:version": "tsc --version",
-    "build": "tsc -b --pretty",
+    "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore",
+    "copy-files": "cp -r src/templates libc"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"

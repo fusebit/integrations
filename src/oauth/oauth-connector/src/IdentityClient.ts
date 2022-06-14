@@ -7,6 +7,7 @@ const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
 type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
+type IConfigure<IToken> = (token: IToken) => Promise<void>;
 
 export interface ITokenParams {
   accountId: string;
