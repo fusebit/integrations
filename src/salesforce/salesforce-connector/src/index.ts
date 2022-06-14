@@ -7,7 +7,7 @@ const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 const SERVICE_NAME = 'Salesforce';
 
-class ServiceConnector extends OAuthConnector {
+class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
@@ -32,6 +32,22 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientId.description = `The OAuth Consumer Key from your ${SERVICE_NAME} Connected App`;
       ctx.body.schema.properties.clientSecret.description = `The Consumer Secret from your ${SERVICE_NAME} Connected App`;
     });
+
+    const Joi = this.middleware.validate.joi;
+
+    this.router.post(
+      '/api/fusebit/webhook/create-secret',
+      this.middleware.validate({
+        body: Joi.object({
+          webhookId: Joi.string().required(),
+          secret: Joi.string().required(),
+        }),
+      }),
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.createWebhookSecret(ctx);
+      }
+    );
   }
 }
 

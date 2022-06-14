@@ -1,7 +1,8 @@
 import { Internal } from '@fusebit-int/framework';
 import jsforce from 'jsforce';
 
-type FusebitClient = jsforce.Connection & { fusebit?: { credentials: any; identity?: any } };
+import SalesforceWebhook from './SalesforceWebhook';
+import { FusebitClient } from './types';
 
 export default class SalesforceProvider extends Internal.Provider.Activator<FusebitClient> {
   /*
@@ -17,4 +18,9 @@ export default class SalesforceProvider extends Internal.Provider.Activator<Fuse
     client.fusebit = { credentials };
     return client;
   }
+
+  public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {
+    const client = await this.instantiate(ctx, lookupKey);
+    return new SalesforceWebhook(ctx, lookupKey, installId, this.config, client);
+  };
 }
