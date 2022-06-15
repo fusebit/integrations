@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/linkedin-provider",
-  "version": "7.47.17",
+  "version": "7.47.18",
   "description": "LinkedIn provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.47.17",
-    "@fusebit-int/play": "^7.47.17",
+    "@fusebit-int/framework": "^7.47.18",
+    "@fusebit-int/play": "^7.47.18",
     "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
