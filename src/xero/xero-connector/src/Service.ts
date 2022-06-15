@@ -31,11 +31,11 @@ class Service extends OAuthConnector.Service {
   }
 
   protected eventToString(event: IXeroEvent) {
-    return `{"resourceUrl": "${event.resourceUrl}", "resourceId": "${event.resourceId}", "eventDateUtc": "${event.eventDateUtc}", "eventType": "${event.eventType}", "eventCategory": "${event.eventCategory}", "tenantId": "${event.tenantId}", "tenantType": "${event.tenantType}"}`;
+    return `{\n  "resourceUrl": "${event.resourceUrl}",\n  "resourceId": "${event.resourceId}",\n  "eventDateUtc": "${event.eventDateUtc}",\n  "eventType": "${event.eventType}",\n  "eventCategory": "${event.eventCategory}",\n  "tenantId": "${event.tenantId}",\n  "tenantType": "${event.tenantType}"\n}`;
   }
 
   protected bodyToString(body: IXeroEventBody) {
-    return `{"events":[${body.events.map((event) => this.eventToString(event)).join(', ')}],"firstEventSequence": ${
+    return `{"events":[${body.events.map((event) => this.eventToString(event)).join(',')}],"firstEventSequence": ${
       body.firstEventSequence
     },"lastEventSequence": ${body.lastEventSequence}, "entropy": "${body.entropy}"}`;
   }
