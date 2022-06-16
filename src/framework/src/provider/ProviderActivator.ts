@@ -22,7 +22,7 @@ export interface IFusebitCredentials {
 }
 
 export abstract class ProviderActivator<T> {
-  public abstract instantiate(ctx: FusebitContext, lookupKey?: string, installId?: string): Promise<T>;
+  public abstract instantiate(ctx: FusebitContext, lookupKey?: string): Promise<T>;
   public instantiateWebhook = async (
     ctx: FusebitContext,
     lookupKey: string,
@@ -51,7 +51,8 @@ export abstract class ProviderActivator<T> {
     ctx: FusebitContext;
     lookupKey: string;
   }): Promise<Token> {
-    const tokenPath = `/api/${lookupKey}/token`;
+    // sessions have a different token endpoint compared to standard install token endpoint.
+    const tokenPath = `/api/${lookupKey.startsWith('sid-') ? 'session/' : ''}${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
     const tokenResponse = await superagent
@@ -62,7 +63,12 @@ export abstract class ProviderActivator<T> {
     const isEmpty = !connectorToken || Object.keys(connectorToken).length === 0;
 
     if (isEmpty) {
-      ctx.throw(404, `Cannot find Integration Identity '${lookupKey}'. Has the tenant authorized this integration?`);
+      ctx.throw(
+        404,
+        `Cannot find Integration ${
+          lookupKey.startsWith('sid-') ? 'Session' : 'Identity'
+        } '${lookupKey}'. Has the tenant authorized this integration?`
+      );
     }
 
     return connectorToken;

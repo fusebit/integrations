@@ -1,3 +1,4 @@
+import superagent from 'superagent';
 import { FusebitContext } from './router';
 import { Service } from './client/Integration';
 import { EntityType } from './schema';
@@ -119,10 +120,10 @@ class ConnectorManager {
    * multiple calls and endpoints.
    *
    * @param name Connector name
-   * @param {string} installId The unique id of the tenant Install that should be used to determine the
+   * @param {string} sessionOrInstallId The unique id of the tenant Install/Session that should be used to determine the
    * appropriate connector identity to populate into the sdk.
    */
-  public async getByName(ctx: FusebitContext, name: string, installId?: string): Promise<any> {
+  public async getByName(ctx: FusebitContext, name: string, sessionOrInstallId?: string): Promise<any> {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(
@@ -140,18 +141,36 @@ class ConnectorManager {
     // uses client credentials to communicate with the Saas (the Microsoft Bot Framework). Hence,
     // no install/id is needed to intantiate it.
     let install;
-    let identity;
-    if (installId) {
-      install = await service.getInstall(ctx, installId);
-      identity = install.data[name];
-      if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
-        ctx.throw(404);
-      }
+    let resourceId;
+    if (sessionOrInstallId?.startsWith('ins-')) {
+      install = await service.getInstall(ctx, sessionOrInstallId);
+      resourceId = install.data[name];
     }
 
-    const client = await inst.instantiate(ctx, identity?.entityId, installId);
+    if (sessionOrInstallId?.startsWith('sid-')) {
+      // When someone passes a sessionId, this gets the connectors that this session is dependent on,
+      // and get the sessionId of the connector session that was created before the session in which
+      // this function is invoked. Which is passed down and make the provider able to get the token of the depended on connector.
+      const dependencies = await superagent
+        .get(`${ctx.state.params.baseUrl}/session/${sessionOrInstallId}`)
+        .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
+        .send();
+
+      resourceId = { entityId: dependencies.body.dependsOn[name].entityId, entityType: EntityType.session };
+    }
+
+    if (
+      sessionOrInstallId &&
+      (!resourceId ||
+        !resourceId.entityId ||
+        (resourceId.entityType !== EntityType.identity && resourceId.entityType !== EntityType.session))
+    ) {
+      ctx.throw(404);
+    }
+
+    const client = await inst.instantiate(ctx, resourceId?.entityId);
     client.fusebit = client.fusebit || {};
-    client.fusebit.identity = identity;
+    client.fusebit.identity = resourceId;
     return client;
   }
 
