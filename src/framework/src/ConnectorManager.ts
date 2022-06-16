@@ -168,7 +168,7 @@ class ConnectorManager {
       ctx.throw(404);
     }
 
-    const client = await inst.instantiate(ctx, resourceId?.entityId, sessionOrInstallId);
+    const client = await inst.instantiate(ctx, resourceId?.entityId);
     client.fusebit = client.fusebit || {};
     client.fusebit.identity = resourceId;
     return client;
