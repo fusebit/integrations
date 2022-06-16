@@ -151,7 +151,6 @@ class ConnectorManager {
     }
 
     if (sessionOrInstallId?.startsWith('sid')) {
-      // Get parent session id
       const dependencies = await superagent
         .get(`${ctx.state.params.baseUrl}/session/${sessionOrInstallId}`)
         .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
