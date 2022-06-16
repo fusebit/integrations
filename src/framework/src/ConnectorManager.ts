@@ -141,27 +141,34 @@ class ConnectorManager {
     // uses client credentials to communicate with the Saas (the Microsoft Bot Framework). Hence,
     // no install/id is needed to intantiate it.
     let install;
-    let identity;
+    let identityOrSessionId;
     if (sessionOrInstallId?.startsWith('ins')) {
       install = await service.getInstall(ctx, sessionOrInstallId);
-      identity = install.data[name];
-      if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
+      identityOrSessionId = install.data[name];
+      if (
+        !identityOrSessionId ||
+        !identityOrSessionId.entityId ||
+        identityOrSessionId.entityType !== EntityType.identity
+      ) {
         ctx.throw(404);
       }
     }
 
     if (sessionOrInstallId?.startsWith('sid')) {
+      // When someone passes a sessionId, this gets the connectors that this session is dependent on,
+      // and get the sessionId of the connector session that was created before the session in which
+      // this function is invoked. Which is passed down and make the provider able to get the token of the depended on connector.
       const dependencies = await superagent
         .get(`${ctx.state.params.baseUrl}/session/${sessionOrInstallId}`)
         .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
         .send();
 
-      identity = { entityId: dependencies.body.dependsOn[name].entityId };
+      identityOrSessionId = { entityId: dependencies.body.dependsOn[name].entityId, entityType: EntityType.session };
     }
 
-    const client = await inst.instantiate(ctx, identity?.entityId, sessionOrInstallId);
+    const client = await inst.instantiate(ctx, identityOrSessionId?.entityId, sessionOrInstallId);
     client.fusebit = client.fusebit || {};
-    client.fusebit.identity = identity;
+    client.fusebit.identity = identityOrSessionId;
     return client;
   }
 
