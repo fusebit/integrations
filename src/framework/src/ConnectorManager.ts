@@ -145,9 +145,6 @@ class ConnectorManager {
     if (sessionOrInstallId?.startsWith('ins-')) {
       install = await service.getInstall(ctx, sessionOrInstallId);
       resourceId = install.data[name];
-      if (!resourceId || !resourceId.entityId || resourceId.entityType !== EntityType.identity) {
-        ctx.throw(404);
-      }
     }
 
     if (sessionOrInstallId?.startsWith('sid-')) {
@@ -160,6 +157,15 @@ class ConnectorManager {
         .send();
 
       resourceId = { entityId: dependencies.body.dependsOn[name].entityId, entityType: EntityType.session };
+    }
+
+    if (
+      sessionOrInstallId &&
+      (!resourceId ||
+        !resourceId.entityId ||
+        (resourceId.entityType !== EntityType.identity && resourceId.entityType !== EntityType.session))
+    ) {
+      ctx.throw(404);
     }
 
     const client = await inst.instantiate(ctx, resourceId?.entityId, sessionOrInstallId);
