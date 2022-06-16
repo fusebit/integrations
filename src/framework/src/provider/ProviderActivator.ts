@@ -51,7 +51,7 @@ export abstract class ProviderActivator<T> {
     ctx: FusebitContext;
     lookupKey: string;
   }): Promise<Token> {
-    const tokenPath = `/api/${lookupKey}/token`;
+    const tokenPath = `/api/${lookupKey.startsWith('sid') ? 'session/' : ''}${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
     const tokenResponse = await superagent

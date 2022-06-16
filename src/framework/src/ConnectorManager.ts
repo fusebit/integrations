@@ -1,3 +1,4 @@
+import superagent from 'superagent';
 import { FusebitContext } from './router';
 import { Service } from './client/Integration';
 import { EntityType } from './schema';
@@ -122,7 +123,7 @@ class ConnectorManager {
    * @param {string} installId The unique id of the tenant Install that should be used to determine the
    * appropriate connector identity to populate into the sdk.
    */
-  public async getByName(ctx: FusebitContext, name: string, installId?: string): Promise<any> {
+  public async getByName(ctx: FusebitContext, name: string, sessionOrInstallId?: string): Promise<any> {
     const cfg = this.connectors[name];
     if (!cfg) {
       throw new Error(
@@ -141,15 +142,25 @@ class ConnectorManager {
     // no install/id is needed to intantiate it.
     let install;
     let identity;
-    if (installId) {
-      install = await service.getInstall(ctx, installId);
+    if (sessionOrInstallId?.startsWith('ins')) {
+      install = await service.getInstall(ctx, sessionOrInstallId);
       identity = install.data[name];
       if (!identity || !identity.entityId || identity.entityType !== EntityType.identity) {
         ctx.throw(404);
       }
     }
 
-    const client = await inst.instantiate(ctx, identity?.entityId, installId);
+    if (sessionOrInstallId?.startsWith('sid')) {
+      // Get parent session id
+      const dependencies = await superagent
+        .get(`${ctx.state.params.baseUrl}/session/${sessionOrInstallId}`)
+        .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
+        .send();
+
+      identity = { entityId: dependencies.body.dependsOn[name].entityId };
+    }
+
+    const client = await inst.instantiate(ctx, identity?.entityId, sessionOrInstallId);
     client.fusebit = client.fusebit || {};
     client.fusebit.identity = identity;
     return client;
