@@ -51,7 +51,6 @@ export abstract class ProviderActivator<T> {
     ctx: FusebitContext;
     lookupKey: string;
   }): Promise<Token> {
-    // When a lookupKey is prefixed via sid, we can safely consider the key to be a sessionId.
     // sessions have a different token endpoint compared to standard install token endpoint.
     const tokenPath = `/api/${lookupKey.startsWith('sid-') ? 'session/' : ''}${lookupKey}/token`;
     const params = ctx.state.params;
