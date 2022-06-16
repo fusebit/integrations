@@ -141,15 +141,11 @@ class ConnectorManager {
     // uses client credentials to communicate with the Saas (the Microsoft Bot Framework). Hence,
     // no install/id is needed to intantiate it.
     let install;
-    let identityOrSessionId;
+    let resourceId;
     if (sessionOrInstallId?.startsWith('ins-')) {
       install = await service.getInstall(ctx, sessionOrInstallId);
-      identityOrSessionId = install.data[name];
-      if (
-        !identityOrSessionId ||
-        !identityOrSessionId.entityId ||
-        identityOrSessionId.entityType !== EntityType.identity
-      ) {
+      resourceId = install.data[name];
+      if (!resourceId || !resourceId.entityId || resourceId.entityType !== EntityType.identity) {
         ctx.throw(404);
       }
     }
@@ -163,12 +159,12 @@ class ConnectorManager {
         .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
         .send();
 
-      identityOrSessionId = { entityId: dependencies.body.dependsOn[name].entityId, entityType: EntityType.session };
+      resourceId = { entityId: dependencies.body.dependsOn[name].entityId, entityType: EntityType.session };
     }
 
-    const client = await inst.instantiate(ctx, identityOrSessionId?.entityId, sessionOrInstallId);
+    const client = await inst.instantiate(ctx, resourceId?.entityId, sessionOrInstallId);
     client.fusebit = client.fusebit || {};
-    client.fusebit.identity = identityOrSessionId;
+    client.fusebit.identity = resourceId;
     return client;
   }
 
