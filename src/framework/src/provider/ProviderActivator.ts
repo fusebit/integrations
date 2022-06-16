@@ -53,7 +53,7 @@ export abstract class ProviderActivator<T> {
   }): Promise<Token> {
     // When a lookupKey is prefixed via sid, we can safely consider the key to be a sessionId.
     // sessions have a different token endpoint compared to standard install token endpoint.
-    const tokenPath = `/api/${lookupKey.startsWith('sid') ? 'session/' : ''}${lookupKey}/token`;
+    const tokenPath = `/api/${lookupKey.startsWith('sid-') ? 'session/' : ''}${lookupKey}/token`;
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}/connector/${this.config.entityId}`;
     const tokenResponse = await superagent

@@ -142,7 +142,7 @@ class ConnectorManager {
     // no install/id is needed to intantiate it.
     let install;
     let identityOrSessionId;
-    if (sessionOrInstallId?.startsWith('ins')) {
+    if (sessionOrInstallId?.startsWith('ins-')) {
       install = await service.getInstall(ctx, sessionOrInstallId);
       identityOrSessionId = install.data[name];
       if (
@@ -154,7 +154,7 @@ class ConnectorManager {
       }
     }
 
-    if (sessionOrInstallId?.startsWith('sid')) {
+    if (sessionOrInstallId?.startsWith('sid-')) {
       // When someone passes a sessionId, this gets the connectors that this session is dependent on,
       // and get the sessionId of the connector session that was created before the session in which
       // this function is invoked. Which is passed down and make the provider able to get the token of the depended on connector.
