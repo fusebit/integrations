@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { Service } from './Service';
 
 const TOKEN_URL = 'https://github.com/login/oauth/access_token';
-const AUTHORIZATION_URL = 'https://github.com/login/oauth/authorize';
+const AUTHORIZATION_URL = 'https://github.com/apps/{{applicationName}}/installations/new';
 const REVOCATION_URL = 'https://api.github.com/applications/CLIENT_ID/token';
 const SERVICE_NAME = 'GitHubApp';
 const HUMAN_SERVICE_NAME = 'GitHub';
@@ -19,7 +19,7 @@ class ServiceConnector extends OAuthConnector {
   }
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
-    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase(), ['applicationName']);
   }
 
   public constructor() {
@@ -35,6 +35,7 @@ class ServiceConnector extends OAuthConnector {
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationId');
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'signingSecret', 'password');
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'privateKey', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'applicationName');
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${HUMAN_SERVICE_NAME} App`;
@@ -51,6 +52,10 @@ class ServiceConnector extends OAuthConnector {
       };
       ctx.body.schema.properties.applicationId = {
         title: `App ID from your ${HUMAN_SERVICE_NAME} App`,
+        type: 'string',
+      };
+      ctx.body.schema.properties.applicationName = {
+        title: `App name from your ${HUMAN_SERVICE_NAME} App`,
         type: 'string',
       };
     });
