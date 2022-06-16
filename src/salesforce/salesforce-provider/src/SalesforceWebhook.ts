@@ -2,6 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import { FusebitClient } from './types';
 
 import superagent from 'superagent';
+import { SaveResult } from 'jsforce';
 
 interface IRemoteSiteSetting {
   fullName: string;

@@ -1,5 +1,5 @@
 @isTest
-  public class ${testClassName} {
+  public class {{testClassName}} {
 
       static SObject mock(String sobjectName) {
           SObjectType t = Schema.getGlobalDescribe().get(sobjectName);
@@ -59,7 +59,7 @@
       }
 
       @isTest static void testTrigger() {
-          SObject o = mock('${entityId}');
+          SObject o = mock('{{entityId}}');
 
           Test.startTest();
           insert o;
@@ -67,11 +67,11 @@
           delete o;
           Test.stopTest();
 
-          System.assertEquals(200, ${webhookClassName}.response.getStatusCode());
-          System.assertEquals('${webhookEndpoint}', ${webhookClassName}.request.getEndpoint());
+          System.assertEquals(200, {{webhookClassName}}.response.getStatusCode());
+          System.assertEquals('{{webhookEndpoint}}', {{webhookClassName}}.request.getEndpoint());
 
-          if (${webhookClassName}.request != null) {
-              Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(${webhookClassName}.request.getBody());
+          if ({{webhookClassName}}.request != null) {
+              Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped({{webhookClassName}}.request.getBody());
               System.assertNotEquals(null, jsonResponse.get('userId'));
           }
       }

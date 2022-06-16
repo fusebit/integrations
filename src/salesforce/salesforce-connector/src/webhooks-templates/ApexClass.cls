@@ -1,4 +1,4 @@
-public class ${className} implements HttpCalloutMock {
+public class {{className}} implements HttpCalloutMock {
 
         public static HttpRequest request;
         public static HttpResponse response;
@@ -23,25 +23,25 @@ public class ${className} implements HttpCalloutMock {
     
             String userId = UserInfo.getUserId();
             String instanceUrl = EncodingUtil.urlEncode(URL.getSalesforceBaseUrl().toExternalForm(), 'UTF-8');
-            String eventType = '${entityId}';
-            JSONGenerator gen = JSON.createGenerator(true);
-            gen.writeStartObject();
-            gen.writeStringField('old', oldObjects);
-            gen.writeStringField('new', newObjects);
-            gen.writeStringField('type', eventType);
-            gen.writeStringField('userId', userId);
-            gen.writeStringField('instanceUrl', instanceUrl);
-            gen.writeStringField('action',  action);
-            gen.writeEndObject();
+            String eventType = '{{entityId}}';
+           
+            String content = JSON.serialize(new Map<String, Object>{
+                    'old' => oldObjects,
+                    'new' => newObjects,
+                    'type' => eventType,
+                    'userId' => userId,
+                    'instanceUrl' => instanceUrl,
+                    'action' => action
+            });
 
-            return gen.getAsString();
+            return content;
         }
     
         @future(callout=true)
         public static void callout(String url, String content) {
     
             if (Test.isRunningTest()) {
-                Test.setMock(HttpCalloutMock.class, new ${className}());
+                Test.setMock(HttpCalloutMock.class, new {{className}}());
             }
     
             Http h = new Http();
@@ -53,9 +53,9 @@ public class ${className} implements HttpCalloutMock {
             req.setHeader('User-Agent', 'fusebit/salesforce');
 
             // Webhooks secrets are created for webhook verification purposes only
-            String secretKey = '${secret}';
-            String signature = generateHmacSHA256Signature('${entityId}', secretKey);
-            String webhookId = '${webhookId}';
+            String secretKey = '{{secret}}';
+            String signature = generateHmacSHA256Signature(content, secretKey);
+            String webhookId = '{{webhookId}}';
             req.setHeader('x-fusebit-salesforce-signature', signature);
             req.setHeader('x-fusebit-salesforce-webhook-id', webhookId);
             req.setBody(content);

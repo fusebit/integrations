@@ -7,7 +7,7 @@ const loadApexFile = async (fileName: string) => {
 };
 
 const replaceElements = (content: string, elements: Record<string, string>) => {
-  return content.replace(/\${([^}]*)}/g, (r, k) => elements[k]);
+  return content.replace(/{{([^}]*)}}/g, (r, k) => elements[k]);
 };
 
 export { loadApexFile, replaceElements };

@@ -76,12 +76,20 @@ class Service extends OAuthConnector.Service {
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
     const signature = ctx.req.headers['x-fusebit-salesforce-signature'] as string;
     const webhookId = ctx.req.headers['x-fusebit-salesforce-webhook-id'] as string;
+    const userAgent = ctx.req.headers['user-agent'] as string;
+
+    if (userAgent !== 'fusebit/salesforce' || !signature || !webhookId) {
+      return false;
+    }
+
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (!webhookStorage) {
       return false;
     }
     const secret = webhookStorage.data.webhookSecret;
-    const computedSignature = crypto.createHmac('sha256', secret).update(ctx.req.body.type).digest('base64');
+    const rawBody = JSON.stringify(ctx.req.body);
+
+    const computedSignature = crypto.createHmac('sha256', secret).update(rawBody).digest('base64');
     const calculatedSignatureBuffer = Buffer.from(computedSignature, 'utf8');
     const requestSignatureBuffer = Buffer.from(signature, 'utf8');
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
