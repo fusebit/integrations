@@ -9,7 +9,7 @@ class Service extends OAuthConnector.Service {
 
   public registerWebhook = async (ctx: Connector.Types.Context) => {
     const { password, webhookId } = ctx.req.body;
-    this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { password } });
+    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { password } });
   };
 
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
