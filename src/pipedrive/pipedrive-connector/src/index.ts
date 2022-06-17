@@ -34,6 +34,19 @@ class ServiceConnector extends OAuthConnector {
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
+
+    this.router.post(
+      '/api/fusebit/webhook/create',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        // Typescript refuses to compile without the type cast :(
+        ctx.body = await (this.service as Service).registerWebhook(ctx);
+      }
+    );
+
+    this.router.post('/api/fusebit/webhook/event/:webhookId', async (ctx: Connector.Types.Context) => {
+      await this.service.handleWebhookEvent(ctx);
+    });
   }
 }
 
