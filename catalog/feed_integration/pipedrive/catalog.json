@@ -1,0 +1,32 @@
+{
+  "id": "pipedrive",
+  "name": "Pipedrive",
+  "smallIcon": "#/assets/pipedrive.svg",
+  "largeIcon": "#/assets/pipedriveLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "CRM"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/pipedrive#creating-your-own-pipedrive-app",
+    "sampleConfig": {
+      "isEnabled": false
+          }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "pipedriveConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "pipedriveIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
