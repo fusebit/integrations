@@ -40,7 +40,7 @@ class ServiceConnector extends OAuthConnector {
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         // Typescript refuses to compile without the type cast :(
-        ctx.body = await (this.service as Service).registerWebhook(ctx);
+        ctx.body = await this.service.registerWebhook(ctx);
       }
     );
 
