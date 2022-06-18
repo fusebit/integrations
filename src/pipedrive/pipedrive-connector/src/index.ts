@@ -35,11 +35,18 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
 
+    const Joi = this.middleware.validate.joi;
+
     this.router.post(
       '/api/fusebit/webhook/create',
       this.middleware.authorizeUser('connector:execute'),
+      this.middleware.validate({
+        body: Joi.object({
+          webhookId: Joi.string().required(),
+          password: Joi.string().required(),
+        }),
+      }),
       async (ctx: Connector.Types.Context) => {
-        // Typescript refuses to compile without the type cast :(
         ctx.body = await this.service.registerWebhook(ctx);
       }
     );
