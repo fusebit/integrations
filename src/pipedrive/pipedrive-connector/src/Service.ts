@@ -18,7 +18,7 @@ class Service extends OAuthConnector.Service {
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
-    return event.meta.host.split('.')[0];
+    return `company_domain/${event.meta.host.split('.')[0]}`;
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
@@ -39,7 +39,13 @@ class Service extends OAuthConnector.Service {
       .get('https://api.pipedrive.com/v1/users/me')
       .set('Authorization', `Bearer ${token.access_token}`)
       .send();
-    return resp.body.data.company_domain;
+    return [
+      `company_domain/${resp.body.data.company_domain}`,
+      `company_name/${resp.body.data.company_name}`,
+      `company_country/${resp.body.data.company_country}`,
+      `company_industry/${resp.body.data.company_industry}`,
+      `email/${resp.body.data.email}`,
+    ];
   }
 
   public getWebhookEventType(event: any): string {
