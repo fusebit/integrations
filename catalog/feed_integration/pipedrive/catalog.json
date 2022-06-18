@@ -11,7 +11,20 @@
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/pipedrive#creating-your-own-pipedrive-app",
     "sampleConfig": {
-      "isEnabled": false
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your lead was successfully added to Pipedrive.",
+        "postFail": "Oops! Something went wrong and we couldn't add your lead to Pipedrive.",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your leads.",
+        "properties": [
+          {
+            "name": "title",
+            "label": "Title"
+          }
+        ]
+      }
     }
   },
   "configuration": {
