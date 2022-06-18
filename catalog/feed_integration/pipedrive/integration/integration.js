@@ -13,7 +13,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference: https://developers.pipedrive.com/docs/api/v1
   const deals = await pipedriveClient.get('/v1/deals');
   ctx.body = {
-    message: `Successfully loaded ${deals.data.length || 0} deals from Pipedrive.`,
+    message: `Successfully loaded ${deals.data.length} deals from Pipedrive.`,
   };
 });
 

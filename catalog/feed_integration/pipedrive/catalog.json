@@ -12,7 +12,7 @@
     "configureAppDocUrl": "https://developer.fusebit.io/docs/pipedrive#creating-your-own-pipedrive-app",
     "sampleConfig": {
       "isEnabled": false
-          }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
