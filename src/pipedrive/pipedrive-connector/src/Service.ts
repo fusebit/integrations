@@ -44,6 +44,7 @@ class Service extends OAuthConnector.Service {
       `company_name/${resp.body.data.company_name}`,
       `company_country/${resp.body.data.company_country}`,
       `company_industry/${resp.body.data.company_industry}`,
+      `company_id/${resp.body.data.company_id}`,
       `email/${resp.body.data.email}`,
     ];
   }
