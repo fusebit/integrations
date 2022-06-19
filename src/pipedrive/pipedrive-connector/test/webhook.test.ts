@@ -38,7 +38,9 @@ describe('Pipedrive Webhook Events', () => {
   });
 
   test('Validate: getAuthIdFromEvent', async () => {
-    expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(sampleEvent.meta.host.split('.')[0]);
+    expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(
+      `company_domain/${sampleEvent.meta.host.split('.')[0]}`
+    );
   });
 
   test('Validate: validateWebhookEvent', async () => {
