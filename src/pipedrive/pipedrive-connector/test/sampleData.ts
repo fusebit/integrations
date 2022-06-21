@@ -17,5 +17,5 @@ export const sampleConfig = {
 
 export const sampleData = {
   webhookId: 'strawberry',
-  password: 'mango',
+  secret: 'mango',
 };
