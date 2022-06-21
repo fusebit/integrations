@@ -22,6 +22,10 @@
           {
             "name": "title",
             "label": "Title"
+          },
+          {
+            "name": "organization_id",
+            "label": "Organization Id"
           }
         ]
       }

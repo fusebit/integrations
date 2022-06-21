@@ -35,6 +35,7 @@ router.post('/api/tenant/:tenantId/items', integration.middleware.authorizeUser(
   // Create a new lead
   await pipedriveClient.post('/v1/leads', {
     title: ctx.req.body.title,
+    organization_id: ctx.req.body.organization_id,
   });
 });
 
