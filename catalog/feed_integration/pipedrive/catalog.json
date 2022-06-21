@@ -1,0 +1,49 @@
+{
+  "id": "pipedrive",
+  "name": "Pipedrive",
+  "smallIcon": "#/assets/pipedrive.svg",
+  "largeIcon": "#/assets/pipedriveLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "CRM"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/pipedrive#creating-your-own-pipedrive-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "Your lead was successfully added to Pipedrive.",
+        "postFail": "Oops! Something went wrong and we couldn't add your lead to Pipedrive.",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your leads.",
+        "properties": [
+          {
+            "name": "title",
+            "label": "Title"
+          },
+          {
+            "name": "organization_id",
+            "label": "Organization Id"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "pipedriveConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "pipedriveIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

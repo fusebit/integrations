@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Pipedrive"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "pipedriveConnector",
+      "skip": false,
+      "provider": "@fusebit-int/pipedrive-provider",
+      "entityId": "<% global.entities.pipedriveConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
