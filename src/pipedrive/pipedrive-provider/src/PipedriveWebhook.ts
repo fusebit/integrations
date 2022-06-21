@@ -20,28 +20,18 @@ interface IPipedriveWebhookConfig {
 }
 
 export class PipedriveWebhook extends Internal.Provider.WebhookClient {
-  public create = async (args: IPipedriveWebhookConfig) => {
-    const webhookId = uuidv4();
-    const password = uuidv4();
-    const params = this.ctx.state.params;
-    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const createWebhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/create`;
-    const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}`;
-    await superagent
-      .post('https://api.pipedrive.com/v1/webhooks')
-      .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
-      .send({
-        ...args,
-        http_auth_user: webhookId,
-        http_auth_password: password,
-        subscription_url: webhookUrl,
-      });
-    await superagent.post(createWebhookUrl).set('Authorization', `Bearer ${params.functionAccessToken}`).send({
-      webhookId,
-      password,
-    });
+  connectorBaseUrl = `${this.ctx.state.params.endpoint}/v2/account/${this.ctx.state.params.accountId}/subscription/${this.ctx.state.params.subscriptionId}/connector/${this.config.entityId}`;
 
-    return { webhookId };
+  public create = async (args: IPipedriveWebhookConfig) => {
+    const response = await superagent
+      .post(`${this.connectorBaseUrl}/api/fusebit/webhook`)
+      .set('Authorization', `Bearer ${this.ctx.state.params.functionAccessToken}`)
+      .send({
+        args,
+        access_token: this.client.fusebit.credentials.access_token,
+      });
+
+    return { webhookId: response.body.webhookId };
   };
 
   public list = async () => {
@@ -59,9 +49,11 @@ export class PipedriveWebhook extends Internal.Provider.WebhookClient {
   public delete = async (webhookId: string) => {
     const webhook = await this.get(webhookId);
     await superagent
-      .delete(`https://api.pipedrive.com/v1/webhooks/${webhook.id}`)
+      .delete(`${this.connectorBaseUrl}/api/fusebit/webhook/${webhook.id}`)
       .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
-      .send();
+      .send({
+        access_token: this.client.fusebit.credentials.access_token,
+      });
   };
 
   public deleteAll = async () => {
@@ -69,9 +61,11 @@ export class PipedriveWebhook extends Internal.Provider.WebhookClient {
     await Promise.all(
       allWebhooks.map((webhook: any) =>
         superagent
-          .delete(`https://api.pipedrive.com/v1/webhooks/${webhook.id}`)
+          .delete(`${this.connectorBaseUrl}/api/fusebit/webhook/${webhook.id}`)
           .set('Authorization', `Bearer ${this.client.fusebit.credentials.access_token}`)
-          .send()
+          .send({
+            access_token: this.client.fusebit.credentials.access_token,
+          })
       )
     );
   };

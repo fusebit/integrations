@@ -38,16 +38,39 @@ class ServiceConnector extends OAuthConnector<Service> {
     const Joi = this.middleware.validate.joi;
 
     this.router.post(
-      '/api/fusebit/webhook/create',
+      '/api/fusebit/webhook',
       this.middleware.authorizeUser('connector:execute'),
       this.middleware.validate({
         body: Joi.object({
-          webhookId: Joi.string().required(),
-          password: Joi.string().required(),
+          access_token: Joi.string().required(),
+          args: Joi.object({
+            user_id: Joi.string(),
+            event_object: Joi.string().required(),
+            event_action: Joi.string().required(),
+          }).required(),
         }),
       }),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.registerWebhook(ctx);
+      }
+    );
+
+    this.router.delete(
+      '/api/fusebit/webhook/:webhookId',
+      this.middleware.authorizeUser('connector:execute'),
+      this.middleware.validate({
+        body: Joi.object({
+          access_token: Joi.string().required(),
+          // This is a Pipedrive webhookId, thus not a UUID like a Fusebit webhookId
+          webhookId: Joi.string().required(),
+          args: Joi.object().required(),
+        }),
+        params: Joi.object({
+          webhookId: Joi.string().uuid({ version: 'uuidv4' }).required(),
+        }),
+      }),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.deleteWebhook(ctx);
       }
     );
 
