@@ -20,7 +20,9 @@ class Service extends OAuthConnector.Service {
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
     const webhookUrl = `${baseUrl}/connector/${params.entityId}/api/fusebit/webhook/event/${webhookId}`;
+
     await this.utilities.setData(ctx, this.getSecretStorageKey(webhookId), { data: { secret } });
+
     const result = await superagent
       .post('https://api.pipedrive.com/v1/webhooks')
       .set('Authorization', `Bearer ${access_token}`)
@@ -47,6 +49,7 @@ class Service extends OAuthConnector.Service {
       .delete(`https://api.pipedrive.com/v1/webhooks/${mapping?.data.id}`)
       .set('Authorization', `Bearer ${access_token}`)
       .send({});
+
     await this.utilities.deleteData(ctx, this.getSecretStorageKey(webhookId));
     await this.utilities.deleteData(ctx, this.getIdMappingStorageKey(webhookId));
   };

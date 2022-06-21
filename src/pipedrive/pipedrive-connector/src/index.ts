@@ -47,7 +47,7 @@ class ServiceConnector extends OAuthConnector<Service> {
             user_id: Joi.string(),
             event_object: Joi.string(),
             event_action: Joi.string(),
-          }).required(),
+          }),
         }),
       }),
       async (ctx: Connector.Types.Context) => {
