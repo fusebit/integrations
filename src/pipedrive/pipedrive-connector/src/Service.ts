@@ -80,7 +80,6 @@ class Service extends OAuthConnector.Service {
     return [
       `company_domain/${resp.body.data.company_domain}`,
       `company_country/${resp.body.data.company_country}`,
-      `company_industry/${resp.body.data.company_industry}`,
       `company_id/${resp.body.data.company_id}`,
     ];
   }

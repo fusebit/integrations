@@ -24,7 +24,9 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
 
   const leads = await pipedriveClient.get('/v1/leads');
 
-  ctx.body = leads.data.map((lead) => lead.title);
+  ctx.body = leads.data.map((lead) => {
+    return { title: lead.title, organization_id: lead.organization_id };
+  });
 });
 
 // Endpoint for Sample App: Create a new lead in Pipedrive
