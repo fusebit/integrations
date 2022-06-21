@@ -9,7 +9,7 @@ class Service extends OAuthConnector.Service {
     return `webhook/secret/${webhookId}`;
   };
 
-  public getIdMappingStorageKey = (webhookId) => {
+  public getIdMappingStorageKey = (webhookId: string) => {
     return `webhook/mapping/${webhookId}`;
   };
 
