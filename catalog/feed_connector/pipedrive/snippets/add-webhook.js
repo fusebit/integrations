@@ -1,5 +1,5 @@
 async function pipedriveAddWebhook(ctx) {
-  // For the Pipedrive SDK documentation, see {enter-url-here}.
+  // For the Pipedrive SDK documentation, see https://developers.pipedrive.com/docs/api/v1.
   const pipedriveWebhookClient = await integration.webhook.getSdkByTenant(
     ctx,
     '<% connectorName %>',
@@ -14,7 +14,7 @@ async function pipedriveAddWebhook(ctx) {
 
 const code = `
 /**
- * {brief-jsdocs-function-description-of-a-snippet-for-intellisense}.
+ * Add a webhook to Pipedrive to send changes to Fusebit.
  * 
  * @param ctx {FusebitContext} Fusebit Context
  */

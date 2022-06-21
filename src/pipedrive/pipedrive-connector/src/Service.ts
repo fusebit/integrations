@@ -5,28 +5,34 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 class Service extends OAuthConnector.Service {
-  public getStorageKey = (webhookId: string) => {
+  public getSecretStorageKey = (webhookId: string) => {
     return `webhook/secret/${webhookId}`;
+  };
+
+  public getIdMappingStorageKey = (webhookId) => {
+    return `webhook/mapping/${webhookId}`;
   };
 
   public registerWebhook = async (ctx: Connector.Types.Context) => {
     const { args, access_token } = ctx.req.body;
     const webhookId = uuidv4();
-    const password = uuidv4();
+    const secret = uuidv4();
     const params = ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
     const webhookUrl = `${baseUrl}/connector/${params.entityId}/api/fusebit/webhook/event/${webhookId}`;
-
-    await superagent
+    await this.utilities.setData(ctx, this.getSecretStorageKey(webhookId), { data: { secret } });
+    const result = await superagent
       .post('https://api.pipedrive.com/v1/webhooks')
       .set('Authorization', `Bearer ${access_token}`)
       .send({
         ...args,
         http_auth_user: webhookId,
-        http_auth_password: password,
+        http_auth_password: secret,
         subscription_url: webhookUrl,
       });
-    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { password } });
+
+    await this.utilities.setData(ctx, this.getIdMappingStorageKey(webhookId), { data: result.body.data.id });
+
     return {
       webhookId,
     };
@@ -36,11 +42,13 @@ class Service extends OAuthConnector.Service {
     const { access_token } = ctx.req.body;
     // The webhookId here have already been translated to a Pipedrive webhookId
     const { webhookId } = ctx.params;
+    const mapping = await this.utilities.getData(ctx, this.getIdMappingStorageKey(webhookId));
     await superagent
-      .delete(`https://api.pipedrive.com/v1/webhooks/${webhookId}`)
+      .delete(`https://api.pipedrive.com/v1/webhooks/${mapping?.data.id}`)
       .set('Authorization', `Bearer ${access_token}`)
       .send({});
-    await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
+    await this.utilities.deleteData(ctx, this.getSecretStorageKey(webhookId));
+    await this.utilities.deleteData(ctx, this.getIdMappingStorageKey(webhookId));
   };
 
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
@@ -55,8 +63,8 @@ class Service extends OAuthConnector.Service {
     // Basic Auth? Seriously?
     const encodedRemote = ctx.req.headers['authorization']?.split(' ')[1];
     const rawRemote = Buffer.from(encodedRemote as string, 'base64');
-    const rawLocal = await this.utilities.getData(ctx, this.getStorageKey(ctx.params.webhookId));
-    const correctLocal = ctx.params.webhookId + ':' + rawLocal?.data.password;
+    const rawLocal = await this.utilities.getData(ctx, this.getSecretStorageKey(ctx.params.webhookId));
+    const correctLocal = ctx.params.webhookId + ':' + rawLocal?.data.secret;
     return crypto.timingSafeEqual(rawRemote, Buffer.from(correctLocal, 'utf-8'));
   }
 

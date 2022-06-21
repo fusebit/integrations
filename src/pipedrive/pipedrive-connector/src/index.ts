@@ -42,11 +42,11 @@ class ServiceConnector extends OAuthConnector<Service> {
       this.middleware.authorizeUser('connector:execute'),
       this.middleware.validate({
         body: Joi.object({
-          access_token: Joi.string().required(),
+          access_token: Joi.string(),
           args: Joi.object({
             user_id: Joi.string(),
-            event_object: Joi.string().required(),
-            event_action: Joi.string().required(),
+            event_object: Joi.string(),
+            event_action: Joi.string(),
           }).required(),
         }),
       }),
@@ -60,13 +60,10 @@ class ServiceConnector extends OAuthConnector<Service> {
       this.middleware.authorizeUser('connector:execute'),
       this.middleware.validate({
         body: Joi.object({
-          access_token: Joi.string().required(),
-          // This is a Pipedrive webhookId, thus not a UUID like a Fusebit webhookId
-          webhookId: Joi.string().required(),
-          args: Joi.object().required(),
+          access_token: Joi.string(),
         }),
         params: Joi.object({
-          webhookId: Joi.string().uuid({ version: 'uuidv4' }).required(),
+          webhookId: Joi.string().uuid({ version: 'uuidv4' }),
         }),
       }),
       async (ctx: Connector.Types.Context) => {
