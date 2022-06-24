@@ -146,6 +146,10 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/session`,
       accessToken: ctx.state.params.functionAccessToken,
+      configure: async (token: IOAuthToken) => {
+        // TODO: Define the best place to run configuration elements.
+        await this.service.configure(ctx, token);
+      },
       createTags: async (token: IOAuthToken): Promise<ITags | undefined> => {
         const webhookIds = await this.service.getWebhookTokenId(ctx, token);
         const result: ITags = {};

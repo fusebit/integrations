@@ -35,11 +35,16 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     const Joi = this.middleware.validate.joi;
 
+    /**
+     * Create a new Salesforce Webhook
+     * - Apex Trigger
+     * - Apex Http Request
+     * - Apext Http Request tests
+     */
     this.router.post(
-      '/api/fusebit/webhook',
+      '/api/webhook',
       this.middleware.validate({
         body: Joi.object({
-          className: Joi.string().required(),
           entityId: Joi.string().required(),
           events: Joi.array()
             .items(
@@ -58,7 +63,29 @@ class ServiceConnector extends OAuthConnector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.createWebhookSecret(ctx);
+        ctx.body = await this.service.createWebhook(ctx);
+      }
+    );
+
+    /**
+     * Configure Webhooks for Salesforce development instance
+     */
+    this.router.post(
+      '/api/webhook/configure',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.enableWebhooksForDevelopment(ctx);
+      }
+    );
+
+    /**
+     * Add a new Webhook
+     */
+    this.router.post(
+      '/api/webhook',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.enableWebhooksForDevelopment(ctx);
       }
     );
   }

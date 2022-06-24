@@ -224,6 +224,11 @@ export class Service extends EntityBase.ServiceDefault {
   public getWebhookBody(ctx: Connector.Types.Context): any {
     return ctx.req?.body;
   }
+
+  /**
+   * Override: In case the connector requires to run additional configuration upon installation
+   */
+  public configure(ctx: Connector.Types.Context, token: any): any {}
 }
 
 /**

@@ -2,7 +2,7 @@ import fs from 'fs';
 import { join } from 'path';
 
 const loadApexFile = async (fileName: string) => {
-  const path = join(__dirname, '../webhooks-templates', `${fileName}.cls`);
+  const path = join(__dirname, '../webhooks-templates', fileName);
   return await fs.promises.readFile(path, 'utf8');
 };
 

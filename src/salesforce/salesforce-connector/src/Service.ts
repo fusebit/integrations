@@ -1,10 +1,12 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector, IOAuthToken } from '@fusebit-int/oauth-connector';
 import { createApexClass, createApexTestClass, createApexTrigger } from './apex';
+import JWTBearerFow from './JWTBearerFlow';
 
 import superagent from 'superagent';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
+import WebhookManager from './WebhookManager';
 
 interface ISalesforceOAuthToken extends IOAuthToken {
   instance_url: string;
@@ -20,39 +22,86 @@ class Service extends OAuthConnector.Service {
     return `webhook/${webhookId}`;
   };
 
-  public createWebhookSecret = async (ctx: Connector.Types.Context) => {
-    const { className, entityId, events } = ctx.req.body;
+  public getWebhookToken = async (ctx: Connector.Types.Context) => {
+    const jwtBearerFlow = new JWTBearerFow(ctx);
+    return await jwtBearerFlow.getAccessToken();
+  };
+
+  public createWebhook = async (ctx: Connector.Types.Context) => {
+    const { entityId, events } = ctx.req.body;
     const webhookSecret = uuidv4();
+    // Get Webhook Id from Storage
     const webhookId = uuidv4();
     const params = ctx.state.params;
+    // We only need 1 Class for the Webhook representing the HTTP Request.
+    const className = `Webhook_Sub_${params.subscriptionId}`;
+
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
     const webhookEndpoint = `${baseUrl}/connector/${params.entityId}/api/fusebit/webhook/event`;
 
-    const apexClass = await createApexClass(className, entityId.toLowerCase(), webhookSecret, webhookId);
+    // const apexClass = await createApexClass(className, entityId.toLowerCase(), webhookSecret, webhookId);
 
-    const apexTestClass = await createApexTestClass({
-      testClassName: `${className}Test`,
-      webhookClassName: className,
-      entityId,
-      webhookEndpoint,
-    });
+    // const apexTestClass = await createApexTestClass({
+    //   testClassName: `${className}Test`,
+    //   webhookClassName: className,
+    //   entityId,
+    //   webhookEndpoint,
+    // });
 
-    const apexTrigger = await createApexTrigger({
-      triggerName: `${className}Trigger`,
-      className,
-      entityId,
-      webhookEndpoint,
-      events,
-    });
+    // const apexTrigger = await createApexTrigger({
+    //   triggerName: `${className}Trigger`,
+    //   className,
+    //   entityId,
+    //   webhookEndpoint,
+    //   events,
+    // });
 
-    const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
-    if (webhookStorage) {
-      return (ctx.status = 409);
-    }
-    const createdTime = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { webhookSecret, createdTime } });
-    return { webhookId, createdTime, webhookSecret, apexClass, apexTestClass, apexTrigger };
+    // const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
+    // if (webhookStorage) {
+    //   return (ctx.status = 409);
+    // }
+    // const createdTime = Date.now();
+    // await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { webhookSecret, createdTime } });
+    // return { webhookId, createdTime, webhookSecret, apexClass, apexTestClass, apexTrigger };
   };
+
+  public async enableWebhooksForDevelopment(ctx: Connector.Types.Context) {
+    const jwtBearerFlow = new JWTBearerFow(ctx);
+    const { access_token, instance_url } = await jwtBearerFlow.getAccessToken();
+    const webhookManager = new WebhookManager({
+      ctx,
+      accessToken: access_token,
+      instanceUrl: instance_url,
+    });
+
+    const webhookId = uuidv4();
+    const { webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks(webhookId);
+    // Get a webhook id associated to the development instance
+    const webhookStorageKey = new URL(instance_url);
+    const webhookStorage = await this.getFusebitWebhook(ctx, webhookStorageKey.hostname);
+    if (!webhookStorage) {
+      const createdTime = Date.now();
+      await this.utilities.setData(ctx, this.getStorageKey(webhookStorageKey.hostname), {
+        data: { webhookSecret, webhookId, createdTime },
+      });
+    }
+  }
+
+  public async addWebhook(ctx: Connector.Types.Context) {}
+
+  public async configure(ctx: Connector.Types.Context, token: any) {
+    const webhookManager = new WebhookManager({
+      ctx,
+      accessToken: token.access_token,
+      instanceUrl: token.instance_url,
+    });
+
+    try {
+      const { webhookId, webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks('');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {

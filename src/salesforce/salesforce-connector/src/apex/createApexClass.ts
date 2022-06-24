@@ -1,12 +1,24 @@
 import { loadApexFile, replaceElements } from './apexUtilities';
 
-const createApexClass = async (className: string, entityId: string, secret: string, webhookId: string) => {
-  const fileContent = await loadApexFile('ApexClass');
+export interface IApexClassOptions {
+  className: string;
+  webhookId: string;
+  webhookSecretMetadata: string;
+  webhookSecretMetadataValue: string;
+}
+
+const createApexClass = async ({
+  className,
+  webhookId,
+  webhookSecretMetadata,
+  webhookSecretMetadataValue,
+}: IApexClassOptions) => {
+  const fileContent = await loadApexFile('ApexClass.cls');
   return replaceElements(fileContent, {
     className,
-    entityId,
-    secret,
     webhookId,
+    webhookSecretMetadata,
+    webhookSecretMetadataValue,
   });
 };
 

@@ -10,7 +10,7 @@ public class {{className}} implements HttpCalloutMock {
             return response;
         }
     
-        public static String jsonContent(List<Object> triggerNew, List<Object> triggerOld, String action) {
+        public static String jsonContent(List<Object> triggerNew, List<Object> triggerOld, String action, String eventType) {
             String newObjects = '[]';
             if (triggerNew != null) {
                 newObjects = JSON.serialize(triggerNew);
@@ -23,7 +23,6 @@ public class {{className}} implements HttpCalloutMock {
     
             String userId = UserInfo.getUserId();
             String instanceUrl = EncodingUtil.urlEncode(URL.getSalesforceBaseUrl().toExternalForm(), 'UTF-8');
-            String eventType = '{{entityId}}';
            
             String content = JSON.serialize(new Map<String, Object>{
                     'old' => oldObjects,
@@ -53,8 +52,8 @@ public class {{className}} implements HttpCalloutMock {
             req.setHeader('User-Agent', 'fusebit/salesforce');
 
             // Webhooks secrets are created for webhook verification purposes only
-            String secretKey = '{{secret}}';
-            String signature = generateHmacSHA256Signature(content, secretKey);
+            {{webhookSecretMetadata}} webhookSecret = [Select {{webhookSecretMetadataValue}} from {{webhookSecretMetadata}}];
+            String signature = generateHmacSHA256Signature(content, webhookSecret.{{webhookSecretMetadataValue}});
             String webhookId = '{{webhookId}}';
             req.setHeader('x-fusebit-salesforce-signature', signature);
             req.setHeader('x-fusebit-salesforce-webhook-id', webhookId);

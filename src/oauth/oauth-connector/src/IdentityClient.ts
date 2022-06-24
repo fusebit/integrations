@@ -7,6 +7,7 @@ const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
 type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
+type IConfigure<IToken> = (token: IToken) => Promise<void>;
 
 export interface ITokenParams {
   accountId: string;
@@ -18,6 +19,7 @@ export interface ITokenParams {
 export interface ITokenSessionParams<IToken> extends ITokenParams {
   createTags: ICreateTags<IToken>;
   validateToken: IValidateToken<IToken>;
+  configure: IConfigure<IToken>;
 }
 
 abstract class TokenClient<IToken> {
@@ -51,11 +53,13 @@ abstract class TokenClient<IToken> {
 class TokenSessionClient<IToken> extends TokenClient<IToken> {
   protected createTags: ICreateTags<IToken>;
   protected validateToken: IValidateToken<IToken>;
+  protected configure: IConfigure<IToken>;
 
   constructor(params: ITokenSessionParams<IToken>) {
     super(params);
     this.createTags = params.createTags;
     this.validateToken = params.validateToken;
+    this.configure = params.configure;
   }
 
   public put = async (token: IToken, sessionId: string): Promise<IToken> => {
@@ -66,6 +70,9 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
       .put(this.getUrl(sessionId))
       .set('Authorization', `Bearer ${this.accessToken}`)
       .send({ output: { token }, tags: await this.createTags(token) });
+
+    const configResult = await this.configure(token);
+
     return response.body;
   };
 
