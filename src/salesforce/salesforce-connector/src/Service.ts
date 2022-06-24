@@ -14,6 +14,8 @@ interface ISalesforceOAuthToken extends IOAuthToken {
 }
 
 class Service extends OAuthConnector.Service {
+  schemaBucket = 'webhook/schema';
+
   private getFusebitWebhook = async (ctx: Connector.Types.Context, webhookId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(webhookId));
   };
@@ -27,42 +29,54 @@ class Service extends OAuthConnector.Service {
     return await jwtBearerFlow.getAccessToken();
   };
 
+  public listWebhooksSchema = async (ctx: Connector.Types.Context) => {
+    const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
+    return webhookSchema ? webhookSchema.data : [];
+  };
+
+  public checkWebhookConfiguration = async (ctx: Connector.Types.Context) => {
+    const jwtBearerFlow = new JWTBearerFow(ctx);
+    const { access_token, instance_url } = await jwtBearerFlow.getAccessToken();
+    const webhookManager = new WebhookManager({
+      ctx,
+      accessToken: access_token,
+      instanceUrl: instance_url,
+    });
+
+    return await webhookManager.getWebhookConfiguration();
+  };
+
+  public getWebhookConfiguration = async (ctx: Connector.Types.Context) => {
+    const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
+    return webhookSchema ? webhookSchema.data : [];
+  };
+
   public createWebhook = async (ctx: Connector.Types.Context) => {
     const { entityId, events } = ctx.req.body;
-    const webhookSecret = uuidv4();
-    // Get Webhook Id from Storage
-    const webhookId = uuidv4();
-    const params = ctx.state.params;
-    // We only need 1 Class for the Webhook representing the HTTP Request.
-    const className = `Webhook_Sub_${params.subscriptionId}`;
+    const jwtBearerFlow = new JWTBearerFow(ctx);
+    const { access_token, instance_url } = await jwtBearerFlow.getAccessToken();
+    const webhookManager = new WebhookManager({
+      ctx,
+      accessToken: access_token,
+      instanceUrl: instance_url,
+    });
 
-    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const webhookEndpoint = `${baseUrl}/connector/${params.entityId}/api/fusebit/webhook/event`;
+    // Store the created trigger in the configuration storage so it can be replicated on tenants.
+    const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
+    if (webhookSchema) {
+      webhookSchema.data[entityId] = events;
+    }
 
-    // const apexClass = await createApexClass(className, entityId.toLowerCase(), webhookSecret, webhookId);
+    await this.utilities.setData(ctx, this.schemaBucket, {
+      data: webhookSchema ? webhookSchema.data : { [entityId]: events },
+    });
 
-    // const apexTestClass = await createApexTestClass({
-    //   testClassName: `${className}Test`,
-    //   webhookClassName: className,
-    //   entityId,
-    //   webhookEndpoint,
-    // });
+    await webhookManager.createOrUpdateSalesforceTrigger({
+      entityId,
+      events,
+    });
 
-    // const apexTrigger = await createApexTrigger({
-    //   triggerName: `${className}Trigger`,
-    //   className,
-    //   entityId,
-    //   webhookEndpoint,
-    //   events,
-    // });
-
-    // const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
-    // if (webhookStorage) {
-    //   return (ctx.status = 409);
-    // }
-    // const createdTime = Date.now();
-    // await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { webhookSecret, createdTime } });
-    // return { webhookId, createdTime, webhookSecret, apexClass, apexTestClass, apexTrigger };
+    return webhookSchema?.data;
   };
 
   public async enableWebhooksForDevelopment(ctx: Connector.Types.Context) {
@@ -80,14 +94,11 @@ class Service extends OAuthConnector.Service {
     const webhookStorageKey = new URL(instance_url);
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookStorageKey.hostname);
     if (!webhookStorage) {
-      const createdTime = Date.now();
       await this.utilities.setData(ctx, this.getStorageKey(webhookStorageKey.hostname), {
-        data: { webhookSecret, webhookId, createdTime },
+        data: { webhookSecret, webhookId },
       });
     }
   }
-
-  public async addWebhook(ctx: Connector.Types.Context) {}
 
   public async configure(ctx: Connector.Types.Context, token: any) {
     const webhookManager = new WebhookManager({

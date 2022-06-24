@@ -36,10 +36,7 @@ class ServiceConnector extends OAuthConnector<Service> {
     const Joi = this.middleware.validate.joi;
 
     /**
-     * Create a new Salesforce Webhook
-     * - Apex Trigger
-     * - Apex Http Request
-     * - Apext Http Request tests
+     * Create a new Salesforce Webhook (Apex Trigger)
      */
     this.router.post(
       '/api/webhook',
@@ -68,21 +65,32 @@ class ServiceConnector extends OAuthConnector<Service> {
     );
 
     /**
-     * Configure Webhooks for Salesforce development instance
+     * List created Webhooks schema
      */
-    this.router.post(
-      '/api/webhook/configure',
+    this.router.get(
+      '/api/webhook',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.enableWebhooksForDevelopment(ctx);
+        ctx.body = await this.service.listWebhooksSchema(ctx);
       }
     );
 
     /**
-     * Add a new Webhook
+     * List created Webhooks schema
+     */
+    this.router.get(
+      '/api/webhook/configure',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.checkWebhookConfiguration(ctx);
+      }
+    );
+
+    /**
+     * Configure Webhooks for Salesforce development instance
      */
     this.router.post(
-      '/api/webhook',
+      '/api/webhook/configure',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.enableWebhooksForDevelopment(ctx);

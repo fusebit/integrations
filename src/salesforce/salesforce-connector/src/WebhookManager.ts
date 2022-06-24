@@ -23,6 +23,17 @@ export interface IRemoteSiteSetting {
   description?: string;
 }
 
+export interface IFeature {
+  feature: string;
+  isEnabled: boolean;
+  value?: string;
+}
+
+export interface IWebhookConfigurationResult {
+  features: IFeature[];
+  totalMissing: number;
+}
+
 class WebhookManager {
   private client: jsforce.Connection;
   private ctx: Connector.Types.Context;
@@ -103,7 +114,7 @@ class WebhookManager {
    *
    * @param fullName {string} The remote site settings name for accessing the API.
    */
-  public isEnableRemoteSiteSettingEnabled = async (fullName: string): Promise<boolean> => {
+  public isRemoteSiteSettingEnabled = async (fullName: string): Promise<boolean> => {
     let settings = await this.client.metadata.list([{ type: 'RemoteSiteSetting' }]);
     if (settings.length) {
       return !!settings.filter((setting) => setting.fullName === fullName).length;
@@ -121,6 +132,41 @@ class WebhookManager {
     return !!settings.totalSize;
   };
 
+  public async getWebhookConfiguration(): Promise<IWebhookConfigurationResult> {
+    const remoteSiteSettingName = `WebhookSettings_${this.apexIdentifier}`;
+    const namespace = await this.getNamespace();
+    const webhookSecretMetadataField = `${namespace}__${this.apexIdentifier}`;
+    const webhookSecretMetadata = `${webhookSecretMetadataField}__mdt`;
+    const webhookSecretMetadataValue = `${namespace}__secret__c`;
+
+    const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
+    const customObjectExists = await this.customObjectExists(webhookSecretMetadata);
+    const customMetadataExists = await this.customMetadataExists(webhookSecretMetadata, webhookSecretMetadataValue);
+    const apexClassExists = await this.getClass(this.webhookClassName);
+    const features: IFeature[] = [];
+
+    const _addFeature = (feature: string, isEnabled: boolean, value: string = '') => {
+      features.push({
+        feature,
+        isEnabled,
+        value,
+      });
+    };
+
+    _addFeature('namespace', !!namespace, namespace);
+    _addFeature('remoteSiteSettingsEnabled', isRemoteSiteSettingEnabled);
+    _addFeature('customObject', customObjectExists, webhookSecretMetadata);
+    _addFeature('customMetadata', customMetadataExists, webhookSecretMetadataValue);
+    _addFeature('httpApexClass', !!apexClassExists, this.webhookClassName);
+
+    const totalMissing = features.filter((feature) => !feature.isEnabled);
+
+    return {
+      features,
+      totalMissing: totalMissing.length,
+    };
+  }
+
   public async prepareSalesforceInstanceForWebhooks(webhookId: string): Promise<Record<string, string>> {
     // 1. Ensure RemoteSiteSettings is enabled for the domain
     const remoteSiteSettingName = `WebhookSettings_${this.apexIdentifier}`;
@@ -131,9 +177,9 @@ class WebhookManager {
     const webhookSecretMetadataFieldReference = `${webhookSecretMetadataField}.Webhook_secret`;
     const webhookSecret = uuidv4();
 
-    const isEnableRemoteSiteSettingEnabled = await this.isEnableRemoteSiteSettingEnabled(remoteSiteSettingName);
+    const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
 
-    if (!isEnableRemoteSiteSettingEnabled) {
+    if (!isRemoteSiteSettingEnabled) {
       const remoteSiteSettingsResponse = await this.enableRemoteSiteSetting({
         fullName: remoteSiteSettingName,
         url: this.ctx.state.params.baseUrl,
@@ -219,7 +265,10 @@ class WebhookManager {
     return { webhookId, webhookSecret };
   }
 
-  public async createSalesforceTrigger({ entityId, events }: INewWebhookOptions): Promise<jsforce.RecordResult> {
+  public async createOrUpdateSalesforceTrigger({
+    entityId,
+    events,
+  }: INewWebhookOptions): Promise<jsforce.RecordResult> {
     const triggerName = `Trigger_${this.apexIdentifier}_${entityId}`;
 
     const apexTrigger = await createApexTrigger({
@@ -229,6 +278,14 @@ class WebhookManager {
       webhookEndpoint: this.webhookEndpoint,
       events,
     });
+
+    const trigger = await this.client.tooling.sobject('ApexTrigger').findOne({
+      name: triggerName,
+    });
+
+    if (trigger) {
+      await this.client.tooling.sobject('ApexTrigger').delete(trigger.Id as string);
+    }
 
     const createdTrigger = await this.client.tooling.sobject('ApexTrigger').create({
       name: triggerName,
