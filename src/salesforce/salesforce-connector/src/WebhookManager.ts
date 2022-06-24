@@ -138,7 +138,6 @@ class WebhookManager {
     const webhookSecretMetadataField = `${namespace}__${this.apexIdentifier}`;
     const webhookSecretMetadata = `${webhookSecretMetadataField}__mdt`;
     const webhookSecretMetadataValue = `${namespace}__secret__c`;
-
     const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
     const customObjectExists = await this.customObjectExists(webhookSecretMetadata);
     const customMetadataExists = await this.customMetadataExists(webhookSecretMetadata, webhookSecretMetadataValue);

@@ -108,9 +108,16 @@ class Service extends OAuthConnector.Service {
     });
 
     try {
-      const { webhookId, webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks('');
+      const webhookId = uuidv4();
+      const { webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks(webhookId);
+      const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
+      if (!webhookStorage) {
+        await this.utilities.setData(ctx, this.getStorageKey(webhookId), {
+          data: { webhookSecret, webhookId },
+        });
+      }
     } catch (error) {
-      console.log(error);
+      ctx.throw(500, 'Something failed while enabling Salesforce Webhooks for your org');
     }
   }
 
@@ -142,6 +149,7 @@ class Service extends OAuthConnector.Service {
       return false;
     }
 
+    // TODO: Include Webhook Storage from development instance by using this.schemaBucket
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (!webhookStorage) {
       return false;
