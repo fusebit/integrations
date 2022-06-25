@@ -7,7 +7,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Project Management,Dev Tools,Office,Spreadsheets,Operations,Sales Automation"
+    "catalog": "Project Management,Dev Tools,Office,Spreadsheets,Operations,Sales"
   },
   "configuration": {
     "schema": "config/schema.json",

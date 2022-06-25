@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Calendar, Office"
+    "catalog": "Calendar,Office"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/google-calendar#creating-your-own-google-calendar-app",
