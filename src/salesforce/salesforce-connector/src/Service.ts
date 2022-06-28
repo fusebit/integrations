@@ -20,6 +20,15 @@ class Service extends OAuthConnector.Service {
     return this.utilities.getData(ctx, this.getStorageKey(webhookId));
   };
 
+  private saveWebhookSecret = async (ctx: Connector.Types.Context, webhookId: string, webhookSecret: string) => {
+    const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
+    if (!webhookStorage) {
+      await this.utilities.setData(ctx, this.getStorageKey(webhookId), {
+        data: { webhookSecret, webhookId },
+      });
+    }
+  };
+
   public getStorageKey = (webhookId: string) => {
     return `webhook/${webhookId}`;
   };
@@ -28,6 +37,99 @@ class Service extends OAuthConnector.Service {
     const jwtBearerFlow = new JWTBearerFow(ctx);
     return await jwtBearerFlow.getAccessToken();
   };
+
+  // Overwritten
+  public async configure(ctx: Connector.Types.Context, token: any) {
+    try {
+      const webhookManager = new WebhookManager({
+        ctx,
+        accessToken: token.access_token,
+        instanceUrl: token.instance_url,
+      });
+      const webhookId = uuidv4();
+      const { webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks(webhookId);
+      await this.saveWebhookSecret(ctx, webhookId, webhookSecret);
+
+      // Create triggers
+      // Get triggers schema
+      const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
+      const webhookSchemaData = webhookSchema?.data || [];
+
+      // No webhooks configured? Skip. (Salesforce is not just Webhooks)
+      if (!webhookSchemaData) {
+        return;
+      }
+
+      const entities = Object.keys(webhookSchemaData);
+
+      for await (const entityId of entities) {
+        await webhookManager.createOrUpdateSalesforceTrigger({
+          entityId,
+          events: webhookSchemaData[entityId],
+        });
+      }
+    } catch (error) {
+      // TODO: Log the error details
+      ctx.throw(500, `Salesforce Webhooks creation failed for your instance ${token.instance_url}`);
+    }
+  }
+
+  // Overwritten
+  // Convert an OAuth token into the key used to look up matching installs for a webhook.
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
+    const sfToken = token as ISalesforceOAuthToken;
+    const user = await superagent.get(sfToken.id).set('Authorization', `Bearer ${sfToken.access_token}`);
+    return [
+      `instance_url/${encodeURIComponent(sfToken.instance_url)}`,
+      `user_id/${user.body.user_id}`,
+      `organization_id/${user.body.organization_id}`,
+    ];
+  }
+
+  // Overwritten
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
+    return `instance_url/${event.instanceUrl}`;
+  }
+
+  // Overwritten
+  public getEventsFromPayload(ctx: Connector.Types.Context) {
+    return [{ ...ctx.req.body }];
+  }
+
+  // Overwritten
+  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
+    const signature = ctx.req.headers['x-fusebit-salesforce-signature'] as string;
+    const webhookId = ctx.req.headers['x-fusebit-salesforce-webhook-id'] as string;
+    const userAgent = ctx.req.headers['user-agent'] as string;
+
+    if (userAgent !== 'fusebit/salesforce' || !signature || !webhookId) {
+      return false;
+    }
+
+    const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
+    if (!webhookStorage) {
+      return false;
+    }
+    const secret = webhookStorage.data.webhookSecret;
+    const rawBody = JSON.stringify(ctx.req.body);
+    const computedSignature = crypto.createHmac('sha256', secret).update(rawBody).digest('base64');
+    const calculatedSignatureBuffer = Buffer.from(computedSignature, 'utf8');
+    const requestSignatureBuffer = Buffer.from(signature, 'utf8');
+
+    return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
+  }
+
+  // Overwritten
+  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
+    return false;
+  }
+
+  // Overwritten
+  public getWebhookEventType(event: any): string {
+    return event.type;
+  }
+
+  // Webhooks authoring functionalities using a Salesforce development instance
 
   public listWebhooksSchema = async (ctx: Connector.Types.Context) => {
     const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
@@ -61,6 +163,11 @@ class Service extends OAuthConnector.Service {
       instanceUrl: instance_url,
     });
 
+    await webhookManager.createOrUpdateSalesforceTrigger({
+      entityId,
+      events,
+    });
+
     // Store the created trigger in the configuration storage so it can be replicated on tenants.
     const webhookSchema = await this.utilities.getData(ctx, this.schemaBucket);
     if (webhookSchema) {
@@ -69,11 +176,6 @@ class Service extends OAuthConnector.Service {
 
     await this.utilities.setData(ctx, this.schemaBucket, {
       data: webhookSchema ? webhookSchema.data : { [entityId]: events },
-    });
-
-    await webhookManager.createOrUpdateSalesforceTrigger({
-      entityId,
-      events,
     });
 
     return webhookSchema?.data;
@@ -90,85 +192,7 @@ class Service extends OAuthConnector.Service {
 
     const webhookId = uuidv4();
     const { webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks(webhookId);
-    // Get a webhook id associated to the development instance
-    const webhookStorageKey = new URL(instance_url);
-    const webhookStorage = await this.getFusebitWebhook(ctx, webhookStorageKey.hostname);
-    if (!webhookStorage) {
-      await this.utilities.setData(ctx, this.getStorageKey(webhookStorageKey.hostname), {
-        data: { webhookSecret, webhookId },
-      });
-    }
-  }
-
-  public async configure(ctx: Connector.Types.Context, token: any) {
-    const webhookManager = new WebhookManager({
-      ctx,
-      accessToken: token.access_token,
-      instanceUrl: token.instance_url,
-    });
-
-    try {
-      const webhookId = uuidv4();
-      const { webhookSecret } = await webhookManager.prepareSalesforceInstanceForWebhooks(webhookId);
-      const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
-      if (!webhookStorage) {
-        await this.utilities.setData(ctx, this.getStorageKey(webhookId), {
-          data: { webhookSecret, webhookId },
-        });
-      }
-    } catch (error) {
-      ctx.throw(500, 'Something failed while enabling Salesforce Webhooks for your org');
-    }
-  }
-
-  // Convert an OAuth token into the key used to look up matching installs for a webhook.
-  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    const sfToken = token as ISalesforceOAuthToken;
-    const user = await superagent.get(sfToken.id).set('Authorization', `Bearer ${sfToken.access_token}`);
-    return [
-      `instance_url/${encodeURIComponent(sfToken.instance_url)}`,
-      `user_id/${user.body.user_id}`,
-      `organization_id/${user.body.organization_id}`,
-    ];
-  }
-
-  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
-    return `instance_url/${event.instanceUrl}`;
-  }
-
-  public getEventsFromPayload(ctx: Connector.Types.Context) {
-    return [{ ...ctx.req.body }];
-  }
-
-  public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const signature = ctx.req.headers['x-fusebit-salesforce-signature'] as string;
-    const webhookId = ctx.req.headers['x-fusebit-salesforce-webhook-id'] as string;
-    const userAgent = ctx.req.headers['user-agent'] as string;
-
-    if (userAgent !== 'fusebit/salesforce' || !signature || !webhookId) {
-      return false;
-    }
-
-    // TODO: Include Webhook Storage from development instance by using this.schemaBucket
-    const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
-    if (!webhookStorage) {
-      return false;
-    }
-    const secret = webhookStorage.data.webhookSecret;
-    const rawBody = JSON.stringify(ctx.req.body);
-
-    const computedSignature = crypto.createHmac('sha256', secret).update(rawBody).digest('base64');
-    const calculatedSignatureBuffer = Buffer.from(computedSignature, 'utf8');
-    const requestSignatureBuffer = Buffer.from(signature, 'utf8');
-    return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
-  }
-
-  public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
-    return false;
-  }
-
-  public getWebhookEventType(event: any): string {
-    return event.type;
+    await this.saveWebhookSecret(ctx, webhookId, webhookSecret);
   }
 }
 

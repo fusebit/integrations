@@ -6,6 +6,7 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 const SERVICE_NAME = 'Salesforce';
+const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
@@ -27,10 +28,35 @@ class ServiceConnector extends OAuthConnector<Service> {
         (element: { label: string }) => element.label == 'OAuth2 Configuration'
       ).label = `${SERVICE_NAME} Configuration`;
 
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherPrivateKey', 'password');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherClientId');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherUser');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherAuthorizationServer');
+
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} Connected App`;
       ctx.body.schema.properties.clientId.description = `The OAuth Consumer Key from your ${SERVICE_NAME} Connected App`;
       ctx.body.schema.properties.clientSecret.description = `The Consumer Secret from your ${SERVICE_NAME} Connected App`;
+
+      ctx.body.schema.properties.webhookPublisherPrivateKey = {
+        title: 'Private key from your development instance',
+        type: 'string',
+      };
+
+      ctx.body.schema.properties.webhookPublisherClientId = {
+        title: 'Client Id from your development instance',
+        type: 'string',
+      };
+
+      ctx.body.schema.properties.webhookPublisherUser = {
+        title: 'Authorized user from your development instance',
+        type: 'string',
+      };
+
+      ctx.body.schema.properties.webhookPublisherAuthorizationServer = {
+        title: 'Use a custom authorization server URL',
+        type: 'string',
+      };
     });
 
     const Joi = this.middleware.validate.joi;

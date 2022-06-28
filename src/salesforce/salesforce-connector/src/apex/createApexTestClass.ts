@@ -4,6 +4,7 @@ export interface IApexTestClass {
   testClassName: string;
   webhookClassName: string;
   webhookEndpoint: string;
+  testEntity: string;
 }
 
 const createApexTestClass = async (options: IApexTestClass) => {

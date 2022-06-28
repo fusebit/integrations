@@ -59,6 +59,13 @@
       }
 
       @isTest static void testTrigger() {
+          SObject o = mock('{{testEntity}}');
+          Test.startTest();
+          insert o;
+          update o;
+          delete o;
+          Test.stopTest();
+
           System.assertEquals(200, {{webhookClassName}}.response.getStatusCode());
           System.assertEquals('{{webhookEndpoint}}', {{webhookClassName}}.request.getEndpoint());
 

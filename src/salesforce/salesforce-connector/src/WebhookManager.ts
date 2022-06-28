@@ -41,7 +41,6 @@ class WebhookManager {
   private baseUrl: string;
   private webhookEndpoint: string;
   private webhookClassName: string;
-  private webhookTestClassName: string;
 
   constructor({ ctx, accessToken, instanceUrl }: IOptions) {
     const { endpoint, accountId, subscriptionId, entityId } = ctx.state.params;
@@ -49,7 +48,6 @@ class WebhookManager {
     const subscriptionIdentifier = subscriptionId.split('sub-')[1];
     this.apexIdentifier = `Sub_${subscriptionIdentifier}`;
     this.webhookClassName = `Webhook_${this.apexIdentifier}`;
-    this.webhookTestClassName = `Test_${this.webhookClassName}`;
     this.baseUrl = `${endpoint}/v2/account/${accountId}/subscription/${subscriptionId}`;
     this.webhookEndpoint = `${this.baseUrl}/connector/${entityId}/api/fusebit/webhook/event`;
     this.client = new jsforce.Connection({
@@ -127,9 +125,8 @@ class WebhookManager {
     return !!(settings as MetadataInfo).fullName;
   };
 
-  public customMetadataExists = async (fullName: string, fieldName: string): Promise<boolean> => {
-    const settings = await this.client.query(`Select ${fieldName} FROM ${fullName}`);
-    return !!settings.totalSize;
+  public getCustoMetadata = async (fullName: string, fieldName: string): Promise<jsforce.QueryResult<any>> => {
+    return await this.client.query(`Select ${fieldName} FROM ${fullName}`);
   };
 
   public async getWebhookConfiguration(): Promise<IWebhookConfigurationResult> {
@@ -140,7 +137,7 @@ class WebhookManager {
     const webhookSecretMetadataValue = `${namespace}__secret__c`;
     const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
     const customObjectExists = await this.customObjectExists(webhookSecretMetadata);
-    const customMetadataExists = await this.customMetadataExists(webhookSecretMetadata, webhookSecretMetadataValue);
+    const customMetadata = await this.getCustoMetadata(webhookSecretMetadata, webhookSecretMetadataValue);
     const apexClassExists = await this.getClass(this.webhookClassName);
     const features: IFeature[] = [];
 
@@ -155,7 +152,7 @@ class WebhookManager {
     _addFeature('namespace', !!namespace, namespace);
     _addFeature('remoteSiteSettingsEnabled', isRemoteSiteSettingEnabled);
     _addFeature('customObject', customObjectExists, webhookSecretMetadata);
-    _addFeature('customMetadata', customMetadataExists, webhookSecretMetadataValue);
+    _addFeature('customMetadata', !!customMetadata.totalSize, webhookSecretMetadataValue);
     _addFeature('httpApexClass', !!apexClassExists, this.webhookClassName);
 
     const totalMissing = features.filter((feature) => !feature.isEnabled);
@@ -174,7 +171,9 @@ class WebhookManager {
     const webhookSecretMetadata = `${webhookSecretMetadataField}__mdt`;
     const webhookSecretMetadataValue = `${namespace}__secret__c`;
     const webhookSecretMetadataFieldReference = `${webhookSecretMetadataField}.Webhook_secret`;
-    const webhookSecret = uuidv4();
+
+    const customMetadata = await this.getCustoMetadata(webhookSecretMetadata, webhookSecretMetadataValue);
+    const webhookSecret = customMetadata.totalSize ? customMetadata.records[0][webhookSecretMetadataValue] : uuidv4();
 
     const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
 
@@ -224,8 +223,7 @@ class WebhookManager {
     }
 
     // 2.3 Configure Webhook secret field and value
-    const customMetadataExists = await this.customMetadataExists(webhookSecretMetadata, webhookSecretMetadataValue);
-    if (!customMetadataExists) {
+    if (!customMetadata.totalSize) {
       const customMetadataResponse = await this.client.metadata.create('CustomMetadata', {
         fullName: webhookSecretMetadataFieldReference,
         //@ts-ignore
@@ -251,15 +249,6 @@ class WebhookManager {
     });
 
     await this.createOrUpdateApexClass(this.webhookClassName, apexClass);
-
-    const apexTestClass = await createApexTestClass({
-      testClassName: this.webhookTestClassName,
-      webhookClassName: this.webhookClassName,
-      webhookEndpoint: this.webhookEndpoint,
-    });
-
-    await this.createOrUpdateApexClass(this.webhookTestClassName, apexTestClass);
-
     //TODO: Return expected types not Record.
     return { webhookId, webhookSecret };
   }
@@ -269,6 +258,7 @@ class WebhookManager {
     events,
   }: INewWebhookOptions): Promise<jsforce.RecordResult> {
     const triggerName = `Trigger_${this.apexIdentifier}_${entityId}`;
+    const webhookTestClassName = `Test_${this.apexIdentifier}_${entityId}`;
 
     const apexTrigger = await createApexTrigger({
       triggerName,
@@ -291,6 +281,16 @@ class WebhookManager {
       tableEnumOrId: entityId,
       body: apexTrigger,
     });
+
+    // Create Trigger Test
+    const apexTestClass = await createApexTestClass({
+      testClassName: webhookTestClassName,
+      webhookClassName: this.webhookClassName,
+      webhookEndpoint: this.webhookEndpoint,
+      testEntity: entityId,
+    });
+
+    await this.createOrUpdateApexClass(webhookTestClassName, apexTestClass);
 
     return createdTrigger;
   }
