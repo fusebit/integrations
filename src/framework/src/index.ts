@@ -23,7 +23,7 @@ import {
   IncomingWebhookClient as IncomingWebhookClient_,
   IncomingWebhookClient,
 } from './provider';
-import { Connector, Integration } from './client/index';
+import { Connector, Integration, Token } from './client/index';
 
 // Objects
 const Internal = {
@@ -38,6 +38,7 @@ const Internal = {
     Activator: ProviderActivator_,
     WebhookClient: WebhookClient_,
     ApiClient: ApiClient_,
+    TokenClient: Token,
     IncomingWebhookClient: IncomingWebhookClient_,
   },
 };
@@ -59,6 +60,7 @@ module Internal {
     export type ApiClient = ApiClient_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
     export type IncomingWebhookClient = typeof IncomingWebhookClient_;
+    export type TokenClient = Token<any>;
   }
   export namespace Types {
     export type Context = Context_;

@@ -2,9 +2,8 @@ import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 
 import { IOAuthConfig, IOAuthToken, IOAuthTokenWithRefresh } from './OAuthTypes';
-import { TokenClient } from './IdentityClient';
 
-const getTokenClient = (ctx: Internal.Types.Context): TokenClient<IOAuthToken> => ctx.state.tokenClient;
+const getTokenClient = (ctx: Internal.Types.Context): Internal.Provider.TokenClient => ctx.state.tokenClient;
 
 class OAuthEngine {
   public cfg: IOAuthConfig;

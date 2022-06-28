@@ -1,14 +1,11 @@
 import superagent from 'superagent';
-import { ObjectEntries } from './Utilities';
 import { ITags } from './OAuthTypes';
-
-const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
-const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
+import { Internal } from '@fusebit-int/framework';
 
 type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
 
-export interface ITokenParams {
+interface ITokenParams {
   accountId: string;
   subscriptionId: string;
   baseUrl: string;
@@ -20,35 +17,7 @@ export interface ITokenSessionParams<IToken> extends ITokenParams {
   validateToken: IValidateToken<IToken>;
 }
 
-abstract class TokenClient<IToken> {
-  protected readonly baseUrl: string;
-  protected readonly accessToken: string;
-
-  constructor(params: ITokenParams) {
-    this.baseUrl = params.baseUrl;
-    this.accessToken = params.accessToken;
-  }
-
-  protected cleanId = (id?: string) => (id ? removeTrailingSlash(removeLeadingSlash(id)) : '');
-  protected getUrl = (id: string) => `${this.baseUrl}/${this.cleanId(id)}`;
-
-  public abstract get(id: string): Promise<IToken>;
-  public abstract put(token: IToken, id: string): Promise<IToken>;
-  public abstract error(error: { error: string; errorDescription?: string }, sessionId: string): Promise<void>;
-  public abstract delete(identityId: string): Promise<void>;
-
-  public list = async (query: { count?: number; next?: string; idPrefix?: string } = {}) => {
-    ObjectEntries(query).forEach(([key, value]) => {
-      if (value === undefined) {
-        delete query[key];
-      }
-    });
-    const response = await superagent.get(this.baseUrl).query(query).set('Authorization', `Bearer ${this.accessToken}`);
-    return response.body;
-  };
-}
-
-class TokenSessionClient<IToken> extends TokenClient<IToken> {
+class TokenSessionClient<IToken> extends Internal.Provider.TokenClient<IToken> {
   protected createTags: ICreateTags<IToken>;
   protected validateToken: IValidateToken<IToken>;
 
@@ -93,7 +62,7 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
   };
 }
 
-class TokenIdentityClient<IToken> extends TokenClient<IToken> {
+class TokenIdentityClient<IToken> extends Internal.Provider.TokenClient<IToken> {
   public get = async (identityId: string): Promise<IToken> => {
     identityId = this.cleanId(identityId);
     const response = await superagent
@@ -124,4 +93,4 @@ class TokenIdentityClient<IToken> extends TokenClient<IToken> {
   };
 }
 
-export { TokenClient, TokenSessionClient, TokenIdentityClient };
+export { TokenSessionClient, TokenIdentityClient };
