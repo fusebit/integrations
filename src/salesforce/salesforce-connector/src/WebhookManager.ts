@@ -167,14 +167,11 @@ class WebhookManager {
     // 1. Ensure RemoteSiteSettings is enabled for the domain
     const remoteSiteSettingName = `WebhookSettings_${this.apexIdentifier}`;
     const namespace = await this.getNamespace();
-    const webhookSecretMetadataField = `${namespace}__${this.apexIdentifier}`;
+
+    const webhookSecretMetadataField = `${namespace ? `${namespace}__` : ''}${this.apexIdentifier}`;
     const webhookSecretMetadata = `${webhookSecretMetadataField}__mdt`;
-    const webhookSecretMetadataValue = `${namespace}__secret__c`;
+    const webhookSecretMetadataValue = `${namespace ? `${namespace}__` : ''}secret__c`;
     const webhookSecretMetadataFieldReference = `${webhookSecretMetadataField}.Webhook_secret`;
-
-    const customMetadata = await this.getCustoMetadata(webhookSecretMetadata, webhookSecretMetadataValue);
-    const webhookSecret = customMetadata.totalSize ? customMetadata.records[0][webhookSecretMetadataValue] : uuidv4();
-
     const isRemoteSiteSettingEnabled = await this.isRemoteSiteSettingEnabled(remoteSiteSettingName);
 
     if (!isRemoteSiteSettingEnabled) {
@@ -194,7 +191,7 @@ class WebhookManager {
     // 2.1 Configure Custom Metadata Type
     const customObjectExists = await this.customObjectExists(webhookSecretMetadata);
     if (!customObjectExists) {
-      const customObjectResponse = await this.client.metadata.create('CustomObject', {
+      await this.client.metadata.create('CustomObject', {
         fullName: webhookSecretMetadata,
         //@ts-ignore
         label: 'Webhook configuration',
@@ -216,28 +213,24 @@ class WebhookManager {
           },
         ],
       });
-
-      if (!(customObjectResponse as SaveResult).success) {
-        this.ctx.throw(400, `Failed to create CustomObject ${webhookSecretMetadata}`);
-      }
     }
 
     // 2.3 Configure Webhook secret field and value
-    if (!customMetadata.totalSize) {
-      const customMetadataResponse = await this.client.metadata.create('CustomMetadata', {
-        fullName: webhookSecretMetadataFieldReference,
-        //@ts-ignore
-        label: 'Webhook secret',
-        protected: 'true',
-        values: {
-          field: webhookSecretMetadataValue,
-          value: webhookSecret,
-        },
-      });
+    let webhookSecret = uuidv4();
+    await this.client.metadata.create('CustomMetadata', {
+      fullName: webhookSecretMetadataFieldReference,
+      //@ts-ignore
+      label: 'Webhook secret',
+      protected: 'true',
+      values: {
+        field: webhookSecretMetadataValue,
+        value: webhookSecret,
+      },
+    });
 
-      if (!(customMetadataResponse as SaveResult).success) {
-        this.ctx.throw(400, `Failed to create CustomMetadata ${webhookSecretMetadataFieldReference}`);
-      }
+    const customMetadata = await this.getCustoMetadata(webhookSecretMetadata, webhookSecretMetadataValue);
+    if (customMetadata.totalSize) {
+      webhookSecret = customMetadata.records[0][webhookSecretMetadataValue];
     }
 
     // 3. Ensure the base Http Apex class and Test are created

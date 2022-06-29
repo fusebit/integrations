@@ -66,12 +66,12 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
     await this.validateToken(token);
 
     sessionId = this.cleanId(sessionId);
+    // Run service configuration requirements.
+    await this.configure(token);
     const response = await superagent
       .put(this.getUrl(sessionId))
       .set('Authorization', `Bearer ${this.accessToken}`)
       .send({ output: { token }, tags: await this.createTags(token) });
-
-    const configResult = await this.configure(token);
 
     return response.body;
   };

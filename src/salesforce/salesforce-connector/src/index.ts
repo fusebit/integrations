@@ -7,6 +7,7 @@ const TOKEN_URL = 'https://login.salesforce.com/services/oauth2/token';
 const AUTHORIZATION_URL = 'https://login.salesforce.com/services/oauth2/authorize';
 const SERVICE_NAME = 'Salesforce';
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
+const WEBHOOK_CONFIGURATION_SECTION = 'Webhook Development Configuration';
 
 class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
@@ -28,10 +29,122 @@ class ServiceConnector extends OAuthConnector<Service> {
         (element: { label: string }) => element.label == 'OAuth2 Configuration'
       ).label = `${SERVICE_NAME} Configuration`;
 
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherPrivateKey', 'password');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherClientId');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherUser');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'webhookPublisherAuthorizationServer');
+      ctx.body.schema.properties.webhooks = {
+        type: 'array',
+        enum: [
+          'Account',
+          'Campaign',
+          'Case',
+          'Contract',
+          'Conversation',
+          'Customer',
+          'Employee',
+          'Event (Calendar)',
+          'Expense',
+          'Goal',
+          'Group',
+          'Invoice',
+          'Lead',
+          'Opportunity',
+          'Order',
+          'Task',
+          'TimeSheet',
+          'User',
+          'WorkOrder',
+        ],
+      };
+
+      ctx.body.schema.properties.actions = {
+        type: 'object',
+        properties: {
+          afterInsert: {
+            type: 'boolean',
+            description: 'After insert',
+          },
+          afterUpdate: {
+            type: 'boolean',
+            description: 'After update',
+          },
+          afterDelete: {
+            type: 'boolean',
+            description: 'After delete',
+          },
+          afterUndelete: {
+            type: 'boolean',
+            description: 'After undelete',
+          },
+        },
+      };
+
+      ctx.body.uischema.elements.push({
+        type: 'Group',
+        label: WEBHOOK_CONFIGURATION_SECTION,
+        rule: {
+          effect: 'SHOW',
+          condition: {
+            scope: '#/properties/mode/properties/useProduction',
+            schema: {
+              const: true,
+            },
+          },
+        },
+        elements: [
+          {
+            type: 'VerticalLayout',
+            elements: [
+              {
+                type: 'HorizontalLayout',
+                elements: [
+                  {
+                    type: 'Control',
+                    scope: '#/properties/webhookPublisherClientId',
+                  },
+                  {
+                    type: 'Control',
+                    scope: '#/properties/webhookPublisherPrivateKey',
+                    options: {
+                      format: 'password',
+                    },
+                  },
+                ],
+              },
+              {
+                type: 'HorizontalLayout',
+                elements: [
+                  {
+                    type: 'Control',
+                    scope: '#/properties/webhookPublisherUser',
+                  },
+                  {
+                    type: 'Control',
+                    scope: '#/properties/webhookPublisherAuthorizationServer',
+                  },
+                ],
+              },
+              {
+                type: 'HorizontalLayout',
+                elements: [
+                  {
+                    type: 'Control',
+                    scope: '#/properties/webhooks',
+                    label: 'Salesforce entity',
+                  },
+                ],
+              },
+              {
+                type: 'HorizontalLayout',
+                elements: [
+                  {
+                    type: 'Control',
+                    scope: '#/properties/actions',
+                    label: 'Subscribe to events',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} Connected App`;
@@ -39,22 +152,22 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.clientSecret.description = `The Consumer Secret from your ${SERVICE_NAME} Connected App`;
 
       ctx.body.schema.properties.webhookPublisherPrivateKey = {
-        title: 'Private key from your development instance',
+        title: 'Private Key',
         type: 'string',
       };
 
       ctx.body.schema.properties.webhookPublisherClientId = {
-        title: 'Client Id from your development instance',
+        title: 'Client ID',
         type: 'string',
       };
 
       ctx.body.schema.properties.webhookPublisherUser = {
-        title: 'Authorized user from your development instance',
+        title: 'Authorized user',
         type: 'string',
       };
 
       ctx.body.schema.properties.webhookPublisherAuthorizationServer = {
-        title: 'Use a custom authorization server URL',
+        title: 'Authorization server URL',
         type: 'string',
       };
     });

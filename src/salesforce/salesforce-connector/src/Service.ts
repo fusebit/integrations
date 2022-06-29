@@ -61,7 +61,7 @@ class Service extends OAuthConnector.Service {
       }
 
       const entities = Object.keys(webhookSchemaData);
-
+      // Move to Promise.all
       for await (const entityId of entities) {
         await webhookManager.createOrUpdateSalesforceTrigger({
           entityId,
@@ -70,6 +70,7 @@ class Service extends OAuthConnector.Service {
       }
     } catch (error) {
       // TODO: Log the error details
+      console.error(error);
       ctx.throw(500, `Salesforce Webhooks creation failed for your instance ${token.instance_url}`);
     }
   }
