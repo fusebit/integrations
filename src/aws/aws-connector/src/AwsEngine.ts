@@ -1,10 +1,11 @@
 import { Connector, Internal } from '@fusebit-int/framework';
 import AWS from 'aws-sdk';
+import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 
 const SESSION_TIMEOUT_DURATION = 5 * 60;
-const getTokenClient = (ctx: Internal.Types.Context): Internal.Provider.TokenClient => ctx.state.tokenClient;
+const getTokenClient = (ctx: Internal.Types.Context): Internal.Provider.BaseTokenClient => ctx.state.tokenClient;
 
 class AwsEngine {
   public cfg: IAwsConfig;
@@ -50,6 +51,28 @@ class AwsEngine {
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
       return undefined;
+    }
+  }
+
+  // Generate the configuration as YAML, technically it is possible for JSON to be applied
+  // But for ease of reading, sticking to YAML
+  public async generateCustomerCloudformation(ctx: Connector.Types.Context) {
+    return fs
+      .readFileSync('./templates/assumeRole.template', 'utf-8')
+      .replace('##BASE_ACCOUNT_ID##', await this.getBaseAccountId(ctx) as string);
+  }
+
+  private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
+    const STSClient = new AWS.STS({
+      accessKeyId: this.cfg.baseUser.accessKeyId,
+      secretAccessKey: this.cfg.baseUser.secretAccessKey,
+    });
+    try {
+      const me = await STSClient.getCallerIdentity().promise();
+      return me.Account;
+    } catch (e) {
+      // Assume any non self retried failure to be the entire backend failed.
+      ctx.throw(500);
     }
   }
 

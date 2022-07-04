@@ -1,7 +1,5 @@
-import { Connector } from '@fusebit-int/framework';
+import { Connector, Internal } from '@fusebit-int/framework';
 import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
-
-import { TokenIdentityClient, TokenSessionClient } from './IdentityClient';
 
 import * as ConfigurationUI from './configure';
 import { IOAuthToken, ITags } from './OAuthTypes';
@@ -129,7 +127,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenIdentityClient<IOAuthToken>({
+    return new Internal.Provider.TokenIdentityClient<IOAuthToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/identity`,
@@ -141,7 +139,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenSessionClient<IOAuthToken>({
+    return new Internal.Provider.TokenSessionClient<IOAuthToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/session`,
@@ -160,7 +158,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         }
         return result;
       },
-      validateToken: (token: IOAuthToken) => {
+      validateToken: async (token: IOAuthToken) => {
         if (token.access_token || token.refresh_token) {
           return;
         }

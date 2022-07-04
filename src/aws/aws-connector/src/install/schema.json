@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "properties": {
+    "accountId": {
+      "title": "The ID of your AWS account",
+      "type": "string"
+    }
+  }
+}

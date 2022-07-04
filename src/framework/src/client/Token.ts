@@ -1,9 +1,14 @@
 import superagent from 'superagent';
-import { ITags } from './OAuthTypes';
-import { Internal } from '@fusebit-int/framework';
 
-type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
+const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
+const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
+
+interface ITags extends Record<string, string | null> {}
+
+type ICreateTags<IToken> = ((token: IToken) => Promise<undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
+
+type Entries<T extends Record<string, any>> = [keyof T, any][];
 
 interface ITokenParams {
   accountId: string;
@@ -17,7 +22,40 @@ export interface ITokenSessionParams<IToken> extends ITokenParams {
   validateToken: IValidateToken<IToken>;
 }
 
-class TokenSessionClient<IToken> extends Internal.Provider.TokenClient<IToken> {
+export const ObjectEntries = <T>(obj: T): Entries<T> => {
+  return Object.entries(obj) as Entries<T>;
+};
+
+abstract class BaseTokenClient<IToken> {
+  protected readonly baseUrl: string;
+  // This token is a Fusebit token, not a external SaaS token
+  protected readonly accessToken: string;
+
+  constructor(params: ITokenParams) {
+    this.baseUrl = params.baseUrl;
+    this.accessToken = params.accessToken;
+  }
+
+  protected cleanId = (id?: string) => (id ? removeTrailingSlash(removeLeadingSlash(id)) : '');
+  protected getUrl = (id: string) => `${this.baseUrl}/${this.cleanId(id)}`;
+
+  public abstract get(id: string): Promise<IToken>;
+  public abstract put(token: IToken, id: string): Promise<IToken>;
+  public abstract error(error: { error: string; errorDescription?: string }, sessionId: string): Promise<void>;
+  public abstract delete(identityId: string): Promise<void>;
+
+  public list = async (query: { count?: number; next?: string; idPrefix?: string } = {}) => {
+    ObjectEntries(query).forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    const response = await superagent.get(this.baseUrl).query(query).set('Authorization', `Bearer ${this.accessToken}`);
+    return response.body;
+  };
+}
+
+class TokenSessionClient<IToken> extends BaseTokenClient<IToken> {
   protected createTags: ICreateTags<IToken>;
   protected validateToken: IValidateToken<IToken>;
 
@@ -62,7 +100,7 @@ class TokenSessionClient<IToken> extends Internal.Provider.TokenClient<IToken> {
   };
 }
 
-class TokenIdentityClient<IToken> extends Internal.Provider.TokenClient<IToken> {
+class TokenIdentityClient<IToken> extends BaseTokenClient<IToken> {
   public get = async (identityId: string): Promise<IToken> => {
     identityId = this.cleanId(identityId);
     const response = await superagent
@@ -93,4 +131,4 @@ class TokenIdentityClient<IToken> extends Internal.Provider.TokenClient<IToken> 
   };
 }
 
-export { TokenSessionClient, TokenIdentityClient };
+export { BaseTokenClient, TokenSessionClient, TokenIdentityClient };

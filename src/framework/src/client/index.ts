@@ -1,5 +1,5 @@
 import Integration from './Integration';
 import Connector from './Connector';
-import Token from './Identity';
+import { BaseTokenClient, TokenSessionClient, TokenIdentityClient } from './Token';
 
-export { Integration, Connector, Token };
+export { Integration, Connector, BaseTokenClient, TokenIdentityClient, TokenSessionClient };
