@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-linear-integration",
-  "version": "7.49.0",
+  "version": "7.49.1",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.49.0",
-    "@fusebit-int/linear-provider": "^7.49.0"
+    "@fusebit-int/framework": "^7.49.1",
+    "@fusebit-int/linear-provider": "^7.49.1"
   },
   "files": [
     "./integration.js",
