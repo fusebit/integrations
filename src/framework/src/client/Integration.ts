@@ -4,6 +4,21 @@ import { FusebitContext } from '../router';
 import { WebhookClient as _WebhookClient, IFusebitCredentials as _IFusebitCredentials } from '../provider';
 import superagent from 'superagent';
 
+interface IFusebitTask {
+  /**
+   * path The path of the task to invoke.
+   */
+  path: string;
+  /**
+   * headers Any headers that the task should include.
+   */
+  headers?: Record<string, string>;
+  /**
+   * notBefore ISO formatted string for the task to execute after.
+   */
+  notBefore?: string;
+}
+
 /**
  * Webhook utilities that give you access to Webhook client SDKs
  * @class
@@ -210,6 +225,17 @@ export class Service extends EntityBase.ServiceBase {
     tagValue?: string
   ): Promise<EntityBase.Types.IInstall[]> => {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
+  };
+
+  public scheduleTask = async (ctx: FusebitContext, task: IFusebitTask) => {
+    const response = await superagent
+      .post(`${ctx.state.params.baseUrl}${task.path}`)
+      .set('Authorization', `Bearer ${ctx?.state?.params?.functionAccessToken}`)
+      .set('User-Agent', 'fusebit/v2-sdk')
+      // Set the headers after the authorization, to allow for overrides if necessary.
+      .set({ ...task.headers, ...(task.notBefore ? { 'fusebit-task-not-before': task.notBefore } : {}) })
+      .ok((r) => r.statusCode === 202);
+    return response.body.location;
   };
 }
 

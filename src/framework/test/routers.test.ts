@@ -34,7 +34,7 @@ describe('Routers', () => {
       const handler = jest.fn(async (ctx: Internal.Types.TaskContext) => {
         expect(ctx).toMatchObject({ originalUrl: 'some_task' });
       });
-      integration.task.on('some_event', handler);
+      integration.task.on('some_task', handler);
 
       const manager = new Manager();
       manager.setup(config, integration.router);
