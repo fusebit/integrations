@@ -1,4 +1,5 @@
 import { Connector } from '@fusebit-int/framework';
+import { ServerResponse } from 'http';
 import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 
 import { TokenIdentityClient, TokenSessionClient } from './IdentityClient';
@@ -13,6 +14,8 @@ type MiddlewareAdjustUrlConfiguration = (
   defaultAuthorizationUrl: string,
   proxyKey?: string
 ) => Connector.Types.Handler;
+
+type Response = ServerResponse & { send: any };
 
 class OAuthConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
@@ -155,8 +158,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       logoUrl: logoUrl || '',
       title: title || 'Running configuration ...',
     });
-    // @ts-ignore
-    return ctx.res.send(callbackHtml);
+    return (ctx.res as Response).send(callbackHtml);
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}

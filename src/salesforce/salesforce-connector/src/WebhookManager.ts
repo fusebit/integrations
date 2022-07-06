@@ -34,6 +34,8 @@ export interface IWebhookConfigurationResult {
   totalMissing: number;
 }
 
+type Metadata = MetadataInfo & { label: string };
+
 class WebhookManager {
   private client: jsforce.Connection;
   private ctx: Connector.Types.Context;
@@ -111,7 +113,7 @@ class WebhookManager {
    * @param fullName {string} The remote site settings name for accessing the API.
    */
   public isRemoteSiteSettingEnabled = async (fullName: string): Promise<boolean> => {
-    let settings = await this.client.metadata.list([{ type: 'RemoteSiteSetting' }]);
+    const settings = await this.client.metadata.list([{ type: 'RemoteSiteSetting' }]);
     if (settings.length) {
       return !!settings.filter((setting) => setting.fullName === fullName).length;
     }
@@ -156,7 +158,6 @@ class WebhookManager {
     if (!customObjectExists) {
       const customObjectResponse = await this.client.metadata.create('CustomObject', {
         fullName: webhookSecretMetadata,
-        //@ts-ignore
         label: 'Webhook configuration',
         pluralLabel: 'Webhook configuration',
         visibility: 'PackageProtected',
@@ -175,21 +176,20 @@ class WebhookManager {
             unique: 'true',
           },
         ],
-      });
+      } as Metadata);
     }
 
     // 2.3 Configure Webhook secret field and value
     let webhookSecret = uuidv4();
     await this.client.metadata.create('CustomMetadata', {
       fullName: webhookSecretMetadataFieldReference,
-      //@ts-ignore
       label: 'Webhook secret',
       protected: 'true',
       values: {
         field: webhookSecretMetadataValue,
         value: webhookSecret,
       },
-    });
+    } as Metadata);
 
     const customMetadata = await this.getCustoMetadata(webhookSecretMetadata, webhookSecretMetadataValue);
     if (customMetadata.totalSize) {
