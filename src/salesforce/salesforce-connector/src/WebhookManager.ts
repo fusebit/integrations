@@ -113,7 +113,7 @@ class WebhookManager {
    */
   public isRemoteSiteSettingEnabled = async (fullName: string): Promise<boolean> => {
     const settings = await this.client.metadata.list([{ type: 'RemoteSiteSetting' }]);
-    if (settings.length) {
+    if (settings && settings.length) {
       return !!settings.filter((setting) => setting.fullName === fullName).length;
     }
     return settings && (settings as any).fullName === fullName;
