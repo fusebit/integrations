@@ -122,6 +122,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
         ctx.state.tokenInfo = token;
         await this.handleSplashScreen(ctx);
+        // The configuration is now completed, indicate to the Splash screen to perform the redirect.
         ctx.body = {
           redirect: true,
         };
@@ -154,9 +155,9 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       code,
       bgColorFrom: bgColorFrom || '#100a2d',
       bgColorTo: bgColorTo || '#12124f',
-      waitText: waitText || 'Configuring your installation, this may take a while, please wait.',
+      waitText: waitText || 'Configuring your installation...',
       logoUrl: logoUrl || '',
-      title: title || 'Running configuration ...',
+      title: title || 'Configuring your installation...',
     });
     return (ctx.res as Response).send(callbackHtml);
   }
@@ -169,10 +170,6 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     return async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
       await this.handleCallback(ctx, displaySplash);
     };
-  }
-
-  protected registerCallback(): Connector.Types.Handler {
-    return this.addCallback();
   }
 
   protected readonly OAuthEngine = OAuthEngine;
@@ -379,7 +376,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
     });
 
-    this.router.get('/api/callback', this.registerCallback());
+    this.router.get('/api/callback', this.addCallback());
   }
 }
 

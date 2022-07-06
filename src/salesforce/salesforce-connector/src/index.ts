@@ -20,8 +20,8 @@ class ServiceConnector extends OAuthConnector<Service> {
     return new ServiceConnector.Service();
   }
 
-  protected registerCallback(): Connector.Types.Handler {
-    return this.addCallback({ displaySplash: true });
+  protected async handleCallback(ctx: Connector.Types.Context, displaySplash: boolean) {
+    await super.handleCallback(ctx, true);
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context) {
