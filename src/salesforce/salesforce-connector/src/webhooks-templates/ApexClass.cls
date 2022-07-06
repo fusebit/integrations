@@ -57,7 +57,7 @@ public class {{className}} implements HttpCalloutMock {
             String webhookId = '{{webhookId}}';
             req.setHeader('fusebit-salesforce-signature', signature);
             req.setHeader('fusebit-salesforce-webhook-id', webhookId);
-            Datetime validDate = datetime.now().addSeconds(60*10);
+            Datetime validDate = datetime.now().addSeconds(60);
             req.setHeader('valid-until', String.valueOf(validDate));
             req.setBody(content);
     
