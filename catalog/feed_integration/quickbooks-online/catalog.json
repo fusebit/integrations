@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Accounting"
+    "catalog": "Finance"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/quickbooks-online#creating-your-own-quickbooks-online-app",
