@@ -6,6 +6,8 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import WebhookManager from './WebhookManager';
 
+const MAX_MINUTES_WEBHOOK_THRESHOLD = 1;
+
 interface ISalesforceOAuthToken extends IOAuthToken {
   instance_url: string;
   id: string;
@@ -49,7 +51,7 @@ class Service extends OAuthConnector.Service {
 
       // Create triggers
       const _mapActionsToArray = (actions: any) => {
-        const actionsSchema: any = {
+        const actionsSchema: Record<string, string> = {
           afterInsert: 'after insert',
           afterUpdate: 'after update',
           afterDelete: 'after delete',
@@ -72,7 +74,6 @@ class Service extends OAuthConnector.Service {
     }
   }
 
-  // Overwritten
   // Convert an OAuth token into the key used to look up matching installs for a webhook.
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
     const sfToken = token as ISalesforceOAuthToken;
@@ -92,7 +93,7 @@ class Service extends OAuthConnector.Service {
     return [{ ...ctx.req.body }];
   }
 
-  public isWebhookDateValid(webhookDateUtc: string, nowUtc: string, maxMinutesThreshold: number) {
+  public isWebhookDateValid(webhookDateUtc: string, nowUtc: string) {
     const webhookDate = new Date(webhookDateUtc);
     const now = new Date(nowUtc);
     const isSameDay = webhookDate.getDay() === now.getDay();
@@ -100,7 +101,9 @@ class Service extends OAuthConnector.Service {
     const isSameMonth = webhookDate.getMonth() === now.getMonth();
     const timeDifference = webhookDate.getMinutes() - now.getMinutes();
 
-    return isSameDay && isSameYear && isSameMonth && timeDifference >= 0 && timeDifference <= maxMinutesThreshold;
+    return (
+      isSameDay && isSameYear && isSameMonth && timeDifference >= 0 && timeDifference <= MAX_MINUTES_WEBHOOK_THRESHOLD
+    );
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
@@ -114,7 +117,7 @@ class Service extends OAuthConnector.Service {
     }
 
     // Ensure the Webhook call lifetime is not longer than 10 minutes.
-    if (!this.isWebhookDateValid(new Date(validDate).toUTCString(), new Date().toUTCString(), 10)) {
+    if (!this.isWebhookDateValid(new Date(validDate).toUTCString(), new Date().toUTCString())) {
       return false;
     }
 

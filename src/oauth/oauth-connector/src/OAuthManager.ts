@@ -137,7 +137,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   }
 
   protected async shouldRenderSplashScreen(ctx: Connector.Types.Context): Promise<boolean> {
-    return true;
+    return false;
   }
 
   protected async renderSplashScreen(ctx: Connector.Types.Context): Promise<void> {

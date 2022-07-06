@@ -45,8 +45,7 @@
     "typescript": "^3.8.0"
   },
   "dependencies": {
-    "jsforce": "1.10.1",
-    "superagent": "^7.1.6"
+    "jsforce": "1.10.1"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
