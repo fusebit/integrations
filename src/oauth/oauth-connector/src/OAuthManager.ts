@@ -111,9 +111,8 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
     try {
       ctx.state.tokenClient = this.createSessionClient(ctx);
-      const shouldRenderSplashScreen = await this.shouldRenderSplashScreen(ctx);
 
-      if (!displaySplash || !shouldRenderSplashScreen) {
+      if (!displaySplash) {
         await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
         return ctx.state.engine.redirectToCallback(ctx);
       }
@@ -135,10 +134,6 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         error: `Conversion error: ${e.response ? e.response.text : e.message} - ${e.stack}`,
       });
     }
-  }
-
-  protected async shouldRenderSplashScreen(ctx: Connector.Types.Context): Promise<boolean> {
-    return false;
   }
 
   protected async renderSplashScreen(ctx: Connector.Types.Context): Promise<void> {

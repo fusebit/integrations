@@ -21,16 +21,13 @@ class ServiceConnector extends OAuthConnector<Service> {
   }
 
   protected async handleCallback(ctx: Connector.Types.Context, displaySplash: boolean) {
-    await super.handleCallback(ctx, true);
+    const { webhooks } = ctx.state.manager.config.configuration.splash || [];
+    const displaySplashScreen = !!webhooks.length;
+    await super.handleCallback(ctx, displaySplashScreen);
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context) {
     await this.service.configure(ctx, ctx.state.tokenInfo);
-  }
-
-  protected async shouldRenderSplashScreen(ctx: Connector.Types.Context) {
-    const { webhooks } = ctx.state.manager.config.configuration.splash || [];
-    return !!webhooks.length;
   }
 
   constructor() {
