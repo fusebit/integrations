@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Running configuration ...</title>
+    <title>{{title}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css?family=Sora" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/4.1.0/superagent.min.js"></script>
@@ -12,11 +12,7 @@
         height: 100%;
         font-family: 'Sora', sans-serif;
         color: #fff;
-        background-image: linear-gradient(
-          -105deg,
-          {{configurationScreenBgColorFrom}},
-          {{configurationScreenBgColorTo}}
-        );
+        background-image: linear-gradient(-105deg, {{bgColorFrom}}, {{bgColorTo}});
       }
 
       #container {
@@ -54,6 +50,11 @@
         width: 100%;
         text-align: center;
         border: solid 1px #ee0600;
+      }
+
+      #logo {
+        max-height: 80px;
+        margin: 20px auto;
       }
 
       @-webkit-keyframes rotate {
@@ -100,6 +101,7 @@
   <body>
     <div id="error" style="display: none;"></div>
     <div id="container">
+      <img id="logo" style="display: none;" />
       <div id="loadinState">
         <p><span id="message"></span></p>
       </div>
@@ -115,6 +117,14 @@
       const state = '{{state}}';
       const code = '{{code}}';
       const redirectUrl = '{{redirectUrl}}';
+      const logoUrl = '{{logoUrl}}';
+
+      if (logoUrl) {
+        const logoElement = document.getElementById('logo');
+
+        logoElement.src = logoUrl;
+        logoElement.style.display = 'block';
+      }
 
       const showSpinner = () => {
         document.getElementById('spinner').style.display = 'block';
@@ -141,7 +151,7 @@
       };
 
       try {
-        showMessage('{{configurationScreenWaitText}}');
+        showMessage('{{waitText}}');
         showSpinner();
 
         const splashCallbackResponse = await superagent

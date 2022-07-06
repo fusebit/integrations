@@ -55,8 +55,10 @@ public class {{className}} implements HttpCalloutMock {
             {{webhookSecretMetadata}} webhookSecret = [Select {{webhookSecretMetadataValue}} from {{webhookSecretMetadata}}];
             String signature = generateHmacSHA256Signature(content, webhookSecret.{{webhookSecretMetadataValue}});
             String webhookId = '{{webhookId}}';
-            req.setHeader('x-fusebit-salesforce-signature', signature);
-            req.setHeader('x-fusebit-salesforce-webhook-id', webhookId);
+            req.setHeader('fusebit-salesforce-signature', signature);
+            req.setHeader('fusebit-salesforce-webhook-id', webhookId);
+            Datetime validDate = datetime.now().addSeconds(60*10);
+            req.setHeader('valid-until', String.valueOf(validDate));
             req.setBody(content);
     
             h.send(req);

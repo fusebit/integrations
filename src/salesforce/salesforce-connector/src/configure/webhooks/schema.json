@@ -1,0 +1,89 @@
+{
+  "type": "object",
+  "properties": {
+    "webhooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entityId": {
+            "type": "string",
+            "enum": [
+              "Account",
+              "Campaign",
+              "Contact",
+              "Case",
+              "Contract",
+              "Conversation",
+              "Customer",
+              "Employee",
+              "Event",
+              "Expense",
+              "Goal",
+              "Group",
+              "Invoice",
+              "Lead",
+              "Opportunity",
+              "Order",
+              "Task",
+              "TimeSheet",
+              "User",
+              "WorkOrder"
+            ]
+          },
+          "actions": {
+            "type": "object",
+            "properties": {
+              "afterInsert": {
+                "type": "boolean",
+                "description": "After insert"
+              },
+              "afterUpdate": {
+                "type": "boolean",
+                "description": "After update"
+              },
+              "afterDelete": {
+                "type": "boolean",
+                "description": "After delete"
+              },
+              "afterUndelete": {
+                "type": "boolean",
+                "description": "After undelete"
+              }
+            }
+          }
+        }
+      }
+    },
+    "screenConfiguration": {
+      "type": "object",
+      "properties": {
+        "bgColorFrom": {
+          "type": "string",
+          "title": "Start background color",
+          "description": "Linear gradient start background color"
+        },
+        "bgColorTo": {
+          "type": "string",
+          "title": "End background color",
+          "description": "Linear gradient end background color"
+        },
+        "waitText": {
+          "type": "string",
+          "title": "Wait text",
+          "description": "Text to display while your users wait the Webhooks installation to finish"
+        },
+        "logoUrl": {
+          "type": "string",
+          "title": "Logo URL",
+          "description": "Display a Custom Logo during the configuration screen"
+        },
+        "title": {
+          "type": "string",
+          "title": "Configuration screen title",
+          "description": "Configure the document title during the configuration screen"
+        }
+      }
+    }
+  }
+}

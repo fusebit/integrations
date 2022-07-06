@@ -33,8 +33,8 @@ class Service extends OAuthConnector.Service {
   public async configure(ctx: Connector.Types.Context, token: any) {
     try {
       // No webhooks configured? Skip. (Salesforce is not just Webhooks)
-      const { webhooks } = ctx.state.manager.config.configuration.webhookSchema;
-      if (!webhooks) {
+      const { webhooks } = ctx.state.manager.config.configuration.splash;
+      if (!webhooks.length) {
         return;
       }
 
@@ -65,7 +65,10 @@ class Service extends OAuthConnector.Service {
         });
       }
     } catch (error) {
-      ctx.throw(500, `Salesforce Webhooks creation failed for your instance ${token.instance_url}`);
+      ctx.throw(
+        500,
+        `Salesforce Webhooks creation failed for your instance ${token.instance_url}, error: ${(error as any).message}`
+      );
     }
   }
 
@@ -81,25 +84,37 @@ class Service extends OAuthConnector.Service {
     ];
   }
 
-  // Overwritten
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
     return `instance_url/${event.instanceUrl}`;
   }
 
-  // Overwritten
   public getEventsFromPayload(ctx: Connector.Types.Context) {
     return [{ ...ctx.req.body }];
   }
 
-  // Overwritten
+  public isWebhookDateValid(webhookDateUtc: string, nowUtc: string, maxMinutesThreshold: number) {
+    const webhookDate = new Date(webhookDateUtc);
+    const now = new Date(nowUtc);
+    const isSameDay = webhookDate.getDay() === now.getDay();
+    const isSameYear = webhookDate.getFullYear() === now.getFullYear();
+    const isSameMonth = webhookDate.getMonth() === now.getMonth();
+    const timeDifference = webhookDate.getMinutes() - now.getMinutes();
+
+    return isSameDay && isSameYear && isSameMonth && timeDifference >= 0 && timeDifference <= maxMinutesThreshold;
+  }
+
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const signature = ctx.req.headers['x-fusebit-salesforce-signature'] as string;
-    const webhookId = ctx.req.headers['x-fusebit-salesforce-webhook-id'] as string;
+    const signature = ctx.req.headers['fusebit-salesforce-signature'] as string;
+    const webhookId = ctx.req.headers['fusebit-salesforce-webhook-id'] as string;
     const userAgent = ctx.req.headers['user-agent'] as string;
+    const validDate = ctx.req.headers['valid-until'] as string;
 
-    // TODO: Add dates validation
+    if (userAgent !== 'fusebit/salesforce' || !signature || !webhookId || !validDate) {
+      return false;
+    }
 
-    if (userAgent !== 'fusebit/salesforce' || !signature || !webhookId) {
+    // Ensure the Webhook call lifetime is not longer than 10 minutes.
+    if (!this.isWebhookDateValid(new Date(validDate).toUTCString(), new Date().toUTCString(), 10)) {
       return false;
     }
 
@@ -116,12 +131,10 @@ class Service extends OAuthConnector.Service {
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
 
-  // Overwritten
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
     return false;
   }
 
-  // Overwritten
   public getWebhookEventType(event: any): string {
     return event.type;
   }

@@ -45,7 +45,7 @@ class WebhookManager {
   constructor({ ctx, accessToken, instanceUrl }: IOptions) {
     const { endpoint, accountId, subscriptionId, entityId } = ctx.state.params;
     this.ctx = ctx;
-    this.apexIdentifier = subscriptionId.split('sub-')[1];
+    this.apexIdentifier = `S_${subscriptionId.split('sub-')[1]}`;
     this.webhookClassName = `Webhook_${this.apexIdentifier}`;
     this.baseUrl = `${endpoint}/v2/account/${accountId}/subscription/${subscriptionId}`;
     this.webhookEndpoint = `${this.baseUrl}/connector/${entityId}/api/fusebit/webhook/event`;
@@ -154,7 +154,7 @@ class WebhookManager {
     // 2.1 Configure Custom Metadata Type
     const customObjectExists = await this.customObjectExists(webhookSecretMetadata);
     if (!customObjectExists) {
-      await this.client.metadata.create('CustomObject', {
+      const customObjectResponse = await this.client.metadata.create('CustomObject', {
         fullName: webhookSecretMetadata,
         //@ts-ignore
         label: 'Webhook configuration',
