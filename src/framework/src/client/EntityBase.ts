@@ -6,6 +6,7 @@ import {
   HttpRouter as HttpRouter_,
   CronRouter as CronRouter_,
   EventRouter as EventRouter_,
+  TaskRouter as TaskRouter_,
   Next as RouterNext,
 } from '../router';
 import * as Middleware from '../middleware';
@@ -30,6 +31,7 @@ abstract class EntityBase {
   public readonly router = new HttpRouter_();
   public readonly cron = new CronRouter_(this.router);
   public readonly event = new EventRouter_(this.router);
+  public readonly task = new TaskRouter_(this.router);
 
   protected readonly utilities = utilities;
 }
