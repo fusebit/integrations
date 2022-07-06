@@ -57,14 +57,13 @@ class WebhookManager {
     });
   }
 
-  private async createOrUpdateApexClass(className: string, content: string): Promise<RecordResult> {
+  private async createApexClass(className: string, content: string): Promise<RecordResult | undefined> {
     const apexClass = await this.getClass(className);
-    if (apexClass) {
-      await this.client.tooling.sobject('ApexClass').delete(apexClass.Id);
+    if (!apexClass) {
+      return await this.client.tooling.sobject('ApexClass').create({
+        body: content,
+      });
     }
-    return await this.client.tooling.sobject('ApexClass').create({
-      body: content,
-    });
   }
 
   /**
@@ -204,50 +203,47 @@ class WebhookManager {
       webhookSecretMetadataValue,
     });
 
-    await this.createOrUpdateApexClass(this.webhookClassName, apexClass);
+    await this.createApexClass(this.webhookClassName, apexClass);
     return { webhookId, webhookSecret };
   }
 
   public async createOrUpdateSalesforceTrigger({
     entityId,
     events,
-  }: INewWebhookOptions): Promise<jsforce.RecordResult> {
+  }: INewWebhookOptions): Promise<jsforce.RecordResult | undefined> {
     const triggerName = `Trigger_${this.apexIdentifier}_${entityId}`;
-    const webhookTestClassName = `Test_${this.apexIdentifier}_${entityId}`;
-
-    const apexTrigger = await createApexTrigger({
-      triggerName,
-      webhookClassName: this.webhookClassName,
-      entityId,
-      webhookEndpoint: this.webhookEndpoint,
-      events,
-    });
-
     const trigger = await this.client.tooling.sobject('ApexTrigger').findOne({
       name: triggerName,
     });
 
-    if (trigger) {
-      await this.client.tooling.sobject('ApexTrigger').delete(trigger.Id as string);
+    if (!trigger) {
+      const webhookTestClassName = `Test_${this.apexIdentifier}_${entityId}`;
+      const apexTrigger = await createApexTrigger({
+        triggerName,
+        webhookClassName: this.webhookClassName,
+        entityId,
+        webhookEndpoint: this.webhookEndpoint,
+        events,
+      });
+
+      const createdTrigger = await this.client.tooling.sobject('ApexTrigger').create({
+        name: triggerName,
+        tableEnumOrId: entityId,
+        body: apexTrigger,
+      });
+
+      // Create Trigger Test
+      const apexTestClass = await createApexTestClass({
+        testClassName: webhookTestClassName,
+        webhookClassName: this.webhookClassName,
+        webhookEndpoint: this.webhookEndpoint,
+        testEntity: entityId,
+      });
+
+      await this.createApexClass(webhookTestClassName, apexTestClass);
+
+      return createdTrigger;
     }
-
-    const createdTrigger = await this.client.tooling.sobject('ApexTrigger').create({
-      name: triggerName,
-      tableEnumOrId: entityId,
-      body: apexTrigger,
-    });
-
-    // Create Trigger Test
-    const apexTestClass = await createApexTestClass({
-      testClassName: webhookTestClassName,
-      webhookClassName: this.webhookClassName,
-      webhookEndpoint: this.webhookEndpoint,
-      testEntity: entityId,
-    });
-
-    await this.createOrUpdateApexClass(webhookTestClassName, apexTestClass);
-
-    return createdTrigger;
   }
 }
 
