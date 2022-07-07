@@ -21,8 +21,9 @@ class ServiceConnector extends OAuthConnector<Service> {
   }
 
   protected async handleCallback(ctx: Connector.Types.Context) {
-    const { webhooks } = ctx.state.manager.config.configuration.splash || [];
-    ctx.state.displaySplash = webhooks && webhooks.length;
+    const { webhooks } = ctx.state.manager.config.configuration.splash || {};
+    // Webhooks only works in production mode.
+    ctx.state.displaySplash = webhooks?.length && ctx.state.manager.config.configuration.mode?.useProduction;
     await super.handleCallback(ctx);
   }
 
