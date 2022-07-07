@@ -36,7 +36,7 @@ class Service extends OAuthConnector.Service {
     try {
       // No webhooks configured? Skip. (Salesforce is not just Webhooks)
       const { webhooks } = ctx.state.manager.config.configuration.splash;
-      if (!webhooks.length) {
+      if (!webhooks?.length) {
         return;
       }
 
