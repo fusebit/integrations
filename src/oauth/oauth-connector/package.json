@@ -13,7 +13,8 @@
   "files": [
     "libc/**/*.js",
     "libc/**/*.d.ts",
-    "libc/**/*.json"
+    "libc/**/*.json",
+    "libc/**/*.html"
   ],
   "repository": {
     "type": "git",
