@@ -13,7 +13,7 @@ const SERVICE_NAME = '<%= h.capitalize(name) %>';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
-class ServiceConnector extends OAuthConnector {
+class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
   protected createService() {
