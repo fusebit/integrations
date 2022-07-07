@@ -156,7 +156,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       logoUrl: logoUrl || '',
       title: title || 'Configuring your installation...',
     });
-    return (ctx.res as Response).send(callbackHtml);
+    ctx.response.body = callbackHtml;
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}
