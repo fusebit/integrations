@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-gitlab-connector",
-  "version": "7.49.2",
+  "version": "7.49.3",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.49.2",
-    "@fusebit-int/gitlab-connector": "^7.49.2"
+    "@fusebit-int/framework": "^7.49.3",
+    "@fusebit-int/gitlab-connector": "^7.49.3"
   }
 }
