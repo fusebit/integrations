@@ -22,7 +22,7 @@ class ServiceConnector extends OAuthConnector<Service> {
 
   protected async handleCallback(ctx: Connector.Types.Context) {
     const { webhooks } = ctx.state.manager.config.configuration.splash || [];
-    ctx.state.displaySplash = !!webhooks.length;
+    ctx.state.displaySplash = webhooks && webhooks.length;
     await super.handleCallback(ctx);
   }
 
