@@ -13,7 +13,9 @@
   "files": [
     "libc/**/*.js",
     "libc/**/*.d.ts",
-    "libc/**/*.json"
+    "libc/**/*.json",
+    "libc/**/*.cls",
+    "libc/**/*.trigger"
   ],
   "repository": {
     "type": "git",
