@@ -20,10 +20,10 @@ class ServiceConnector extends OAuthConnector<Service> {
     return new ServiceConnector.Service();
   }
 
-  protected async handleCallback(ctx: Connector.Types.Context, displaySplash: boolean) {
+  protected async handleCallback(ctx: Connector.Types.Context) {
     const { webhooks } = ctx.state.manager.config.configuration.splash || [];
-    const displaySplashScreen = !!webhooks.length;
-    await super.handleCallback(ctx, displaySplashScreen);
+    ctx.state.displaySplash = !!webhooks.length;
+    await super.handleCallback(ctx);
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context) {

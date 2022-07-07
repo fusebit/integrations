@@ -87,7 +87,9 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     return this.adjustUrlConfiguration('http://fusebit.io/token', 'http://fusebit.io/authorize', 'oauth');
   }
 
-  protected async handleCallback(ctx: Connector.Types.Context, displaySplash: boolean) {
+  protected async handleCallback(ctx: Connector.Types.Context) {
+    const { displaySplash } = ctx.state;
+
     if (ctx.query.error) {
       // The OAuth exchange has errored out - send back to callback and pass those parameters along.
       await this.onSessionError(ctx, {
@@ -158,14 +160,6 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}
-
-  protected addCallback(
-    { displaySplash }: { displaySplash: boolean } = { displaySplash: false }
-  ): Connector.Types.Handler {
-    return async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
-      await this.handleCallback(ctx, displaySplash);
-    };
-  }
 
   protected readonly OAuthEngine = OAuthEngine;
 
@@ -371,7 +365,9 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
     });
 
-    this.router.get('/api/callback', this.addCallback());
+    this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
+      await this.handleCallback(ctx);
+    });
   }
 }
 
