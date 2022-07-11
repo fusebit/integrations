@@ -10,11 +10,9 @@ const code = `
 
   // Data Object sent with the Webhook Trigger
   const objectName = ctx.params.eventType;
-  const actionType = ctx.req.body.data.action;
-  const salesforceUserId = ctx.req.body.data.userId;
-  const salesforceInstanceUrl = ctx.req.body.data.instanceUrl;
-  const updatedValue = ctx.req.body.data.new;
-  const oldValue = ctx.req.body.data.old;
+
+  // Tip: Inspect the full body of the request to see associated Installs information
+  const {actionType, salesforceUserId, salesforceInstanceUrl, updatedValue, oldValue} = ctx.req.body.data
 
   console.log(objectName, actionType, salesforceUserId, salesforceInstanceUrl, updatedValue, oldValue);
   
@@ -24,6 +22,6 @@ const code = `
 
 module.exports = {
   name: 'Listen to Salesforce Webhook Events',
-  description: "Listen to Salesforce Webhook Events using Fusebit's built-in event handler",
+  description: `Listen to Salesforce Webhook Events using Fusebit's built-in event handler`,
   code,
 };
