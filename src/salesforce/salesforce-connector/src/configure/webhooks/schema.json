@@ -8,28 +8,7 @@
         "properties": {
           "entityId": {
             "type": "string",
-            "enum": [
-              "Account",
-              "Campaign",
-              "Contact",
-              "Case",
-              "Contract",
-              "Conversation",
-              "Customer",
-              "Employee",
-              "Event",
-              "Expense",
-              "Goal",
-              "Group",
-              "Invoice",
-              "Lead",
-              "Opportunity",
-              "Order",
-              "Task",
-              "TimeSheet",
-              "User",
-              "WorkOrder"
-            ]
+            "enum": ["Account", "Campaign", "Contact", "Case", "Lead", "Opportunity", "Task", "WorkOrder"]
           },
           "actions": {
             "type": "object",
