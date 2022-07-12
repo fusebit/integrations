@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-google-docs-integration",
-  "version": "7.49.6",
+  "version": "7.49.7",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.49.6",
-    "@fusebit-int/google-provider": "^7.49.6"
+    "@fusebit-int/framework": "^7.49.7",
+    "@fusebit-int/google-provider": "^7.49.7"
   },
   "files": [
     "./integration.js",
