@@ -8,7 +8,7 @@ const code = `
  // Listen to Salesforce Webhook events
  integration.event.on('/:componentName/webhook/:eventType', async (ctx) => { 
   // Tip: Inspect the full body of the request to see associated Installs information
-  console.log(\`New Webhook event:\${ctx.req.body.eventType}\`, ctx.req.body.data);
+  console.log(\`New Webhook event: \${ctx.req.body.eventType}\`, ctx.req.body.data);
 });
 
 `;
