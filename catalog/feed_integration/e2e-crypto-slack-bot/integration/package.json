@@ -4,8 +4,8 @@
     "get": "fuse integration get crypto-notification-bot -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.49.5",
-    "@fusebit-int/slack-provider": "^7.49.5",
+    "@fusebit-int/framework": "^7.49.6",
+    "@fusebit-int/slack-provider": "^7.49.6",
     "undici": "^4.15.1"
   },
   "files": [
@@ -13,6 +13,6 @@
     "README.md"
   ],
   "name": "@fusebit-int/catalog-feed-integration-e2e-crypto-slack-bot",
-  "version": "7.49.5",
+  "version": "7.49.6",
   "private": true
 }
