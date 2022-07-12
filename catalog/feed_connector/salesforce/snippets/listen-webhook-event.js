@@ -7,15 +7,8 @@ const code = `
 
  // Listen to Salesforce Webhook events
  integration.event.on('/:componentName/webhook/:eventType', async (ctx) => { 
-
-  // Data Object sent with the Webhook Trigger
-  const objectName = ctx.params.eventType;
-
   // Tip: Inspect the full body of the request to see associated Installs information
-  const { actionType, salesforceUserId, salesforceInstanceUrl, updatedValue, oldValue } = ctx.req.body.data
-
-  console.log(objectName, actionType, salesforceUserId, salesforceInstanceUrl, updatedValue, oldValue);
-  
+  console.log(\`New Webhook event: <@\${ctx.req.body.eventType}> \`, ctx.req.body.data);
 });
 
 `;
