@@ -25,7 +25,7 @@ export class TaskRouter {
   /**
    * Register to handle a scheduled task.
    *
-   * A task is equivilant in many respects to a normal http invocation, except that it appears to be
+   * A task is equivilent in many respects to a normal HTTP invocation, except that it appears to be
    * asynchronous from the perspective of the caller and may take more than a minute to complete.
    *
    * The contents of `ctx.body` will be made available to the caller after the invocation completes.

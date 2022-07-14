@@ -14,9 +14,10 @@ interface IFusebitTask {
    */
   headers?: Record<string, string>;
   /**
-   * notBefore ISO formatted string for the task to execute after.
+   * notBefore The epoch-time for the task to execute after; often, this is the value in an `Retry-After`
+   *           header on an 429 HTTP error.
    */
-  notBefore?: string;
+  notBefore?: Date | string;
 }
 
 /**
@@ -227,13 +228,21 @@ export class Service extends EntityBase.ServiceBase {
     return this.utilities.listByTag(ctx, 'install', tagKey, tagValue);
   };
 
+  /**
+   * Schedule a new task to be executed based on the `task` object.
+   * @param ctx The context object provided by the route function
+   * @param task The specification for the task to invoke
+   * @example
+   * integration.service.scheduleTask(ctx, { path: '/api/update', notBefore: '1657763386' });
+   */
   public scheduleTask = async (ctx: FusebitContext, task: IFusebitTask) => {
+    const notBefore = typeof task.notBefore == 'object' ? Number(task.notBefore) / 1000 : task.notBefore;
     const response = await superagent
       .post(`${ctx.state.params.baseUrl}${task.path}`)
       .set('Authorization', `Bearer ${ctx?.state?.params?.functionAccessToken}`)
       .set('User-Agent', 'fusebit/v2-sdk')
       // Set the headers after the authorization, to allow for overrides if necessary.
-      .set({ ...task.headers, ...(task.notBefore ? { 'fusebit-task-not-before': task.notBefore } : {}) })
+      .set({ ...task.headers, ...(notBefore ? { 'fusebit-task-not-before': notBefore } : {}) })
       .ok((r) => r.statusCode === 202);
     return response.body.location;
   };
