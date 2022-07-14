@@ -14,10 +14,10 @@ interface IFusebitTask {
    */
   headers?: Record<string, string>;
   /**
-   * notBefore The epoch-time for the task to execute after; often, this is the value in an `Retry-After`
-   *           header on an 429 HTTP error.
+   * notBefore The number of seconds since epoch for the task to execute after; often, this is the value in an
+   *           `Retry-After` header on an 429 HTTP error.
    */
-  notBefore?: Date | string;
+  notBefore?: Date | string | number;
 }
 
 /**
