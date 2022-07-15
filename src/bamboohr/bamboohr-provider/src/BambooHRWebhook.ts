@@ -38,8 +38,8 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<BambooHRClient> {
   };
 
   /**
-   * Update a Mailchimp webhook
-   * @param args {object} The configuration for the Mailchimp webhook.
+   * Update a BambooHR webhook
+   * @param args {object} The configuration for the BambooHR webhook.
    */
   public update = async (id: number, args: IBambooHRWebhook): Promise<IBambooHRWebhookResponse> => {
     const params = this.ctx.state.params;

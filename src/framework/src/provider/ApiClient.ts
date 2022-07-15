@@ -7,9 +7,7 @@ export class ApiClient {
   public token: string;
   public connectorId: string;
 
-  protected addAuthorization = (request: superagent.Request) => {
-    return request.set('Authorization', `Bearer ${this.token}`);
-  };
+  protected addAuthorization = (request: superagent.Request) => request.set('Authorization', `Bearer ${this.token}`);
 
   protected makeRequest = (verb: string) => async (url: string, body?: any) =>
     (
