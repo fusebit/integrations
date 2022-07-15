@@ -5,7 +5,7 @@ import KoaRouter from '@koa/router';
 import { IncomingMessage } from 'http';
 
 const httpMethods = ['HEAD', 'OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', 'DELETE'];
-const fusebitMethods = ['CRON', 'EVENT'];
+const fusebitMethods = ['CRON', 'EVENT', 'TASK'];
 
 /** Elements that get added to the stock Koa context. */
 export interface IFusebitContext extends KoaRouter.RouterContext {

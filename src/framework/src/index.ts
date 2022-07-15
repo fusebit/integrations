@@ -5,6 +5,7 @@ import {
   FusebitContext as Context_,
   CronContext as CronContext_,
   EventContext as EventContext_,
+  TaskContext as TaskContext_,
   Next as NextType,
 } from './router';
 import { Manager as Manager_, IOnStartup as IOnStartup_, IConfig as IConfig_ } from './Manager';
@@ -64,6 +65,7 @@ module Internal {
     export type Context = Context_;
     export type CronContext = CronContext_;
     export type EventContext = EventContext_;
+    export type TaskContext = TaskContext_;
     export type Next = NextType;
     export interface IConfig extends IConfig_ {}
     export interface IOnStartup extends IOnStartup_ {}
