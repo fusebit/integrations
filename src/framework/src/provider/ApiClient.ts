@@ -7,7 +7,9 @@ export class ApiClient {
   public token: string;
   public connectorId: string;
 
-  protected addAuthorization = (request: superagent.Request) => request.set('Authorization', `Bearer ${this.token}`);
+  protected addAuthorization = (request: superagent.Request) => {
+    return request.set('Authorization', `Bearer ${this.token}`);
+  };
 
   protected makeRequest = (verb: string) => async (url: string, body?: any) =>
     (
@@ -16,12 +18,12 @@ export class ApiClient {
       ).send(body)
     ).body;
 
-  public get: (url: string) => Promise<any>;
-  public put: (url: string, body?: any) => Promise<any>;
-  public post: (url: string, body?: any) => Promise<any>;
-  public delete: (url: string, body?: any) => Promise<any>;
-  public head: (url: string, body?: any) => Promise<any>;
-  public patch: (url: string, body?: any) => Promise<any>;
+  public get: <T = any>(url: string) => Promise<T>;
+  public put: <T = any>(url: string, body?: any) => Promise<T>;
+  public post: <T = any>(url: string, body?: any) => Promise<T>;
+  public delete: <T = any>(url: string, body?: any) => Promise<T>;
+  public head: <T = any>(url: string, body?: any) => Promise<T>;
+  public patch: <T = any>(url: string, body?: any) => Promise<T>;
 
   constructor(makeUrl: MakeUrl, connectorId: string, token: string) {
     this.makeUrl = makeUrl;

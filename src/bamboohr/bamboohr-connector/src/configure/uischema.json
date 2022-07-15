@@ -1,0 +1,24 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Group",
+      "label": "You need to create an API Key to use this Integration. Once logged in to BambooHR, click on your profile on the top-right and select \"API Keys\", then select \"Add A New Key\". If this option is not available to you, contact your BambooHR administrator.",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/apiKey"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/companyDomain"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
