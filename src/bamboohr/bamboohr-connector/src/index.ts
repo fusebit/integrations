@@ -228,19 +228,6 @@ class ServiceConnector extends Connector<Service> {
       }
     );
 
-    this.router.get(
-      '/api/webhook/:id/storage',
-      this.middleware.validate({
-        params: Joi.object({
-          id: Joi.number().required(),
-        }),
-      }),
-      this.middleware.authorizeUser('connector:execute'),
-      async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.getFusebitWebhook(ctx, ctx.params.id);
-      }
-    );
-
     this.router.delete(
       '/api/webhook/:webhookId',
       this.middleware.validate({
