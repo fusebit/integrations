@@ -1,1 +1,13 @@
-{}
+{
+  "employees": [
+    {
+      "changedFields": ["First name"],
+      "fields": {
+        "Employee #": { "value": "300" },
+        "First name": { "value": "Tefi" },
+        "Last name": { "value": "Adams" }
+      },
+      "id": "5"
+    }
+  ]
+}

@@ -37,7 +37,7 @@ describe('<%= h.capitalize(name) %> Webhook Events', () => {
   });
 
   test.todo('Validate: initializationChallenge false', async () => {
-    expect(service.initializationChallenge(sampleCtx)).toBeFalsy();
+    expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
   test.todo('Validate: getTokenAuthId', async () => {

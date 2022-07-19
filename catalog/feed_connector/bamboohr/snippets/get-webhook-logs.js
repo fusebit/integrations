@@ -19,7 +19,7 @@ const code = `
    * @param webhookId {string} The identifier of the webhook to get
    * @returns {object} BambooHR Webhook Logs
    */
-  ${bambooHRGetWebhook.toString()}
+  ${bambooHRGetWebhookLogs.toString()}
   `;
 
 module.exports = {

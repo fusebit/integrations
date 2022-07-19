@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { ServiceConnector } from '../src';
-import { Service } from '../src/Service';
 
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';

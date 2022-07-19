@@ -177,9 +177,21 @@ class ServiceConnector extends Connector<Service> {
       }
     );
 
-    this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
       // Use production is enabled always by default
-      ctx.body.schema.properties.useProduction.options.readonly = true;
+      ctx.body = {
+        schema: {
+          properties: {
+            useProduction: {
+              options: {
+                readonly: true,
+              },
+            },
+          },
+        },
+      };
+
+      return next();
     });
 
     // Webhook management
