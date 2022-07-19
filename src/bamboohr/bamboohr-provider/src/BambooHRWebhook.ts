@@ -1,70 +1,44 @@
-import { v4 as uuidv4 } from 'uuid';
 import superagent from 'superagent';
 import { Internal } from '@fusebit-int/framework';
 
-import { BambooHRClient } from './BambooHRClient';
-import { IBambooHRWebhook, IBambooHRWebhookResponse, IBambooHRWebhookList } from './types';
+import { IBambooHRWebhookList, FusebitBambooHRClient } from './types';
+import { Types } from '@fusebit-int/bamboohr-connector';
 
-class BambooHRWebhook extends Internal.Provider.WebhookClient<BambooHRClient> {
+class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRClient> {
   /**
    * Register a new BambooHR webhook
    * @param args {object} The configuration for the BambooHR webhook.
    */
-  public create = async (args: IBambooHRWebhook): Promise<IBambooHRWebhookResponse> => {
-    const webhookId = uuidv4();
+  public create = async (args: Types.IBambooHRWebhook): Promise<Types.IBambooHRWebhookResponse> => {
     const params = this.ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const createWebhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/webhook`;
-    // We use the Webhook name property to identify the event type
-    args.name = (args.name || 'bamboohr-event').replace(/\s/g, '-');
-    const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}/${args.name}`;
-
-    // Register the Webhook in BambooHR.
-    const createdWebhook = await this.client.rest.post<IBambooHRWebhookResponse>('webhooks', {
-      ...args,
-      url: webhookUrl,
-      format: 'json',
-      includeCompanyDomain: true,
-    });
+    const createWebhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${this.lookupKey}`;
 
     // Register the Webhook in Fusebit
-    await superagent.post(createWebhookUrl).set('Authorization', `Bearer ${params.functionAccessToken}`).send({
-      webhookId,
-      id: createdWebhook.id,
-      privateKey: createdWebhook.privateKey,
-    });
+    const createdWebhook = await superagent
+      .post(createWebhookUrl)
+      .set('Authorization', `Bearer ${params.functionAccessToken}`)
+      .send(args);
 
-    return createdWebhook;
+    return createdWebhook.body;
   };
 
   /**
    * Update a BambooHR webhook
    * @param args {object} The configuration for the BambooHR webhook.
    */
-  public update = async (id: number, args: IBambooHRWebhook): Promise<IBambooHRWebhookResponse> => {
-    const params = this.ctx.state.params;
-    const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const webhookBasePath = `${baseUrl}/connector/${this.config.entityId}/api/webhook`;
+  public update = async (id: number, args: Types.IBambooHRWebhook): Promise<Types.IBambooHRWebhookResponse> => {
     // We use the Webhook name property to identify the event type
     args.name = (args.name || 'bamboohr-event').replace(/\s/g, '-');
-
-    // Get associated Webhook Id from Fusebit storage
-    const webhookStorage = await superagent
-      .get(`${webhookBasePath}/${id}/storage`)
-      .set('Authorization', `Bearer ${params.functionAccessToken}`)
-      .send();
-
-    if (!webhookStorage) {
-      this.ctx.throw(404, 'Cannot find metadata associated to the Webhook');
-    }
-
-    const webhookId = webhookStorage.body.data?.webhookId;
-    const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/fusebit/webhook/event/${webhookId}/${args.name}`;
-
     // Update the Webhook in BambooHR.
-    const updatedWebhook = await this.client.rest.put<IBambooHRWebhookResponse>(`webhooks/${id}`, {
+    const { url } = await this.get(id);
+    const { path, webhookId } = this.getWebhookUrlParts(url);
+    const updatedWebhook = await this.client.put<Types.IBambooHRWebhookResponse>(`webhooks/${id}`, {
       ...args,
-      url: webhookUrl,
+      // Despite the fact we don't allow to change the Webhook URL (we create it automatically)
+      // BambooHR update API requires sending the URL even if it is the same value since PATCH
+      // is not supported. Hence, we are recreating it here.
+      url: `${path}/event/${webhookId}/action/${args.name}`,
       format: 'json',
       includeCompanyDomain: true,
     });
@@ -72,28 +46,31 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<BambooHRClient> {
     return updatedWebhook;
   };
 
-  public get = async (webhookId: number): Promise<any> => {
-    return await this.client.rest.get<IBambooHRWebhookResponse>(`webhooks/${webhookId}`);
+  public get = async (webhookId: number): Promise<Types.IBambooHRWebhookResponse> => {
+    return await this.client.get<Types.IBambooHRWebhookResponse>(`webhooks/${webhookId}`);
   };
 
   public list = async (): Promise<IBambooHRWebhookList> => {
-    return await this.client.rest.get<IBambooHRWebhookList>('webhooks');
+    return await this.client.get<IBambooHRWebhookList>('webhooks');
   };
 
-  public getLogs = async (id: number): Promise<any> => {
-    return await this.client.rest.get<IBambooHRWebhookResponse>(`webhooks/${id}/log`);
+  public getLogs = async (id: number): Promise<Types.IBambooHRWebhookResponse> => {
+    return await this.client.get<Types.IBambooHRWebhookResponse>(`webhooks/${id}/log`);
   };
 
-  public getMonitorFields = async (): Promise<any> => {
-    return await this.client.rest.get<IBambooHRWebhookResponse>('webhooks/monitor_fields');
+  public getMonitorFields = async (): Promise<Types.IBambooHRWebhookResponse> => {
+    return await this.client.get<Types.IBambooHRWebhookResponse>('webhooks/monitor_fields');
   };
 
   public delete = async (id: number) => {
-    await this.client.rest.delete(`webhooks/${id}`);
+    await this.client.delete(`webhooks/${id}`);
+
     // Remove webhook from Fusebit
     const params = this.ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const webhookPath = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${id}`;
+    const { url } = await this.get(id);
+    const { webhookId } = this.getWebhookUrlParts(url);
+    const webhookPath = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${webhookId}`;
     await superagent.delete(webhookPath).set('Authorization', `Bearer ${params.functionAccessToken}`).send();
   };
 
@@ -101,6 +78,16 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<BambooHRClient> {
     const { webhooks } = await this.list();
     await Promise.all(webhooks.map(async (webhook) => this.delete(webhook.id)));
   };
+
+  private getWebhookUrlParts(url: string): Types.IWebhookUrlParts {
+    const [path, webhookPath] = url.split('/event/');
+    const [webhookId, eventType] = webhookPath.split('/action/');
+    return {
+      webhookId,
+      eventType,
+      path,
+    };
+  }
 }
 
 export default BambooHRWebhook;

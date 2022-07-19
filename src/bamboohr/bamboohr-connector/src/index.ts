@@ -1,10 +1,14 @@
 import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 import { TokenClient, TokenSessionClient, TokenIdentityClient } from '@fusebit-int/oauth-connector';
+
 import { Service } from './Service';
 import { schema, uischema } from './configure';
+import * as Types from './types';
 
 const SERVICE_NAME = 'BambooHR';
+
+type CustomResponse = Response & { output: any };
 
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
@@ -16,11 +20,11 @@ class ServiceConnector extends Connector<Service> {
     return new ServiceConnector.Service();
   }
 
-  protected createSessionClient(ctx: Connector.Types.Context): TokenSessionClient<any> {
+  protected createSessionClient(ctx: Connector.Types.Context): TokenSessionClient<Types.BambooHRToken> {
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenSessionClient<string>({
+    return new TokenSessionClient<Types.BambooHRToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/session`,
@@ -39,12 +43,12 @@ class ServiceConnector extends Connector<Service> {
         }
         return result;
       },
-      validateToken: (token: string) => {
+      validateToken: (token: Types.BambooHRToken) => {
         if (token) {
           return;
         }
 
-        throw new Error('Missing private key');
+        throw new Error('Missing private key or Company domain');
       },
     });
   }
@@ -61,20 +65,21 @@ class ServiceConnector extends Connector<Service> {
     });
   }
 
-  protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<string> {
-    const tokenClient: TokenClient<string> = ctx.state.tokenClient;
-    const token: string | undefined = await tokenClient.get(lookupKey);
+  protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<Types.BambooHRToken> {
+    const tokenClient: TokenClient<Types.BambooHRToken> = ctx.state.tokenClient;
+    const token: Types.BambooHRToken = await tokenClient.get(lookupKey);
 
     if (!token) {
       ctx.throw(404);
     }
+
     return token;
   }
 
   protected sanitizeCredentials = (token: any) => {
     return {
-      api_key: token.apiKey,
-      company_domain: token.companyDomain,
+      apiKey: token.apiKey,
+      companyDomain: token.companyDomain,
     };
   };
 
@@ -84,6 +89,15 @@ class ServiceConnector extends Connector<Service> {
     const Joi = this.middleware.validate.joi;
     // Override the authorize endpoint to render a Form requiring an API Key
     this.router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
+      // Get content for an existing session
+      let existingSession = null;
+      if (ctx.query.session) {
+        existingSession = await superagent
+          .get(`${ctx.state.params.baseUrl}/session/${ctx.query.session}`)
+          .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
+          .send();
+      }
+
       const [form, contentType] = Internal.Form({
         schema,
         uiSchema: uischema,
@@ -92,7 +106,9 @@ class ServiceConnector extends Connector<Service> {
         state: {
           session: ctx.query.session,
         },
-        data: undefined,
+        data: existingSession?.body.output?.token
+          ? { companyDomain: existingSession.body.output.token.companyDomain }
+          : undefined,
         cancelUrl: '',
         windowTitle: 'Authorize BambooHR Access',
       });
@@ -110,12 +126,13 @@ class ServiceConnector extends Connector<Service> {
       }
 
       const { session } = formPayload.state;
+
       await superagent
         .put(`${ctx.state.params.baseUrl}/session/${session}`)
         .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
         .send({ output: formPayload.payload });
 
-      await tokenClient.put({ apiKey, companyDomain } as unknown, session);
+      await tokenClient.put({ apiKey, companyDomain }, session);
       return ctx.redirect(`${ctx.state.params.baseUrl}/session/${session}/callback`);
     });
 
@@ -161,24 +178,41 @@ class ServiceConnector extends Connector<Service> {
     );
 
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
-      // Adjust the configuration elements here
-      ctx.body.schema = schema;
-      ctx.body.uischema = uischema;
+      // Use production is enabled always by default
+      ctx.body.schema.properties.useProduction.options.readonly = true;
     });
 
     // Webhook management
     this.router.post(
-      '/api/webhook',
+      '/api/webhook/:lookupKey',
       this.middleware.validate({
         body: Joi.object({
-          webhookId: Joi.string().required(),
-          id: Joi.string().required(),
-          privateKey: Joi.string().required(),
+          name: Joi.string().required(),
+          monitorFields: Joi.array().items(Joi.string()).required().min(1),
+          postFields: Joi.object().optional().min(1),
+          frequency: Joi.object({
+            hour: Joi.number().allow(null).min(0).max(23),
+            minute: Joi.number().allow(null).min(0).max(59),
+            day: Joi.number().allow(null).min(1).max(31),
+            month: Joi.number().allow(null).min(1).max(12),
+          })
+            .optional()
+            .min(1),
+          limit: Joi.object({
+            times: Joi.number(),
+            seconds: Joi.number(),
+          })
+            .optional()
+            .min(1),
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.registerWebhook(ctx);
+        ctx.state.tokenClient = this.createIdentityClient(ctx);
+        const { apiKey, companyDomain } = this.sanitizeCredentials(
+          await this.ensureAccessToken(ctx, ctx.params.lookupKey)
+        );
+        ctx.body = await this.service.registerWebhook(ctx, apiKey, companyDomain);
       }
     );
 
@@ -196,10 +230,10 @@ class ServiceConnector extends Connector<Service> {
     );
 
     this.router.delete(
-      '/api/webhook/:id',
+      '/api/webhook/:webhookId',
       this.middleware.validate({
         params: Joi.object({
-          id: Joi.number().required(),
+          webhookId: Joi.string().required(),
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -208,13 +242,16 @@ class ServiceConnector extends Connector<Service> {
       }
     );
 
-    this.router.post('/api/fusebit/webhook/event/:webhookId/:eventType', async (ctx: Connector.Types.Context) => {
-      await this.service.handleWebhookEvent(ctx);
-    });
+    this.router.post(
+      '/api/fusebit/webhook/event/:webhookId/action/:eventType',
+      async (ctx: Connector.Types.Context) => {
+        await this.service.handleWebhookEvent(ctx);
+      }
+    );
   }
 }
 
 const connector = new ServiceConnector();
 
 export default connector;
-export { ServiceConnector };
+export { ServiceConnector, Types };

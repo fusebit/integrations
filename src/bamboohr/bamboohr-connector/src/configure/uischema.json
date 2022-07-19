@@ -10,7 +10,10 @@
           "elements": [
             {
               "type": "Control",
-              "scope": "#/properties/apiKey"
+              "scope": "#/properties/apiKey",
+              "options": {
+                "format": "password"
+              }
             },
             {
               "type": "Control",

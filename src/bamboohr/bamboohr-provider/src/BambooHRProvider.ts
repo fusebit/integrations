@@ -1,8 +1,9 @@
+import { Types } from '@fusebit-int/bamboohr-connector';
 import { Internal } from '@fusebit-int/framework';
-import { BambooHRClient } from './BambooHRClient';
-import BambooHRWebhook from './BambooHRWebhook';
 
-type FusebitBambooHRClient = BambooHRClient & { fusebit?: Internal.Types.IFusebitCredentials };
+import BambooHRWebhook from './BambooHRWebhook';
+import BasicAuthClient from './BasicAuthClient';
+import { FusebitBambooHRClient } from './types';
 
 export default class BambooHRProvider extends Internal.Provider.Activator<FusebitBambooHRClient> {
   /*
@@ -10,11 +11,19 @@ export default class BambooHRProvider extends Internal.Provider.Activator<Fusebi
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitBambooHRClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitBambooHRClient = new BambooHRClient(ctx, {
+    const { apiKey, companyDomain } = (credentials as unknown) as Types.BambooHRToken;
+    const client: FusebitBambooHRClient = new BasicAuthClient(
+      (url: string) => `https://api.bamboohr.com/api/gateway.php/${companyDomain}/v1/${url}`,
+      credentials.connectorId,
+      apiKey
+    );
+
+    client.fusebit = {
       credentials,
       lookupKey,
       connectorId: this.config.entityId,
-    });
+    };
+
     return client;
   }
 

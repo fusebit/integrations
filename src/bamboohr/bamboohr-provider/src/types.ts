@@ -1,37 +1,10 @@
-export type BambooHRToken = {
-  api_key: string;
-  company_domain: string;
-};
+import { Types } from '@fusebit-int/bamboohr-connector';
+import { Internal } from '@fusebit-int/framework';
 
-export interface IBambooHRWebhookFrequency {
-  hour?: number;
-  minute?: number;
-  day?: number;
-  month?: number;
-}
-
-export interface IBambooHRWebhookLimit {
-  times: number;
-  seconds: number;
-}
-
-export interface IBambooHRWebhook {
-  name: string;
-  monitorFields: string[];
-  postFields: Record<string, any>;
-  frequency?: IBambooHRWebhookFrequency;
-  limit?: IBambooHRWebhookLimit;
-}
-
-export interface IBambooHRWebhookResponse extends IBambooHRWebhook {
-  id: number;
-  created: string;
-  lastSent: string;
-  url: string;
-  format: string;
-  privateKey: string;
-}
+import BasicAuthClient from './BasicAuthClient';
 
 export interface IBambooHRWebhookList {
-  webhooks: Omit<IBambooHRWebhookResponse, 'privateKey'>[];
+  webhooks: Omit<Types.IBambooHRWebhookResponse, 'privateKey'>[];
 }
+
+export type FusebitBambooHRClient = BasicAuthClient & { fusebit?: Internal.Types.IFusebitCredentials };

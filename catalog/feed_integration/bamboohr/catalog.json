@@ -11,7 +11,25 @@
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/bamboohr#creating-your-own-bamboohr-app",
     "sampleConfig": {
-      "isEnabled": false
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "The new employee was successfully added to your BambooHR organization",
+        "postFail": "Oops! Something went wrong and we couldn't add your new employee",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your employee directory from BambooHR",
+        "itemName": "Employee",
+        "properties": [
+          {
+            "name": "displayName",
+            "label": "Diplay name"
+          },
+          {
+            "name": "jobTitle",
+            "label": "Job Title"
+          }
+        ]
+      }
     }
   },
   "configuration": {

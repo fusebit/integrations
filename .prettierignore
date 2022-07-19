@@ -22,6 +22,10 @@ lib-cov
 coverage
 *.lcov
 
+# Salesforce Apex
+*.cls
+*.trigger
+
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release

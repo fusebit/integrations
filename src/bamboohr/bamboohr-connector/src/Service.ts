@@ -1,14 +1,10 @@
-import { IncomingMessage } from 'http';
 import crypto from 'crypto';
 
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
-type BambooHRRequest = IncomingMessage & { body?: any; path: string };
-interface WebhookInfo {
-  webhookId: string;
-  eventType: string;
-}
+import WebhookManager from './WebhookManager';
+import { IWebhookUrlParts } from './types';
 
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
@@ -17,33 +13,30 @@ class Service extends OAuthConnector.Service {
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    return [`company_domain/${encodeURIComponent(token.companyDomain)}`];
+    return [`company_domain/${token.companyDomain}`];
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any) {
     return `company_domain/${event.companyDomain}`;
   }
 
-  private getWebhookInfoFromRequest(ctx: Connector.Types.Context): WebhookInfo {
-    const [, webhookInfo] = (ctx.req as BambooHRRequest).path.split('/api/fusebit/webhook/event/');
-    const [webhookId, eventType] = webhookInfo.split('/');
-    return { webhookId, eventType };
+  private getWebhookInfoFromRequest(ctx: Connector.Types.Context): IWebhookUrlParts {
+    const [, path] = ctx.path.split('/event/');
+    const [webhookId, eventType] = path.split('/action/');
+    return {
+      webhookId,
+      eventType,
+      path,
+    };
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    const req = ctx.req as BambooHRRequest;
+    const req = ctx.req;
     const timestamp = req.headers['x-bamboohr-timestamp'];
-    const userAgent = req.headers['user-agent'];
     const signature = req.headers['x-bamboohr-signature'] as string;
     const { webhookId, eventType } = this.getWebhookInfoFromRequest(ctx);
 
-    if (
-      !timestamp ||
-      !signature ||
-      !webhookId ||
-      !eventType ||
-      userAgent !== 'BambooHR-WebHooks/1.0 (+https://www.bamboohr.com)'
-    ) {
+    if (!timestamp || !signature || !webhookId || !eventType) {
       return false;
     }
 
@@ -81,26 +74,28 @@ class Service extends OAuthConnector.Service {
     return `webhook/${webhookId}`;
   };
 
-  public registerWebhook = async (ctx: Connector.Types.Context) => {
-    const { webhookId, id, privateKey } = ctx.req.body;
+  public registerWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+    const webhookManager = new WebhookManager({
+      ctx,
+      apiKey,
+      companyDomain,
+    });
+
+    // Create the Webhook at BambooHR
+    const { webhookId, privateKey, id } = await webhookManager.create(ctx.req.body);
+
+    // Register the Webhook in Fusebit
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
     if (webhookStorage) {
       return (ctx.status = 409);
     }
     const createdTime = Date.now();
     await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { privateKey, createdTime, id } });
-    await this.utilities.setData(ctx, this.getStorageKey(id), { data: { webhookId, createdTime } });
   };
 
   public deleteWebhook = async (ctx: Connector.Types.Context) => {
-    const { id } = ctx.params;
-    const bamboohrWebhook = await this.getFusebitWebhook(ctx, id);
-    if (!bamboohrWebhook) {
-      return (ctx.status = 404);
-    }
-    const { webhookId } = bamboohrWebhook.data;
+    const { webhookId } = ctx.params;
     await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
-    await this.utilities.deleteData(ctx, this.getStorageKey(id));
   };
 }
 

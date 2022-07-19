@@ -6,7 +6,7 @@
       "type": "string"
     },
     "companyDomain": {
-      "title": "Company Domain",
+      "title": "Company Domain ([companyname].bamboohr.com)",
       "type": "string"
     }
   },
