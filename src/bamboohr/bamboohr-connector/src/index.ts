@@ -155,7 +155,8 @@ class ServiceConnector extends Connector<Service> {
           return ctx.throw(error);
         }
 
-        let { apiKey, companyDomain } = payload;
+        let { apiKey } = payload;
+        const { companyDomain } = payload;
         const { session } = state;
 
         const sessionInfo = await superagent

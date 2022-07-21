@@ -6,12 +6,7 @@ import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
 import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
 
-const sampleCtx: any = {
-  req: { headers: { ...sampleHeaders }, body: sampleEvent },
-  path: '/webhook/event/303098f2-780c-4951-9dc8-81a272a969ff/action/onEmployeeChange',
-  state: { manager: { config: { configuration: sampleConfig.configuration } } },
-  throw: jest.fn(),
-};
+let sampleCtx: any;
 
 const companyDomain = 'fusebit.bamboohr.com';
 const webhookId = '303098f2-780c-4951-9dc8-81a272a969ff';
@@ -35,6 +30,12 @@ beforeEach(() => {
   service = connector.service;
   service.utilities.getData = jest.fn(getData);
   service.utilities.setData = jest.fn(setData);
+  sampleCtx = {
+    req: { headers: { ...sampleHeaders }, body: sampleEvent },
+    path: '/webhook/event/303098f2-780c-4951-9dc8-81a272a969ff/action/onEmployeeChange',
+    state: { manager: { config: { configuration: sampleConfig.configuration } } },
+    throw: jest.fn(),
+  };
 });
 
 describe('BambooHR Webhook Events', () => {
@@ -83,6 +84,7 @@ describe('BambooHR Webhook Events', () => {
       data: {
         webhookId,
         privateKey,
+        id: '1',
       },
     });
     const eventAuthId = connector.service.getAuthIdFromEvent(ctx, sampleBody);
@@ -95,7 +97,7 @@ describe('BambooHR Webhook Events', () => {
         expect(body).toEqual({
           payload: [
             {
-              data: sampleBody,
+              data: { ...sampleBody, webhook: { id: '1' } },
               entityId: Constants.connectorId,
               eventType: eventType,
               webhookAuthId: eventAuthId,
