@@ -46,8 +46,8 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRCli
     return updatedWebhook;
   };
 
-  public get = async (webhookId: number): Promise<Types.IBambooHRWebhookResponse> => {
-    return await this.client.get<Types.IBambooHRWebhookResponse>(`webhooks/${webhookId}`);
+  public get = async (id: number): Promise<Types.IBambooHRWebhookResponse> => {
+    return await this.client.get<Types.IBambooHRWebhookResponse>(`webhooks/${id}`);
   };
 
   public list = async (): Promise<IBambooHRWebhookList> => {
@@ -63,14 +63,9 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRCli
   };
 
   public delete = async (id: number) => {
-    await this.client.delete(`webhooks/${id}`);
-
-    // Remove webhook from Fusebit
     const params = this.ctx.state.params;
     const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
-    const { url } = await this.get(id);
-    const { webhookId } = this.getWebhookUrlParts(url);
-    const webhookPath = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${webhookId}`;
+    const webhookPath = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${this.lookupKey}/${id}`;
     await superagent.delete(webhookPath).set('Authorization', `Bearer ${params.functionAccessToken}`).send();
   };
 

@@ -52,6 +52,13 @@ class WebhookManager {
 
     return { ...createdWebhook, webhookId };
   }
+
+  async delete(id: number): Promise<IBambooHRWebhookResponse> {
+    const params = this.ctx.state.params;
+    const webhookToDelete = await this.makeRequest<IBambooHRWebhookResponse>('get', `webhooks/${id}`, params.entityId);
+    const response = await this.makeRequest<string>('delete', `webhooks/${id}`, params.entityId);
+    return webhookToDelete;
+  }
 }
 
 export default WebhookManager;

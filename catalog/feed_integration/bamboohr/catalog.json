@@ -22,7 +22,7 @@
         "properties": [
           {
             "name": "displayName",
-            "label": "Diplay name"
+            "label": "Diplay Name"
           },
           {
             "name": "jobTitle",

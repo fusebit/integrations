@@ -1,4 +1,4 @@
-async function bambooHRGetWebhookLogs(ctx, webhookId) {
+async function bambooHRGetWebhookLogs(ctx, id) {
   // For BambooHR Webhooks documentation, see https://documentation.bamboohr.com/reference/webhooks-1
   const bambooHRWebhookClient = await integration.webhook.getSdkByTenant(
     ctx,
@@ -6,7 +6,7 @@ async function bambooHRGetWebhookLogs(ctx, webhookId) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const webhook = await bambooHRWebhookClient.getLogs(webhookId);
+  const webhook = await bambooHRWebhookClient.getLogs(id);
 
   return webhook;
 }
@@ -16,7 +16,7 @@ const code = `
    * Get a BambooHR Webhook Logs
    * 
    * @param ctx {FusebitContext} Fusebit Context of the request
-   * @param webhookId {string} The identifier of the webhook to get
+   * @param id {string} The identifier of the webhook to get
    * @returns {object} BambooHR Webhook Logs
    */
   ${bambooHRGetWebhookLogs.toString()}

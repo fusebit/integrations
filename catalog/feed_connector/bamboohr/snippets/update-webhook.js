@@ -1,4 +1,4 @@
-async function bambooHRUpdateWebhook(ctx, webhookId) {
+async function bambooHRUpdateWebhook(ctx, id) {
   // For BambooHR Webhooks documentation, see https://documentation.bamboohr.com/reference/webhooks-1
   const bambooHRWebhookClient = await integration.webhook.getSdkByTenant(
     ctx,
@@ -7,7 +7,7 @@ async function bambooHRUpdateWebhook(ctx, webhookId) {
   );
 
   // This example updates the Employee data to monitor from the Webhook
-  const updatedWebhook = await bambooHRWebhookClient.update(webhookId, {
+  const updatedWebhook = await bambooHRWebhookClient.update(id, {
     name: 'onEmployeeNamechange',
     monitorFields: ['firstName', 'lastName'],
     postFields: {
@@ -24,7 +24,7 @@ const code = `
    * Update a BambooHR webhook
    * 
    * @param ctx {FusebitContext} Fusebit Context of the request
-   * @param webhookId {string} The identifier of the webhook to update
+   * @param id {string} The identifier of the webhook to update
    * @returns {object} Updated Webhook
    */
   ${bambooHRUpdateWebhook.toString()}

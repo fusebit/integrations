@@ -8,10 +8,10 @@ const code = `
  // Subscribe to Webhook events (learn more at https://documentation.bamboohr.com/reference/webhooks-1)
  integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
   const {
-    data: { employees, type}
+    data: { employees, type, webhook}
   } = ctx.req.body;
   
-  console.log('Received a webhook event', type);
+  console.log(\`Received an event of type \${type} for Webhook \${webhook.id}\`);
   const client = await integration.service.getSdk(
     ctx,
     ctx.params.componentName,

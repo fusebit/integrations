@@ -21,7 +21,11 @@ class Service extends OAuthConnector.Service {
   }
 
   private getWebhookInfoFromRequest(ctx: Connector.Types.Context): IWebhookUrlParts {
-    const [, path] = ctx.path.split('/event/');
+    return this.getWebhookInfoFromUrl(ctx.path);
+  }
+
+  private getWebhookInfoFromUrl(url: string): IWebhookUrlParts {
+    const [, path] = url.split('/event/');
     const [webhookId, eventType] = path.split('/action/');
     return {
       webhookId,
@@ -53,6 +57,14 @@ class Service extends OAuthConnector.Service {
       .digest('hex');
     const calculatedSignatureBuffer = Buffer.from(computedSignature, 'utf8');
     const requestSignatureBuffer = Buffer.from(signature, 'utf8');
+
+    // Inject useful webhook info here.
+    ctx.req.body = {
+      ...ctx.req.body,
+      webhook: {
+        id: fusebitWebhook.data.id,
+      },
+    };
 
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
   }
@@ -93,8 +105,15 @@ class Service extends OAuthConnector.Service {
     await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { privateKey, createdTime, id } });
   };
 
-  public deleteWebhook = async (ctx: Connector.Types.Context) => {
-    const { webhookId } = ctx.params;
+  public deleteWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+    const { id } = ctx.params;
+    const webhookManager = new WebhookManager({
+      ctx,
+      apiKey,
+      companyDomain,
+    });
+    const { url } = await webhookManager.delete((id as unknown) as number);
+    const { webhookId } = this.getWebhookInfoFromUrl(url);
     await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
   };
 }

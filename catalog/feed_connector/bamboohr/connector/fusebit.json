@@ -9,8 +9,8 @@
       "useProduction": true
     },
     "scope": "",
-    "clientId": "<% global.consts.random %>",
-    "clientSecret": "<% global.consts.random %>",
+    "clientId": "",
+    "clientSecret": "",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,
