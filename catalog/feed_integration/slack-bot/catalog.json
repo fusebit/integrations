@@ -1,6 +1,6 @@
 {
   "id": "slack-bot",
-  "name": "Slack Bot",
+  "name": "Slack",
   "smallIcon": "#/assets/slack.svg",
   "largeIcon": "#/assets/slackLarge.svg",
   "version": "5.2.0",

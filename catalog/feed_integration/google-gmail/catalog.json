@@ -1,10 +1,11 @@
 {
   "id": "google-gmail",
-  "name": "Google Gmail",
+  "name": "Gmail",
   "smallIcon": "#/assets/google-gmail.svg",
   "largeIcon": "#/assets/google-gmail.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["google"],
   "tags": {
     "catalog": "Email,Office"
   },

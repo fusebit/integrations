@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/hubspotlarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["slack-bot", "hubspot-crm-contacts"],
   "tags": {
     "catalog": "Messaging,CRM"
   },
