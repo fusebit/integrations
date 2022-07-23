@@ -1,15 +1,23 @@
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
-import WebhookManager from './WebhookManager';
-import { IWebhookUrlParts } from './types';
+import { IBambooHRWebhook, IBambooHRWebhookResponse, IWebhookUrlParts } from './types';
+import Client from './Client';
 
 class Service extends OAuthConnector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     const { eventType } = this.getWebhookInfoFromRequest(ctx);
-    return [{ ...ctx.req.body, type: eventType, companyDomain: `${ctx.req.headers['company-domain']}.bamboohr.com` }];
+    return [
+      {
+        ...ctx.req.body,
+        webhook: ctx.state.webhook,
+        type: eventType,
+        companyDomain: `${ctx.req.headers['company-domain']}.bamboohr.com`,
+      },
+    ];
   }
 
   public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
@@ -59,11 +67,8 @@ class Service extends OAuthConnector.Service {
     const requestSignatureBuffer = Buffer.from(signature, 'utf8');
 
     // Inject useful webhook info here.
-    ctx.req.body = {
-      ...ctx.req.body,
-      webhook: {
-        id: fusebitWebhook.data.id,
-      },
+    ctx.state.webhook = {
+      id: fusebitWebhook.data.id,
     };
 
     return crypto.timingSafeEqual(calculatedSignatureBuffer, requestSignatureBuffer);
@@ -86,15 +91,36 @@ class Service extends OAuthConnector.Service {
     return `webhook/${webhookId}`;
   };
 
+  private sanitizeWebhookData = (data: IBambooHRWebhook) => {
+    // We use the Webhook name property to identify the event type
+    data.name = (data.name || 'bamboohr-event').replace(/\s/g, '-');
+    return { ...data };
+  };
+
+  private buildWebhookEventUrl = (ctx: Connector.Types.Context, webhookId: string, eventType: string) => {
+    const { subscriptionId, endpoint, accountId, entityId } = ctx.state.params;
+    const baseUrl = `${endpoint}/v2/account/${accountId}/subscription/${subscriptionId}`;
+    return `${baseUrl}/connector/${entityId}/api/fusebit/webhook/event/${webhookId}/action/${eventType}`;
+  };
+
   public registerWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
-    const webhookManager = new WebhookManager({
-      ctx,
+    const webhookData = this.sanitizeWebhookData(ctx.req.body);
+    const client = new Client({
       apiKey,
       companyDomain,
     });
 
     // Create the Webhook at BambooHR
-    const { webhookId, privateKey, id } = await webhookManager.create(ctx.req.body);
+    const webhookId = uuidv4();
+    const { entityId } = ctx.state.params;
+    const webhookUrl = this.buildWebhookEventUrl(ctx, webhookId, webhookData.name);
+    // Register the Webhook in BambooHR.
+    const createdWebhook = await client.makeRequest<IBambooHRWebhookResponse>('post', 'webhooks', entityId, {
+      ...webhookData,
+      url: webhookUrl,
+      format: 'json',
+      includeCompanyDomain: true,
+    });
 
     // Register the Webhook in Fusebit
     const webhookStorage = await this.getFusebitWebhook(ctx, webhookId);
@@ -102,17 +128,42 @@ class Service extends OAuthConnector.Service {
       return (ctx.status = 409);
     }
     const createdTime = Date.now();
+    const { privateKey, id } = createdWebhook;
+
     await this.utilities.setData(ctx, this.getStorageKey(webhookId), { data: { privateKey, createdTime, id } });
+    // Prevent exposing the privateKey (only returned for Webhook creation)
+    return { ...createdWebhook, privateKey: '' };
   };
 
-  public deleteWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+  public updateWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+    const webhookData = this.sanitizeWebhookData(ctx.req.body);
     const { id } = ctx.params;
-    const webhookManager = new WebhookManager({
-      ctx,
+    const { entityId } = ctx.state.params;
+    const client = new Client({
       apiKey,
       companyDomain,
     });
-    const { url } = await webhookManager.delete((id as unknown) as number);
+    const { url } = await client.makeRequest<IBambooHRWebhookResponse>('get', `webhooks/${id}`, entityId);
+    const { webhookId } = this.getWebhookInfoFromUrl(url);
+    const webhookUrl = this.buildWebhookEventUrl(ctx, webhookId, webhookData.name);
+    const updatedWebhook = await client.makeRequest<IBambooHRWebhookResponse>('put', `webhooks/${id}`, entityId, {
+      ...webhookData,
+      url: webhookUrl,
+      format: 'json',
+      includeCompanyDomain: true,
+    });
+
+    return updatedWebhook;
+  };
+
+  public deleteWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+    const { id, entityId } = ctx.params;
+    const client = new Client({
+      apiKey,
+      companyDomain,
+    });
+    const { url } = await client.makeRequest<IBambooHRWebhookResponse>('get', `webhooks/${id}`, entityId);
+    await client.makeRequest<string>('delete', `webhooks/${id}`, entityId);
     const { webhookId } = this.getWebhookInfoFromUrl(url);
     await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
   };

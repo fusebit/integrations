@@ -99,17 +99,15 @@ class ServiceConnector extends Connector<Service> {
       this.middleware.validate({
         query: Joi.object({
           session: Joi.string().required(),
-          redirect_uri: Joi.string().required(),
+          redirect_uri: Joi.string().uri().required(),
         }),
       }),
       async (ctx: Connector.Types.Context) => {
+        const tokenClient = (ctx.state.tokenClient = this.createSessionClient(ctx));
         // Get content for an existing session
         let existingSession = null;
         if (ctx.query.session) {
-          existingSession = await superagent
-            .get(`${ctx.state.params.baseUrl}/session/${ctx.query.session}`)
-            .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
-            .send();
+          existingSession = await tokenClient.get(ctx.query.session);
         }
 
         const [form, contentType] = Internal.Form({
@@ -120,16 +118,20 @@ class ServiceConnector extends Connector<Service> {
           state: {
             session: ctx.query.session,
           },
-          data: existingSession?.body.output?.token
-            ? { companyDomain: existingSession.body.output.token.companyDomain, apiKey: '__PLACEHOLDER__' }
+          data: existingSession?.companyDomain
+            ? { companyDomain: existingSession.companyDomain, apiKey: '__PLACEHOLDER__' }
             : undefined,
-          cancelUrl: '',
+          cancelUrl: `${ctx.state.params.baseUrl}/api/session/${ctx.query.session}/cancel`,
           windowTitle: 'Authorize BambooHR Access',
         });
         ctx.body = form;
         ctx.header['Content-Type'] = contentType;
       }
     );
+
+    this.router.post('/api/session/:session/cancel', async (ctx) => {
+      ctx.body = 'The process has been canceled; please start over to authorize access to your BambooHR account.';
+    });
 
     this.router.post(
       '/api/form/api-key',
@@ -158,14 +160,10 @@ class ServiceConnector extends Connector<Service> {
         let { apiKey } = payload;
         const { companyDomain } = payload;
         const { session } = state;
+        const sessionInfo = await tokenClient.get(session);
 
-        const sessionInfo = await superagent
-          .get(`${ctx.state.params.baseUrl}/session/${session}`)
-          .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`)
-          .send();
-
-        if (sessionInfo?.body.output?.token?.apiKey) {
-          apiKey = sessionInfo?.body.output?.token?.apiKey;
+        if (sessionInfo?.apiKey && apiKey === '__PLACEHOLDER__') {
+          apiKey = sessionInfo.apiKey;
         }
 
         await tokenClient.put({ apiKey, companyDomain }, session);
@@ -176,6 +174,11 @@ class ServiceConnector extends Connector<Service> {
     this.router.get(
       '/api/session/:lookupKey/token',
       this.middleware.authorizeUser('connector:execute'),
+      this.middleware.validate({
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
+        }),
+      }),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createSessionClient(ctx);
         await getToken(ctx);
@@ -188,6 +191,11 @@ class ServiceConnector extends Connector<Service> {
 
     this.router.get(
       '/api/:lookupKey/token',
+      this.middleware.validate({
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createIdentityClient(ctx);
@@ -197,6 +205,11 @@ class ServiceConnector extends Connector<Service> {
 
     this.router.delete(
       '/api/:lookupKey',
+      this.middleware.validate({
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createIdentityClient(ctx);
@@ -206,6 +219,11 @@ class ServiceConnector extends Connector<Service> {
 
     this.router.get(
       '/api/:lookupKey/health',
+      this.middleware.validate({
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createIdentityClient(ctx);
@@ -215,7 +233,8 @@ class ServiceConnector extends Connector<Service> {
     );
 
     this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      // Use production is enabled always by default
+      // This connector only supports an API Key asked to the user during the authorization flow.
+      // Custom connector configuration is disabled by default.
       ctx.body = {
         schema: {
           properties: {
@@ -231,34 +250,55 @@ class ServiceConnector extends Connector<Service> {
       return next();
     });
 
+    const webhookSchema = Joi.object({
+      name: Joi.string().required(),
+      monitorFields: Joi.array().items(Joi.string()).required().min(1),
+      postFields: Joi.object().optional().min(1),
+      frequency: Joi.object({
+        hour: Joi.number().allow(null).min(0).max(23),
+        minute: Joi.number().allow(null).min(0).max(59),
+        day: Joi.number().allow(null).min(1).max(31),
+        month: Joi.number().allow(null).min(1).max(12),
+      })
+        .optional()
+        .min(1),
+      limit: Joi.object({
+        times: Joi.number(),
+        seconds: Joi.number(),
+      })
+        .optional()
+        .min(1),
+    });
+
     // Webhook management
     this.router.post(
       '/api/webhook/:lookupKey',
       this.middleware.validate({
-        body: Joi.object({
-          name: Joi.string().required(),
-          monitorFields: Joi.array().items(Joi.string()).required().min(1),
-          postFields: Joi.object().optional().min(1),
-          frequency: Joi.object({
-            hour: Joi.number().allow(null).min(0).max(23),
-            minute: Joi.number().allow(null).min(0).max(59),
-            day: Joi.number().allow(null).min(1).max(31),
-            month: Joi.number().allow(null).min(1).max(12),
-          })
-            .optional()
-            .min(1),
-          limit: Joi.object({
-            times: Joi.number(),
-            seconds: Joi.number(),
-          })
-            .optional()
-            .min(1),
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
         }),
+        body: webhookSchema,
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         const { apiKey, companyDomain } = await this.getCredentials(ctx);
         ctx.body = await this.service.registerWebhook(ctx, apiKey, companyDomain);
+      }
+    );
+
+    this.router.put(
+      '/api/webhook/:lookupKey/:id',
+      this.middleware.validate({
+        params: Joi.object({
+          lookupKey: Joi.string().required(),
+          id: Joi.number().required(),
+        }),
+        body: webhookSchema,
+      }),
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        const { apiKey, companyDomain } = await this.getCredentials(ctx);
+        ctx.body = await this.service.updateWebhook(ctx, apiKey, companyDomain);
       }
     );
 
@@ -279,6 +319,12 @@ class ServiceConnector extends Connector<Service> {
 
     this.router.post(
       '/api/fusebit/webhook/event/:webhookId/action/:eventType',
+      this.middleware.validate({
+        params: Joi.object({
+          webhookId: Joi.string().required(),
+          eventType: Joi.string().required(),
+        }),
+      }),
       async (ctx: Connector.Types.Context) => {
         await this.service.handleWebhookEvent(ctx);
       }

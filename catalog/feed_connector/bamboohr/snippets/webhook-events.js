@@ -1,31 +1,30 @@
+async function bambooHRWebhookEventRoute() {
+  // For BambooHR Webhooks documentation, see https://documentation.bamboohr.com/reference/webhooks-1
+  integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
+    const {
+      data: { employees, type, webhook },
+    } = ctx.req.body;
+
+    console.log(`Received an event of type ${type} for Webhook ${webhook.id}`);
+    const client = await integration.service.getSdk(ctx, ctx.params.componentName, ctx.req.body.installIds[0]);
+
+    for await (const { id, changedFields } of employees) {
+      const employee = await client.get(`employees/${id}?fields=displayName,jobTitle`);
+      console.log(
+        `The employee ${employee.displayName} (${employee.jobTitle}) was updated with the fields ${changedFields.join(
+          ','
+        )}`
+      );
+    }
+  });
+}
+
 const code = `
 /**
  * Use Fusebit's Event Handler to respond to BambooHR Webhook Events
- * 
- * @param ctx {FusebitContext} Fusebit Context
  */
-
- // Subscribe to Webhook events (learn more at https://documentation.bamboohr.com/reference/webhooks-1)
- integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
-  const {
-    data: { employees, type, webhook}
-  } = ctx.req.body;
-  
-  console.log(\`Received an event of type \${type} for Webhook \${webhook.id}\`);
-  const client = await integration.service.getSdk(
-    ctx,
-    ctx.params.componentName,
-    ctx.req.body.installIds[0]
-  );
-
-
-  for await (const { id, changedFields } of employees) {
-    const employee = await client.get(\`employees/\${id}?fields=displayName,jobTitle\`);
-    console.log(\`The employee \${employee.displayName} (\${employee.jobTitle}) was updated with the fields \${changedFields.join(',')}\`);
-  }
- });
-
-`;
+  ${bambooHRWebhookEventRoute.toString()}
+  `;
 
 module.exports = {
   name: 'Respond to BambooHR Webhook Events',
