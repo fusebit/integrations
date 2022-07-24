@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/pagerduty.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["pagerduty", "discord"],
   "tags": {
     "catalog": "Messaging,Dev Tools,Operations"
   },

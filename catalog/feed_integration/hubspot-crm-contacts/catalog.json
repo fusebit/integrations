@@ -1,6 +1,6 @@
 {
   "id": "hubspot-crm-contacts",
-  "name": "HubSpot Contacts sync",
+  "name": "HubSpot",
   "smallIcon": "#/assets/hubspot.svg",
   "largeIcon": "#/assets/hubspotlarge.svg",
   "version": "5.2.0",
