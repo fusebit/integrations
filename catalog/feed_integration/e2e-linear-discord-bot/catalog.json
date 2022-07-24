@@ -2,7 +2,7 @@
   "id": "e2e-linear-discord-bot",
   "name": "Linear Discord Bot",
   "smallIcon": "#/assets/linear.svg",
-  "largeIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linearLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "parent": ["linear", "discord"],
