@@ -2,7 +2,7 @@
   "id": "microsoft-teams",
   "name": "Microsoft Teams",
   "smallIcon": "#/assets/microsoft-teams.svg",
-  "largeIcon": "#/assets/microsoft-teams.svg",
+  "largeIcon": "#/assets/microsoft-teamsLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

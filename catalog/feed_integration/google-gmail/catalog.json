@@ -2,7 +2,7 @@
   "id": "google-gmail",
   "name": "Gmail",
   "smallIcon": "#/assets/google-gmail.svg",
-  "largeIcon": "#/assets/google-gmail.svg",
+  "largeIcon": "#/assets/google-gmailLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "parent": ["google"],

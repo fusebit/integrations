@@ -2,7 +2,7 @@
   "id": "trello-planned",
   "name": "Trello",
   "smallIcon": "#/assets/trello.svg",
-  "largeIcon": "#/assets/trello.svg",
+  "largeIcon": "#/assets/trelloLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "outOfPlan": true,

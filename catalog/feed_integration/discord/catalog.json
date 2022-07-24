@@ -2,7 +2,7 @@
   "id": "discord",
   "name": "Discord",
   "smallIcon": "#/assets/discord.svg",
-  "largeIcon": "#/assets/discord.svg",
+  "largeIcon": "#/assets/discordLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

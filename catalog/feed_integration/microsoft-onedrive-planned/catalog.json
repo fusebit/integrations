@@ -2,7 +2,7 @@
   "id": "microsoft-onedrive-planned",
   "name": "Microsoft OneDrive",
   "smallIcon": "#/assets/microsoft-onedrive.svg",
-  "largeIcon": "#/assets/microsoft-onedrive.svg",
+  "largeIcon": "#/assets/microsoft-onedriveLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "outOfPlan": true,
