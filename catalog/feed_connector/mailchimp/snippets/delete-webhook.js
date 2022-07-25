@@ -18,7 +18,7 @@ const code = `
    * @param ctx {FusebitContext} Fusebit Context of the request
    * @param listId {string} The identifier of the audience
    * @param webhookId {string} The identifier of the webhook to remove
-   * @returns {object} Newly created webhook.
+   * @returns {object} Deleted webhook response.
    */
   ${mailchimpDeleteWebhook.toString()}
   `;

@@ -1,10 +1,17 @@
 import nock from 'nock';
-import { ServiceConnector } from '../src';
+import { Connector } from '@fusebit-int/framework';
 
+import { ServiceConnector } from '../src';
 import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
-import { sampleHeaders, sampleConfig, sampleEvent } from './sampleData';
-import { Connector } from '@fusebit-int/framework';
+import { sampleEvent, sampleHeaders, sampleConfig } from './sampleData';
+
+let sampleCtx: any;
+
+const companyDomain = 'fusebit.bamboohr.com';
+const webhookId = '303098f2-780c-4951-9dc8-81a272a969ff';
+const privateKey = '123b929362d51613054f71e5e5d4bf2c';
+const sampleBody = { ...sampleEvent, companyDomain, type: 'onEmployeeChange' };
 
 const testMemoryStorage: Record<string, Connector.Types.StorageBucketItem | undefined> = {};
 
@@ -18,97 +25,70 @@ const getData = async (ctx: object, key: string) => {
 let service: any;
 let connector: Connector;
 
-const createMockConnector = () => {
+beforeEach(() => {
   connector = new ServiceConnector();
   service = connector.service;
   service.utilities.getData = jest.fn(getData);
   service.utilities.setData = jest.fn(setData);
-};
-
-const sampleCtx: any = {
-  req: { headers: { ...sampleHeaders }, body: sampleEvent },
-  state: { manager: { config: { configuration: sampleConfig.configuration } } },
-  params: { webhookId: 'mango' },
-  query: {
-    secret: 'kiwi',
-  },
-  throw: jest.fn(),
-};
-
-beforeEach(() => {
-  createMockConnector();
+  sampleCtx = {
+    req: { headers: { ...sampleHeaders }, body: sampleEvent },
+    path: '/webhook/event/303098f2-780c-4951-9dc8-81a272a969ff/action/onEmployeeChange',
+    state: { manager: { config: { configuration: sampleConfig.configuration } } },
+    throw: jest.fn(),
+  };
 });
 
-describe('Mailchimp Webhook Events', () => {
+describe('BambooHR Webhook Events', () => {
   test('Validate: getEventsFromPayload', async () => {
-    expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
+    expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleBody]);
   });
 
   test('Validate: getAuthIdFromEvent', async () => {
-    expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(sampleEvent.webhookId);
+    expect(service.getAuthIdFromEvent(sampleCtx, sampleEvent)).toBe(`company_domain/${sampleEvent.companyDomain}`);
   });
 
   test('Validate: validateWebhookEvent', async () => {
     service.utilities.getData.mockReturnValue({
       data: {
-        webhookId: sampleEvent.webhookId,
-        secret: 'kiwi',
+        webhookId,
+        privateKey,
       },
     });
 
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
-    expect(service.utilities.getData).toHaveBeenCalledWith(expect.anything(), `webhook/${sampleEvent.webhookId}`);
-  });
-
-  test('Validate: validateWebhookEvent fails with an invalid secret', async () => {
-    service.utilities.getData.mockReturnValue({
-      data: {
-        webhookId: sampleEvent.webhookId,
-        secret: 'invalid',
-      },
-    });
-
-    expect(await service.validateWebhookEvent(sampleCtx)).toBeFalsy();
-  });
-
-  test('Validate: validateWebhookEvent without a secret', async () => {
-    service.utilities.getData.mockReturnValue({
-      data: {
-        webhookId: sampleEvent.webhookId,
-      },
-    });
-    expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
+    expect(service.utilities.getData).toHaveBeenCalledWith(expect.anything(), `webhook/${webhookId}`);
   });
 
   test('Validate: initializationChallenge false', async () => {
     expect(await service.initializationChallenge(sampleCtx)).toBeFalsy();
   });
 
+  test('Validate: getTokenAuthId', async () => {
+    expect(await service.getTokenAuthId(sampleCtx, { companyDomain })).toStrictEqual([
+      `company_domain/${companyDomain}`,
+    ]);
+  });
+
   test('Validate: getWebhookEventType', async () => {
-    expect(service.getWebhookEventType(sampleEvent)).toBe(sampleEvent.type);
+    expect(service.getWebhookEventType(sampleBody)).toStrictEqual('onEmployeeChange');
   });
 
   test('Validate: Event to Fanout', async () => {
     const ctx = getContext();
     ctx.state = { ...ctx.state, ...sampleCtx.state };
     ctx.req = sampleCtx.req;
-    ctx.params = {
-      webhookId: 'mango',
-    };
-
-    ctx.query = {
-      secret: 'kiwi',
-    };
+    ctx.path = sampleCtx.path;
 
     const connector: any = new ServiceConnector();
     connector.service.utilities.getData.mockReturnValue({
       data: {
-        webhookId: sampleEvent.webhookId,
-        secret: 'kiwi',
+        webhookId,
+        privateKey,
+        id: '1',
       },
     });
-    const eventAuthId = connector.service.getAuthIdFromEvent(ctx, sampleEvent);
-    const eventType = connector.service.getWebhookEventType(sampleEvent);
+    const eventAuthId = connector.service.getAuthIdFromEvent(ctx, sampleBody);
+    const eventType = connector.service.getWebhookEventType(sampleBody);
 
     // Create mocked endpoints for each event.
     const scope = nock(ctx.state.params.baseUrl);
@@ -117,7 +97,7 @@ describe('Mailchimp Webhook Events', () => {
         expect(body).toEqual({
           payload: [
             {
-              data: sampleEvent,
+              data: { ...sampleBody, webhook: { id: '1' } },
               entityId: Constants.connectorId,
               eventType: eventType,
               webhookAuthId: eventAuthId,

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "apiKey": {
+      "title": "API Key",
+      "type": "string"
+    },
+    "companyDomain": {
+      "title": "Company Domain",
+      "type": "string"
+    }
+  },
+  "required": ["apiKey", "companyDomain"]
+}

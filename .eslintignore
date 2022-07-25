@@ -75,3 +75,7 @@ libm/
 
 *.json
 *.md
+
+# Salesforce Apex
+*.cls
+*.trigger
