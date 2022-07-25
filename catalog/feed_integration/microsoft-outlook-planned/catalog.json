@@ -2,7 +2,7 @@
   "id": "microsoft-outlook-planned",
   "name": "Microsoft Outlook",
   "smallIcon": "#/assets/microsoft-outlook.svg",
-  "largeIcon": "#/assets/microsoft-outlook.svg",
+  "largeIcon": "#/assets/microsoft-outlookLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "outOfPlan": true,

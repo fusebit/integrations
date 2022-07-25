@@ -2,7 +2,7 @@
   "id": "microsoft-excel-planned",
   "name": "Microsoft Excel",
   "smallIcon": "#/assets/microsoft-excel.svg",
-  "largeIcon": "#/assets/microsoft-excel.svg",
+  "largeIcon": "#/assets/microsoft-excelLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "outOfPlan": true,

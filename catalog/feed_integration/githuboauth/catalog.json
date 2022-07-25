@@ -2,7 +2,7 @@
   "id": "githuboauth",
   "name": "GitHub OAuth App",
   "smallIcon": "#/assets/github.svg",
-  "largeIcon": "#/assets/github.svg",
+  "largeIcon": "#/assets/githubLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "parent": ["githubapp"],
