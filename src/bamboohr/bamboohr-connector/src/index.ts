@@ -1,4 +1,3 @@
-import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 import { TokenClient, TokenSessionClient, TokenIdentityClient } from '@fusebit-int/oauth-connector';
 
@@ -93,6 +92,10 @@ class ServiceConnector extends Connector<Service> {
     super();
 
     const Joi = this.middleware.validate.joi;
+    const lookupKeySchema = Joi.string()
+      .regex(/^idn-[a-f0-9]{32}$/)
+      .required();
+
     // Override the authorize endpoint to render a Form requiring an API Key
     this.router.get(
       '/api/authorize',
@@ -184,7 +187,7 @@ class ServiceConnector extends Connector<Service> {
       this.middleware.authorizeUser('connector:execute'),
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
       }),
       async (ctx: Connector.Types.Context) => {
@@ -201,7 +204,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/:lookupKey/token',
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -215,7 +218,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/:lookupKey',
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -229,7 +232,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/:lookupKey/health',
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -283,7 +286,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/webhook/:lookupKey',
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
         body: webhookSchema,
       }),
@@ -298,7 +301,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/webhook/:lookupKey/:id',
       this.middleware.validate({
         params: Joi.object({
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
           id: Joi.number().required(),
         }),
         body: webhookSchema,
@@ -315,7 +318,7 @@ class ServiceConnector extends Connector<Service> {
       this.middleware.validate({
         params: Joi.object({
           id: Joi.number().required(),
-          lookupKey: Joi.string().required(),
+          lookupKey: lookupKeySchema,
         }),
       }),
       this.middleware.authorizeUser('connector:execute'),
@@ -329,7 +332,7 @@ class ServiceConnector extends Connector<Service> {
       '/api/fusebit/webhook/event/:webhookId/action/:eventType',
       this.middleware.validate({
         params: Joi.object({
-          webhookId: Joi.string().required(),
+          webhookId: Joi.string().guid().required(),
           eventType: Joi.string().required(),
         }),
       }),
