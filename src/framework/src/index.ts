@@ -70,6 +70,7 @@ module Internal {
     export type IncomingWebhookClient = typeof IncomingWebhookClient_;
     export type TokenSessionClient = TokenSessionClient_<any>;
     export type TokenIdentityClient = TokenIdentityClient_<any>;
+    export type BaseTokenClient = BaseTokenClient_<any>;
   }
   export namespace Types {
     export type Context = Context_;

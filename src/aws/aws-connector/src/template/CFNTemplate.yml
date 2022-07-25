@@ -1,0 +1,15 @@
+Resources:
+  fusebitcrossaccaccess:
+    Type: AWS::IAM::Role
+    RoleName: ##ROLE_NAME##
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: ##EXTERNAL_ID##
+            Effect: Allow
+            Principal:
+              AWS: '##BASE_ACCOUNT_ID##'
+        Version: '2012-10-17'
