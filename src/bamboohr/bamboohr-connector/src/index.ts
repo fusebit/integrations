@@ -244,8 +244,8 @@ class ServiceConnector extends Connector<Service> {
     );
 
     this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      // This connector only supports an API Key asked to the user during the authorization flow.
-      // Custom connector configuration is disabled by default.
+      // No current support for proxy credentials, as there's no demo account available for BambooHR. When
+      // that changes, add the necessary random clientId and clientSecret logic back into the catalog.
       ctx.body = {
         schema: {
           properties: {
