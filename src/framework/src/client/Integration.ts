@@ -10,6 +10,10 @@ interface IFusebitTask {
    */
   path: string;
   /**
+   * body Any payload to be dispatched to the task.
+   */
+  body?: any;
+  /**
    * headers Any headers that the task should include.
    */
   headers?: Record<string, string>;
@@ -243,6 +247,7 @@ export class Service extends EntityBase.ServiceBase {
       .set('User-Agent', 'fusebit/v2-sdk')
       // Set the headers after the authorization, to allow for overrides if necessary.
       .set({ ...task.headers, ...(notBefore ? { 'fusebit-task-not-before': notBefore } : {}) })
+      .send(task.body)
       .ok((r) => r.statusCode === 202);
     return response.body.location;
   };

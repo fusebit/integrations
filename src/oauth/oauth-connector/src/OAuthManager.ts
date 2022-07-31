@@ -112,8 +112,6 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     }
 
     try {
-      ctx.state.tokenClient = this.createSessionClient(ctx);
-
       if (!displaySplash) {
         await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
         return ctx.state.engine.redirectToCallback(ctx);
@@ -366,6 +364,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     });
 
     this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
+      ctx.state.tokenClient = this.createSessionClient(ctx);
       await this.handleCallback(ctx);
     });
   }
