@@ -24,13 +24,16 @@ fi
 TARGETDIR=${PREFIX}/${ENTITYTYPE}-${ENTITYID}
 
 # Get the function into the TARGETDIR
-mkdir -p ${TARGETDIR}
-rm -rf ${TARGETDIR}
-fuse function get -b ${ENTITYTYPE} ${ENTITYID} -d ${TARGETDIR}
+if [ ! -d ${TARGETDIR} ]; then
+  echo Pulling latest copy of ${ENTITYTYPE}/${ENTITYID} into ${TARGETDIR}
+  mkdir -p ${TARGETDIR}
+  rm -rf ${TARGETDIR}
+  fuse function get -b ${ENTITYTYPE} ${ENTITYID} -d ${TARGETDIR}
 
-# Add a 'name' to the package.json to avoid accidental 'unnamed' project confusion by lerna
-NEWPACKAGE=`cat ${TARGETDIR}/package.json | jq ".name = \"workspace-${ENTITYTYPE}-${ENTITYID}\"" | jq ".private = \"true\""`
-echo ${NEWPACKAGE} > ${TARGETDIR}/package.json
+  # Add a 'name' to the package.json to avoid accidental 'unnamed' project confusion by lerna
+  NEWPACKAGE=`cat ${TARGETDIR}/package.json | jq ".name = \"workspace-${ENTITYTYPE}-${ENTITYID}\"" | jq ".private = \"true\""`
+  echo ${NEWPACKAGE} > ${TARGETDIR}/package.json
+fi
 
 # Use lerna to create the symlinks for the function's node_modules directory
 lerna bootstrap
