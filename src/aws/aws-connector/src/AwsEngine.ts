@@ -1,10 +1,11 @@
 import { Connector, Internal } from '@fusebit-int/framework';
-import AWS, { S3 } from 'aws-sdk';
+import AWS from 'aws-sdk';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
+import * as templates from './template';
 
-const SESSION_TIMEOUT_DURATION = 5 * 60;
+const SESSION_TIMEOUT_DURATION = 5 * 60 * 60;
 const getTokenClient = (ctx: Internal.Types.Context) => ctx.state.tokenClient as Internal.Provider.BaseTokenClient;
 const ROLE_NAME = 'fusebit-aws-connector-role';
 
@@ -46,11 +47,11 @@ class AwsEngine {
           ExternalId: cfg.externalId,
           RoleSessionName: this.generateSessionName(),
           RoleArn: cfg.roleArn,
-          DurationSeconds: SESSION_TIMEOUT_DURATION,
         })
         .promise();
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
+      console.log(e);
       return undefined;
     }
   }
@@ -58,8 +59,8 @@ class AwsEngine {
   // Generate the configuration as YAML, technically it is possible for JSON to be applied
   // But for ease of reading, sticking to YAML
   private async generateCustomerCloudformation(ctx: Connector.Types.Context, externalId: string, roleName: string) {
-    return fs
-      .readFileSync('./template/CFNTemplate.yml', 'utf-8')
+    const baseFile = this.cfg.customTemplate?.cfnObject || templates.getCFNTemplate();
+    return baseFile
       .replace('##BASE_ACCOUNT_ID##', (await this.getBaseAccountId(ctx)) as string)
       .replace('##EXTERNAL_ID##', externalId)
       .replace('##ROLE_NAME##', roleName);
@@ -75,7 +76,9 @@ class AwsEngine {
       Key: bucketName.prefix ? `${bucketName.prefix}/${sessionId}` : sessionId,
     }).promise();
 
-    return `https://s3.amazonaws.com/${bucketName.name}`;
+    return `https://s3.amazonaws.com/${bucketName.name}/${
+      bucketName.prefix ? `${bucketName.prefix}/${sessionId}` : sessionId
+    }`;
   }
 
   private async CleanupS3(ctx: Connector.Types.Context, sessionId: string) {
@@ -99,14 +102,18 @@ class AwsEngine {
 
     const template = await this.generateCustomerCloudformation(ctx, externalId, roleName);
     const S3Url = await this.UploadS3(ctx, template, sessionId);
-    const consoleUrl = `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-  1#/stacks/create/review?templateUrl=${S3Url}&stackName=${
+    const consoleUrl = `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateUrl=${S3Url}&stackName=${
       this.cfg.stackName || 'connectorassumerolestack'
     }`;
 
-    let htmlTemplate = fs.readFileSync('template/installCfn.html', 'utf-8');
+    let htmlTemplate = templates.getInstallCfn();
     htmlTemplate = htmlTemplate.replace('##WINDOW_TITLE##', this.cfg.configPage.windowTitle || 'Configure AWS');
     htmlTemplate = htmlTemplate.replace('##S3_URL##', S3Url);
     htmlTemplate = htmlTemplate.replace('##S3_CONSOLE_URL##', consoleUrl);
+    htmlTemplate = htmlTemplate.replace(
+      '##FINAL_URL##',
+      `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`
+    );
     return htmlTemplate;
   }
 
@@ -149,7 +156,7 @@ class AwsEngine {
   }
 
   public getFinalCallbackUrl = async (ctx: Internal.Types.Context): Promise<string> => {
-    const url = new URL(`${this.cfg.mountUrl}/session/${ctx.query.state}/callback`);
+    const url = new URL(`${ctx.state.params.baseUrl}/session/${ctx.query.sessionId}/callback`);
     Object.entries<string>(ctx.request.query).forEach(([key, value]) => url.searchParams.append(key, value));
     return url.toString();
   };

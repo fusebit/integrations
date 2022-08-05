@@ -1,6 +1,0 @@
-The contracts all connectors implement:
-
-/api/configure: renders a JSON form for UI based configuration of the connector
-lives under *Manager.ts
-
-permission: connector:put

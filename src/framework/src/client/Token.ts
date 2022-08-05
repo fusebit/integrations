@@ -5,7 +5,7 @@ const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
 interface ITags extends Record<string, string | null> {}
 
-type ICreateTags<IToken> = ((token: IToken) => Promise<undefined>) | ((token: IToken) => ITags | undefined);
+type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
 
 type Entries<T extends Record<string, any>> = [keyof T, any][];

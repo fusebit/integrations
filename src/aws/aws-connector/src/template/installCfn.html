@@ -113,11 +113,7 @@
                 variant="outlined"
                 size="small"
                 onClick={() => {
-                  setSpinnerOpen(true);
-                  // Just making it so the tenant will chill down on making requests to the backend
-                  setTimeout(() => {
-                    setSpinnerOpen(false);
-                  }, 10000);
+                  window.location.href = '##FINAL_URL##';
                 }}
               >
                 Finish
@@ -127,9 +123,6 @@
         );
         return (
           <>
-            <Backdrop sx={{ color: '#fff', zIndex: (theme) => 10000 }} open={spinnerOpen}>
-              <CircularProgress color="inherit" />
-            </Backdrop>
             <Box
               style={{
                 width: 350,

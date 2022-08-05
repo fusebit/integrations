@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jest --config=./jest.config.ts",
     "tsc:version": "tsc --version",
-    "build": "tsc -b --pretty",
+    "build": "tsc -b --pretty && mkdir -p libc/template/ && cp -r src/template/ libc/template/",
     "dev": "tsc --watch --pretty",
     "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"

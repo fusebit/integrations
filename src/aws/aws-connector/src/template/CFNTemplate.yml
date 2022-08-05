@@ -1,8 +1,8 @@
 Resources:
   fusebitcrossaccaccess:
     Type: AWS::IAM::Role
-    RoleName: ##ROLE_NAME##
     Properties:
+      RoleName: ##ROLE_NAME##
       AssumeRolePolicyDocument:
         Statement:
           - Action: sts:AssumeRole

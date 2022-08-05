@@ -72,14 +72,14 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
       const sessionId = ctx.query.session;
       ctx.state.tokenClient = this.createSessionClient(ctx);
 
-      ctx.body = Internal.Form({
+      [ctx.body, ctx.headers['Content-Type']] = Internal.Form({
         schema: InstallUI.schema,
         uiSchema: InstallUI.uiSchema,
         state: {
           sessionId,
         },
         dialogTitle: 'AWS information',
-        submitUrl: 'cb',
+        submitUrl: 'authorize/cb',
         windowTitle: 'AWS information',
         // Not sure what the proper cancel url would be here
         cancelUrl: '/cancel',
@@ -92,10 +92,13 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
     // When everything is in place, redirect to a new page with a button to drop the user to the CFN
     // portal with instruction on how to connect everything
     this.router.post('/api/authorize/cb', async (ctx: Connector.Types.Context) => {
-      const { sessionId, ...configuration } = ctx.req.body;
+      const pl = JSON.parse(ctx.req.body.payload);
+      const configuration = pl.payload;
+      const { sessionId } = pl.state;
+      ctx.state.sessionId = sessionId;
       ctx.state.tokenClient = this.createSessionClient(ctx);
       // Check a sessionId and proper configuration is provided
-      if (!sessionId) {
+      if (!ctx.state.sessionId) {
         ctx.throw(403);
       }
 
@@ -104,14 +107,13 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
       }
 
       const engine: AwsEngine = ctx.state.engine;
-
       ctx.body = await engine.handleFirstInstallStep(ctx);
       ctx.type = 'html';
     });
 
-    this.router.post('/api/authorize/finalize', async (ctx: Connector.Types.Context) => {
+    this.router.get('/api/authorize/finalize', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);
-      ctx.redirect(await (ctx.state.engin as AwsEngine).getFinalCallbackUrl(ctx));
+      ctx.redirect(await (ctx.state.engine as AwsEngine).getFinalCallbackUrl(ctx));
     });
 
     this.router.get('/api/session/:lookupKey/health', async (ctx: Connector.Types.Context) => {
