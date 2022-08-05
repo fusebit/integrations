@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/hubspot#creating-your-own-hubspot-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/hubspot",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

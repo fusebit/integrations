@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/pagerduty#creating-your-own-pagerduty-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/pagerduty",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

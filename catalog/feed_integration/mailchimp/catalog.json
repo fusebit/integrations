@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/mailchimp#creating-your-own-mailchimp-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/constantcontact#creating-your-own-constantcontact-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

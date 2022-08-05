@@ -10,7 +10,8 @@
     "catalog": "Video"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/youtube#creating-your-own-youtube-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

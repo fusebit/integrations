@@ -10,7 +10,8 @@
     "catalog": "Project Management,Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord",
+    "configureAppDocUrl": "https://fusebit.io/blog/linear-discord-slash-commands/",
+    "integrationsDocUrl": "https://fusebit.io/blog/linear-discord-slash-commands/",
     "sampleConfig": {
       "isEnabled": false
     }

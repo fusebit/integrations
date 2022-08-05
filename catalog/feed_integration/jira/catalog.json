@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/jira#creating-your-own-jira-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/jira",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

@@ -10,7 +10,7 @@
     "catalog": "Messaging,Dev Tools"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord-slash-commands#creating-your-own-discord-slash-commands-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord#creating-your-own-discord-app",
     "sampleConfig": {
       "isEnabled": false
     }

@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/confluence#creating-your-own-confluence-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/confluence",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

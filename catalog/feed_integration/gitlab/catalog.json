@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/gitlab#creating-your-own-gitlab-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started",
     "sampleConfig": {
       "isEnabled": false
     }

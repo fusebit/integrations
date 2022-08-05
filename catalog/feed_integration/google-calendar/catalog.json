@@ -10,7 +10,8 @@
     "catalog": "Calendar,Office"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-calendar#creating-your-own-google-calendar-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,
