@@ -1,76 +1,60 @@
 {
   "type": "object",
   "properties": {
-    "mode": {
+    "sessionName": {
+      "title": "AssumeRole session name.",
+      "type": "string"
+    },
+    "bucketName": {
+      "title": "S3 bucket name",
+      "type": "string"
+    },
+    "bucketPrefix": {
+      "title": "Prefix for objects in S3",
+      "type": "string"
+    },
+    "stackName": {
+      "title": "The name of the CFN stack within the customer's AWS account.",
+      "type": "string"
+    },
+    "IAM": {
       "type": "object",
       "properties": {
-        "useProduction": {
-          "title": "Production Credentials",
-          "type": "boolean"
+        "accessKeyId": {
+          "type": "string",
+          "title": "IAM Access Key"
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "title": "IAM Secret Access Key"
+        },
+        "OTPSecret": {
+          "type": "string",
+          "title": "The OTP secret provided by AWS to generate one time tokens."
         }
       }
     },
-    "constants": {
+    "customTemplate": {
       "type": "object",
       "properties": {
-        "urls": {
-          "type": "object",
-          "properties": {
-            "callbackUrl": {
-              "title": "OAuth2 Redirect URL",
-              "type": "string",
-              "readOnly": true,
-              "copy": true
-            },
-            "webhookUrl": {
-              "title": "Webhook URL",
-              "type": "string",
-              "readOnly": true,
-              "copy": true
-            }
-          }
+        "cfnObject": {
+          "type": "string",
+          "title": "The Cloudformation template to utilize."
+        },
+        "roleName": {
+          "type": "string",
+          "title": "The name of the IAM role generated above."
         }
       }
     },
-    "authorizationUrl": {
-      "title": "Override the OAuth2 Authorization URL",
-      "type": "string"
-    },
-    "tokenUrl": {
-      "title": "Override the OAuth2 Token Request URL",
-      "type": "string"
-    },
-    "scope": {
-      "title": "Space separated scopes to request from the OAuth server",
-      "type": "string"
-    },
-    "clientId": {
-      "title": "Client ID",
-      "type": "string"
-    },
-    "clientSecret": {
-      "title": "Client Secret",
-      "type": "string"
-    },
-    "refreshErrorLimit": {
-      "type": "integer"
-    },
-    "refreshInitialBackoff": {
-      "type": "integer"
-    },
-    "refreshWaitCountLimit": {
-      "type": "integer"
-    },
-    "refreshBackoffIncrement": {
-      "type": "integer"
-    },
-    "accessTokenExpirationBuffer": {
-      "type": "integer"
-    },
-    "defaultEventHandler": {
-      "title": "The Integration ID that will act as the default event handler",
-      "type": "string"
+    "configPage": {
+      "type": "object",
+      "properties": {
+        "windowTitle": {
+          "type": "string",
+          "title": "The title of the configuration page"
+        }
+      }
     }
-  },
-  "required": ["scope", "clientId", "clientSecret"]
+  }
 }

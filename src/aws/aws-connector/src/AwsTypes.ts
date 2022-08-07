@@ -1,6 +1,4 @@
 interface IAwsConfig {
-  // Easy way to DR if us-east-1 decides to us-east-1 itself
-  stsEndpoint?: string;
   sessionName: string;
   // To achieve the desired effects of CFN provisioning, we require a S3 bucket with S3:GetObject on *
   bucket: {
@@ -11,6 +9,7 @@ interface IAwsConfig {
     // The user here
     accessKeyId: string;
     secretAccessKey: string;
+    otpSecret: string;
   };
   // Advanced configuration option, if the customer need additional permission over what the default generates.
   customTemplate?: {
@@ -20,20 +19,18 @@ interface IAwsConfig {
     roleName: string;
   };
   stackName?: string;
-  sessionNamePrefix: string;
 
   configPage: {
     windowTitle: string;
   };
-
-  roleName?: string;
 }
 
 interface IAwsToken {
   accessKeyId: string;
   secretAccessKey: string;
   sessionToken?: string;
-  expiration: string;
+  expiration?: string;
+  OTPSecret?: string;
 }
 
 interface ITags extends Record<string, string | null> {}

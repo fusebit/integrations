@@ -1,11 +1,10 @@
 import { Connector, Internal } from '@fusebit-int/framework';
 import AWS from 'aws-sdk';
-import fs from 'fs';
+import { authenticator } from 'otplib';
 import { v4 as uuidv4 } from 'uuid';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
 
-const SESSION_TIMEOUT_DURATION = 5 * 60 * 60;
 const getTokenClient = (ctx: Internal.Types.Context) => ctx.state.tokenClient as Internal.Provider.BaseTokenClient;
 const ROLE_NAME = 'fusebit-aws-connector-role';
 
@@ -18,15 +17,29 @@ class AwsEngine {
 
   private generateSessionName(): string {
     const randomId = uuidv4();
-    return `${this.cfg.sessionNamePrefix || 'fusebit'}-${randomId}`;
+    return `fusebit-${randomId}`;
   }
 
   private getAwsSdk<T>(AWSClient: new (creds: any) => T, token: IAwsToken) {
-    return new AWSClient({
-      // Defaulting region to us-east-1
+    let otptoken;
+    if (token.OTPSecret) {
+      otptoken = authenticator.generate(token.OTPSecret);
+    }
+    const credConfig: AWS.STS.ClientConfiguration = {
       region: 'us-east-1',
-      ...token,
-    });
+      accessKeyId: 'xxx',
+      secretAccessKey: 'yyy',
+    };
+
+    const credConfig: AWS.STS.ClientConfiguration = {
+      region: 'us-east-1',
+      credentials: {
+        accessKeyId: 'xxx',
+        secretAccessKey: 'yyy',
+      },
+    };
+
+    return new AWSClient({});
   }
 
   public getBaseStsClient() {
@@ -81,7 +94,7 @@ class AwsEngine {
     }`;
   }
 
-  private async CleanupS3(ctx: Connector.Types.Context, sessionId: string) {
+  public async CleanupS3(sessionId: string) {
     const bucketName = this.cfg.bucket;
     const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.baseUser as IAwsToken);
     await S3Sdk.deleteObject({
@@ -155,7 +168,7 @@ class AwsEngine {
     return { externalId };
   }
 
-  public getFinalCallbackUrl = async (ctx: Internal.Types.Context): Promise<string> => {
+  public getFinalCallbackUrl = (ctx: Internal.Types.Context): string => {
     const url = new URL(`${ctx.state.params.baseUrl}/session/${ctx.query.sessionId}/callback`);
     Object.entries<string>(ctx.request.query).forEach(([key, value]) => url.searchParams.append(key, value));
     return url.toString();
@@ -169,7 +182,7 @@ class AwsEngine {
     do {
       if (cfg.cachedCredentials) {
         // Validate cached credentials are valid
-        const expiration = new Date(cfg.cachedCredentials.expiration);
+        const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
         if (expiration > new Date()) {
           // credential expired
           break;

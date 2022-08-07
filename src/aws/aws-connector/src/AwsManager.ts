@@ -113,7 +113,9 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
 
     this.router.get('/api/authorize/finalize', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);
-      ctx.redirect(await (ctx.state.engine as AwsEngine).getFinalCallbackUrl(ctx));
+      const engine: AwsEngine = ctx.state.engine;
+      await engine.CleanupS3(ctx.query.sessionId);
+      ctx.redirect(engine.getFinalCallbackUrl(ctx));
     });
 
     this.router.get('/api/session/:lookupKey/health', async (ctx: Connector.Types.Context) => {
