@@ -2,9 +2,10 @@
   "id": "discord-slash-commands",
   "name": "Discord Slash Commands",
   "smallIcon": "#/assets/discord.svg",
-  "largeIcon": "#/assets/discord.svg",
+  "largeIcon": "#/assets/discordLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["discord"],
   "tags": {
     "catalog": "Messaging,Dev Tools"
   },

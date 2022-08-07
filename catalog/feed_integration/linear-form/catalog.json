@@ -2,7 +2,7 @@
   "id": "linear-form",
   "name": "Linear-form",
   "smallIcon": "#/assets/linear.svg",
-  "largeIcon": "#/assets/linear.svg",
+  "largeIcon": "#/assets/linearLarge.svg",
   "version": "5.2.0",
   "private": true,
   "description": "#README.md",

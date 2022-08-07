@@ -5,8 +5,9 @@
   "largeIcon": "#/assets/google-calendarLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["google"],
   "tags": {
-    "catalog": "Calendar, Office"
+    "catalog": "Calendar,Office"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/google-calendar#creating-your-own-google-calendar-app",

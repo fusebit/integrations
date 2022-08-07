@@ -2,11 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 import { v4 as uuidv4 } from 'uuid';
 import superagent from 'superagent';
 
-import mailChimpMarketingClient, {
-  IMailChimpWebhook,
-  IMailChimpWebhookResponse,
-  IMailchimpWebhookList,
-} from '@mailchimp/mailchimp_marketing';
+import { IMailChimpWebhook, IMailChimpWebhookResponse, IMailchimpWebhookList } from '@mailchimp/mailchimp_marketing';
 
 class MailchimpWebhook extends Internal.Provider.WebhookClient {
   /**

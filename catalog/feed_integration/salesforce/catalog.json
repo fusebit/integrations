@@ -2,7 +2,7 @@
   "id": "salesforce",
   "name": "Salesforce",
   "smallIcon": "#/assets/salesforce.svg",
-  "largeIcon": "#/assets/salesforce.svg",
+  "largeIcon": "#/assets/salesforceLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

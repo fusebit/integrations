@@ -1,0 +1,23 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "BambooHR"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "bamboohrConnector",
+      "skip": false,
+      "provider": "@fusebit-int/bamboohr-provider",
+      "entityId": "<% global.entities.bamboohrConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {
+    "mode": {
+      "useProduction": true
+    }
+  }
+}

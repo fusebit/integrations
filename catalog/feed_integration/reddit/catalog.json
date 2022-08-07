@@ -2,7 +2,7 @@
   "id": "reddit",
   "name": "Reddit",
   "smallIcon": "#/assets/reddit.svg",
-  "largeIcon": "#/assets/reddit.svg",
+  "largeIcon": "#/assets/redditLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

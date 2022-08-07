@@ -2,9 +2,10 @@
   "id": "e2e-pagerduty-discord-bot",
   "name": "PagerDuty Discord Bot",
   "smallIcon": "#/assets/pagerduty.svg",
-  "largeIcon": "#/assets/pagerduty.svg",
+  "largeIcon": "#/assets/pagerdutyLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "parent": ["pagerduty", "discord"],
   "tags": {
     "catalog": "Messaging,Dev Tools,Operations"
   },

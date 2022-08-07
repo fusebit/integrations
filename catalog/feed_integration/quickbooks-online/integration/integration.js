@@ -24,11 +24,10 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   const quickbooksClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   const customers = await quickbooksClient.findCustomers({ fetchAll: true });
-  const customersList = customers.QueryResponse.Customer.map((customers) => ({
-    GivenName: customers.GivenName,
-    FamilyName: customers.FamilyName,
+  const customersList = (customers.QueryResponse?.Customer || []).map((customer) => ({
+    GivenName: customer.GivenName,
+    FamilyName: customer.FamilyName,
   }));
-
   ctx.body = customersList;
 });
 

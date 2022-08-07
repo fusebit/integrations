@@ -3,11 +3,11 @@
   "name": "Google Sheets Add-On",
   "private": true,
   "smallIcon": "#/assets/google-sheets.svg",
-  "largeIcon": "#/assets/google-sheets.svg",
+  "largeIcon": "#/assets/google-sheetsLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Project Management,Dev Tools,Office,Spreadsheets,Operations,Sales Automation"
+    "catalog": "Project Management,Dev Tools,Office,Spreadsheets,Operations,Sales"
   },
   "configuration": {
     "schema": "config/schema.json",

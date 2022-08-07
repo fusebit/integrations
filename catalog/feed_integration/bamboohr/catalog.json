@@ -1,0 +1,50 @@
+{
+  "id": "bamboohr",
+  "name": "BambooHR",
+  "smallIcon": "#/assets/bamboohr.svg",
+  "largeIcon": "#/assets/bamboohrLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/bamboohr#creating-your-own-bamboohr-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "The new employee was successfully added to your BambooHR organization",
+        "postFail": "Oops! Something went wrong and we couldn't add your new employee",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your employee directory from BambooHR",
+        "itemName": "Employee",
+        "properties": [
+          {
+            "name": "displayName",
+            "label": "Diplay Name"
+          },
+          {
+            "name": "jobTitle",
+            "label": "Job Title"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "bamboohrConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "bamboohrIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

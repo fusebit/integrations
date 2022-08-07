@@ -1,8 +1,8 @@
 {
   "id": "githubapp",
-  "name": "GitHub App",
+  "name": "GitHub",
   "smallIcon": "#/assets/github.svg",
-  "largeIcon": "#/assets/github.svg",
+  "largeIcon": "#/assets/githubLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {

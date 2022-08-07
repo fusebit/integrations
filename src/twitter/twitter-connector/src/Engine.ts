@@ -7,7 +7,7 @@ class TwitterOAuthEngine extends OAuthEngine {
     const tokenUrl = this.getTokenUrl(ctx);
     try {
       const basicAuthPlain = `${params.client_id}:${params.client_secret}`;
-      const basicAuth = new Buffer(basicAuthPlain).toString('base64');
+      const basicAuth = Buffer.from(basicAuthPlain).toString('base64');
       const response = await superagent
         .post(tokenUrl)
         .set('Accept', 'application/json')

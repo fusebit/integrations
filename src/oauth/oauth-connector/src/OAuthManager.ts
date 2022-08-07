@@ -1,14 +1,19 @@
+import { ServerResponse } from 'http';
 import { Connector, Internal } from '@fusebit-int/framework';
 import { OAuthEngine, IOAuthConfig } from './OAuthEngine';
 
 import * as ConfigurationUI from './configure';
 import { IOAuthToken, ITags } from './OAuthTypes';
 
+import { loadFilecontent } from './Utilities';
+
 type MiddlewareAdjustUrlConfiguration = (
   defaultTokenUrl: string,
   defaultAuthorizationUrl: string,
   proxyKey?: string
 ) => Connector.Types.Handler;
+
+type Response = ServerResponse & { send: any };
 
 class OAuthConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   static middleware: { adjustUrlConfiguration: MiddlewareAdjustUrlConfiguration };
@@ -79,6 +84,78 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration('http://fusebit.io/token', 'http://fusebit.io/authorize', 'oauth');
   }
+
+  protected async handleCallback(ctx: Connector.Types.Context) {
+    const { displaySplash } = ctx.state;
+
+    if (ctx.query.error) {
+      // The OAuth exchange has errored out - send back to callback and pass those parameters along.
+      await this.onSessionError(ctx, {
+        error: ctx.query.error,
+        errorDescription: ctx.query.error_description || ctx.query.errorDescription,
+      });
+      return ctx.state.engine.redirectToCallback(ctx);
+    }
+
+    const state = ctx.query.state;
+    if (!state) {
+      ctx.throw(400, 'Missing state');
+    }
+
+    const code = ctx.query.code;
+
+    if (!code) {
+      await this.onSessionError(ctx, { error: 'Missing code query parameter from OAuth server' });
+      return ctx.state.engine.redirectToCallback(ctx);
+    }
+
+    try {
+      if (!displaySplash) {
+        await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+        return ctx.state.engine.redirectToCallback(ctx);
+      }
+
+      if (ctx.query.splash) {
+        const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+        ctx.state.tokenInfo = token;
+        await this.handleSplashScreen(ctx);
+        // The configuration is now completed, indicate to the Splash screen to perform the redirect.
+        ctx.body = {
+          redirect: true,
+        };
+        return;
+      }
+
+      await this.renderSplashScreen(ctx);
+    } catch (e) {
+      await this.onSessionError(ctx, {
+        error: `Conversion error: ${e.response ? e.response.text : e.message} - ${e.stack}`,
+      });
+    }
+  }
+
+  protected async renderSplashScreen(ctx: Connector.Types.Context): Promise<void> {
+    const { code, state } = ctx.query;
+    const baseUrl = ctx.state.engine.cfg.mountUrl;
+    const redirectUrl = await ctx.state.engine.getCallbackUrl(ctx);
+    const { bgColorFrom, bgColorTo, waitText, logoUrl, title } =
+      ctx.state.manager.config.configuration.splash.screenConfiguration || {};
+
+    const callbackHtml = await loadFilecontent('callback.html', 'templates', {
+      baseUrl,
+      redirectUrl,
+      state,
+      code,
+      bgColorFrom: bgColorFrom || '#100a2d',
+      bgColorTo: bgColorTo || '#12124f',
+      waitText: waitText || 'Configuring your installation...',
+      logoUrl: logoUrl || '',
+      title: title || 'Configuring your installation...',
+    });
+    ctx.response.body = callbackHtml;
+  }
+
+  protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}
 
   protected readonly OAuthEngine = OAuthEngine;
 
@@ -286,34 +363,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
     this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);
-      const state = ctx.query.state;
-
-      if (!state) {
-        ctx.throw(400, 'Missing state');
-      }
-
-      if (ctx.query.error) {
-        // The OAuth exchange has errored out - send back to callback and pass those parameters along.
-        await this.onSessionError(ctx, {
-          error: ctx.query.error,
-          errorDescription: ctx.query.error_description || ctx.query.errorDescription,
-        });
-        return ctx.state.engine.redirectToCallback(ctx);
-      }
-
-      const code = ctx.query.code;
-
-      if (!code) {
-        await this.onSessionError(ctx, { error: 'Missing code query parameter from OAuth server' });
-        return ctx.state.engine.redirectToCallback(ctx);
-      }
-
-      try {
-        await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
-      } catch (e) {
-        await this.onSessionError(ctx, { error: `Conversion error: ${e.response?.text} - ${e.stack}` });
-      }
-      return ctx.state.engine.redirectToCallback(ctx);
+      await this.handleCallback(ctx);
     });
   }
 }

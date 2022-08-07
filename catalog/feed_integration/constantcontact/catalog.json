@@ -6,7 +6,7 @@
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Marketing"
+    "catalog": "Marketing,Email"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/constantcontact#creating-your-own-constantcontact-app",
