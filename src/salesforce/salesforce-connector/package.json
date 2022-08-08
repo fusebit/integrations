@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/salesforce-connector",
-  "version": "7.50.3",
+  "version": "7.50.4",
   "description": "Fusebit Salesforce connector",
   "keywords": [
     "Fusebit",
@@ -37,13 +37,13 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.50.3",
+    "@fusebit-int/oauth-connector": "^7.50.4",
     "jsforce": "^1.11.0",
     "superagent": "6.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.50.3",
+    "@fusebit-int/framework": "^7.50.4",
     "@types/jsforce": "^1.9.42",
     "@types/superagent": "^4.1.12",
     "@types/uuid": "^8.3.4",
