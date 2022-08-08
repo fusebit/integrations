@@ -76,7 +76,7 @@ class AwsEngine {
       Key: `${this.cfg.bucketPrefix}/${sessionId}`,
     }).promise();
 
-    return `https://s3.amazonaws.com/${bucketName.name}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
+    return `https://s3.amazonaws.com/${this.cfg.bucketName}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
   }
 
   public async CleanupS3(sessionId: string) {

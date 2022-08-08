@@ -4,7 +4,7 @@ import { Internal } from '@fusebit-int/framework';
 type FusebitAwsClient = typeof AWS & { fusebit?: any };
 
 export default class AwsProvider extends Internal.Provider.Activator<FusebitAwsClient> {
-  public async instantiate(ctx: Internal.Types.Context, lookupKey?: string | undefined): Promise<FusebitAwsClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitAwsClient> {
     const creds = await this.requestConnectorToken({ ctx, lookupKey });
     const AWS_: FusebitAwsClient = AWS;
     AWS_.config.accessKeyId = creds.accessKeyId;
