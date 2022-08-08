@@ -48,6 +48,7 @@ class AwsEngine {
           RoleSessionName: this.generateSessionName(),
           RoleArn: cfg.roleArn,
           TokenCode: totpToken,
+          SerialNumber: this.cfg.IAM.mfaSerial,
         })
         .promise();
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);

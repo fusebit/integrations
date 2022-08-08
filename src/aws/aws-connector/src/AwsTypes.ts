@@ -7,6 +7,7 @@ interface IAwsConfig {
     accessKeyId: string;
     secretAccessKey: string;
     otpSecret: string;
+    mfaSerial: string;
   };
   customTemplate: {
     cfnObject?: string;

@@ -31,6 +31,10 @@
         "otpSecret": {
           "type": "string",
           "title": "The OTP secret provided by AWS to generate one time tokens."
+        },
+        "mfaSerial": {
+          "type": "string",
+          "title": "MFA Serial Code"
         }
       }
     },
