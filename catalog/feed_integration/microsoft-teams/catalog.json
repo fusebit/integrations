@@ -9,7 +9,8 @@
     "catalog": "Messaging,Office"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-teams#creating-your-own-microsoft-teams-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoft-teams-bot#creating-your-own-microsoft-teams-bot",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/microsoft-teams-bot"
   },
   "configuration": {
     "schema": "config/schema.json",

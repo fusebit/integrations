@@ -13,6 +13,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/catalog.json
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>#creating-your-own-<%= name.toLowerCase() %>-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/<%= name.toLowerCase() %>",
     "sampleConfig": {
       "isEnabled": <%= isSampleApp %>
       <% if (locals.isSampleApp) { -%>

@@ -9,7 +9,8 @@
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack#creating-your-own-slack-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/slack-creating-your-own-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/slack",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": false,

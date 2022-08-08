@@ -10,7 +10,8 @@
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://fusebit.io/blog/slack-crypto-bot/"
+    "configureAppDocUrl": "https://fusebit.io/blog/slack-crypto-bot/",
+    "integrationsDocUrl": "https://fusebit.io/blog/slack-crypto-bot/"
   },
   "configuration": {
     "schema": "config/schema.json",

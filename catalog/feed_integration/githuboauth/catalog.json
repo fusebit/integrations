@@ -10,7 +10,8 @@
     "catalog": "Dev Tools,Project Management"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/githuboauth#creating-your-own-githuboauth"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/github#creating-your-own-githubapp",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/github"
   },
   "configuration": {
     "schema": "config/schema.json",

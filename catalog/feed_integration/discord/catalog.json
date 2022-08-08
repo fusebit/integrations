@@ -9,7 +9,8 @@
     "catalog": "Messaging"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord#creating-your-own-discord-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord#creating-your-own-discord-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/discord"
   },
   "configuration": {
     "schema": "config/schema.json",

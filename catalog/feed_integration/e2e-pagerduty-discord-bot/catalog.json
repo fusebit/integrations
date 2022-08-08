@@ -10,7 +10,8 @@
     "catalog": "Messaging,Dev Tools,Operations"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/discord",
+    "integrationsDocUrl": "https://fusebit.io/blog/pagerduty-discord-integration/"
   },
   "configuration": {
     "schema": "config/schema.json",

@@ -9,7 +9,8 @@
     "catalog": "CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/salesforce#creating-your-own-salesforce-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/creating-your-own-salesforce-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/salesforce",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

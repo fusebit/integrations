@@ -10,6 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/asana#creating-your-own-asana-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/asana",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

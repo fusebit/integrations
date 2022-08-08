@@ -10,7 +10,8 @@
     "catalog": "Office"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-docs#creating-your-own-google-docs-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
     "sampleConfig": {
       "isEnabled": false
     }

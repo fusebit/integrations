@@ -9,7 +9,8 @@
     "catalog": "Social,Community"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/reddit#creating-your-own-reddit-app"
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/reddit#creating-your-own-reddit-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started"
   },
   "configuration": {
     "schema": "config/schema.json",

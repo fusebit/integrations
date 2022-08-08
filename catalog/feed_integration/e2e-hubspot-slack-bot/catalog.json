@@ -10,7 +10,8 @@
     "catalog": "Messaging,CRM"
   },
   "resources": {
-    "configureAppDocUrl": "https://fusebit.io/blog/slack-bot-hubspot-integration/"
+    "configureAppDocUrl": "https://fusebit.io/blog/slack-bot-hubspot-integration/",
+    "integrationsDocUrl": "https://fusebit.io/blog/slack-bot-hubspot-integration/"
   },
   "configuration": {
     "schema": "config/schema.json",
