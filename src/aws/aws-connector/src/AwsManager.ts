@@ -52,11 +52,10 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
       '/api/configure',
       this.middleware.authorizeUser('connector:put'),
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+        const engine: AwsEngine = this.createEngine(ctx);
         ctx.body = JSON.parse(
           JSON.stringify({
-            data: {
-              ...ctx.state.manager.config.configuration,
-            },
+            data: engine.configToJsonForms(),
             schema: ConfigurationUI.schema,
             uiSchema: ConfigurationUI.uiSchema,
           })

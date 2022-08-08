@@ -7,7 +7,7 @@ import * as templates from './template';
 
 const getTokenClient = (ctx: Internal.Types.Context) => ctx.state.tokenClient as Internal.Provider.BaseTokenClient;
 const ROLE_NAME = 'fusebit-aws-connector-role';
-
+const AWS_TYPE = 'AWS';
 class AwsEngine {
   public cfg: IAwsConfig;
 
@@ -21,29 +21,15 @@ class AwsEngine {
   }
 
   private getAwsSdk<T>(AWSClient: new (creds: any) => T, token: IAwsToken) {
-    let otptoken;
-    if (token.OTPSecret) {
-      otptoken = authenticator.generate(token.OTPSecret);
-    }
-    const credConfig: AWS.STS.ClientConfiguration = {
+    return new AWSClient({
+      // Defaulting region to us-east-1
       region: 'us-east-1',
-      accessKeyId: 'xxx',
-      secretAccessKey: 'yyy',
-    };
-
-    const credConfig: AWS.STS.ClientConfiguration = {
-      region: 'us-east-1',
-      credentials: {
-        accessKeyId: 'xxx',
-        secretAccessKey: 'yyy',
-      },
-    };
-
-    return new AWSClient({});
+      ...token,
+    });
   }
 
   public getBaseStsClient() {
-    return this.getAwsSdk(AWS.STS, this.cfg.baseUser as IAwsToken);
+    return this.getAwsSdk(AWS.STS, this.cfg.IAM as IAwsToken);
   }
 
   /**
@@ -55,16 +41,18 @@ class AwsEngine {
   public async assumeCustomerRole(cfg: IAssumeRoleConfiguration) {
     try {
       const baseStsClient = this.getBaseStsClient();
+      const totpToken = authenticator.generate(this.cfg.IAM.otpSecret);
       const assumeRoleCredentials = await baseStsClient
         .assumeRole({
           ExternalId: cfg.externalId,
           RoleSessionName: this.generateSessionName(),
           RoleArn: cfg.roleArn,
+          TokenCode: totpToken,
         })
         .promise();
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
-      console.log(e);
+      console.log(`CONNECTOR FAILURE: ASSUME CUSTOMER ROLE FAILURE ${(e as any).code}`);
       return undefined;
     }
   }
@@ -72,7 +60,7 @@ class AwsEngine {
   // Generate the configuration as YAML, technically it is possible for JSON to be applied
   // But for ease of reading, sticking to YAML
   private async generateCustomerCloudformation(ctx: Connector.Types.Context, externalId: string, roleName: string) {
-    const baseFile = this.cfg.customTemplate?.cfnObject || templates.getCFNTemplate();
+    const baseFile = this.cfg.customTemplate.cfnObject || templates.getCFNTemplate();
     return baseFile
       .replace('##BASE_ACCOUNT_ID##', (await this.getBaseAccountId(ctx)) as string)
       .replace('##EXTERNAL_ID##', externalId)
@@ -80,26 +68,23 @@ class AwsEngine {
   }
 
   private async UploadS3(ctx: Connector.Types.Context, CfnContent: string, sessionId: string) {
-    const bucketName = this.cfg.bucket;
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.baseUser as IAwsToken);
+    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM as IAwsToken);
     await S3Sdk.putObject({
-      Bucket: bucketName.name,
+      Bucket: this.cfg.bucketName,
       Body: Buffer.from(CfnContent),
       ContentType: 'text/plain',
-      Key: bucketName.prefix ? `${bucketName.prefix}/${sessionId}` : sessionId,
+      Key: `${this.cfg.bucketPrefix}/${sessionId}`,
     }).promise();
 
-    return `https://s3.amazonaws.com/${bucketName.name}/${
-      bucketName.prefix ? `${bucketName.prefix}/${sessionId}` : sessionId
-    }`;
+    return `https://s3.amazonaws.com/${bucketName.name}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
   }
 
   public async CleanupS3(sessionId: string) {
-    const bucketName = this.cfg.bucket;
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.baseUser as IAwsToken);
+    const bucketName = this.cfg.bucketName;
+    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM as IAwsToken);
     await S3Sdk.deleteObject({
-      Bucket: bucketName.name,
-      Key: bucketName.prefix ? `${bucketName.prefix}/${sessionId}` : sessionId,
+      Bucket: this.cfg.bucketName,
+      Key: `${bucketName}/${sessionId}`,
     }).promise();
   }
 
@@ -108,7 +93,7 @@ class AwsEngine {
 
     const { accountId } = postPayload.payload;
     const { sessionId } = postPayload.state;
-    const roleName = this.cfg.roleName || ROLE_NAME;
+    const roleName = this.cfg.customTemplate.roleName || ROLE_NAME;
 
     // push configuration to session
     const { externalId } = await this.storeSetupInformation(ctx, accountId, roleName, sessionId);
@@ -118,28 +103,28 @@ class AwsEngine {
     const consoleUrl = `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateUrl=${S3Url}&stackName=${
       this.cfg.stackName || 'connectorassumerolestack'
     }`;
+    const SESSION_HEALTH_URL = `${ctx.state.params.baseUrl}/api/session/${ctx.state.sessionId}/health`;
+    const FINAL_URL = `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`;
 
     let htmlTemplate = templates.getInstallCfn();
     htmlTemplate = htmlTemplate.replace('##WINDOW_TITLE##', this.cfg.configPage.windowTitle || 'Configure AWS');
     htmlTemplate = htmlTemplate.replace('##S3_URL##', S3Url);
     htmlTemplate = htmlTemplate.replace('##S3_CONSOLE_URL##', consoleUrl);
-    htmlTemplate = htmlTemplate.replace(
-      '##FINAL_URL##',
-      `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`
-    );
+    htmlTemplate = htmlTemplate.replace('##FINAL_URL##', FINAL_URL);
+    htmlTemplate = htmlTemplate.replace('##SESSION_HEALTH_URL##', SESSION_HEALTH_URL);
     return htmlTemplate;
   }
 
   private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
     const STSClient = new AWS.STS({
-      accessKeyId: this.cfg.baseUser.accessKeyId,
-      secretAccessKey: this.cfg.baseUser.secretAccessKey,
+      accessKeyId: this.cfg.IAM.accessKeyId,
+      secretAccessKey: this.cfg.IAM.secretAccessKey,
     });
     try {
       const me = await STSClient.getCallerIdentity().promise();
       return me.Account;
     } catch (e) {
-      // Assume any non self retried failure to be the entire backend failed.
+      console.log(`CONNECTOR FAILURE: ${(e as any).code}`);
       ctx.throw(500);
     }
   }
@@ -192,10 +177,12 @@ class AwsEngine {
           const customerStsSdk = this.getAwsSdk(AWS.STS, cfg.cachedCredentials);
           const me = await customerStsSdk.getCallerIdentity().promise();
           if (me.Account !== cfg.accountId) {
-            break;
+            return undefined;
           }
           return cfg.cachedCredentials;
-        } catch (e) {}
+        } catch (e) {
+          console.log(`CONNECTOR FAILURE: CROSS ACCOUNT ACCESS FAILURE ${(e as any).code}`);
+        }
       }
     } while (false);
     const assumedRoleCredential = await this.assumeCustomerRole(cfg);
@@ -222,6 +209,13 @@ class AwsEngine {
     );
 
     return assumedRoleCredential;
+  }
+
+  public configToJsonForms() {
+    return {
+      type: AWS_TYPE,
+      ...this.cfg,
+    };
   }
 }
 

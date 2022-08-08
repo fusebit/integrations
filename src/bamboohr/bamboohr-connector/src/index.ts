@@ -1,5 +1,4 @@
 import { Connector, Internal } from '@fusebit-int/framework';
-import { TokenClient, TokenSessionClient, TokenIdentityClient } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
 import { schema, uischema } from './configure';
@@ -18,11 +17,11 @@ class ServiceConnector extends Connector<Service> {
     return new ServiceConnector.Service();
   }
 
-  protected createSessionClient(ctx: Connector.Types.Context): TokenSessionClient<Types.BambooHRToken> {
+  protected createSessionClient(ctx: Connector.Types.Context) {
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenSessionClient<Types.BambooHRToken>({
+    return new Internal.Provider.TokenSessionClient<Types.BambooHRToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/session`,
@@ -51,11 +50,11 @@ class ServiceConnector extends Connector<Service> {
     });
   }
 
-  protected createIdentityClient(ctx: Connector.Types.Context): TokenIdentityClient<Types.BambooHRToken> {
+  protected createIdentityClient(ctx: Connector.Types.Context) {
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenIdentityClient<Types.BambooHRToken>({
+    return new Internal.Provider.TokenIdentityClient<Types.BambooHRToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/identity`,
@@ -64,7 +63,7 @@ class ServiceConnector extends Connector<Service> {
   }
 
   protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<Types.BambooHRToken> {
-    const tokenClient: TokenClient<Types.BambooHRToken> = ctx.state.tokenClient;
+    const tokenClient = ctx.state.tokenClient;
     const token: Types.BambooHRToken = await tokenClient.get(lookupKey);
 
     if (!token) {
