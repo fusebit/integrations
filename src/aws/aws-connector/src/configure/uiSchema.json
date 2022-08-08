@@ -30,7 +30,7 @@
                   "elements": [
                     { "type": "Control", "scope": "#/properties/IAM/properties/accessKeyId" },
                     { "type": "Control", "scope": "#/properties/IAM/properties/secretAccessKey" },
-                    { "type": "Control", "scope": "#/properties/IAM/properties/OTPSecret" }
+                    { "type": "Control", "scope": "#/properties/IAM/properties/otpSecret" }
                   ]
                 }
               ]

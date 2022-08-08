@@ -28,7 +28,7 @@
           "type": "string",
           "title": "IAM Secret Access Key"
         },
-        "OTPSecret": {
+        "otpSecret": {
           "type": "string",
           "title": "The OTP secret provided by AWS to generate one time tokens."
         }

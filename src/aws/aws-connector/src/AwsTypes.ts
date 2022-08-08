@@ -9,8 +9,8 @@ interface IAwsConfig {
     otpSecret: string;
   };
   customTemplate: {
-    cfnObject: string;
-    roleName: string;
+    cfnObject?: string;
+    roleName?: string;
   };
   configPage: {
     windowTitle: string;

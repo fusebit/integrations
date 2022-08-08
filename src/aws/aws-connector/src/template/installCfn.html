@@ -143,15 +143,6 @@
         </ThemeProvider>,
         document.getElementById('root')
       );
-
-      const SESSION_HEALTH_URL = '##SESSION_HEALTH_URL##';
-      fetch(SESSION_HEALTH_URL)
-        .then(() => {
-          window.location.href = `##FINAL_URL##`;
-        })
-        .catch(() => {
-          /** None successful response here means failed to assume role, no need to error catch this */
-        });
     </script>
   </body>
 </html>

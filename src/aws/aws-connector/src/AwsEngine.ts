@@ -103,7 +103,6 @@ class AwsEngine {
     const consoleUrl = `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateUrl=${S3Url}&stackName=${
       this.cfg.stackName || 'connectorassumerolestack'
     }`;
-    const SESSION_HEALTH_URL = `${ctx.state.params.baseUrl}/api/session/${ctx.state.sessionId}/health`;
     const FINAL_URL = `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`;
 
     let htmlTemplate = templates.getInstallCfn();
@@ -111,7 +110,6 @@ class AwsEngine {
     htmlTemplate = htmlTemplate.replace('##S3_URL##', S3Url);
     htmlTemplate = htmlTemplate.replace('##S3_CONSOLE_URL##', consoleUrl);
     htmlTemplate = htmlTemplate.replace('##FINAL_URL##', FINAL_URL);
-    htmlTemplate = htmlTemplate.replace('##SESSION_HEALTH_URL##', SESSION_HEALTH_URL);
     return htmlTemplate;
   }
 
