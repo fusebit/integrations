@@ -9,7 +9,8 @@ to: catalog/feed_connector/<%= name.toLowerCase() %>/config/schema.json
       "properties": {
         "id": {
           "type": "string",
-          "minLength": 3
+          "minLength": 3,
+          "pattern": "'/^[A-Za-z0-9-]{1,64}$/'",
         }
       }
     }
