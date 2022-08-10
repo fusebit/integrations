@@ -1,0 +1,60 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.feedId": "google",
+    "fusebit.service": "Google",
+    "fusebit.feedType": "integration"
+  },
+  "routes": [
+    {
+      "path": "/api/transform/tenant",
+      "task": {}
+    }
+  ],
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "googleConnector",
+      "path": "/api/authorize",
+      "skip": false,
+      "entityId": "<% global.entities.google-bigquery-etlConnector.id %>",
+      "provider": "@fusebit-int/google-provider",
+      "dependsOn": [],
+      "entityType": "connector"
+    },
+    {
+      "name": "projectForm",
+      "path": "/api/configure/projectForm",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["googleConnector"],
+      "entityType": "integration"
+    },
+    {
+      "name": "datasetForm",
+      "path": "/api/configure/datasetForm",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["googleConnector", "projectForm"],
+      "entityType": "integration"
+    },
+    {
+      "name": "tableForm",
+      "path": "/api/configure/tableForm",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["googleConnector", "datasetForm"],
+      "entityType": "integration"
+    },
+    {
+      "name": "mappingForm",
+      "path": "/api/configure/mappingForm",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["googleConnector", "tableForm"],
+      "entityType": "integration"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

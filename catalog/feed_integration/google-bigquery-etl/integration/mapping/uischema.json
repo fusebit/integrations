@@ -1,0 +1,54 @@
+{
+  "type": "ListWithDetail",
+  "scope": "#/properties/transformations",
+  "options": {
+    "detail": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/mParticleEventType",
+          "label": "mParticle Event Template"
+        },
+        {
+          "type": "CodeBlock",
+          "scope": "#/properties/mappingCode",
+          "label": "mParticle Transform",
+          "options": { "multi": true }
+        },
+        {
+          "type": "Control",
+          "label": "Execute conditionally",
+          "scope": "#/properties/conditional"
+        },
+        {
+          "type": "Group",
+          "rule": {
+            "effect": "HIDE",
+            "condition": {
+              "scope": "#/properties/conditional",
+              "schema": { "const": false }
+            }
+          },
+          "elements": [
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/column",
+                  "label": "Column Name Filter (optional)"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/columnFilter",
+                  "label": "Filter Value (optional)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

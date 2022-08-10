@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "properties": {
+    "transformations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": { "type": "string" },
+          "conditional": { "type": "boolean" },
+          "column": {
+            "type": "string",
+            "description": "Column name to filter by"
+          },
+          "columnFilter": {
+            "type": "string",
+            "description": "Value to match (regex allowed), leave blank to match all values"
+          },
+          "mParticleEventType": {
+            "type": "string",
+            "title": "Event Type",
+            "enum": [
+              "custom_event",
+              "commerce_event",
+              "session_start",
+              "session_end",
+              "screen_view",
+              "uninstall",
+              "crash_report",
+              "opt_out",
+              "push_registration",
+              "application_state_transition",
+              "push_message",
+              "network_performance",
+              "breadcrumb"
+            ]
+          },
+          "mappingCode": {
+            "type": "string",
+            "title": "Transformation JavaScript function",
+            "isExpandable": false
+          }
+        },
+        "required": ["mappingCode"]
+      }
+    }
+  }
+}

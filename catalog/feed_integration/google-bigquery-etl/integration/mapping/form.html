@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="minimum-scale=1, initial-scale=1, width=device-width"
+    />
+    <title>##windowTitle##</title>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@16.14.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/dot-object@2.1.4/dist/dot-object.min.js"></script>
+    <!--
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react.production.min.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react-dom.production.min.js"></script>
+    -->
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/material-ui.production.min.js"></script>
+    <script>
+      // Webpack expects MaterialUI to have a 'default' parameter in may locations; this fixes that.
+      MaterialUI.default = MaterialUI;
+    </script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-core.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-react.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-material.js"></script>
+    <script src="https://unpkg.com/@fusebit/monaco-jsonforms@latest/dist/cjs/index.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+  </head>
+
+  <body style="font-family: 'Nunito Sans'">
+    <div id="root"></div>
+    <script type="text/babel" crossorigin>
+      const {
+        createMuiTheme,
+        ThemeProvider,
+        Button,
+        Dialog,
+        DialogContent,
+        DialogContentText,
+        DialogTitle,
+        DialogActions,
+        TextField,
+        Grid,
+        Icon,
+        Table,
+        TableBody,
+        TableContainer,
+        TableRow,
+        TableHead,
+        TableCell,
+        TablePagination,
+        Typography,
+        Paper,
+      } = MaterialUI;
+
+      const FusebitTheme = {
+        ...createMuiTheme({
+          // Overrides of default MUI theme:
+          typography: {
+            fontFamily: '"Nunito Sans", sans-serif',
+          },
+          palette: {
+            primary: {
+              main: '#03032D', // FusebitColor.black
+            },
+            secondary: {
+              main: '#FB310A', // FusebitColor.red
+            },
+          },
+          overrides: {
+            MuiTab: {
+              wrapper: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiButton: {
+              root: {
+                borderRadius: '100px',
+              },
+              label: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiDialogContent: {
+              root: {
+                paddingBottom: '30px',
+                paddingTop: '30px',
+              },
+            },
+          },
+        }),
+      };
+
+      const { useState, useEffect } = React;
+
+      function postForm(path, payload) {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = path;
+
+        const payloadField = document.createElement('input');
+        payloadField.type = 'hidden';
+        payloadField.name = 'payload';
+        payloadField.value = JSON.stringify({ payload, state: JSON.parse('##state##') });
+
+        form.appendChild(payloadField);
+
+        document.body.appendChild(form);
+        form.submit();
+      }
+
+      function App() {
+        const renderers = [...JSONFormsMaterial.materialRenderers, MonacoJSONForms.MonacoEditorControl];
+        const cells = JSONFormsMaterial.materialCells;
+        const dot = DotObject;
+
+        const sampleData = ##sampleRecords##;
+        const headers = Object.keys(sampleData[0]);
+        const prototypes = { fusebit_default: "async (input) => (input)", screen_view: "async (input) => ({\n event_type: 'screen_view',\n data: {\n  screen_name: input.name,\n  source_message_id: input.id,\n  timestamp_unixtime_ms: input.original_timestamp,\n  custom_attributes: {url: input.url, title:input.title},\n }\n})"};
+
+        const schema = ##schema##;
+        const uischema = ##uischema##;
+
+        const [data, setData] = useState(##data##);
+        const [exampleResults, setExampleResults] = useState(false);
+        const [rowsPerPage, setRowsPerPage] = useState(1);
+        const [page, setPage] = useState(0);
+        const [pagedInput, setPagedInput] = useState([]);
+        const [invalidTransform, setInvalidTransform] = useState(
+          "Please specify a transformation or adjust your conditional criteria"
+        );
+
+        const createMappings = (mappings) => {
+          const funcs = mappings.map((map) => async (input) => {
+            try {
+              return (map?.mappingCode && (!map.conditional || (map.columnFilter && map.column && input[map.column] == map.columnFilter)))
+              ? eval(map.mappingCode)(input)
+              : undefined;
+            } catch (error) {
+              console.log(error);
+              return `ERROR: ${error}`;
+            }
+          });
+          return funcs;
+        };
+
+        const handleChangePage = (event, newPage) => {
+          setPage(newPage);
+          setPagedInput(rowsPerPage > 0
+                      ? sampleData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : sampleData);
+        };
+
+        const handleChangeRowsPerPage = (event) => {
+          setRowsPerPage(+event.target.value);
+          setPage(0);
+        };
+
+        useEffect(()=>{
+          setPagedInput(rowsPerPage > 0
+                      ? sampleData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : sampleData);
+        }, [page])
+
+        useEffect(() => {
+          (async () => {
+            if (!data?.transformations?.length || data?.transformations?.length === 0) {
+              return;
+            }
+            const mappings = createMappings(data.transformations);
+            const results = [];
+
+            for (let i = 0; i < pagedInput.length; i++) {
+              let result;
+              for(let j = 0; j < mappings.length; j++){
+                try {
+                  const tempResult = eval(await mappings[j](pagedInput[i]));
+                  if(!result){
+                    result = tempResult
+                  } else {
+                    Object.assign(result, tempResult);
+                  }
+                } catch(e){
+                  // Swallow exception
+                }
+              }
+
+              if (result) {
+                results.push(result);
+              } else {
+                setInvalidTransform("Invalid transform function");
+              }
+            }
+            setExampleResults(results);
+          })();
+        }, [data, pagedInput]);
+
+
+        const submitForm = () => {
+          const target = ##submitUrl##;
+          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          postForm(target, data);
+        };
+
+        const cancelForm = () => {
+          const target = ##cancelUrl##;
+          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          postForm(target, {});
+        };
+
+        const updateData = (newData) => {
+          let tx = newData.transformations = (newData.transformations || []);
+          for(let i=0; i < tx.length; i++ ){
+
+            tx[i].columnName = (tx[i].column && tx[i].columnFilter && tx[i].conditional) ? `Run if ${tx[i].column} is "${tx[i].columnFilter}"`: 'Run always';
+
+            let eventType = 'fusebit_default';
+            if(tx[i].mParticleEventType != "" && prototypes[tx[i].mParticleEventType]){
+              eventType = tx[i].mParticleEventType;
+            }
+            if (!data.transformations[i]){
+              tx[i].mappingCode = prototypes[eventType];
+            } else {
+              if(tx[i].mappingCode && tx[i].mappingCode.length > 0 &&
+              tx[i].mParticleEventType != data.transformations[i].mParticleEventType &&
+              confirm("Overwrite existing transform?")){
+                tx[i].mappingCode = prototypes[eventType];
+              } else {
+                tx[i].mParticleEventType = data.transformations[i].mParticleEventType;
+              }
+            }
+
+
+          }
+          console.log(newData);
+          setData(newData);
+        }
+
+
+
+        return (
+          <Dialog open={true} fullWidth maxWidth="xl" disableBackdropClick disableEscapeKeyDown>
+            <DialogTitle>
+              ##dialogTitle##
+            </DialogTitle>
+            <DialogContent>
+              <Typography variant="h6">Source Columns</Typography>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} size="small">
+                  <TableHead>
+                    <TableRow>
+                    {headers.map((header) => (<TableCell>{header}</TableCell>)) }
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {pagedInput.map((row) => (
+                    <TableRow
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      {Object.values(row).map((val) => (
+                        <TableCell component="th" scope="row">
+                          <Typography
+                            variant="body2"
+                            style={{
+                              display: "-webkit-box",
+                              overflow: "hidden",
+                              WebkitBoxOrient: "vertical",
+                              WebkitLineClamp: 3,
+                              width: 250,
+                            }}
+                          >
+                            {val}
+                          </Typography>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[1]}
+                component="div"
+                count={sampleData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+              />
+              <Typography variant="h6">Transformed Columns</Typography>
+              { exampleResults && exampleResults.length > 0 && exampleResults[0] !== null ? (
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      {Object.keys(dot.dot(exampleResults[0])).map(
+                        (header) => (
+                          <TableCell>{header}</TableCell>
+                        )
+                      )}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {exampleResults.map((row) => (
+                      <TableRow
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        {Object.values(dot.dot(row)).map((val) => (
+                          <TableCell component="th" scope="row">
+                            {" "}
+                            <Typography
+                              variant="body2"
+                              style={{
+                                display: "-webkit-box",
+                                overflow: "hidden",
+                                WebkitBoxOrient: "vertical",
+                                WebkitLineClamp: 3,
+                                width: 250,
+                              }}
+                          >
+                              {JSON.stringify(val)}
+                            </Typography>
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <Typography>{invalidTransform}</Typography>
+            )}
+                    <JSONFormsReact.JsonForms
+                      renderers={renderers}
+                      cells={cells}
+                      schema={schema}
+                      uischema={uischema}
+                      data={data}
+                      onChange={({ errors, data }) => { console.log(data); updateData(data); }}
+                    />
+            </DialogContent>
+            <DialogActions>
+              <Button variant="text" onClick={cancelForm}> Cancel </Button>
+              <Button variant="contained" color="primary" onClick={submitForm}> Submit </Button>
+            </DialogActions>
+          </Dialog>
+        );
+      }
+
+      ReactDOM.render(
+        <ThemeProvider theme={FusebitTheme}>
+          <App />
+        </ThemeProvider>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
