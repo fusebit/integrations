@@ -5,6 +5,7 @@
   "largeIcon": "#/assets/googleLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
+  "private": true,
   "tags": {
     "catalog": "ETL"
   },

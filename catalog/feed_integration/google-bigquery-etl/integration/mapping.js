@@ -13,9 +13,8 @@ const createMappings = (mappings) => {
 };
 
 const handleMapping = async (mappings, row) => {
-  let result;
   for (const mapping of mappings) {
-    result = await mapping(row);
+    let result = await mapping(row);
     if (result) {
       return result;
     }

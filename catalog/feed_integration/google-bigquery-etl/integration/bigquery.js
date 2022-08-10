@@ -37,7 +37,6 @@ const makeQuery = async (bigquery, projectId, query) => {
 
   const queryResult = await bigquery.jobs.query({ projectId, requestBody });
 
-  console.log(JSON.stringify({ schema: queryResult.data.schema }));
   // Convert to a more useful array of objects, optimistically
   const schema = queryResult.data.schema.fields;
   return queryResult.data.rows.map((row) =>

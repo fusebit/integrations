@@ -36,7 +36,6 @@ const generateForm = async (ctx) => {
   // Get this session
   const priorSession = await session.getPriorSession(ctx, ctx.query.session, 'projectForm');
 
-  console.log(priorSession);
   // Use the projectId to get the list of available datasets.
   const projectId = priorSession.output.projectId;
   const datasets = await bigquery.getDatasets(ctx.state.googleClient, priorSession.output.projectId);
