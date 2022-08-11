@@ -10,7 +10,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/config/schema.json
         "id": {
           "type": "string",
           "minLength": 3,
-          "pattern": "'/^[A-Za-z0-9-]{1,64}$/'",
+          "pattern": "^[A-Za-z0-9-]{1,64}$/",
           "errorMessage": {
             "minLength": "Integration name must be at least 3 characters long",
             "pattern": "Integration name cannot have any spaces or special characters"
@@ -24,7 +24,7 @@ to: catalog/feed_integration/<%= name.toLowerCase() %>/config/schema.json
         "id": {
           "type": "string",
           "minLength": 3,
-          "pattern": "'/^[A-Za-z0-9-]{1,64}$/'",
+          "pattern": "^[A-Za-z0-9-]{1,64}$/",
           "errorMessage": {
             "minLength": "Connector name must be at least 3 characters long",
             "pattern": "Connector name cannot have any spaces or special characters"
