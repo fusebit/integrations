@@ -3,28 +3,8 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/githubappIntegration/properties/id",
-      "label": "Name"
-    },
-    {
-      "type": "Control",
-      "label": "Customize",
-      "scope": "#/properties/ui/properties/toggle",
-      "options": {
-        "toggle": true
-      }
-    },
-    {
-      "type": "Control",
       "scope": "#/properties/githubappConnector/properties/id",
-      "label": "GitHub Connector name",
-      "rule": {
-        "effect": "SHOW",
-        "condition": {
-          "scope": "#/properties/ui/properties/toggle",
-          "schema": { "const": true }
-        }
-      }
+      "label": "Name"
     }
   ]
 }
