@@ -1,15 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "githubappIntegration": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 3
-        }
-      }
-    },
     "githubappConnector": {
       "type": "object",
       "properties": {
@@ -18,15 +9,7 @@
           "minLength": 3
         }
       }
-    },
-    "ui": {
-      "type": "object",
-      "properties": {
-        "toggle": {
-          "type": "boolean",
-          "description": "The \"toggle\" option renders boolean values as a toggle."
-        }
-      }
     }
   }
 }
+
