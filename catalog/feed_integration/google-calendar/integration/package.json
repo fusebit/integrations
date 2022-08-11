@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-google-calendar-integration",
-  "version": "7.50.4",
+  "version": "7.50.5",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.50.4",
-    "@fusebit-int/google-provider": "^7.50.4"
+    "@fusebit-int/framework": "^7.50.5",
+    "@fusebit-int/google-provider": "^7.50.5"
   },
   "files": [
     "./integration.js",

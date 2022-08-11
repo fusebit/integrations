@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-pagerduty-connector",
-  "version": "7.50.4",
+  "version": "7.50.5",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.50.4",
-    "@fusebit-int/pagerduty-connector": "^7.50.4"
+    "@fusebit-int/framework": "^7.50.5",
+    "@fusebit-int/pagerduty-connector": "^7.50.5"
   }
 }
