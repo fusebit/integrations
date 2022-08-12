@@ -65,13 +65,12 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
       }
     );
 
-    // Daisy's customer configuration flow
     // Start the auth flow, render the initial page
     this.router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
       const sessionId = ctx.query.session;
       ctx.state.tokenClient = this.createSessionClient(ctx);
 
-      [ctx.body, ctx.headers['Content-Type']] = Internal.Form({
+      [ctx.body, ctx.type] = Internal.Form({
         schema: InstallUI.schema,
         uiSchema: InstallUI.uiSchema,
         state: {
@@ -80,8 +79,7 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
         dialogTitle: 'AWS information',
         submitUrl: 'authorize/cb',
         windowTitle: 'AWS information',
-        // Not sure what the proper cancel url would be here
-        cancelUrl: '/cancel',
+        cancelUrl: `${ctx.state.params.baseUrl}/api/session/${ctx.query.session}/cancel`,
         data: {},
       });
     });
@@ -107,13 +105,13 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
 
       const engine: AwsEngine = ctx.state.engine;
       ctx.body = await engine.handleFirstInstallStep(ctx);
-      ctx.type = 'html';
+      ctx.type = 'text/html';
     });
 
     this.router.get('/api/authorize/finalize', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);
       const engine: AwsEngine = ctx.state.engine;
-      await engine.CleanupS3(ctx.query.sessionId);
+      await engine.cleanupS3(ctx.query.sessionId);
       ctx.redirect(engine.getFinalCallbackUrl(ctx));
     });
 

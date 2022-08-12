@@ -5,9 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
 
-const getTokenClient = (ctx: Internal.Types.Context) => ctx.state.tokenClient as Internal.Provider.BaseTokenClient;
+const getTokenClient = (ctx: Internal.Types.Context) =>
+  ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
 const ROLE_NAME = 'fusebit-aws-connector-role';
 const AWS_TYPE = 'AWS';
+const MAX_FX_RUNTIME = 900;
+const S3_BASE_URL = 's3.amazonaws.com';
 class AwsEngine {
   public cfg: IAwsConfig;
 
@@ -15,26 +18,20 @@ class AwsEngine {
     this.cfg = ctx.state.manager.config.configuration as IAwsConfig;
   }
 
-  private generateSessionName(): string {
-    const randomId = uuidv4();
-    return `fusebit-${randomId}`;
-  }
-
   private getAwsSdk<T>(AWSClient: new (creds: any) => T, token: IAwsToken) {
     return new AWSClient({
-      // Defaulting region to us-east-1
-      region: 'us-east-1',
+      region: this.cfg.IAM.region,
       ...token,
     });
   }
 
   public getBaseStsClient() {
-    return this.getAwsSdk(AWS.STS, this.cfg.IAM as IAwsToken);
+    return this.getAwsSdk(AWS.STS, this.cfg.IAM);
   }
 
   /**
    * Returns a valid IAM key pair to the customer's AWS account.
-   * The key pair defaults to time out after 125 seconds, which is the max time a integration
+   * The key pair defaults to time out after 900 seconds, which is the max time a integration
    * can run for, with some slack for HTTP transport between the connector and integration.
    * @returns {*} IAwsToken The temperary token of the customer.
    */
@@ -45,9 +42,10 @@ class AwsEngine {
       const assumeRoleCredentials = await baseStsClient
         .assumeRole({
           ExternalId: cfg.externalId,
-          RoleSessionName: this.generateSessionName(),
+          RoleSessionName: uuidv4(),
           RoleArn: cfg.roleArn,
           TokenCode: totpToken,
+          DurationSeconds: Math.max(MAX_FX_RUNTIME, parseInt(this.cfg.IAM.timeout)),
           SerialNumber: this.cfg.IAM.mfaSerial,
         })
         .promise();
@@ -68,8 +66,8 @@ class AwsEngine {
       .replace('##ROLE_NAME##', roleName);
   }
 
-  private async UploadS3(ctx: Connector.Types.Context, CfnContent: string, sessionId: string) {
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM as IAwsToken);
+  private async uploadS3(ctx: Connector.Types.Context, CfnContent: string, sessionId: string) {
+    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
     await S3Sdk.putObject({
       Bucket: this.cfg.bucketName,
       Body: Buffer.from(CfnContent),
@@ -77,12 +75,12 @@ class AwsEngine {
       Key: `${this.cfg.bucketPrefix}/${sessionId}`,
     }).promise();
 
-    return `https://s3.amazonaws.com/${this.cfg.bucketName}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
+    return `https://${S3_BASE_URL}/${this.cfg.bucketName}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
   }
 
-  public async CleanupS3(sessionId: string) {
+  public async cleanupS3(sessionId: string) {
     const bucketName = this.cfg.bucketName;
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM as IAwsToken);
+    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
     await S3Sdk.deleteObject({
       Bucket: this.cfg.bucketName,
       Key: `${bucketName}/${sessionId}`,
@@ -100,10 +98,10 @@ class AwsEngine {
     const { externalId } = await this.storeSetupInformation(ctx, accountId, roleName, sessionId);
 
     const template = await this.generateCustomerCloudformation(ctx, externalId, roleName);
-    const S3Url = await this.UploadS3(ctx, template, sessionId);
-    const consoleUrl = `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateUrl=${S3Url}&stackName=${
-      this.cfg.stackName || 'connectorassumerolestack'
-    }`;
+    const S3Url = await this.uploadS3(ctx, template, sessionId);
+    const consoleUrl = `https://${this.cfg.IAM.region}.console.aws.amazon.com/cloudformation/home?region=${
+      this.cfg.IAM.region
+    }#/stacks/create/review?templateUrl=${S3Url}&stackName=${this.cfg.stackName || 'connectorassumerolestack'}`;
     const FINAL_URL = `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`;
 
     let htmlTemplate = templates.getInstallCfn();
@@ -114,13 +112,19 @@ class AwsEngine {
     return htmlTemplate;
   }
 
+  private async verifyCustomerCredentials(cfg: IAssumeRoleConfiguration): Promise<boolean> {
+    const customerStsSdk = this.getAwsSdk(AWS.STS, cfg.cachedCredentials as IAwsToken);
+    const me = await customerStsSdk.getCallerIdentity().promise();
+    return me.Account === cfg.accountId;
+  }
+
   private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
-    const STSClient = new AWS.STS({
+    const stsClient = new AWS.STS({
       accessKeyId: this.cfg.IAM.accessKeyId,
       secretAccessKey: this.cfg.IAM.secretAccessKey,
     });
     try {
-      const me = await STSClient.getCallerIdentity().promise();
+      const me = await stsClient.getCallerIdentity().promise();
       return me.Account;
     } catch (e) {
       console.log(`CONNECTOR FAILURE: ${(e as any).code}`);
@@ -167,34 +171,21 @@ class AwsEngine {
       if (cfg.cachedCredentials) {
         // Validate cached credentials are valid
         const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
-        if (expiration > new Date()) {
+        if (expiration < new Date()) {
           // credential expired
           break;
         }
-
-        try {
-          const customerStsSdk = this.getAwsSdk(AWS.STS, cfg.cachedCredentials);
-          const me = await customerStsSdk.getCallerIdentity().promise();
-          if (me.Account !== cfg.accountId) {
-            return undefined;
-          }
-          return cfg.cachedCredentials;
-        } catch (e) {
-          console.log(`CONNECTOR FAILURE: CROSS ACCOUNT ACCESS FAILURE ${(e as any).code}`);
+        if (!(await this.verifyCustomerCredentials(cfg))) {
+          return undefined;
         }
+        return cfg.cachedCredentials;
       }
     } while (false);
     const assumedRoleCredential = await this.assumeCustomerRole(cfg);
     if (!assumedRoleCredential) {
       return undefined;
     }
-    const CustomerStsSdk = this.getAwsSdk(AWS.STS, assumedRoleCredential);
-
-    // Basic validation to verify we assumed the right role
-    const me = await CustomerStsSdk.getCallerIdentity().promise();
-
-    // AccountId matches
-    if (me.Account !== cfg.accountId) {
+    if (!(await this.verifyCustomerCredentials(cfg))) {
       return undefined;
     }
 

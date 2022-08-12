@@ -28,7 +28,6 @@ export const ObjectEntries = <T>(obj: T): Entries<T> => {
 
 abstract class BaseTokenClient<IToken> {
   protected readonly baseUrl: string;
-  // This token is a Fusebit token, not a external SaaS token
   protected readonly accessToken: string;
 
   constructor(params: ITokenParams) {

@@ -235,7 +235,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         }
         return result;
       },
-      validateToken: async (token: IOAuthToken) => {
+      validateToken: (token: IOAuthToken) => {
         if (token.access_token || token.refresh_token) {
           return;
         }

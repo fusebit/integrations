@@ -69,9 +69,9 @@ module Internal {
     export type ApiClient = ApiClient_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
     export type IncomingWebhookClient = typeof IncomingWebhookClient_;
-    export type TokenSessionClient = TokenSessionClient_<any>;
-    export type TokenIdentityClient = TokenIdentityClient_<any>;
-    export type BaseTokenClient = BaseTokenClient_<any>;
+    export type TokenSessionClient<T> = TokenSessionClient_<T>;
+    export type TokenIdentityClient<T> = TokenIdentityClient_<T>;
+    export type BaseTokenClient<T> = BaseTokenClient_<T>;
   }
   export namespace Types {
     export type Context = Context_;

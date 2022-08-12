@@ -8,6 +8,8 @@ interface IAwsConfig {
     secretAccessKey: string;
     otpSecret: string;
     mfaSerial: string;
+    region: string;
+    timeout: string;
   };
   customTemplate: {
     cfnObject?: string;

@@ -3,7 +3,8 @@ import { Connector, Internal } from '@fusebit-int/framework';
 
 import { IOAuthConfig, IOAuthToken, IOAuthTokenWithRefresh } from './OAuthTypes';
 
-const getTokenClient = (ctx: Internal.Types.Context): Internal.Provider.BaseTokenClient => ctx.state.tokenClient;
+const getTokenClient = (ctx: Internal.Types.Context) =>
+  ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IOAuthToken>;
 
 class OAuthEngine {
   public cfg: IOAuthConfig;
