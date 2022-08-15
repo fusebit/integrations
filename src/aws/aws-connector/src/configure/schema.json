@@ -17,6 +17,10 @@
       "title": "The name of the CFN stack within the customer's AWS account.",
       "type": "string"
     },
+    "refreshTimeout": {
+      "title": "The max time (in ms) of when the connector should stop retrying to refresh token.",
+      "type": "string"
+    },
     "IAM": {
       "type": "object",
       "properties": {

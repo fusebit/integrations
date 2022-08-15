@@ -10,7 +10,8 @@
             { "type": "Control", "scope": "#/properties/sessionName" },
             { "type": "Control", "scope": "#/properties/bucketName" },
             { "type": "Control", "scope": "#/properties/bucketPrefix" },
-            { "type": "Control", "scope": "#/properties/stackName" }
+            { "type": "Control", "scope": "#/properties/stackName" },
+            { "type": "Control", "scope": "#/properties/refreshTimeout" }
           ]
         }
       ]
