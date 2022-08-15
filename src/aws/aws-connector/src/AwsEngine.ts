@@ -7,10 +7,11 @@ import * as templates from './template';
 
 const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
-const ROLE_NAME = 'fusebit-aws-connector-role';
+const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const AWS_TYPE = 'AWS';
 const MAX_FX_RUNTIME = 900;
 const S3_BASE_URL = 's3.amazonaws.com';
+
 class AwsEngine {
   public cfg: IAwsConfig;
 
@@ -90,18 +91,18 @@ class AwsEngine {
   public async handleFirstInstallStep(ctx: Connector.Types.Context) {
     const postPayload = JSON.parse(ctx.req.body.payload);
 
-    const { accountId } = postPayload.payload;
+    const { accountId, region } = postPayload.payload;
     const { sessionId } = postPayload.state;
-    const roleName = this.cfg.customTemplate.roleName || ROLE_NAME;
+    const roleName = this.cfg.customTemplate.roleName || DEFAULT_ROLE_NAME;
 
     // push configuration to session
-    const { externalId } = await this.storeSetupInformation(ctx, accountId, roleName, sessionId);
+    const { externalId } = await this.storeSetupInformation(ctx, accountId, roleName, sessionId, region);
 
     const template = await this.generateCustomerCloudformation(ctx, externalId, roleName);
     const S3Url = await this.uploadS3(ctx, template, sessionId);
-    const consoleUrl = `https://${this.cfg.IAM.region}.console.aws.amazon.com/cloudformation/home?region=${
-      this.cfg.IAM.region
-    }#/stacks/create/review?templateUrl=${S3Url}&stackName=${this.cfg.stackName || 'connectorassumerolestack'}`;
+    const consoleUrl = `https://${region}.console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/create/review?templateUrl=${S3Url}&stackName=${
+      this.cfg.stackName || 'connectorassumerolestack'
+    }`;
     const FINAL_URL = `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`;
 
     let htmlTemplate = templates.getInstallCfn();
@@ -141,7 +142,13 @@ class AwsEngine {
     };
   }
 
-  public async storeSetupInformation(ctx: Connector.Types.Context, accountId: string, roleName: string, id: string) {
+  public async storeSetupInformation(
+    ctx: Connector.Types.Context,
+    accountId: string,
+    roleName: string,
+    id: string,
+    region: string
+  ) {
     const tokenClient = getTokenClient(ctx);
     const externalId = uuidv4();
     await tokenClient.put(
@@ -149,6 +156,7 @@ class AwsEngine {
         accountId: accountId,
         externalId: externalId,
         roleArn: `arn:aws:iam::${accountId}:role/${roleName}`,
+        region,
       },
       id
     );

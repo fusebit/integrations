@@ -5,6 +5,11 @@
       "type": "Control",
       "scope": "#/properties/accountId",
       "label": "Account Id"
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/region",
+      "label": "Region"
     }
   ]
 }

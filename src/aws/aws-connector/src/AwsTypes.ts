@@ -35,6 +35,7 @@ interface IAssumeRoleConfiguration {
   externalId: string;
   roleArn: string;
   cachedCredentials?: IAwsToken;
+  region: string;
 }
 
 export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags };

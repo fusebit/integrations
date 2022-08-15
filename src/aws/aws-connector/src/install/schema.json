@@ -4,6 +4,10 @@
     "accountId": {
       "title": "The ID of your AWS account",
       "type": "string"
+    },
+    "region": {
+      "title": "The region where everything should reside in.",
+      "type": "string"
     }
   }
 }

@@ -115,12 +115,21 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
       ctx.redirect(engine.getFinalCallbackUrl(ctx));
     });
 
-    this.router.get('/api/session/:lookupKey/health', async (ctx: Connector.Types.Context) => {
-      ctx.state.tokenClient = this.createSessionClient(ctx);
-      const lookupKey = ctx.params.lookupKey;
-      const engine: AwsEngine = ctx.state.engine;
-      await engine.ensureCrossAccountAccess(ctx, lookupKey);
-    });
+    this.router.get(
+      '/api/session/:lookupKey/health',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+        ctx.state.tokenClient = this.createSessionClient(ctx);
+        const lookupKey = ctx.params.lookupKey;
+        const engine: AwsEngine = ctx.state.engine;
+        const res = await engine.ensureCrossAccountAccess(ctx, lookupKey);
+        if (!res) {
+          ctx.throw(404);
+        }
+
+        return next();
+      }
+    );
 
     this.router.get(
       '/api/:lookupKey/token',

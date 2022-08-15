@@ -42,7 +42,9 @@
         },
         "timeout": {
           "type": "string",
-          "title": "The timeout of each assume role session, minimum 900s."
+          "title": "The timeout of each assume role session, minimum 900s.",
+          "pattern": "90[0-9]|9[1-9]\\d|[1-9]\\d{3,}",
+          "minLength": 3
         }
       }
     },
