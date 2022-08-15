@@ -175,22 +175,15 @@ class AwsEngine {
     lookupKey: string
   ): Promise<IAwsToken | undefined> {
     const cfg: IAssumeRoleConfiguration = await getTokenClient(ctx).get(lookupKey);
-    do {
-      if (cfg.cachedCredentials) {
-        // Validate cached credentials are valid
-        const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
-        if (expiration < new Date()) {
-          // credential expired
-          break;
-        }
-        if (!(await this.verifyCustomerCredentials(cfg))) {
-          return undefined;
-        }
+    if (cfg.cachedCredentials) {
+      // Validate cached credentials are valid
+      const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
+      if (expiration > new Date()) {
         return cfg.cachedCredentials;
       }
-    } while (false);
-    const assumedRoleCredential = await this.assumeCustomerRole(cfg);
-    if (!assumedRoleCredential) {
+    }
+    const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
+    if (!assumedRoleCredentials) {
       return undefined;
     }
     if (!(await this.verifyCustomerCredentials(cfg))) {
@@ -201,12 +194,12 @@ class AwsEngine {
     await getTokenClient(ctx).put(
       {
         ...cfg,
-        cachedCredentials: assumedRoleCredential,
+        cachedCredentials: assumedRoleCredentials,
       },
       lookupKey
     );
 
-    return assumedRoleCredential;
+    return assumedRoleCredentials;
   }
 
   public configToJsonForms() {
