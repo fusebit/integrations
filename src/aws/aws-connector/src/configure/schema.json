@@ -62,7 +62,7 @@
         "cfnObject": {
           "type": "string",
           "title": "The Cloudformation template to utilize.",
-          "language": "javascript"
+          "language": "yaml"
         },
         "roleName": {
           "type": "string",
