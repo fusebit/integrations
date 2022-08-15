@@ -68,24 +68,28 @@ class AwsEngine {
   }
 
   private async uploadS3(ctx: Connector.Types.Context, CfnContent: string, sessionId: string) {
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    await S3Sdk.putObject({
-      Bucket: this.cfg.bucketName,
-      Body: Buffer.from(CfnContent),
-      ContentType: 'text/plain',
-      Key: `${this.cfg.bucketPrefix}/${sessionId}`,
-    }).promise();
+    const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
+    await s3Sdk
+      .putObject({
+        Bucket: this.cfg.bucketName,
+        Body: Buffer.from(CfnContent),
+        ContentType: 'text/plain',
+        Key: `${this.cfg.bucketPrefix}/${sessionId}`,
+      })
+      .promise();
 
     return `https://${S3_BASE_URL}/${this.cfg.bucketName}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
   }
 
   public async cleanupS3(sessionId: string) {
     const bucketName = this.cfg.bucketName;
-    const S3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    await S3Sdk.deleteObject({
-      Bucket: this.cfg.bucketName,
-      Key: `${bucketName}/${sessionId}`,
-    }).promise();
+    const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
+    await s3Sdk
+      .deleteObject({
+        Bucket: this.cfg.bucketName,
+        Key: `${bucketName}/${sessionId}`,
+      })
+      .promise();
   }
 
   public async handleFirstInstallStep(ctx: Connector.Types.Context) {
