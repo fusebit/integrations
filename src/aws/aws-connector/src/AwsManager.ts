@@ -158,6 +158,13 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
         return next();
       }
     );
+
+    this.router.post('/api/session/:sessionId/cancel', async (ctx) => {
+      const tokenClient = this.createSessionClient(ctx);
+      await tokenClient.error({ error: 'Session canceled' }, ctx.params.session);
+      const engine: AwsEngine = ctx.state.engine;
+      ctx.redirect(engine.getFinalCallbackUrl(ctx));
+    });
   }
 }
 

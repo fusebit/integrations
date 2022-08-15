@@ -57,7 +57,8 @@
       "properties": {
         "cfnObject": {
           "type": "string",
-          "title": "The Cloudformation template to utilize."
+          "title": "The Cloudformation template to utilize.",
+          "language": "javascript"
         },
         "roleName": {
           "type": "string",

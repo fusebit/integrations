@@ -46,7 +46,7 @@ class AwsEngine {
           RoleSessionName: uuidv4(),
           RoleArn: cfg.roleArn,
           TokenCode: totpToken,
-          DurationSeconds: Math.max(MAX_FX_RUNTIME, parseInt(this.cfg.IAM.timeout)),
+          DurationSeconds: 900,
           SerialNumber: this.cfg.IAM.mfaSerial,
         })
         .promise();
@@ -138,7 +138,7 @@ class AwsEngine {
       accessKeyId: rawCreds.AccessKeyId,
       secretAccessKey: rawCreds.SecretAccessKey,
       sessionToken: rawCreds.SessionToken,
-      expiration: rawCreds.Expiration.toString(),
+      expiration: rawCreds.Expiration.getTime(),
     };
   }
 
@@ -165,7 +165,7 @@ class AwsEngine {
   }
 
   public getFinalCallbackUrl = (ctx: Internal.Types.Context): string => {
-    const url = new URL(`${ctx.state.params.baseUrl}/session/${ctx.query.sessionId}/callback`);
+    const url = new URL(`${ctx.state.params.baseUrl}/session/${ctx.query.sessionId || ctx.params.sessionId}/callback`);
     Object.entries<string>(ctx.request.query).forEach(([key, value]) => url.searchParams.append(key, value));
     return url.toString();
   };
@@ -174,15 +174,48 @@ class AwsEngine {
     ctx: Connector.Types.Context,
     lookupKey: string
   ): Promise<IAwsToken | undefined> {
-    const cfg: IAssumeRoleConfiguration = await getTokenClient(ctx).get(lookupKey);
+    const tokenClient = getTokenClient(ctx);
+    const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
     if (cfg.cachedCredentials) {
+      if (cfg.cachedCredentials.status === 'REFRESHING') {
+        const maxIteration = parseInt(this.cfg.refreshTimeout) / 1000;
+        for (let i = 0; i < maxIteration; i++) {
+          const token = await tokenClient.get(lookupKey);
+          if (token.cachedCredentials?.status === 'READY') {
+            return token.cachedCredentials;
+          }
+
+          await new Promise((res) => setTimeout(res, 1000));
+        }
+
+        // status failed to transition to healthy, retry renew
+        await tokenClient.put(
+          {
+            ...cfg,
+            cachedCredentials: {
+              accessKeyId: '',
+              secretAccessKey: '',
+              expiration: 0,
+              status: 'READY',
+            },
+          },
+          lookupKey
+        );
+        return await this.ensureCrossAccountAccess(ctx, lookupKey);
+      }
       // Validate cached credentials are valid
       const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
       if (expiration > new Date()) {
         return cfg.cachedCredentials;
       }
     }
+
+    cfg.cachedCredentials = { status: 'REFRESHING', accessKeyId: '', secretAccessKey: '' };
+
+    await tokenClient.put(cfg, lookupKey);
+
     const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
+    cfg.cachedCredentials = assumedRoleCredentials;
     if (!assumedRoleCredentials) {
       return undefined;
     }
@@ -191,10 +224,10 @@ class AwsEngine {
     }
 
     // Update cached credentials within the session
-    await getTokenClient(ctx).put(
+    await tokenClient.put(
       {
         ...cfg,
-        cachedCredentials: assumedRoleCredentials,
+        cachedCredentials: { ...assumedRoleCredentials, status: 'READY' },
       },
       lookupKey
     );

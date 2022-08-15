@@ -3,6 +3,7 @@ interface IAwsConfig {
   bucketName: string;
   bucketPrefix: string;
   stackName: string;
+  refreshTimeout: string;
   IAM: {
     accessKeyId: string;
     secretAccessKey: string;
@@ -24,8 +25,9 @@ interface IAwsToken {
   accessKeyId: string;
   secretAccessKey: string;
   sessionToken?: string;
-  expiration?: string;
+  expiration?: number;
   OTPSecret?: string;
+  status?: 'REFRESHING' | 'READY';
 }
 
 interface ITags extends Record<string, string | null> {}
