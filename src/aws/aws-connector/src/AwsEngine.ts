@@ -9,7 +9,8 @@ const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const AWS_TYPE = 'AWS';
-const MAX_FX_RUNTIME = 900;
+const MAX_FX_RUNTIME = 3000;
+const MIN_TIME_BEFORE_REFRESH_MS = 900 * 1000;
 const S3_BASE_URL = 's3.amazonaws.com';
 
 class AwsEngine {
@@ -46,7 +47,7 @@ class AwsEngine {
           RoleSessionName: uuidv4(),
           RoleArn: cfg.roleArn,
           TokenCode: totpToken,
-          DurationSeconds: 900,
+          DurationSeconds: Math.max(MAX_FX_RUNTIME, parseInt(this.cfg.IAM.timeout || '0')),
           SerialNumber: this.cfg.IAM.mfaSerial,
         })
         .promise();
@@ -174,69 +175,77 @@ class AwsEngine {
     return url.toString();
   };
 
+  public async atomicRefresh(
+    tokenClient: Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>,
+    cfg: IAssumeRoleConfiguration,
+    lookupKey: string
+  ) {
+    await tokenClient.put(
+      { ...cfg, status: 'REFRESHING', cachedCredentials: { accessKeyId: '', secretAccessKey: '' } },
+      lookupKey
+    );
+
+    const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
+    // transition to state = FAILED if the system failed to assume role
+    if (assumedRoleCredentials === undefined) {
+      await tokenClient.put(
+        { ...cfg, cachedCredentials: { accessKeyId: '', secretAccessKey: '' }, status: 'FAILED' },
+        lookupKey
+      );
+      return;
+    }
+
+    await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
+
+    return assumedRoleCredentials;
+  }
+
   public async ensureCrossAccountAccess(
     ctx: Connector.Types.Context,
     lookupKey: string
   ): Promise<IAwsToken | undefined> {
     const tokenClient = getTokenClient(ctx);
     const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
-    if (cfg.cachedCredentials) {
-      if (cfg.cachedCredentials.status === 'REFRESHING') {
-        const maxIteration = parseInt(this.cfg.refreshTimeout) / 1000;
-        for (let i = 0; i < maxIteration; i++) {
-          const token = await tokenClient.get(lookupKey);
-          if (token.cachedCredentials?.status === 'READY') {
-            return token.cachedCredentials;
-          }
+    // If system have been transitioned to permanent failure, immediately fail request to get token
+    if (cfg.status === 'FAILED') {
+      return undefined;
+    }
+    // If there is no cached creds at all, immediately transition to refresh
+    if (
+      !cfg.cachedCredentials ||
+      (cfg.cachedCredentials.expiration || 0) - new Date().getTime() < MIN_TIME_BEFORE_REFRESH_MS
+    ) {
+      return await this.atomicRefresh(tokenClient, cfg, lookupKey);
+    }
 
-          await new Promise((res) => setTimeout(res, 1000));
+    if (cfg.status === 'REFRESHING') {
+      const maxIteration = parseInt(this.cfg.refreshTimeout) / 1000;
+      for (let i = 0; i < maxIteration; i++) {
+        const token = await tokenClient.get(lookupKey);
+        if (token.status === 'READY') {
+          return token.cachedCredentials;
         }
 
-        // status failed to transition to healthy, retry renew
-        await tokenClient.put(
-          {
-            ...cfg,
-            cachedCredentials: {
-              accessKeyId: '',
-              secretAccessKey: '',
-              expiration: 0,
-              status: 'READY',
-            },
+        await new Promise((res) => setTimeout(res, 1000));
+      }
+
+      // status failed to transition to healthy, retry renew
+      await tokenClient.put(
+        {
+          ...cfg,
+          status: 'READY',
+          cachedCredentials: {
+            accessKeyId: '',
+            secretAccessKey: '',
+            expiration: 0,
           },
-          lookupKey
-        );
-        return await this.ensureCrossAccountAccess(ctx, lookupKey);
-      }
-      // Validate cached credentials are valid
-      const expiration = new Date(cfg.cachedCredentials?.expiration || 0);
-      if (expiration > new Date()) {
-        return cfg.cachedCredentials;
-      }
+        },
+        lookupKey
+      );
+      return await this.atomicRefresh(tokenClient, cfg, lookupKey);
     }
 
-    cfg.cachedCredentials = { status: 'REFRESHING', accessKeyId: '', secretAccessKey: '' };
-
-    await tokenClient.put(cfg, lookupKey);
-
-    const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
-    cfg.cachedCredentials = assumedRoleCredentials;
-    if (!assumedRoleCredentials) {
-      return undefined;
-    }
-    if (!(await this.verifyCustomerCredentials(cfg))) {
-      return undefined;
-    }
-
-    // Update cached credentials within the session
-    await tokenClient.put(
-      {
-        ...cfg,
-        cachedCredentials: { ...assumedRoleCredentials, status: 'READY' },
-      },
-      lookupKey
-    );
-
-    return assumedRoleCredentials;
+    return cfg.cachedCredentials;
   }
 
   public configToJsonForms() {

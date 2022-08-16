@@ -10,7 +10,7 @@ interface IAwsConfig {
     otpSecret: string;
     mfaSerial: string;
     region: string;
-    timeout: string;
+    timeout?: string;
   };
   customTemplate: {
     cfnObject?: string;
@@ -27,7 +27,6 @@ interface IAwsToken {
   sessionToken?: string;
   expiration?: number;
   OTPSecret?: string;
-  status?: 'REFRESHING' | 'READY';
 }
 
 interface ITags extends Record<string, string | null> {}
@@ -38,6 +37,17 @@ interface IAssumeRoleConfiguration {
   roleArn: string;
   cachedCredentials?: IAwsToken;
   region: string;
+  status?: 'REFRESHING' | 'READY' | 'FAILED';
 }
 
-export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags };
+interface error {
+  error: string;
+  errorMessage: string;
+}
+
+const ERROR_SESSION_CANCELED: error = {
+  error: 'Session canceled',
+  errorMessage: 'The session install process have been halted.',
+};
+
+export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags, ERROR_SESSION_CANCELED };

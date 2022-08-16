@@ -3,7 +3,7 @@ import { Connector, Internal } from '@fusebit-int/framework';
 import { AwsEngine } from './AwsEngine';
 import * as ConfigurationUI from './configure';
 import * as InstallUI from './install';
-import { IAwsToken, ITags } from './AwsTypes';
+import { ERROR_SESSION_CANCELED, IAwsToken, ITags } from './AwsTypes';
 
 class AwsConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   private createEngine(ctx: Connector.Types.Context) {
@@ -161,7 +161,7 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
 
     this.router.post('/api/session/:sessionId/cancel', async (ctx) => {
       const tokenClient = this.createSessionClient(ctx);
-      await tokenClient.error({ error: 'Session canceled' }, ctx.params.session);
+      await tokenClient.error(ERROR_SESSION_CANCELED, ctx.params.session);
       const engine: AwsEngine = ctx.state.engine;
       ctx.redirect(engine.getFinalCallbackUrl(ctx));
     });

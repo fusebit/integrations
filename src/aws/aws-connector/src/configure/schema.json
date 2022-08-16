@@ -46,12 +46,12 @@
         },
         "timeout": {
           "type": "string",
-          "title": "The timeout of each assume role session, minimum 900s.",
+          "title": "The timeout of each assume role session, minimum 3000s.",
           "pattern": "90[0-9]|9[1-9]\\d|[1-9]\\d{3,}",
           "minLength": 3,
           "errorMessage": {
-            "minLength": "The timeout of each assume role session must be > 900s",
-            "pattern": "The timeout of each assume role session must be > 900s"
+            "minLength": "The timeout of each assume role session must be > 3000s",
+            "pattern": "The timeout of each assume role session must be > 3000s"
           }
         }
       }
