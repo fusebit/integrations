@@ -68,12 +68,12 @@ class AwsEngine {
       .replace('##ROLE_NAME##', roleName);
   }
 
-  private async uploadS3(ctx: Connector.Types.Context, CfnContent: string, sessionId: string) {
+  private async uploadS3(ctx: Connector.Types.Context, cfnContent: string, sessionId: string) {
     const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
     await s3Sdk
       .putObject({
         Bucket: this.cfg.bucketName,
-        Body: Buffer.from(CfnContent),
+        Body: Buffer.from(cfnContent),
         ContentType: 'text/plain',
         Key: `${this.cfg.bucketPrefix}/${sessionId}`,
       })
