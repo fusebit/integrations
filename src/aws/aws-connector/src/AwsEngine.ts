@@ -118,12 +118,6 @@ class AwsEngine {
     return htmlTemplate;
   }
 
-  private async verifyCustomerCredentials(cfg: IAssumeRoleConfiguration): Promise<boolean> {
-    const customerStsSdk = this.getAwsSdk(AWS.STS, cfg.cachedCredentials as IAwsToken);
-    const me = await customerStsSdk.getCallerIdentity().promise();
-    return me.Account === cfg.accountId;
-  }
-
   private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
     const stsClient = new AWS.STS({
       accessKeyId: this.cfg.IAM.accessKeyId,
