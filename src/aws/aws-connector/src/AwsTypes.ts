@@ -3,7 +3,6 @@ interface IAwsConfig {
   bucketName: string;
   bucketPrefix: string;
   stackName: string;
-  refreshTimeout: string;
   IAM: {
     accessKeyId: string;
     secretAccessKey: string;

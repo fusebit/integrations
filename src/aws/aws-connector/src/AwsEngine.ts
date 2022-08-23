@@ -10,7 +10,9 @@ const getTokenClient = (ctx: Internal.Types.Context) =>
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const AWS_TYPE = 'AWS';
 const MAX_FX_RUNTIME = 3000;
-const MIN_TIME_BEFORE_REFRESH_MS = 900 * 1000;
+const REFRESH_BACKOFF_ITER = 20;
+const TIMEOUT_PER_ITER = 2 * 1000;
+const MIN_TIME_BEFORE_REFRESH_MS = 900;
 const S3_BASE_URL = 's3.amazonaws.com';
 
 class AwsEngine {
@@ -175,18 +177,20 @@ class AwsEngine {
     lookupKey: string
   ) {
     await tokenClient.put(
-      { ...cfg, status: 'REFRESHING', cachedCredentials: { accessKeyId: '', secretAccessKey: '' } },
+      {
+        ...cfg,
+        status: 'REFRESHING',
+      },
       lookupKey
     );
+
+    await new Promise((res) => setTimeout(res, 5 * 1000));
 
     const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
     // transition to state = FAILED if the system failed to assume role
     if (assumedRoleCredentials === undefined) {
-      await tokenClient.put(
-        { ...cfg, cachedCredentials: { accessKeyId: '', secretAccessKey: '' }, status: 'FAILED' },
-        lookupKey
-      );
-      return;
+      await tokenClient.put({ ...cfg, status: 'FAILED' }, lookupKey);
+      return assumedRoleCredentials;
     }
 
     await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
@@ -202,44 +206,81 @@ class AwsEngine {
     const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
     // If system have been transitioned to permanent failure, immediately fail request to get token
     if (cfg.status === 'FAILED') {
+      // Return existing credentials if they are still valid, otherwise fail completely
+      if ((cfg.cachedCredentials?.expiration || 0) > new Date().getTime()) {
+        return cfg.cachedCredentials;
+      }
+
       return undefined;
     }
-    // If there is no cached creds at all, immediately transition to refresh
+
+    // base case ready and not near expiring
     if (
-      !cfg.cachedCredentials ||
-      (cfg.cachedCredentials.expiration || 0) - new Date().getTime() < MIN_TIME_BEFORE_REFRESH_MS
+      cfg.status === 'READY' &&
+      (cfg.cachedCredentials?.expiration || 0) - new Date().getTime() >
+        MIN_TIME_BEFORE_REFRESH_MS + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER
+    ) {
+      return cfg.cachedCredentials;
+    }
+
+    // ready but need a quick refresh
+    if (
+      cfg.status === 'READY' &&
+      (cfg.cachedCredentials?.expiration || 0) - new Date().getTime() <
+        MIN_TIME_BEFORE_REFRESH_MS + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER
     ) {
       return await this.atomicRefresh(tokenClient, cfg, lookupKey);
     }
 
-    if (cfg.status === 'REFRESHING') {
-      const maxIteration = parseInt(this.cfg.refreshTimeout) / 1000;
-      for (let i = 0; i < maxIteration; i++) {
-        const token = await tokenClient.get(lookupKey);
-        if (token.status === 'READY') {
-          return token.cachedCredentials;
-        }
-
-        await new Promise((res) => setTimeout(res, 1000));
-      }
-
-      // status failed to transition to healthy, retry renew
-      await tokenClient.put(
-        {
-          ...cfg,
-          status: 'READY',
-          cachedCredentials: {
-            accessKeyId: '',
-            secretAccessKey: '',
-            expiration: 0,
-          },
-        },
-        lookupKey
-      );
-      return await this.atomicRefresh(tokenClient, cfg, lookupKey);
+    // token is refreshing, credentials are not expired
+    if (cfg.status === 'REFRESHING' && (cfg.cachedCredentials?.expiration || 0) > new Date().getDate()) {
+      return cfg.cachedCredentials;
     }
 
-    return cfg.cachedCredentials;
+    // This case is hit if:
+    // token ISN'T marked ready
+    // token ISN'T in permanent failure
+    // token IS marked in REFRESHING
+    // token IS NOT valid
+    // token is refreshing, credentials are expired
+    return (await this.waitForRefresh(ctx, lookupKey, REFRESH_BACKOFF_ITER, TIMEOUT_PER_ITER))?.cachedCredentials;
+  }
+
+  private async waitForRefresh(
+    ctx: Internal.Types.Context,
+    lookupKey: string,
+    count: number,
+    backoff: number
+  ): Promise<IAssumeRoleConfiguration | undefined> {
+    const tokenClient = getTokenClient(ctx);
+    if (count <= 0) {
+      return undefined;
+    }
+
+    return new Promise((res, rej) => {
+      setTimeout(async () => {
+        const token = await tokenClient.get(lookupKey);
+        try {
+          if (token.status === 'FAILED') {
+            throw new Error('Concurrent AWS Token Refresh Operation Failed');
+          }
+        } catch (e) {
+          rej(new Error(`Error waiting for access token refresh: ${(e as any).message}`));
+        }
+        if (token.status === 'READY') {
+          res(token);
+        }
+
+        let result;
+        try {
+          result = await this.waitForRefresh(ctx, lookupKey, count - 1, backoff);
+        } catch (e) {
+          rej(e);
+        }
+
+        return res(result);
+      }, backoff);
+    });
   }
 
   public configToJsonForms() {
