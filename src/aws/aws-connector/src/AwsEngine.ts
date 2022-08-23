@@ -14,6 +14,7 @@ const REFRESH_BACKOFF_ITER = 20;
 const TIMEOUT_PER_ITER = 2 * 1000;
 const MIN_TIME_BEFORE_REFRESH_MS = 900;
 const S3_BASE_URL = 's3.amazonaws.com';
+const IAM_ARN_PREFIX = 'arn:aws:iam';
 
 class AwsEngine {
   public cfg: IAwsConfig;
@@ -156,7 +157,7 @@ class AwsEngine {
       {
         accountId: accountId,
         externalId: externalId,
-        roleArn: `arn:aws:iam::${accountId}:role/${roleName}`,
+        roleArn: `${IAM_ARN_PREFIX}::${accountId}:role/${roleName}`,
         region,
       },
       id
@@ -183,8 +184,6 @@ class AwsEngine {
       },
       lookupKey
     );
-
-    await new Promise((res) => setTimeout(res, 5 * 1000));
 
     const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
     // transition to state = FAILED if the system failed to assume role
@@ -237,12 +236,6 @@ class AwsEngine {
       return cfg.cachedCredentials;
     }
 
-    // This case is hit if:
-    // token ISN'T marked ready
-    // token ISN'T in permanent failure
-    // token IS marked in REFRESHING
-    // token IS NOT valid
-    // token is refreshing, credentials are expired
     return (await this.waitForRefresh(ctx, lookupKey, REFRESH_BACKOFF_ITER, TIMEOUT_PER_ITER))?.cachedCredentials;
   }
 
