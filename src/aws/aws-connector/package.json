@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/aws-connector",
-  "version": "7.49.0",
+  "version": "7.50.3",
   "description": "AWS Connector",
   "keywords": [
     "Fusebit",
@@ -23,7 +23,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --config=./jest.config.ts",
+    "test": "jest --config=./jest.config.ts --passWithNoTests",
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty && mkdir -p libc/template/ && cp -r src/template/ libc/template/",
     "dev": "tsc --watch --pretty",
@@ -35,25 +35,22 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1159.0",
-    "jsonwebtoken": "^8.5.1",
     "otplib": "^12.0.1",
     "superagent": "6.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.49.0",
-    "@types/jsonwebtoken": "^8.5.5",
+    "@fusebit-int/framework": "^7.50.3",
     "@types/superagent": "^4.1.12",
     "@types/uuid": "^8.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
     "ts-jest": "^27.0.5",
-    "typescript": "^4.4.3"
+    "typescript": "~4.4.3"
   },
   "peerDependencies": {
     "@fusebit-int/framework": "*"
