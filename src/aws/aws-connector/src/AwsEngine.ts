@@ -8,8 +8,8 @@ import * as templates from './template';
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const CONFIG_TYPE_AWS = 'AWS';
 const MAX_AWS_SESS_DURATION = 3000;
-const REFRESH_BACKOFF_ITER = 20;
-const TIMEOUT_PER_ITER = 2 * 1000;
+const REFRESH_BACKOFF_ITER = 40;
+const TIMEOUT_PER_ITER = 2;
 const MAX_FUSEBIT_INTEGRATION_RUNTIME = 900;
 // This is defined by the sum of the fusebit integration runtime and the max time a refresh is allowed to take
 const TOTAL_MIN_TIME_BEFORE_REFRESH =
@@ -44,7 +44,7 @@ class AwsEngine {
    * can run for, with some slack for HTTP transport between the connector and integration.
    * @returns {*} IAwsToken The temperary token of the customer.
    */
-  public async assumeCustomerRole(cfg: IAssumeRoleConfiguration) {
+  public async assumeCustomerRole(cfg: IAssumeRoleConfiguration): Promise<IAwsToken | 'RETRY' | undefined> {
     try {
       const baseStsClient = this.getBaseStsClient();
       const totpToken = authenticator.generate(this.cfg.IAM.otpSecret);
@@ -60,6 +60,9 @@ class AwsEngine {
         .promise();
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
+      if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
+        return 'RETRY';
+      }
       console.log(`CONNECTOR FAILURE: ASSUME CUSTOMER ROLE FAILURE ${(e as any).code}`);
       return undefined;
     }
@@ -196,6 +199,12 @@ class AwsEngine {
       return assumedRoleCredentials;
     }
 
+    if (assumedRoleCredentials === 'RETRY') {
+      // We will just for now send back the old creds and a subsequent request will retry refresh
+      await tokenClient.put({ ...cfg, status: 'READY' }, lookupKey);
+      return cfg.cachedCredentials;
+    }
+
     await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
 
     return assumedRoleCredentials;
@@ -203,13 +212,18 @@ class AwsEngine {
 
   public async ensureCrossAccountAccess(
     ctx: Connector.Types.Context,
-    lookupKey: string
+    lookupKey: string,
+    inRecursion?: boolean
   ): Promise<IAwsToken | undefined> {
     const tokenClient = getTokenClient(ctx);
     const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
 
-    const cachedCredsTimeout = cfg.cachedCredentials?.expiration || 0;
+    // if there is no credential at all and it's not disabled, force a refresh
+    if (!cfg.cachedCredentials && cfg.status !== 'FAILED') {
+      await this.atomicRefresh(tokenClient, cfg, lookupKey);
+    }
 
+    const cachedCredsTimeout = cfg.cachedCredentials?.expiration || 0;
     // If system have been transitioned to permanent failure, immediately fail request to get token
     if (cfg.status === 'FAILED') {
       // Return existing credentials if they are still valid, otherwise fail completely
@@ -220,9 +234,7 @@ class AwsEngine {
       return undefined;
     }
 
-    const isExpiring =
-      cachedCredsTimeout - new Date().getTime() <
-      TOTAL_MIN_TIME_BEFORE_REFRESH + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER;
+    const isExpiring = cachedCredsTimeout - new Date().getTime() < TOTAL_MIN_TIME_BEFORE_REFRESH;
 
     // base case ready and not near expiring
     if (cfg.status === 'READY' && !isExpiring) {
@@ -236,7 +248,15 @@ class AwsEngine {
 
     // ready but need a quick refresh
     if (cfg.status === 'READY' && isExpiring) {
-      return await this.atomicRefresh(tokenClient, cfg, lookupKey);
+      // if inRecursion is set to true, this just means MFA token have gone bad, fail the request for now
+      if (inRecursion) {
+        // In this case, we just toss back the bad creds for now
+        // TODO: Implement task capability so this is not needed and we can use a background task to refresh
+        return cfg.cachedCredentials;
+      }
+      await this.atomicRefresh(tokenClient, cfg, lookupKey);
+      // This just ensures the new credentials are good to go
+      return await this.ensureCrossAccountAccess(ctx, lookupKey, true);
     }
 
     return (await this.waitForRefresh(ctx, lookupKey, REFRESH_BACKOFF_ITER, TIMEOUT_PER_ITER))?.cachedCredentials;
