@@ -39,4 +39,4 @@ interface IAssumeRoleConfiguration {
   status?: 'REFRESHING' | 'READY' | 'FAILED';
 }
 
-export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags, ERROR_SESSION_CANCELED };
+export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags };
