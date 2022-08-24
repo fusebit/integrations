@@ -1,20 +1,24 @@
-import { Connector, Internal } from '@fusebit-int/framework';
 import AWS from 'aws-sdk';
 import { authenticator } from 'otplib';
 import { v4 as uuidv4 } from 'uuid';
+import { Connector, Internal } from '@fusebit-int/framework';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
 
-const getTokenClient = (ctx: Internal.Types.Context) =>
-  ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
-const AWS_TYPE = 'AWS';
-const MAX_FX_RUNTIME = 3000;
+const CONFIG_TYPE_AWS = 'AWS';
+const MAX_AWS_SESS_DURATION = 3000;
 const REFRESH_BACKOFF_ITER = 20;
 const TIMEOUT_PER_ITER = 2 * 1000;
-const MIN_TIME_BEFORE_REFRESH_MS = 900;
+const MAX_FUSEBIT_INTEGRATION_RUNTIME = 900;
+// This is defined by the sum of the fusebit integration runtime and the max time a refresh is allowed to take
+const TOTAL_MIN_TIME_BEFORE_REFRESH =
+  (MAX_FUSEBIT_INTEGRATION_RUNTIME + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER) * 1000;
 const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
+
+const getTokenClient = (ctx: Internal.Types.Context) =>
+  ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
 
 class AwsEngine {
   public cfg: IAwsConfig;
@@ -50,7 +54,7 @@ class AwsEngine {
           RoleSessionName: uuidv4(),
           RoleArn: cfg.roleArn,
           TokenCode: totpToken,
-          DurationSeconds: Math.max(MAX_FX_RUNTIME, parseInt(this.cfg.IAM.timeout || '0')),
+          DurationSeconds: Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM.timeout || '0')),
           SerialNumber: this.cfg.IAM.mfaSerial,
         })
         .promise();
@@ -203,37 +207,36 @@ class AwsEngine {
   ): Promise<IAwsToken | undefined> {
     const tokenClient = getTokenClient(ctx);
     const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
+
+    const cachedCredsTimeout = cfg.cachedCredentials?.expiration || 0;
+
     // If system have been transitioned to permanent failure, immediately fail request to get token
     if (cfg.status === 'FAILED') {
       // Return existing credentials if they are still valid, otherwise fail completely
-      if ((cfg.cachedCredentials?.expiration || 0) > new Date().getTime()) {
+      if (cachedCredsTimeout > new Date().getTime()) {
         return cfg.cachedCredentials;
       }
 
       return undefined;
     }
 
+    const isExpiring =
+      cachedCredsTimeout - new Date().getTime() <
+      TOTAL_MIN_TIME_BEFORE_REFRESH + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER;
+
     // base case ready and not near expiring
-    if (
-      cfg.status === 'READY' &&
-      (cfg.cachedCredentials?.expiration || 0) - new Date().getTime() >
-        MIN_TIME_BEFORE_REFRESH_MS + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER
-    ) {
+    if (cfg.status === 'READY' && !isExpiring) {
+      return cfg.cachedCredentials;
+    }
+
+    // token is refreshing, credentials are not expired
+    if (cfg.status === 'REFRESHING' && cachedCredsTimeout > new Date().getDate()) {
       return cfg.cachedCredentials;
     }
 
     // ready but need a quick refresh
-    if (
-      cfg.status === 'READY' &&
-      (cfg.cachedCredentials?.expiration || 0) - new Date().getTime() <
-        MIN_TIME_BEFORE_REFRESH_MS + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER
-    ) {
+    if (cfg.status === 'READY' && isExpiring) {
       return await this.atomicRefresh(tokenClient, cfg, lookupKey);
-    }
-
-    // token is refreshing, credentials are not expired
-    if (cfg.status === 'REFRESHING' && (cfg.cachedCredentials?.expiration || 0) > new Date().getDate()) {
-      return cfg.cachedCredentials;
     }
 
     return (await this.waitForRefresh(ctx, lookupKey, REFRESH_BACKOFF_ITER, TIMEOUT_PER_ITER))?.cachedCredentials;
@@ -250,7 +253,7 @@ class AwsEngine {
       return undefined;
     }
 
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       setTimeout(async () => {
         const token = await tokenClient.get(lookupKey);
         try {
@@ -258,27 +261,27 @@ class AwsEngine {
             throw new Error('Concurrent AWS Token Refresh Operation Failed');
           }
         } catch (e) {
-          rej(new Error(`Error waiting for access token refresh: ${(e as any).message}`));
+          reject(new Error(`Error waiting for access token refresh: ${(e as any).message}`));
         }
         if (token.status === 'READY') {
-          res(token);
+          resolve(token);
         }
 
         let result;
         try {
           result = await this.waitForRefresh(ctx, lookupKey, count - 1, backoff);
         } catch (e) {
-          rej(e);
+          reject(e);
         }
 
-        return res(result);
+        return resolve(result);
       }, backoff);
     });
   }
 
   public configToJsonForms() {
     return {
-      type: AWS_TYPE,
+      type: CONFIG_TYPE_AWS,
       ...this.cfg,
     };
   }

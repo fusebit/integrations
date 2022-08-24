@@ -39,14 +39,4 @@ interface IAssumeRoleConfiguration {
   status?: 'REFRESHING' | 'READY' | 'FAILED';
 }
 
-interface error {
-  error: string;
-  errorMessage: string;
-}
-
-const ERROR_SESSION_CANCELED: error = {
-  error: 'Session canceled',
-  errorMessage: 'The session install process have been halted.',
-};
-
 export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags, ERROR_SESSION_CANCELED };
