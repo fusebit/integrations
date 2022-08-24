@@ -3,7 +3,7 @@ import { Connector, Internal } from '@fusebit-int/framework';
 import { AwsEngine } from './AwsEngine';
 import * as ConfigurationUI from './configure';
 import * as InstallUI from './install';
-import { ERROR_SESSION_CANCELED, IAwsToken, ITags } from './AwsTypes';
+import { IAwsToken, ITags } from './AwsTypes';
 
 class AwsConnector<S extends Connector.Types.Service = Connector.Service> extends Connector<S> {
   private createEngine(ctx: Connector.Types.Context) {
