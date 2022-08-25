@@ -37,6 +37,7 @@ interface IAssumeRoleConfiguration {
   cachedCredentials?: IAwsToken;
   region: string;
   status?: 'REFRESHING' | 'READY' | 'FAILED';
+  retryAfter?: number;
 }
 
 export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags };

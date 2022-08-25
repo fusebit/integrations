@@ -16,6 +16,7 @@ const TOTAL_MIN_TIME_BEFORE_REFRESH =
   (MAX_FUSEBIT_INTEGRATION_RUNTIME + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER) * 1000;
 const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
+const RETRY_AFTER_TIME = 30 * 1000;
 
 const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
@@ -44,7 +45,7 @@ class AwsEngine {
    * can run for, with some slack for HTTP transport between the connector and integration.
    * @returns {*} IAwsToken The temperary token of the customer.
    */
-  public async assumeCustomerRole(cfg: IAssumeRoleConfiguration): Promise<IAwsToken | 'RETRY' | undefined> {
+  public async assumeCustomerRole(cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
     try {
       const baseStsClient = this.getBaseStsClient();
       const totpToken = authenticator.generate(this.cfg.IAM.otpSecret);
@@ -61,10 +62,10 @@ class AwsEngine {
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
       if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
-        return 'RETRY';
+        throw new Error('Please Retry');
       }
       console.log(`CONNECTOR FAILURE: ASSUME CUSTOMER ROLE FAILURE ${(e as any).code}`);
-      return undefined;
+      throw new Error('Assume Role Failure');
     }
   }
 
@@ -184,30 +185,32 @@ class AwsEngine {
     cfg: IAssumeRoleConfiguration,
     lookupKey: string
   ) {
-    await tokenClient.put(
-      {
-        ...cfg,
-        status: 'REFRESHING',
-      },
-      lookupKey
-    );
-
-    const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
-    // transition to state = FAILED if the system failed to assume role
-    if (assumedRoleCredentials === undefined) {
-      await tokenClient.put({ ...cfg, status: 'FAILED' }, lookupKey);
-      return assumedRoleCredentials;
-    }
-
-    if (assumedRoleCredentials === 'RETRY') {
-      // We will just for now send back the old creds and a subsequent request will retry refresh
-      await tokenClient.put({ ...cfg, status: 'READY' }, lookupKey);
+    if (cfg.retryAfter && cfg.retryAfter > new Date().getTime()) {
       return cfg.cachedCredentials;
     }
+    try {
+      await tokenClient.put(
+        {
+          ...cfg,
+          status: 'REFRESHING',
+        },
+        lookupKey
+      );
 
-    await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
+      const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
+      await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
 
-    return assumedRoleCredentials;
+      return assumedRoleCredentials;
+    } catch (e) {
+      if ((e as any).includes('Please Retry')) {
+        const retryAfter = new Date().getTime() + RETRY_AFTER_TIME;
+        await tokenClient.put({ ...cfg, retryAfter: retryAfter }, lookupKey);
+        return cfg.cachedCredentials;
+      }
+
+      await tokenClient.put({ ...cfg, status: 'FAILED' }, lookupKey);
+      return cfg.cachedCredentials;
+    }
   }
 
   public async ensureCrossAccountAccess(
@@ -217,13 +220,14 @@ class AwsEngine {
   ): Promise<IAwsToken | undefined> {
     const tokenClient = getTokenClient(ctx);
     const cfg: IAssumeRoleConfiguration = await tokenClient.get(lookupKey);
+    const cachedCredsTimeout = cfg.cachedCredentials?.expiration || 0;
+    const isExpiring = cachedCredsTimeout - new Date().getTime() < TOTAL_MIN_TIME_BEFORE_REFRESH;
 
     // if there is no credential at all and it's not disabled, force a refresh
     if (!cfg.cachedCredentials && cfg.status !== 'FAILED') {
       await this.atomicRefresh(tokenClient, cfg, lookupKey);
     }
 
-    const cachedCredsTimeout = cfg.cachedCredentials?.expiration || 0;
     // If system have been transitioned to permanent failure, immediately fail request to get token
     if (cfg.status === 'FAILED') {
       // Return existing credentials if they are still valid, otherwise fail completely
@@ -233,8 +237,6 @@ class AwsEngine {
 
       return undefined;
     }
-
-    const isExpiring = cachedCredsTimeout - new Date().getTime() < TOTAL_MIN_TIME_BEFORE_REFRESH;
 
     // base case ready and not near expiring
     if (cfg.status === 'READY' && !isExpiring) {
@@ -250,7 +252,7 @@ class AwsEngine {
     if (cfg.status === 'READY' && isExpiring) {
       // if inRecursion is set to true, this just means MFA token have gone bad, fail the request for now
       if (inRecursion) {
-        // In this case, we just toss back the bad creds for now
+        // In this case, we just toss back the older creds for now
         // TODO: Implement task capability so this is not needed and we can use a background task to refresh
         return cfg.cachedCredentials;
       }
