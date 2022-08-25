@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "properties": {
+    "sessionName": {
+      "title": "AssumeRole session name.",
+      "type": "string"
+    },
+    "bucketName": {
+      "title": "S3 bucket name.",
+      "type": "string"
+    },
+    "bucketPrefix": {
+      "title": "Prefix for objects in S3.",
+      "type": "string"
+    },
+    "stackName": {
+      "title": "The name of the CFN stack within the customer's AWS account.",
+      "type": "string"
+    },
+    "refreshTimeout": {
+      "title": "The max time (in ms) of when the connector should stop retrying to refresh token.",
+      "type": "string"
+    },
+    "IAM": {
+      "type": "object",
+      "properties": {
+        "accessKeyId": {
+          "type": "string",
+          "title": "IAM Access Key."
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "title": "IAM Secret Access Key."
+        },
+        "otpSecret": {
+          "type": "string",
+          "title": "The OTP secret provided by AWS to generate one time tokens."
+        },
+        "mfaSerial": {
+          "type": "string",
+          "title": "MFA Serial Code."
+        },
+        "region": {
+          "type": "string",
+          "title": "The region where everything lives."
+        },
+        "timeout": {
+          "type": "string",
+          "title": "The timeout of each assume role session, minimum 3000s.",
+          "pattern": "90[0-9]|9[1-9]\\d|[1-9]\\d{3,}",
+          "minLength": 3,
+          "errorMessage": {
+            "minLength": "The timeout of each assume role session must be > 3000s",
+            "pattern": "The timeout of each assume role session must be > 3000s"
+          }
+        }
+      }
+    },
+    "customTemplate": {
+      "type": "object",
+      "properties": {
+        "cfnObject": {
+          "type": "string",
+          "title": "The Cloudformation template to utilize.",
+          "language": "yaml"
+        },
+        "roleName": {
+          "type": "string",
+          "title": "The name of the IAM role generated above."
+        }
+      }
+    },
+    "configPage": {
+      "type": "object",
+      "properties": {
+        "windowTitle": {
+          "type": "string",
+          "title": "The title of the configuration page."
+        }
+      }
+    }
+  }
+}

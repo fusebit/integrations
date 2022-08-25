@@ -1,0 +1,78 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "HorizontalLayout",
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            { "type": "Control", "scope": "#/properties/sessionName" },
+            { "type": "Control", "scope": "#/properties/bucketName" },
+            { "type": "Control", "scope": "#/properties/bucketPrefix" },
+            { "type": "Control", "scope": "#/properties/stackName" },
+            { "type": "Control", "scope": "#/properties/refreshTimeout" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "IAM Configuration",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "VerticalLayout",
+                  "elements": [
+                    { "type": "Control", "scope": "#/properties/IAM/properties/accessKeyId" },
+                    { "type": "Control", "scope": "#/properties/IAM/properties/secretAccessKey" },
+                    { "type": "Control", "scope": "#/properties/IAM/properties/otpSecret" },
+                    { "type": "Control", "scope": "#/properties/IAM/properties/mfaSerial" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Custom CloudFormation Template",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                { "type": "CodeBlock", "scope": "#/properties/customTemplate/properties/cfnObject" },
+                { "type": "Control", "scope": "#/properties/customTemplate/properties/roleName" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Configuration Page Customizations",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [{ "type": "Control", "scope": "#/properties/configPage/properties/windowTitle" }]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,8 +2,6 @@ import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 import * as ConfigurationUI from './configure';
 
-import { TokenClient, TokenSessionClient, TokenIdentityClient } from '@fusebit-int/oauth-connector';
-
 interface ICcfToken {
   expires_at: number;
   expires_in?: number;
@@ -53,7 +51,7 @@ class CcfConnector extends Connector<Connector.Service> {
   }
 
   protected async refreshToken(ctx: Internal.Types.Context, lookupKey: string, token: ICcfToken): Promise<ICcfToken> {
-    const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
+    const tokenClient: Internal.Provider.BaseTokenClient<ICcfToken> = ctx.state.tokenClient;
 
     if (token.status === TOKEN_REFRESHING) {
       token = await this.waitForRefreshedAccessToken(ctx, lookupKey);
@@ -108,7 +106,7 @@ class CcfConnector extends Connector<Connector.Service> {
   }
 
   protected async ensureAccessToken(ctx: Internal.Types.Context, lookupKey: string): Promise<ICcfToken> {
-    const tokenClient: TokenClient<ICcfToken> = ctx.state.tokenClient;
+    const tokenClient: Internal.Provider.BaseTokenClient<ICcfToken> = ctx.state.tokenClient;
     const token: ICcfToken | undefined = await tokenClient.get(lookupKey);
 
     if (!token) {
@@ -126,11 +124,11 @@ class CcfConnector extends Connector<Connector.Service> {
     return await this.refreshToken(ctx, lookupKey, token);
   }
 
-  protected createIdentityClient(ctx: Connector.Types.Context): TokenIdentityClient<ICcfToken> {
+  protected createIdentityClient(ctx: Connector.Types.Context): Internal.Provider.TokenIdentityClient<ICcfToken> {
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenIdentityClient<ICcfToken>({
+    return new Internal.Provider.TokenIdentityClient<ICcfToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/identity`,
@@ -138,11 +136,11 @@ class CcfConnector extends Connector<Connector.Service> {
     });
   }
 
-  protected createSessionClient(ctx: Connector.Types.Context): TokenSessionClient<ICcfToken> {
+  protected createSessionClient(ctx: Connector.Types.Context): Internal.Provider.TokenSessionClient<ICcfToken> {
     const functionUrl = new URL(ctx.state.params.baseUrl);
     const baseUrl = `${functionUrl.protocol}//${functionUrl.host}/v2/account/${ctx.state.params.accountId}/subscription/${ctx.state.params.subscriptionId}/connector/${ctx.state.params.entityId}`;
 
-    return new TokenSessionClient<ICcfToken>({
+    return new Internal.Provider.TokenSessionClient<ICcfToken>({
       accountId: ctx.state.params.accountId,
       subscriptionId: ctx.state.params.subscriptionId,
       baseUrl: `${baseUrl}/session`,

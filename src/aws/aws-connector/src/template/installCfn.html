@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <title>##WINDOW_TITLE##</title>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react.production.min.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react-dom.production.min.js"></script>
+    <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/material-ui.production.min.js"></script>
+    <script>
+      // Webpack expects MaterialUI to have a 'default' parameter in may locations; this fixes that.
+      MaterialUI.default = MaterialUI;
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel" crossorigin>
+      const {
+        ThemeProvider,
+        createMuiTheme,
+        Box,
+        CardContent,
+        Button,
+        CardActions,
+        Card,
+        CircularProgress,
+        Backdrop,
+      } = MaterialUI;
+
+      const FusebitTheme = {
+        ...createMuiTheme({
+          // Overrides of default MUI theme:
+          typography: {
+            fontFamily: '"Nunito Sans", sans-serif',
+          },
+          palette: {
+            primary: {
+              main: '#03032D', // FusebitColor.black
+            },
+            secondary: {
+              main: '#FB310A', // FusebitColor.red
+            },
+          },
+          overrides: {
+            MuiTab: {
+              wrapper: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiButton: {
+              root: {
+                borderRadius: '100px',
+              },
+              label: {
+                fontFamily: '"Poppins", sans-serif',
+              },
+            },
+            MuiDialogContent: {
+              root: {
+                paddingBottom: '30px',
+                paddingTop: '30px',
+              },
+            },
+          },
+        }),
+      };
+
+      function App() {
+        const [spinnerOpen, setSpinnerOpen] = React.useState(false);
+        const S3Url = '##S3_URL##';
+        const consoleRedirectUrl = '##S3_CONSOLE_URL##';
+
+        const card = (
+          <React.Fragment>
+            <CardContent>
+              Now that you have provided us your account id, <br />
+              you have to install a cloudformation template <br />
+              so we can assume a role into your account.
+            </CardContent>
+            <CardActions style={{ justifyContent: 'center' }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  window.open(consoleRedirectUrl, '_blank');
+                }}
+              >
+                Install
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  window.open(S3Url, '_blank');
+                }}
+              >
+                Preview Template
+              </Button>
+            </CardActions>
+
+            <CardContent>
+              After you are done with installing the template,
+              <br /> click finish to verify the installation.
+            </CardContent>
+
+            <CardActions style={{ justifyContent: 'center' }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  window.location.href = '##FINAL_URL##';
+                }}
+              >
+                Finish
+              </Button>
+            </CardActions>
+          </React.Fragment>
+        );
+        return (
+          <>
+            <Box
+              style={{
+                width: 350,
+                align: 'center',
+                position: 'relative',
+                left: '40%',
+              }}
+            >
+              <Card variant="outlined">{card}</Card>
+            </Box>
+          </>
+        );
+      }
+
+      ReactDOM.render(
+        <ThemeProvider theme={FusebitTheme}>
+          <App />
+        </ThemeProvider>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>

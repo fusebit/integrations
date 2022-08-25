@@ -71,19 +71,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 router.get('/api/form', async (ctx) => {
-  let resp = await superagent
-    .get(`${ctx.state.params.baseUrl}/session/${ctx.query.session}`)
-    .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-  const connectorUrl = ctx.state.params.baseUrl.split('/');
-  connectorUrl.pop();
-  connectorUrl.pop();
-  connectorUrl.push('connector');
-  connectorUrl.push(resp.body.dependsOn.linearConnector.parentEntityId);
-  let resp2 = await superagent
-    .get(`${connectorUrl.join('/')}/api/session/${resp.body.dependsOn.linearConnector.entityId}/token`)
-    .set('Authorization', `Bearer ${ctx.state.params.functionAccessToken}`);
-
-  const linearSdk = new client.LinearClient({ accessToken: resp2.body.access_token });
+  const linearSdk = await integration.service.getSdk(ctx, connectorName, ctx.query.sessionId);
   const teams = await linearSdk.teams();
   let teamNames = [];
   teams.nodes.forEach((team) => teamNames.push(team.name));

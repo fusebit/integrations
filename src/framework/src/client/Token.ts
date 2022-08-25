@@ -1,14 +1,16 @@
 import superagent from 'superagent';
-import { ObjectEntries } from './Utilities';
-import { ITags } from './OAuthTypes';
 
 const removeLeadingSlash = (s: string) => s.replace(/^\/(.+)$/, '$1');
 const removeTrailingSlash = (s: string) => s.replace(/^(.+)\/$/, '$1');
 
+interface ITags extends Record<string, string | null> {}
+
 type ICreateTags<IToken> = ((token: IToken) => Promise<ITags | undefined>) | ((token: IToken) => ITags | undefined);
 type IValidateToken<IToken> = ((token: IToken) => Promise<void>) | ((token: IToken) => void);
 
-export interface ITokenParams {
+type Entries<T extends Record<string, any>> = [keyof T, any][];
+
+interface ITokenParams {
   accountId: string;
   subscriptionId: string;
   baseUrl: string;
@@ -20,7 +22,11 @@ export interface ITokenSessionParams<IToken> extends ITokenParams {
   validateToken: IValidateToken<IToken>;
 }
 
-abstract class TokenClient<IToken> {
+export const ObjectEntries = <T>(obj: T): Entries<T> => {
+  return Object.entries(obj) as Entries<T>;
+};
+
+abstract class BaseTokenClient<IToken> {
   protected readonly baseUrl: string;
   protected readonly accessToken: string;
 
@@ -48,7 +54,7 @@ abstract class TokenClient<IToken> {
   };
 }
 
-class TokenSessionClient<IToken> extends TokenClient<IToken> {
+class TokenSessionClient<IToken> extends BaseTokenClient<IToken> {
   protected createTags: ICreateTags<IToken>;
   protected validateToken: IValidateToken<IToken>;
 
@@ -93,7 +99,7 @@ class TokenSessionClient<IToken> extends TokenClient<IToken> {
   };
 }
 
-class TokenIdentityClient<IToken> extends TokenClient<IToken> {
+class TokenIdentityClient<IToken> extends BaseTokenClient<IToken> {
   public get = async (identityId: string): Promise<IToken> => {
     identityId = this.cleanId(identityId);
     const response = await superagent
@@ -124,4 +130,4 @@ class TokenIdentityClient<IToken> extends TokenClient<IToken> {
   };
 }
 
-export { TokenClient, TokenSessionClient, TokenIdentityClient };
+export { BaseTokenClient, TokenSessionClient, TokenIdentityClient };

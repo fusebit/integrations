@@ -24,7 +24,13 @@ import {
   IncomingWebhookClient as IncomingWebhookClient_,
   IncomingWebhookClient,
 } from './provider';
-import { Connector, Integration } from './client/index';
+import {
+  Connector,
+  Integration,
+  TokenIdentityClient as TokenIdentityClient_,
+  TokenSessionClient as TokenSessionClient_,
+  BaseTokenClient as BaseTokenClient_,
+} from './client/index';
 
 // Objects
 const Internal = {
@@ -39,6 +45,9 @@ const Internal = {
     Activator: ProviderActivator_,
     WebhookClient: WebhookClient_,
     ApiClient: ApiClient_,
+    TokenSessionClient: TokenSessionClient_,
+    TokenIdentityClient: TokenIdentityClient_,
+    BaseTokenClient: BaseTokenClient_,
     IncomingWebhookClient: IncomingWebhookClient_,
   },
 };
@@ -60,6 +69,9 @@ module Internal {
     export type ApiClient = ApiClient_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
     export type IncomingWebhookClient = typeof IncomingWebhookClient_;
+    export type TokenSessionClient<T> = TokenSessionClient_<T>;
+    export type TokenIdentityClient<T> = TokenIdentityClient_<T>;
+    export type BaseTokenClient<T> = BaseTokenClient_<T>;
   }
   export namespace Types {
     export type Context = Context_;
@@ -73,6 +85,7 @@ module Internal {
     export type IInstanceConnectorConfig = IInstanceConnectorConfig_;
     export type IFusebitCredentials = Integration.Types.IFusebitCredentials;
     export type IncomingWebhookClient = typeof IncomingWebhookClient_;
+    export type BaseTokenClient = typeof BaseTokenClient_;
   }
 }
 
