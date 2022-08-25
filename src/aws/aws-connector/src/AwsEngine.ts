@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Connector, Internal } from '@fusebit-int/framework';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
+import * as errors from './AwsError';
 
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const CONFIG_TYPE_AWS = 'AWS';
@@ -62,10 +63,10 @@ class AwsEngine {
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
       if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
-        throw new Error('Please Retry');
+        throw new errors.RetryError('Please Retry');
       }
       console.log(`CONNECTOR FAILURE: ASSUME CUSTOMER ROLE FAILURE ${(e as any).code}`);
-      throw new Error('Assume Role Failure');
+      throw new errors.AssumeRoleError('Assume Role Failure');
     }
   }
 
@@ -185,9 +186,6 @@ class AwsEngine {
     cfg: IAssumeRoleConfiguration,
     lookupKey: string
   ) {
-    if (cfg.retryAfter && cfg.retryAfter > new Date().getTime()) {
-      return cfg.cachedCredentials;
-    }
     try {
       await tokenClient.put(
         {
@@ -202,7 +200,7 @@ class AwsEngine {
 
       return assumedRoleCredentials;
     } catch (e) {
-      if ((e as any).includes('Please Retry')) {
+      if (e instanceof errors.RetryError) {
         const retryAfter = new Date().getTime() + RETRY_AFTER_TIME;
         await tokenClient.put({ ...cfg, retryAfter: retryAfter }, lookupKey);
         return cfg.cachedCredentials;
@@ -256,6 +254,11 @@ class AwsEngine {
         // TODO: Implement task capability so this is not needed and we can use a background task to refresh
         return cfg.cachedCredentials;
       }
+
+      if (cfg.retryAfter && cfg.retryAfter > new Date().getTime()) {
+        return cfg.cachedCredentials;
+      }
+
       await this.atomicRefresh(tokenClient, cfg, lookupKey);
       // This just ensures the new credentials are good to go
       return await this.ensureCrossAccountAccess(ctx, lookupKey, true);
@@ -280,10 +283,10 @@ class AwsEngine {
         const token = await tokenClient.get(lookupKey);
         try {
           if (token.status === 'FAILED') {
-            throw new Error('Concurrent AWS Token Refresh Operation Failed');
+            throw new errors.RefreshFailedError('Concurrent AWS Token Refresh Operation Failed');
           }
         } catch (e) {
-          reject(new Error(`Error waiting for access token refresh: ${(e as any).message}`));
+          reject(new errors.WaitForRefreshFailedError(`Error waiting for access token refresh: ${(e as any).message}`));
         }
         if (token.status === 'READY') {
           resolve(token);
