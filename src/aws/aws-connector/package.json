@@ -14,7 +14,7 @@
     "libc/**/*.js",
     "libc/**/*.d.ts",
     "libc/**/*.json",
-    "libc/**/*.yaml",
+    "libc/**/*.yml",
     "libc/**/*.html"
   ],
   "repository": {
