@@ -57,7 +57,7 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
           JSON.stringify({
             data: engine.configToJsonForms(),
             schema: ConfigurationUI.schema,
-            uiSchema: ConfigurationUI.uiSchema,
+            uischema: ConfigurationUI.uiSchema,
           })
         );
 

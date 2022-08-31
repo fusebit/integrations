@@ -3,6 +3,8 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: ##ROLE_NAME##
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess'
       AssumeRolePolicyDocument:
         Statement:
           - Action: sts:AssumeRole

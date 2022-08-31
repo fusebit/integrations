@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "AWS"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "awsConnector",
+      "skip": false,
+      "provider": "@fusebit-int/aws-provider",
+      "entityId": "<% global.entities.awsConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
