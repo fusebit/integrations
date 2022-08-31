@@ -1,12 +1,12 @@
 {
-  "id": "atlassian",
-  "name": "Atlassian",
+  "id": "aws",
+  "name": "AWS",
   "smallIcon": "#/assets/aws.svg",
   "largeIcon": "#/assets/awsLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Project Management,Dev Tools"
+    "catalog": "Cloud"
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
@@ -17,7 +17,7 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "atlassianConnector": {
+      "awsConnector": {
         "entityType": "connector",
         "path": "connector/"
       }
