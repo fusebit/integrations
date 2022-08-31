@@ -1,8 +1,8 @@
 {
-  "id": "reddit",
-  "name": "Reddit",
-  "smallIcon": "#/assets/reddit.svg",
-  "largeIcon": "#/assets/redditLarge.svg",
+  "id": "s3",
+  "name": "AWS S3",
+  "smallIcon": "#/assets/s3.svg",
+  "largeIcon": "#/assets/s3.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
