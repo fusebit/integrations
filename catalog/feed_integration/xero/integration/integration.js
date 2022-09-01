@@ -14,6 +14,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // Optional if the tenantId is supplied by the caller; otherwise populates xeroClient.tenants.
   await xeroClient.updateTenants();
 
+  // API Reference: https://xeroapi.github.io/xero-node/
   const accounts = await xeroClient.accountingApi.getAccounts(xeroClient.tenants[0].tenantId);
 
   ctx.body = {
@@ -26,7 +27,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const xeroClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  // Include API Reference for Xero
+  // API Reference: https://xeroapi.github.io/xero-node/
   await xeroClient.updateTenants();
   const contacts = await xeroClient.accountingApi.getContacts(xeroClient.tenants[0].tenantId);
 
