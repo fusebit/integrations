@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-jira-connector",
-  "version": "7.51.3",
+  "version": "7.51.4",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/atlassian-connector": "^7.51.3",
-    "@fusebit-int/framework": "^7.51.3"
+    "@fusebit-int/atlassian-connector": "^7.51.4",
+    "@fusebit-int/framework": "^7.51.4"
   }
 }
