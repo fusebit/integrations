@@ -1,4 +1,5 @@
 const { Integration } = require('@fusebit-int/framework');
+const AWS = require('aws-sdk');
 const integration = new Integration();
 
 // Koa Router: https://koajs.com
