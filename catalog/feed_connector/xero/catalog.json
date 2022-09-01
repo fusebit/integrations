@@ -10,7 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/xero#creating-your-own-xero-app",
-    "connectorSDKDocUrl": "https://xeroapi.github.io/xero-node/"
+    "connectorSDKDocUrl": "https://github.com/XeroAPI/xero-node"
   },
   "configuration": {
     "schema": "config/schema.json",
