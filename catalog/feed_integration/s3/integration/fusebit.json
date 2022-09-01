@@ -1,0 +1,24 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "AWS"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "awsConnector",
+      "skip": false,
+      "provider": "@fusebit-int/aws-provider",
+      "entityId": "<% global.entities.awsConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {
+    "customTemplate": {
+      "roleName": "fusebitcrossaccaccess",
+      "cfnObject": "Resources:\n  fusebitcrossaccaccess:\n    Type: \"AWS::IAM::Role\"\n    Properties:\n      RoleName: \"##ROLE_NAME##\"\n      ManagedPolicyArns:\n        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: 'sts:AssumeRole'\n            Condition:\n              StringEquals:\n                sts:ExternalId: \"##EXTERNAL_ID##\"\n            Effect: Allow\n            Principal:\n              AWS: '##BASE_ACCOUNT_ID##'\n        Version: '2012-10-17'\n"
+    }
+  }
+}
