@@ -73,7 +73,7 @@ class AwsEngine {
   // Generate the configuration as YAML, technically it is possible for JSON to be applied
   // But for ease of reading, sticking to YAML
   private async generateCustomerCloudformation(ctx: Connector.Types.Context, externalId: string, roleName: string) {
-    const baseFile = String(this.cfg.customTemplate.cfnObject) || templates.getCFNTemplate();
+    const baseFile = this.cfg.customTemplate.cfnObject || templates.getCFNTemplate();
     return baseFile
       .replace('##BASE_ACCOUNT_ID##', (await this.getBaseAccountId(ctx)) as string)
       .replace('##EXTERNAL_ID##', externalId)
