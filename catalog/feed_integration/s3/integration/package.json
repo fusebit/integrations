@@ -9,7 +9,7 @@
   "dependencies": {
     "@fusebit-int/aws-provider": "^7.51.5",
     "@fusebit-int/framework": "^7.51.5",
-    "aws-sdk": "*"
+    "aws-sdk": "2.1208.0"
   },
   "files": [
     "./integration.js",
