@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-s3-integration",
+  "name": "@fusebit-int/catalog-feed-integration-s3-legacy-integration",
   "version": "7.51.5",
   "private": true,
   "scripts": {
@@ -7,9 +7,9 @@
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.165.0",
-    "@fusebit-int/aws-provider": "^7.51.5",
-    "@fusebit-int/framework": "^7.51.5"
+    "@fusebit-int/aws-v2-provider": "^7.51.5",
+    "@fusebit-int/framework": "^7.51.5",
+    "aws-sdk": "2.1208.0"
   },
   "files": [
     "./integration.js",

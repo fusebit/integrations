@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/catalog-feed-integration-s3-connector",
+  "name": "@fusebit-int/catalog-feed-integration-s3-legacy-connector",
   "version": "7.51.5",
   "private": true,
   "scripts": {
@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@fusebit-int/aws-connector": "^7.51.5",
-    "@fusebit-int/framework": "^7.51.5",
-    "aws-sdk": "*"
+    "@fusebit-int/framework": "^7.51.5"
   }
 }

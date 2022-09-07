@@ -1,0 +1,30 @@
+{
+  "id": "s3-legacy",
+  "name": "AWS S3 (Legacy)",
+  "smallIcon": "#/assets/s3.svg",
+  "largeIcon": "#/assets/s3.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Cloud"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "awsConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "s3Integration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

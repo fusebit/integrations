@@ -1,7 +1,7 @@
 {
-  "name": "@fusebit-int/aws-provider",
+  "name": "@fusebit-int/aws-v2-provider",
   "version": "7.51.5",
-  "description": "AWS V3 SDK Provider",
+  "description": "AWS Legacy V2 Provider",
   "keywords": [
     "Fusebit",
     "AWS",
@@ -57,5 +57,8 @@
     "jest": "^27.2.4",
     "typescript": "^4.4.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "aws-sdk": "^2.1159.0",
+    "superagent": "^6.1.0"
+  }
 }
