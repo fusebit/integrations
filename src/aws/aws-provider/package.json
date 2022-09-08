@@ -1,7 +1,7 @@
 {
   "name": "@fusebit-int/aws-provider",
   "version": "7.51.6",
-  "description": "AWS V3 SDK Provider",
+  "description": "AWS provider",
   "keywords": [
     "Fusebit",
     "AWS",
