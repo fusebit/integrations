@@ -14,7 +14,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const command = new ListBucketsCommand({});
   const response = await client.send(command);
 
-  ctx.body = { message: `${buckets.Buckets.length} buckets discovered from the AWS account.` };
+  ctx.body = { message: `${response.Buckets.length} buckets discovered from the AWS account.` };
 });
 
 module.exports = integration;
