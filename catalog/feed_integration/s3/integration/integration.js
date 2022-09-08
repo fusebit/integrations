@@ -1,5 +1,5 @@
 const { Integration } = require('@fusebit-int/framework');
-const { S3Client } = require('@aws-sdk/client-s3');
+const { S3Client, ListBucketsCommand } = require('@aws-sdk/client-s3');
 const integration = new Integration();
 
 // Koa Router: https://koajs.com
