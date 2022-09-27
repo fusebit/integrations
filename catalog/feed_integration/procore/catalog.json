@@ -1,0 +1,49 @@
+{
+  "id": "procore",
+  "name": "Procore",
+  "smallIcon": "#/assets/procore.svg",
+  "largeIcon": "#/assets/procoreLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Finance, Sales"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/procore#creating-your-own-procore-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your companies list from Procore",
+        "itemName": "Company",
+        "properties": [
+          {
+            "name": "companyName",
+            "label": "Company Name"
+          },
+          {
+            "name": "companyIsActive",
+            "label": "Is Active"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "procoreConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "procoreIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
