@@ -17,4 +17,3 @@ integration.event.on('/:componentName/webhook/:eventType', async (ctx) => {
 });
 
 module.exports = integration;
-

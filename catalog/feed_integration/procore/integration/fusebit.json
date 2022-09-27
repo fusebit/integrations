@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Procore"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "procoreConnector",
+      "skip": false,
+      "provider": "@fusebit-int/procore-provider",
+      "entityId": "<% global.entities.procoreConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
