@@ -21,7 +21,7 @@ const code = `
   `;
 
 module.exports = {
-  name: 'Retrive company offices',
+  name: 'Retrieve company offices',
   description: 'Retrive Procore company offices',
   code,
 };
