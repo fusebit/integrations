@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "microsoftdynamicsConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  }
+}

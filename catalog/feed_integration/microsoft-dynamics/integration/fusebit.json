@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "MicrosoftDynamics"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "microsoftdynamicsConnector",
+      "skip": false,
+      "provider": "@fusebit-int/microsoft-dynamics-provider",
+      "entityId": "<% global.entities.microsoftdynamicsConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

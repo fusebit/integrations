@@ -1,0 +1,54 @@
+<svg width="57" height="65" viewBox="0 0 57 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_2020_106)">
+<mask id="mask0_2020_106" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="7" y="0" width="42" height="57">
+<path d="M48.6876 18.4341C48.6876 15.9249 47.1101 13.6865 44.747 12.8426L10.2988 0.539722C8.75211 -0.0126668 7.125 1.13398 7.125 2.77636V21.4825C7.125 22.4862 7.75598 23.3816 8.70123 23.7192L24.1387 29.2326C25.6854 29.7849 27.3125 28.6383 27.3125 26.9959V16.255C27.3125 15.4253 28.1417 14.8513 28.9182 15.1435L32.9663 16.667C35.2803 17.5378 36.8125 19.7515 36.8125 22.224V26.9014L19.3724 33.2737C18.4356 33.616 17.8125 34.5071 17.8125 35.5045V54.1973C17.8125 55.847 19.4531 56.9942 21.0026 56.428L44.7878 47.7372C47.1297 46.8815 48.6875 44.6538 48.6875 42.1604L48.6876 18.4341Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_2020_106)">
+<path d="M7.125 -0.59375L48.6876 14.2499V34.6302C48.6876 36.2725 47.0607 37.4191 45.514 36.8669L36.8125 33.7602V22.2206C36.8125 19.7469 35.2789 17.5324 32.9633 16.6624L28.9176 15.1423C28.1412 14.8506 27.3125 15.4246 27.3125 16.254V30.366L7.125 23.1562V-0.59375Z" fill="url(#paint0_linear_2020_106)"/>
+<g filter="url(#filter1_f_2020_106)">
+<path d="M48.6875 18.6436C48.6875 21.137 47.1297 23.3692 44.7877 24.2249L17.8125 34.0812V57.8312L48.6875 46.5499V18.6436Z" fill="black" fill-opacity="0.24"/>
+</g>
+<g filter="url(#filter2_f_2020_106)">
+<path d="M48.6875 19.5936C48.6875 22.087 47.1297 24.3191 44.7877 25.1748L17.8125 35.0312V58.7812L48.6875 47.4999V19.5936Z" fill="black" fill-opacity="0.32"/>
+</g>
+<path d="M48.6875 18.4061C48.6875 20.8995 47.1297 23.1316 44.7877 23.9873L17.8125 33.8437V57.5937L48.6875 46.3124V18.4061Z" fill="url(#paint1_linear_2020_106)"/>
+<path opacity="0.5" d="M48.6875 18.4061C48.6875 20.8995 47.1297 23.1316 44.7877 23.9873L17.8125 33.8437V57.5937L48.6875 46.3124V18.4061Z" fill="url(#paint2_linear_2020_106)"/>
+<path opacity="0.5" d="M36.8133 26.9089L27.3079 30.3862L27.3079 44.3145C27.3079 45.1442 28.1372 45.7181 28.9137 45.4258L32.9674 43.9C35.2813 43.029 36.8133 40.8155 36.8133 38.3431V26.9089Z" fill="#B0ADFF"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_2020_106" x="-4" y="0" width="65" height="65" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2020_106"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2020_106" result="shape"/>
+</filter>
+<filter id="filter1_f_2020_106" x="17.0125" y="17.8436" width="32.475" height="40.7876" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.4" result="effect1_foregroundBlur_2020_106"/>
+</filter>
+<filter id="filter2_f_2020_106" x="9.8125" y="11.5936" width="46.875" height="55.1876" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="4" result="effect1_foregroundBlur_2020_106"/>
+</filter>
+<linearGradient id="paint0_linear_2020_106" x1="22.5893" y1="-0.59375" x2="33.641" y2="28.3357" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0B53CE"/>
+<stop offset="1" stop-color="#7252AA"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2020_106" x1="38.0818" y1="55.511" x2="38.0818" y2="21.0277" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2266E3"/>
+<stop offset="1" stop-color="#AE7FE2"/>
+</linearGradient>
+<linearGradient id="paint2_linear_2020_106" x1="48.6875" y1="33.7166" x2="36.8579" y2="33.7166" gradientUnits="userSpaceOnUse">
+<stop stop-color="#94B9FF"/>
+<stop offset="0.287843" stop-color="#94B9FF" stop-opacity="0.523646"/>
+<stop offset="1" stop-color="#538FFF" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

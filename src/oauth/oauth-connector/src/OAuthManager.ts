@@ -28,20 +28,12 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     await ctx.state.tokenClient.error({ ...error }, ctx.query.state);
   }
 
-  protected adjustUrlConfiguration(
-    defaultTokenUrl: string,
-    defaultAuthorizationUrl: string,
-    proxyKey?: string,
-    dynamicAuthorizationFields?: string[]
-  ) {
+  protected adjustUrlConfiguration(defaultTokenUrl: string, defaultAuthorizationUrl: string, proxyKey?: string) {
     return async (ctx: Connector.Types.Context, next: Connector.Types.Next): ReturnType<Connector.Types.Next> => {
       const { config: cfg } = ctx.state.manager;
 
-      if (dynamicAuthorizationFields) {
-        dynamicAuthorizationFields.forEach((field) => {
-          defaultAuthorizationUrl = defaultAuthorizationUrl.replace(/{{([^}]*)}}/g, (r, k) => cfg.configuration[k]);
-        });
-      }
+      defaultAuthorizationUrl = defaultAuthorizationUrl.replace(/{{([^}]*)}}/g, (r, k) => cfg.configuration[k]);
+      defaultTokenUrl = defaultTokenUrl.replace(/{{([^}]*)}}/g, (r, k) => cfg.configuration[k]);
 
       cfg.configuration.constants = {
         urls: {
