@@ -1,3 +1,4 @@
+import superagent from 'superagent';
 import { FusebitContext } from '../router';
 import { IInstanceConnectorConfig } from '../ConnectorManager';
 
@@ -20,4 +21,18 @@ export abstract class WebhookClient<C = any> {
   protected installId: string;
   protected config: IInstanceConnectorConfig;
   protected client: C;
+
+  protected makeConnectorWebhookRequest = <T>(verb: string) => {
+    return async (path: string, data?: any): Promise<T> => {
+      const params = this.ctx.state.params;
+      const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
+      const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${path}`;
+      return (
+        await (superagent as any)
+          [verb](webhookUrl)
+          .set('Authorization', `Bearer ${params.functionAccessToken}`)
+          .send(data)
+      ).body;
+    };
+  };
 }

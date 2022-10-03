@@ -102,14 +102,15 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     }
 
     try {
+      const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+      ctx.state.tokenInfo = token;
+
       if (!displaySplash) {
-        await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
+        await this.runExtraConfiguration(ctx);
         return ctx.state.engine.redirectToCallback(ctx);
       }
 
       if (ctx.query.splash) {
-        const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
-        ctx.state.tokenInfo = token;
         await this.handleSplashScreen(ctx);
         // The configuration is now completed, indicate to the Splash screen to perform the redirect.
         ctx.body = {
@@ -148,6 +149,8 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
   }
 
   protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}
+
+  protected async runExtraConfiguration(ctx: Connector.Types.Context): Promise<void> {}
 
   protected readonly OAuthEngine = OAuthEngine;
 

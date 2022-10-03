@@ -1,5 +1,5 @@
 async function createNewCase(ctx, title, description, contactId) {
-  // For the Microsoft Dynamics SDK documentation, see https://github.com/AleksandrRogov/DynamicsWebApi/wiki/api-classes-dynamicswebapi
+  // For the Microsoft Dynamics SDK documentation, see https://learn.microsoft.com/en-us/previous-versions/dynamicscrm-2016/developers-guide/mt593051(v=crm.8)
   const client = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',

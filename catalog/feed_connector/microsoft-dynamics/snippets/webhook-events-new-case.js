@@ -5,6 +5,7 @@ const method = async (ctx) => {
   const { title, ticketnumber } = await client.retrieve(caseId, 'incidents', ['title', 'ticketnumber']);
   ctx.body = `Case ${title} created with number ${ticketnumber}`;
 };
+
 const code = `
 /**
  * Use Fusebit's Event Handler to respond to Microsoft Dynamics Webhook Events

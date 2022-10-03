@@ -1,9 +1,15 @@
 import { Internal } from '@fusebit-int/framework';
 import Client from 'dynamics-web-api';
+import MicrosoftDynamicsWebhook from './MicrosoftDynamicsWebhook';
 
 type FusebitMicrosoftDynamicsClient = Client & { fusebit?: Internal.Types.IFusebitCredentials };
 
 export default class MicrosoftDynamicsProvider extends Internal.Provider.Activator<FusebitMicrosoftDynamicsClient> {
+  public instantiateWebhook = async (ctx: Internal.Types.Context, lookupKey: string, installId: string) => {
+    const client = await this.instantiate(ctx, lookupKey);
+    return new MicrosoftDynamicsWebhook(ctx, lookupKey, installId, this.config, client);
+  };
+
   /*
    * This function will create an authorized wrapper of the Microsoft-Dynamics SDK client.
    */

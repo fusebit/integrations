@@ -5,14 +5,17 @@ import { getContext } from '../../../framework/test/utilities';
 import { Constants } from '../../../framework/test/utilities';
 import { sampleHeaders, sampleConfig, sampleEvent } from './sampleData';
 import { Connector } from '@fusebit-int/framework';
+import { getData, setData } from '../../../../test/mocks/storage';
 
 let service: any;
 let connector: Connector;
-const encodedOrganizationId = 'NzNjZjZhMTctODRhMC00ZjBmLTg5NjEtZDVmMWVjNzcwODcw';
+const aRandomSecret = 'NzNjZjZhMTctODRhMC00ZjBmLTg5NjEtZDVmMWVjNzcwODcw';
 
 const createMockConnector = () => {
   connector = new ServiceConnector();
   service = connector.service;
+  service.utilities.getData = jest.fn(getData);
+  service.utilities.setData = jest.fn(setData);
 };
 
 const sampleCtx: any = {
@@ -20,7 +23,7 @@ const sampleCtx: any = {
   headers: { ...sampleHeaders },
   state: { manager: { config: { configuration: sampleConfig.configuration } } },
   query: {
-    secret: encodedOrganizationId,
+    secret: aRandomSecret,
   },
   throw: jest.fn(),
 };
@@ -39,6 +42,11 @@ describe('Microsoft Dynamics Webhook Events', () => {
   });
 
   test('Validate: validateWebhookEvent', async () => {
+    service.utilities.getData.mockReturnValue({
+      data: {
+        secret: aRandomSecret,
+      },
+    });
     expect(await service.validateWebhookEvent(sampleCtx)).toBeTruthy();
   });
 
@@ -49,7 +57,7 @@ describe('Microsoft Dynamics Webhook Events', () => {
   });
 
   test('Validate: validateWebhookEvent fails with a secret from a different organization', async () => {
-    const ctx = { ...sampleCtx, query: { secret: 'yet-another-organization' } };
+    const ctx = { ...sampleCtx, query: { secret: 'yet-another-secret' } };
     expect(await service.validateWebhookEvent(ctx)).toBeFalsy();
   });
 
@@ -66,10 +74,15 @@ describe('Microsoft Dynamics Webhook Events', () => {
     ctx.state = { ...ctx.state, ...sampleCtx.state };
     ctx.req = sampleCtx.req;
     ctx.query = {
-      secret: encodedOrganizationId,
+      secret: aRandomSecret,
     };
 
     const connector: any = new ServiceConnector();
+    service.utilities.getData.mockReturnValue({
+      data: {
+        secret: aRandomSecret,
+      },
+    });
     const eventAuthId = connector.service.getAuthIdFromEvent(ctx, sampleEvent);
     const eventType = connector.service.getWebhookEventType(sampleEvent);
 

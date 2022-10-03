@@ -20,6 +20,10 @@ class ServiceConnector extends OAuthConnector<Service> {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
   }
 
+  protected async runExtraConfiguration(ctx: Connector.Types.Context) {
+    await this.service.configure(ctx, ctx.state.tokenInfo);
+  }
+
   public constructor() {
     super();
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
@@ -37,6 +41,33 @@ class ServiceConnector extends OAuthConnector<Service> {
         type: 'string',
       };
     });
+
+    const Joi = this.middleware.validate.joi;
+
+    // Webhook management
+    this.router.delete(
+      '/api/webhook/:organizationId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.deleteWebhook(ctx);
+      }
+    );
+
+    this.router.patch(
+      '/api/webhook/:organizationId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.updateWebhook(ctx, ctx.params.organizationId);
+      }
+    );
+
+    this.router.get(
+      '/api/webhook/:organizationId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.getWebhook(ctx);
+      }
+    );
   }
 }
 
