@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "organization": {
+      "title": "Service Root URL",
+      "type": "string"
+    }
+  },
+  "required": ["organization"]
+}

@@ -153,6 +153,8 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
   protected async runExtraConfiguration(ctx: Connector.Types.Context): Promise<void> {}
 
+  protected async displayConfigurationScreen(ctx: Connector.Types.Context): Promise<void> {}
+
   protected readonly OAuthEngine = OAuthEngine;
 
   protected createEngine(ctx: Connector.Types.Context): OAuthEngine {
@@ -354,7 +356,11 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
     // OAuth Flow Endpoints
     this.router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
-      ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
+      const { displayConfigurationScreen } = ctx.state.manager.config.configuration;
+      if (!displayConfigurationScreen) {
+        return ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
+      }
+      this.displayConfigurationScreen(ctx);
     });
 
     this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {

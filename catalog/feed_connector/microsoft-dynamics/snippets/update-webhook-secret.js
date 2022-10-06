@@ -11,7 +11,11 @@ async function updateWebhookSecret(ctx, organizationId) {
 
 const code = `
     /**
-     * Update an existing Webhook secret from a Microsoft Dynamics Organization 
+     * Update an existing Webhook secret from a Microsoft Dynamics Organization
+     * If you need to offer a mechanism to refresh the Webhook secret for a specific
+     * Microsoft Dynamics instance, use this method.
+     * This method is helpful for situations where your users forget the secret configured
+     * using the plug-in registration tool for their Microsoft Dynamics instance.
      * 
      * @param ctx {FusebitContext} Fusebit Context of the request
      * @param organizationId {string} The Id of the organization

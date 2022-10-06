@@ -1,7 +1,8 @@
-import { Connector } from '@fusebit-int/framework';
+import { Connector, Internal } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
+import { schema, uischema } from './configure';
 
 const TOKEN_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/token';
 const AUTHORIZATION_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/authorize';
@@ -24,6 +25,23 @@ class ServiceConnector extends OAuthConnector<Service> {
     await this.service.configure(ctx, ctx.state.tokenInfo);
   }
 
+  protected async displayConfigurationScreen(ctx: Connector.Types.Context) {
+    const [form, contentType] = Internal.Form({
+      schema,
+      uiSchema: uischema,
+      dialogTitle: 'Authorize application to connect to your Microsoft Dynamics instance',
+      submitUrl: `form/configure-organization?session=${ctx.query.session}`,
+      state: {
+        session: ctx.query.session,
+      },
+      data: {},
+      cancelUrl: `${ctx.state.params.baseUrl}/api/session/${ctx.query.session}/cancel`,
+      windowTitle: 'Authorize application to connect to your Microsoft Dynamics instance',
+    });
+    ctx.body = form;
+    ctx.header['Content-Type'] = contentType;
+  }
+
   public constructor() {
     super();
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
@@ -32,6 +50,7 @@ class ServiceConnector extends OAuthConnector<Service> {
         'Microsoft Dynamics Configuration';
 
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'tenant');
+      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'displayConfigurationScreen');
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
@@ -40,11 +59,52 @@ class ServiceConnector extends OAuthConnector<Service> {
         title: `Tenant from your ${SERVICE_NAME} App`,
         type: 'string',
       };
+      ctx.body.schema.properties.displayConfigurationScreen = {
+        title: `Allow multiple ${SERVICE_NAME} instances to use your App`,
+        type: 'boolean',
+      };
     });
 
     const Joi = this.middleware.validate.joi;
 
     // Webhook management
+    this.router.post(
+      '/api/form/configure-organization',
+      this.middleware.validate({
+        body: Joi.object({
+          payload: Joi.string().required(),
+        }),
+      }),
+      async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+        const { payload, state } = JSON.parse(ctx.req.body.payload);
+        const schema = Joi.object({
+          state: {
+            session: Joi.string().required(),
+          },
+          payload: Joi.object({
+            organization: Joi.string().required(),
+          }),
+        });
+
+        const { error } = schema.validate({
+          payload,
+          state,
+        });
+        if (error) {
+          return ctx.throw(error);
+        }
+
+        ctx.state.manager.config.configuration.scope = `${payload.organization.split('/api')[0]}/user_impersonation`;
+        const authorizationUrl = await ctx.state.engine.getAuthorizationUrl(ctx);
+        ctx.redirect(authorizationUrl);
+      }
+    );
+
+    this.router.post('/api/session/:session/cancel', async (ctx) => {
+      ctx.body =
+        'The process has been canceled; please start over to authorize access to your Microsoft Dynamics account.';
+    });
+
     this.router.delete(
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),

@@ -36,9 +36,13 @@ class Service extends OAuthConnector.Service {
   public async configure(ctx: Connector.Types.Context, token: any) {
     // Generate a new Webhook secret associated to the specific organization.
     const { OrganizationId } = await this.getOrganizationInfo(token);
-    const secret = randomBytes(16).toString('hex');
-    const createdTime = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(OrganizationId), { data: { secret, createdTime } });
+    const webhookStorage = await this.getWebhookStorage(ctx, OrganizationId);
+
+    if (!webhookStorage) {
+      const secret = randomBytes(16).toString('hex');
+      const createdTime = Date.now();
+      await this.utilities.setData(ctx, this.getStorageKey(OrganizationId), { data: { secret, createdTime } });
+    }
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
