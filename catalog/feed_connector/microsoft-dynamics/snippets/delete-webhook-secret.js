@@ -16,7 +16,7 @@ const code = `
      * @param ctx {FusebitContext} Fusebit Context of the request
      * @param organizationId {string} The Id of the organization
      */
-    ${getWebhookSecret.toString()}
+    ${deleteWebhookSecret.toString()}
     `;
 
 module.exports = {

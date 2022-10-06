@@ -29,14 +29,14 @@ class ServiceConnector extends OAuthConnector<Service> {
     const [form, contentType] = Internal.Form({
       schema,
       uiSchema: uischema,
-      dialogTitle: 'Authorize application to connect to your Microsoft Dynamics instance',
+      dialogTitle: 'Authorize application to connect to your Microsoft Dynamics Configuration',
       submitUrl: `form/configure-organization?session=${ctx.query.session}`,
       state: {
         session: ctx.query.session,
       },
       data: {},
       cancelUrl: `${ctx.state.params.baseUrl}/api/session/${ctx.query.session}/cancel`,
-      windowTitle: 'Authorize application to connect to your Microsoft Dynamics instance',
+      windowTitle: 'Configure Integration',
     });
     ctx.body = form;
     ctx.header['Content-Type'] = contentType;
