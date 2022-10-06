@@ -1,7 +1,7 @@
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 import superagent from 'superagent';
-import { randomBytes } from 'crypto';
+import { randomBytes, timingSafeEqual } from 'crypto';
 
 class Service extends OAuthConnector.Service {
   private getWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
@@ -19,12 +19,7 @@ class Service extends OAuthConnector.Service {
   }
 
   public updateWebhook = async (ctx: Connector.Types.Context, organizationId: string) => {
-    const webhookStorage = await this.getWebhookStorage(ctx, organizationId);
     const secret = randomBytes(16).toString('hex');
-    if (!webhookStorage) {
-      return (ctx.status = 404);
-    }
-
     const lastUpdate = Date.now();
     await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
     return await this.getWebhook(ctx, organizationId);
@@ -41,15 +36,9 @@ class Service extends OAuthConnector.Service {
   public async configure(ctx: Connector.Types.Context, token: any) {
     // Generate a new Webhook secret associated to the specific organization.
     const { OrganizationId } = await this.getOrganizationInfo(token);
-    const webhookStorage = await this.getWebhookStorage(ctx, OrganizationId);
-    // If the secret already associated to this organization, update the secret.
-    if (webhookStorage) {
-      await this.updateWebhook(ctx, OrganizationId);
-    } else {
-      const secret = randomBytes(16).toString('hex');
-      const createdTime = Date.now();
-      await this.utilities.setData(ctx, this.getStorageKey(OrganizationId), { data: { secret, createdTime } });
-    }
+    const secret = randomBytes(16).toString('hex');
+    const createdTime = Date.now();
+    await this.utilities.setData(ctx, this.getStorageKey(OrganizationId), { data: { secret, createdTime } });
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
@@ -68,7 +57,9 @@ class Service extends OAuthConnector.Service {
       return false;
     }
 
-    return webhookStorage.data.secret === secret;
+    const requestSecretBuffer = Buffer.from(secret, 'utf8');
+    const storedSecretBuffer = Buffer.from(webhookStorage.data.secret, 'utf8');
+    return timingSafeEqual(requestSecretBuffer, storedSecretBuffer);
   }
 
   public getStorageKey = (organizationId: string) => {
@@ -85,12 +76,7 @@ class Service extends OAuthConnector.Service {
 
   public deleteWebhook = async (ctx: Connector.Types.Context) => {
     const { organizationId } = ctx.params;
-    const webhookStorage = await this.getWebhookStorage(ctx, organizationId);
-    if (!webhookStorage) {
-      return (ctx.status = 404);
-    }
-    const { webhookId } = webhookStorage.data;
-    await this.utilities.deleteData(ctx, this.getStorageKey(webhookId));
+    await this.utilities.deleteData(ctx, this.getStorageKey(organizationId));
   };
 
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
