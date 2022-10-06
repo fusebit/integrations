@@ -27,6 +27,7 @@ class Service extends OAuthConnector.Service {
 
     const lastUpdate = Date.now();
     await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
+    return await this.getWebhook(ctx, organizationId);
   };
 
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
@@ -74,8 +75,7 @@ class Service extends OAuthConnector.Service {
     return `webhook/ms-dynamics/${organizationId}`;
   };
 
-  public getWebhook = async (ctx: Connector.Types.Context) => {
-    const { organizationId } = ctx.params;
+  public getWebhook = async (ctx: Connector.Types.Context, organizationId: string) => {
     const webhookStorage = await this.getWebhookStorage(ctx, organizationId);
     if (!webhookStorage) {
       return (ctx.status = 404);

@@ -65,7 +65,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.getWebhook(ctx);
+        ctx.body = await this.service.getWebhook(ctx, ctx.params.organizationId);
       }
     );
   }
