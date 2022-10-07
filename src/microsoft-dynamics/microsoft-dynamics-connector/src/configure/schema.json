@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "organization": {
-      "title": "Service Root URL",
+      "title": "Organization name",
       "type": "string"
     }
   },

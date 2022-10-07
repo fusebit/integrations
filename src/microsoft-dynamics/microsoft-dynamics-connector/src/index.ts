@@ -21,16 +21,16 @@ class ServiceConnector extends OAuthConnector<Service> {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
   }
 
-  protected async runExtraConfiguration(ctx: Connector.Types.Context) {
-    await this.service.configure(ctx, ctx.state.tokenInfo);
+  protected async runExtraConfiguration(ctx: Connector.Types.Context, token: any) {
+    await this.service.configure(ctx, token);
   }
 
-  protected async displayConfigurationScreen(ctx: Connector.Types.Context) {
+  protected async onAuthorize(ctx: Connector.Types.Context) {
     const [form, contentType] = Internal.Form({
       schema,
       uiSchema: uischema,
       dialogTitle: 'Authorize application to connect to your Microsoft Dynamics Configuration',
-      submitUrl: `form/configure-organization?session=${ctx.query.session}`,
+      submitUrl: 'form/configure-organization',
       state: {
         session: ctx.query.session,
       },
@@ -50,7 +50,6 @@ class ServiceConnector extends OAuthConnector<Service> {
         'Microsoft Dynamics Configuration';
 
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'tenant');
-      this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'displayConfigurationScreen');
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
@@ -58,10 +57,6 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.tenant = {
         title: `Tenant from your ${SERVICE_NAME} App`,
         type: 'string',
-      };
-      ctx.body.schema.properties.displayConfigurationScreen = {
-        title: `Allow multiple ${SERVICE_NAME} instances to use your App`,
-        type: 'boolean',
       };
     });
 
@@ -93,9 +88,10 @@ class ServiceConnector extends OAuthConnector<Service> {
         if (error) {
           return ctx.throw(error);
         }
-
-        ctx.state.manager.config.configuration.scope = `${payload.organization.split('/api')[0]}/user_impersonation`;
+        ctx.query.session = state.session;
         const authorizationUrl = await ctx.state.engine.getAuthorizationUrl(ctx);
+        const url = new URL(authorizationUrl);
+        url.searchParams.set('scope', `https://${payload.organization}.api.crm.dynamics.com/user_impersonation`);
         ctx.redirect(authorizationUrl);
       }
     );

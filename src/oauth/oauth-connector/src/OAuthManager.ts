@@ -104,8 +104,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     try {
       if (!displaySplash) {
         const token = await ctx.state.engine.convertAccessCodeToToken(ctx, state, code);
-        ctx.state.tokenInfo = token;
-        await this.runExtraConfiguration(ctx);
+        await this.runExtraConfiguration(ctx, token);
         return ctx.state.engine.redirectToCallback(ctx);
       }
 
@@ -151,9 +150,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
 
   protected async handleSplashScreen(ctx: Connector.Types.Context): Promise<void> {}
 
-  protected async runExtraConfiguration(ctx: Connector.Types.Context): Promise<void> {}
-
-  protected async displayConfigurationScreen(ctx: Connector.Types.Context): Promise<void> {}
+  protected async runExtraConfiguration(ctx: Connector.Types.Context, token: any): Promise<void> {}
 
   protected readonly OAuthEngine = OAuthEngine;
 
@@ -247,6 +244,10 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
         );
       },
     });
+  }
+
+  protected async onAuthorize(ctx: Connector.Types.Context) {
+    return ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
   }
 
   constructor() {
@@ -355,13 +356,7 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     );
 
     // OAuth Flow Endpoints
-    this.router.get('/api/authorize', async (ctx: Connector.Types.Context) => {
-      const { displayConfigurationScreen } = ctx.state.manager.config.configuration;
-      if (!displayConfigurationScreen) {
-        return ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
-      }
-      this.displayConfigurationScreen(ctx);
-    });
+    this.router.get('/api/authorize', this.onAuthorize);
 
     this.router.get('/api/callback', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);

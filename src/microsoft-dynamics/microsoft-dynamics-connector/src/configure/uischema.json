@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Group",
-      "label": "Service Root URL",
+      "label": "Organization name",
       "elements": [
         {
           "type": "HorizontalLayout",

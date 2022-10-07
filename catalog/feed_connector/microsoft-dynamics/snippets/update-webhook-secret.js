@@ -16,6 +16,8 @@ const code = `
      * Microsoft Dynamics instance, use this method.
      * This method is helpful for situations where your users forget the secret configured
      * using the plug-in registration tool for their Microsoft Dynamics instance.
+     * Warning: Updating the Webhook secret will break your existing webhooks, you need to update
+     * the secret using the plug-in registration tool. 
      * 
      * @param ctx {FusebitContext} Fusebit Context of the request
      * @param organizationId {string} The Id of the organization
