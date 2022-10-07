@@ -26,7 +26,7 @@ class Service extends OAuthConnector.Service {
     const secret = randomBytes(16).toString('hex');
     const lastUpdate = Date.now();
     await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
-    return { secret };
+    return { secret, lastUpdate };
   };
 
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {

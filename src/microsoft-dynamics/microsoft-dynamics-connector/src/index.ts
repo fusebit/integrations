@@ -92,7 +92,7 @@ class ServiceConnector extends OAuthConnector<Service> {
         const authorizationUrl = await ctx.state.engine.getAuthorizationUrl(ctx);
         const url = new URL(authorizationUrl);
         url.searchParams.set('scope', `https://${payload.organization}.api.crm.dynamics.com/user_impersonation`);
-        ctx.redirect(authorizationUrl);
+        ctx.redirect(url.toString());
       }
     );
 
