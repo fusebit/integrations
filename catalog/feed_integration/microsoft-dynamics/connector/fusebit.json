@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "https://admin.services.crm.dynamics.com/user_impersonation",
+    "scope": "offline_access",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,

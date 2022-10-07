@@ -76,8 +76,7 @@ class Service extends OAuthConnector.Service {
     return webhookStorage.data;
   };
 
-  public deleteWebhook = async (ctx: Connector.Types.Context) => {
-    const { organizationId } = ctx.params;
+  public deleteWebhook = async (ctx: Connector.Types.Context, organizationId: string) => {
     await this.utilities.deleteData(ctx, this.getStorageKey(organizationId));
   };
 

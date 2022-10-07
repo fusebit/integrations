@@ -1,10 +1,6 @@
 import { Internal } from '@fusebit-int/framework';
 
 class MicrosoftDynamicsWebhook extends Internal.Provider.WebhookClient {
-  public create = async (): Promise<void> => {
-    throw new Error('Method not supported');
-  };
-
   /**
    * Generates the new Microsoft Dynamics webhook secret
    * @param organizationId {string} The Microsoft Dynamics organization associates the secret with
@@ -27,6 +23,10 @@ class MicrosoftDynamicsWebhook extends Internal.Provider.WebhookClient {
    */
   public get = async (organizationId: string) => {
     return this.makeConnectorWebhookRequest<void>('get')(organizationId);
+  };
+
+  public create = async (): Promise<void> => {
+    throw new Error('Method not supported');
   };
 
   public list = async () => {

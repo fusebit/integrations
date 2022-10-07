@@ -10,6 +10,8 @@ const REVOCATION_URL = 'https://graph.microsoft.com/v1.0/me/revokeSignInSessions
 const SERVICE_NAME = 'Microsoft Dynamics';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
+const REQUIRED_SCOPES = ['offline_access'];
+
 class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
 
@@ -50,6 +52,16 @@ class ServiceConnector extends OAuthConnector<Service> {
         'Microsoft Dynamics Configuration';
 
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'tenant');
+
+      // Make sure offline_access and other required scopes (if any) are present
+      if (!ctx.body.data.configuration) {
+        ctx.body.data.configuration = { scope: '' };
+      }
+
+      ctx.body.data.configuration.scope = [
+        ...new Set([...ctx.body.data.configuration.scope.split(' ')].concat(REQUIRED_SCOPES)),
+      ].join(' ');
+
       // Adjust the data schema
       ctx.body.schema.properties.scope.description = `Space separated scopes to request from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
@@ -62,7 +74,7 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     const Joi = this.middleware.validate.joi;
 
-    // Webhook management
+    // Display configuration screen to specify a Microsoft Dynamics Organization.
     this.router.post(
       '/api/form/configure-organization',
       this.middleware.validate({
@@ -91,7 +103,15 @@ class ServiceConnector extends OAuthConnector<Service> {
         ctx.query.session = state.session;
         const authorizationUrl = await ctx.state.engine.getAuthorizationUrl(ctx);
         const url = new URL(authorizationUrl);
-        url.searchParams.set('scope', `https://${payload.organization}.api.crm.dynamics.com/user_impersonation`);
+        const scope = [
+          ...new Set([
+            ...REQUIRED_SCOPES,
+            ctx.state.manager.config.configuration.scope || [],
+            `https://${payload.organization}.api.crm.dynamics.com/user_impersonation`,
+          ]),
+        ].join(' ');
+
+        url.searchParams.set('scope', scope);
         ctx.redirect(url.toString());
       }
     );
@@ -101,11 +121,12 @@ class ServiceConnector extends OAuthConnector<Service> {
         'The process has been canceled; please start over to authorize access to your Microsoft Dynamics account.';
     });
 
+    // Webhook management
     this.router.delete(
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.deleteWebhook(ctx);
+        ctx.body = await this.service.deleteWebhook(ctx, ctx.params.organizationId);
       }
     );
 
