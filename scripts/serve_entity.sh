@@ -4,6 +4,7 @@ set -e
 
 ENTITYTYPE=$1
 ENTITYID=$2
+PACKAGE_NAME=$3
 
 PREFIX=workspace
 
@@ -36,7 +37,12 @@ if [ ! -d ${TARGETDIR} ]; then
 fi
 
 # Use lerna to create the symlinks for the function's node_modules directory
-lerna bootstrap
+if [[ ${PACKAGE_NAME} != "" ]]; then
+    echo Running lerna bootstrap for package @fusebit-int/${PACKAGE_NAME}
+    lerna bootstrap --scope=@fusebit-int/${PACKAGE_NAME}
+  else
+    lerna bootstrap
+fi
 
 if [[ ! -L "${TARGETDIR}/node_modules/@fusebit-int/framework" ]]; then
   RED='\033[0;31m'

@@ -1,0 +1,21 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "MicrosoftDynamics"
+  },
+  "handler": "@fusebit-int/microsoft-dynamics-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "offline_access",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500,
+    "tenant": "organization"
+  }
+}

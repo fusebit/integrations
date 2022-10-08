@@ -1,0 +1,51 @@
+{
+  "id": "microsoft-dynamics",
+  "name": "Microsoft Dynamics",
+  "smallIcon": "#/assets/microsoft-dynamics.svg",
+  "largeIcon": "#/assets/microsoft-dynamicsLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing, CRM, Support, Sales Automation, Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoftdynamics#creating-your-own-microsoft-dynamics-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "postSuccess": "The new Case was successfully created in your Microsoft Dynamics Customer Service instance",
+        "postFail": "Oops! Something went wrong and we couldn't create the Case",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve the Cases from your Microsoft Dynamics Customer Service instance",
+        "itemName": "Case",
+        "properties": [
+          {
+            "name": "caseTitle",
+            "label": "Case Title"
+          },
+          {
+            "name": "caseNumber",
+            "label": "Case Number"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftdynamicsConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "microsoftdynamicsIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

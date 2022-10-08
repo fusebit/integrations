@@ -1,0 +1,36 @@
+{
+  "id": "microsoft-dynamics",
+  "name": "Microsoft Dynamics",
+  "smallIcon": "#/assets/microsoft-dynamics.svg",
+  "largeIcon": "#/assets/microsoft-dynamicsLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing, CRM, Support, Sales Automation, Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoftdynamics#creating-your-own-microsoft-dynamics-app",
+    "connectorSDKDocUrl": "https://github.com/AleksandrRogov/DynamicsWebApi"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftdynamicsConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/microsoft-dynamics-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

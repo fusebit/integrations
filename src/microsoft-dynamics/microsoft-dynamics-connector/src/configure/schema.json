@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "organization": {
+      "title": "Organization name",
+      "type": "string"
+    }
+  },
+  "required": ["organization"]
+}
