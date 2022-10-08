@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-pipedrive-connector",
-  "version": "7.51.9",
+  "version": "7.51.10",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.9",
-    "@fusebit-int/pipedrive-connector": "^7.51.9"
+    "@fusebit-int/framework": "^7.51.10",
+    "@fusebit-int/pipedrive-connector": "^7.51.10"
   }
 }
