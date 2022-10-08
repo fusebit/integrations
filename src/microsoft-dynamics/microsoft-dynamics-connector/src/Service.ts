@@ -4,6 +4,10 @@ import superagent from 'superagent';
 import { randomBytes, timingSafeEqual } from 'crypto';
 
 class Service extends OAuthConnector.Service {
+  public getStorageKey = (organizationId: string) => {
+    return `webhook/ms-dynamics/${organizationId}`;
+  };
+
   private getWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(organizationId));
   };
@@ -17,10 +21,6 @@ class Service extends OAuthConnector.Service {
       .set('Accept', 'application/json');
     return instanceResponse.body;
   }
-
-  public getStorageKey = (organizationId: string) => {
-    return `webhook/ms-dynamics/${organizationId}`;
-  };
 
   public updateWebhook = async (ctx: Connector.Types.Context, organizationId: string) => {
     const secret = randomBytes(16).toString('hex');
