@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { authenticator } from 'otplib';
 import { v4 as uuidv4 } from 'uuid';
+import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
@@ -18,6 +19,7 @@ const TOTAL_MIN_TIME_BEFORE_REFRESH =
 const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
 const RETRY_AFTER_TIME = 30 * 1000;
+let proxyConfig: any;
 
 const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
@@ -31,7 +33,7 @@ class AwsEngine {
 
   private getAwsSdk<T>(AWSClient: new (creds: any) => T, token: IAwsToken) {
     return new AWSClient({
-      region: this.cfg.IAM.region,
+      region: this.cfg.IAM?.region,
       ...token,
     });
   }
@@ -40,26 +42,48 @@ class AwsEngine {
     return this.getAwsSdk(AWS.STS, this.cfg.IAM);
   }
 
+  public async getProxyCredentials(ctx: Internal.Types.Context) {
+    if (proxyConfig) {
+      return proxyConfig;
+    }
+
+    const response = await superagent.get(`${ctx.state.params.baseUrl}/proxy/aws/config`);
+
+    proxyConfig = response.body;
+    return proxyConfig;
+  }
+
   /**
    * Returns a valid IAM key pair to the customer's AWS account.
    * The key pair defaults to time out after 900 seconds, which is the max time a integration
    * can run for, with some slack for HTTP transport between the connector and integration.
    * @returns {*} IAwsToken The temperary token of the customer.
    */
-  public async assumeCustomerRole(cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
+  public async assumeCustomerRole(ctx: Internal.Types.Context, cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
     try {
       const baseStsClient = this.getBaseStsClient();
-      const totpToken = authenticator.generate(this.cfg.IAM.otpSecret);
-      const assumeRoleCredentials = await baseStsClient
-        .assumeRole({
-          ExternalId: cfg.externalId,
-          RoleSessionName: uuidv4(),
-          RoleArn: cfg.roleArn,
-          TokenCode: totpToken,
-          DurationSeconds: Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM.timeout || '0')),
-          SerialNumber: this.cfg.IAM.mfaSerial,
-        })
-        .promise();
+      const totpToken = authenticator.generate(this.cfg.IAM?.otpSecret);
+      let assumeRoleCredentials: any;
+      const duration = Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM.timeout || '0'));
+      if (this.cfg.mode?.useProduction) {
+        assumeRoleCredentials = await baseStsClient
+          .assumeRole({
+            ExternalId: cfg.externalId,
+            RoleSessionName: uuidv4(),
+            RoleArn: cfg.roleArn,
+            TokenCode: totpToken,
+            DurationSeconds: duration,
+            SerialNumber: this.cfg.IAM?.mfaSerial,
+          })
+          .promise();
+      } else {
+        assumeRoleCredentials = (
+          await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
+            action: 'STS.AssumeRole',
+            requestBody: { externalId: cfg.externalId, roleArn: cfg.roleArn, durationSeconds: duration },
+          })
+        ).body;
+      }
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
       if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
@@ -73,7 +97,7 @@ class AwsEngine {
   // Generate the configuration as YAML, technically it is possible for JSON to be applied
   // But for ease of reading, sticking to YAML
   private async generateCustomerCloudformation(ctx: Connector.Types.Context, externalId: string, roleName: string) {
-    const baseFile = this.cfg.customTemplate.cfnObject || templates.getCFNTemplate();
+    const baseFile = this.cfg.customTemplate?.cfnObject || templates.getCFNTemplate();
     return baseFile
       .replace('##BASE_ACCOUNT_ID##', (await this.getBaseAccountId(ctx)) as string)
       .replace('##EXTERNAL_ID##', externalId)
@@ -82,27 +106,43 @@ class AwsEngine {
 
   private async uploadS3(ctx: Connector.Types.Context, cfnContent: string, sessionId: string) {
     const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    await s3Sdk
-      .putObject({
-        Bucket: this.cfg.bucketName,
-        Body: Buffer.from(cfnContent),
-        ContentType: 'text/plain',
-        Key: `${this.cfg.bucketPrefix}/${sessionId}`,
-      })
-      .promise();
+    if (this.cfg.mode?.useProduction) {
+      await s3Sdk
+        .putObject({
+          Bucket: this.cfg.bucketName,
+          Body: Buffer.from(cfnContent),
+          ContentType: 'text/plain',
+          Key: `${this.cfg.bucketPrefix}/${sessionId}`,
+        })
+        .promise();
+    } else {
+      await superagent
+        .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
+        .send({ action: 'S3.PutObject', requestBody: { sessionId, body: cfnContent } });
+    }
 
-    return `https://${S3_BASE_URL}/${this.cfg.bucketName}/${`${this.cfg.bucketPrefix}/${sessionId}`}`;
+    return `https://${S3_BASE_URL}/${
+      this.cfg.mode?.useProduction ? this.cfg.bucketName : (await this.getProxyCredentials(ctx)).bucketName
+    }/${`${
+      this.cfg.mode?.useProduction ? this.cfg.bucketPrefix : (await this.getProxyCredentials(ctx)).bucketPrefix
+    }/${sessionId}`}`;
   }
 
-  public async cleanupS3(sessionId: string) {
+  public async cleanupS3(ctx: Internal.Types.Context, sessionId: string) {
     const bucketName = this.cfg.bucketName;
     const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    await s3Sdk
-      .deleteObject({
-        Bucket: this.cfg.bucketName,
-        Key: `${bucketName}/${sessionId}`,
-      })
-      .promise();
+    if (this.cfg.mode?.useProduction) {
+      await s3Sdk
+        .deleteObject({
+          Bucket: this.cfg.bucketName,
+          Key: `${bucketName}/${sessionId}`,
+        })
+        .promise();
+    } else {
+      await superagent
+        .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
+        .send({ action: 'S3.DeleteObject', requestBody: { sessionId } });
+    }
   }
 
   public async handleFirstInstallStep(ctx: Connector.Types.Context) {
@@ -110,7 +150,7 @@ class AwsEngine {
 
     const { accountId, region } = postPayload.payload;
     const { sessionId } = postPayload.state;
-    const roleName = this.cfg.customTemplate.roleName || DEFAULT_ROLE_NAME;
+    const roleName = this.cfg.customTemplate?.roleName || DEFAULT_ROLE_NAME;
 
     // push configuration to session
     const { externalId } = await this.storeSetupInformation(ctx, accountId, roleName, sessionId, region);
@@ -123,7 +163,7 @@ class AwsEngine {
     const FINAL_URL = `${ctx.state.params.baseUrl}/api/authorize/finalize?sessionId=${ctx.state.sessionId}`;
 
     let htmlTemplate = templates.getInstallCfn();
-    htmlTemplate = htmlTemplate.replace('##WINDOW_TITLE##', this.cfg.configPage.windowTitle || 'Configure AWS');
+    htmlTemplate = htmlTemplate.replace('##WINDOW_TITLE##', 'Configure AWS');
     htmlTemplate = htmlTemplate.replace('##S3_URL##', S3Url);
     htmlTemplate = htmlTemplate.replace('##S3_CONSOLE_URL##', consoleUrl);
     htmlTemplate = htmlTemplate.replace('##FINAL_URL##', FINAL_URL);
@@ -132,11 +172,20 @@ class AwsEngine {
 
   private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
     const stsClient = new AWS.STS({
-      accessKeyId: this.cfg.IAM.accessKeyId,
-      secretAccessKey: this.cfg.IAM.secretAccessKey,
+      accessKeyId: this.cfg.IAM?.accessKeyId,
+      secretAccessKey: this.cfg.IAM?.secretAccessKey,
     });
     try {
-      const me = await stsClient.getCallerIdentity().promise();
+      let me;
+      if (this.cfg.mode?.useProduction) {
+        me = await stsClient.getCallerIdentity().promise();
+      } else {
+        me = (
+          await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
+            action: 'STS.GetCallerIdentity',
+          })
+        ).body;
+      }
       return me.Account;
     } catch (e) {
       console.log(`CONNECTOR FAILURE: ${(e as any).code}`);
@@ -182,6 +231,7 @@ class AwsEngine {
   };
 
   public async atomicRefresh(
+    ctx: Internal.Types.Context,
     tokenClient: Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>,
     cfg: IAssumeRoleConfiguration,
     lookupKey: string
@@ -195,7 +245,7 @@ class AwsEngine {
         lookupKey
       );
 
-      const assumedRoleCredentials = await this.assumeCustomerRole(cfg);
+      const assumedRoleCredentials = await this.assumeCustomerRole(ctx, cfg);
       await tokenClient.put({ ...cfg, cachedCredentials: assumedRoleCredentials, status: 'READY' }, lookupKey);
 
       return assumedRoleCredentials;
@@ -223,7 +273,7 @@ class AwsEngine {
 
     // if there is no credential at all and it's not disabled, force a refresh
     if (!cfg.cachedCredentials && cfg.status !== 'FAILED') {
-      await this.atomicRefresh(tokenClient, cfg, lookupKey);
+      await this.atomicRefresh(ctx, tokenClient, cfg, lookupKey);
     }
 
     // If system have been transitioned to permanent failure, immediately fail request to get token
@@ -259,7 +309,7 @@ class AwsEngine {
         return cfg.cachedCredentials;
       }
 
-      await this.atomicRefresh(tokenClient, cfg, lookupKey);
+      await this.atomicRefresh(ctx, tokenClient, cfg, lookupKey);
       // This just ensures the new credentials are good to go
       return await this.ensureCrossAccountAccess(ctx, lookupKey, true);
     }

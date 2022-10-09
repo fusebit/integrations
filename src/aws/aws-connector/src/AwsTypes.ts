@@ -1,5 +1,7 @@
 interface IAwsConfig {
-  sessionName: string;
+  mode: {
+    useProduction: boolean;
+  };
   bucketName: string;
   bucketPrefix: string;
   stackName: string;
@@ -14,9 +16,6 @@ interface IAwsConfig {
   customTemplate: {
     cfnObject?: string;
     roleName?: string;
-  };
-  configPage: {
-    windowTitle: string;
   };
 }
 

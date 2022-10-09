@@ -10,7 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
-    "connectorSDKDocUrl": "https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-javascript-example_code-nodegetstarted.html"
+    "connectorSDKDocUrl": "https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/index.html"
   },
   "configuration": {
     "schema": "config/schema.json",
