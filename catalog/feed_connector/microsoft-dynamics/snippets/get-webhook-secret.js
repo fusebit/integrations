@@ -10,13 +10,13 @@ async function getWebhookSecret(ctx, organizationId) {
 }
 
 const code = `
-    /**
-     * Retrieve an existing Webhook secret from a Microsoft Dynamics Organization 
-     * 
-     * @param ctx {FusebitContext} Fusebit Context of the request
-     * @param organizationId {string} The Id of the organization
-     */
-    ${getWebhookSecret.toString()}
+/**
+ * Retrieve an existing Webhook secret from a Microsoft Dynamics Organization 
+ * 
+ * @param ctx {FusebitContext} Fusebit Context of the request
+ * @param organizationId {string} The Id of the organization
+ */
+${getWebhookSecret.toString()}
     `;
 
 module.exports = {
