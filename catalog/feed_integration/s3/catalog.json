@@ -10,17 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
-    "integrationsDocUrl": "https://developer.fusebit.io/docs/aws",
-    "sampleConfig": {
-      "isEnabled": true,
-      "isGetEnabled": true,
-      "isPostEnabled": true,
-      "terms": {
-        "getFail": "Oops! Something went wrong and we couldn't retrieve your objects from S3.",
-        "itemName": "Object",
-        "properties": [{ "name": "objectName", "label": "" }]
-      }
-    }
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/aws"
   },
   "configuration": {
     "schema": "config/schema.json",
