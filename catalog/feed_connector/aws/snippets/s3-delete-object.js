@@ -1,15 +1,14 @@
 async function awsS3DeleteObject(ctx, bucketName, objectName) {
-  const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-
   // For the Aws SDK documentation, see https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/index.html.
-  const awsCredentials = await integration.tenant.getSdkByTenant(
+  const credentials = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const client = new S3Client({ credentials: awsCredentials });
-  await client.send(new DeleteObjectCommand({ Bucket: bucketName, Key: objectName }));
+  const client = new S3(credentials);
+
+  await client.deleteObject({ Bucket: bucketName, Key: objectName });
 }
 
 const code = `

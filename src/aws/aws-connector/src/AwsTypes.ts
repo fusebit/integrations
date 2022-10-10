@@ -39,4 +39,9 @@ interface IAssumeRoleConfiguration {
   retryAfter?: number;
 }
 
+export interface IAwsProxyConfig {
+  bucketName: string;
+  bucketPrefix: string;
+}
+
 export { IAwsConfig, IAwsToken, IAssumeRoleConfiguration, ITags };

@@ -3,7 +3,7 @@ import { authenticator } from 'otplib';
 import { v4 as uuidv4 } from 'uuid';
 import superagent from 'superagent';
 import { Connector, Internal } from '@fusebit-int/framework';
-import { IAssumeRoleConfiguration, IAwsConfig, IAwsToken } from './AwsTypes';
+import { IAssumeRoleConfiguration, IAwsConfig, IAwsProxyConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
 import * as errors from './AwsError';
 
@@ -19,7 +19,7 @@ const TOTAL_MIN_TIME_BEFORE_REFRESH =
 const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
 const RETRY_AFTER_TIME = 30 * 1000;
-let proxyConfig: any;
+let proxyConfig: IAwsProxyConfig;
 
 const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
@@ -61,11 +61,11 @@ class AwsEngine {
    */
   public async assumeCustomerRole(ctx: Internal.Types.Context, cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
     try {
-      const baseStsClient = this.getBaseStsClient();
-      const totpToken = authenticator.generate(this.cfg.IAM?.otpSecret);
       let assumeRoleCredentials: any;
-      const duration = Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM.timeout || '0'));
+      const duration = Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM?.timeout || '0'));
       if (this.cfg.mode?.useProduction) {
+        const baseStsClient = this.getBaseStsClient();
+        const totpToken = authenticator.generate(this.cfg.IAM?.otpSecret);
         assumeRoleCredentials = await baseStsClient
           .assumeRole({
             ExternalId: cfg.externalId,
@@ -77,12 +77,22 @@ class AwsEngine {
           })
           .promise();
       } else {
-        assumeRoleCredentials = (
+        const tempAssumeRoleCredentials = (
           await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
             action: 'STS.AssumeRole',
-            requestBody: { externalId: cfg.externalId, roleArn: cfg.roleArn, durationSeconds: duration },
+            externalId: cfg.externalId,
+            roleArn: cfg.roleArn,
+            durationSeconds: duration,
           })
         ).body;
+        assumeRoleCredentials = {
+          Credentials: {
+            AccessKeyId: tempAssumeRoleCredentials.accessKeyId,
+            SecretAccessKey: tempAssumeRoleCredentials.secretAccessKey,
+            Expiration: new Date(tempAssumeRoleCredentials.expiration),
+            SessionToken: tempAssumeRoleCredentials.sessionToken,
+          },
+        };
       }
       return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
     } catch (e) {
@@ -118,7 +128,7 @@ class AwsEngine {
     } else {
       await superagent
         .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
-        .send({ action: 'S3.PutObject', requestBody: { sessionId, body: cfnContent } });
+        .send({ action: 'S3.PutObject', sessionId, body: cfnContent });
     }
 
     return `https://${S3_BASE_URL}/${
@@ -141,7 +151,7 @@ class AwsEngine {
     } else {
       await superagent
         .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
-        .send({ action: 'S3.DeleteObject', requestBody: { sessionId } });
+        .send({ action: 'S3.DeleteObject', sessionId });
     }
   }
 
@@ -176,17 +186,15 @@ class AwsEngine {
       secretAccessKey: this.cfg.IAM?.secretAccessKey,
     });
     try {
-      let me;
       if (this.cfg.mode?.useProduction) {
-        me = await stsClient.getCallerIdentity().promise();
+        const me = await stsClient.getCallerIdentity().promise();
+        return me.Account;
       } else {
-        me = (
-          await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
-            action: 'STS.GetCallerIdentity',
-          })
-        ).body;
+        const response = await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
+          action: 'STS.GetCallerIdentity',
+        });
+        return response.body.accountId;
       }
-      return me.Account;
     } catch (e) {
       console.log(`CONNECTOR FAILURE: ${(e as any).code}`);
       ctx.throw(500);
