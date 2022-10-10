@@ -8,6 +8,7 @@ const TOKEN_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/toke
 const AUTHORIZATION_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/authorize';
 const REVOCATION_URL = 'https://graph.microsoft.com/v1.0/me/revokeSignInSessions';
 const SERVICE_NAME = 'Microsoft Dynamics';
+const PROXY_KEY = 'microsoftdynamics';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 const REQUIRED_SCOPES = ['offline_access'];
@@ -20,7 +21,7 @@ class ServiceConnector extends OAuthConnector<Service> {
   }
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
-    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, PROXY_KEY);
   }
 
   protected async runExtraConfiguration(ctx: Connector.Types.Context, token: any) {
