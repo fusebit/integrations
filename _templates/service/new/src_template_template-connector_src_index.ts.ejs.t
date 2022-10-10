@@ -10,6 +10,7 @@ const TOKEN_URL = '<%= connector.tokenUrl %>';
 const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
 const REVOCATION_URL = '<%= connector.revokeUrl %>';
 const SERVICE_NAME = '<%= h.capitalize(name) %>';
+const PROXY_KEY = '<%= h.changeCase.lower(h.changeCase.camel(name)) %>';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
@@ -21,7 +22,7 @@ class ServiceConnector extends OAuthConnector<Service> {
   }
 
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
-    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, SERVICE_NAME.toLowerCase());
+    return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, PROXY_KEY);
   }
 
   public constructor() {
