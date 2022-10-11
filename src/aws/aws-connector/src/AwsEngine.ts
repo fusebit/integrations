@@ -16,7 +16,6 @@ const MAX_FUSEBIT_INTEGRATION_RUNTIME = 900;
 // This is defined by the sum of the fusebit integration runtime and the max time a refresh is allowed to take
 const TOTAL_MIN_TIME_BEFORE_REFRESH =
   (MAX_FUSEBIT_INTEGRATION_RUNTIME + REFRESH_BACKOFF_ITER * TIMEOUT_PER_ITER) * 1000;
-const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
 const RETRY_AFTER_TIME = 30 * 1000;
 
