@@ -66,7 +66,7 @@ class ProdAwsClient extends BaseAwsClient {
       })
       .promise();
 
-    return `https://${S3_BASE_URL}/${this.globalCfg.bucketName}/${this.globalCfg.bucketPrefix}/${sessionId}`;
+    return `https://${this.globalCfg.bucketName}.${S3_BASE_URL}/${this.globalCfg.bucketPrefix}/${sessionId}`;
   }
 
   public async deleteObject(sessionId: string) {
