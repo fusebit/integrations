@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-google-gmail-integration",
-  "version": "7.51.14",
+  "version": "7.51.15",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.14",
-    "@fusebit-int/google-provider": "^7.51.14"
+    "@fusebit-int/framework": "^7.51.15",
+    "@fusebit-int/google-provider": "^7.51.15"
   },
   "files": [
     "./integration.js",
