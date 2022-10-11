@@ -6,10 +6,10 @@ import { Connector, Internal } from '@fusebit-int/framework';
 import { IAssumeRoleConfiguration, IAwsConfig, IAwsProxyConfig, IAwsToken } from './AwsTypes';
 import * as templates from './template';
 import * as errors from './AwsError';
+import { BaseAwsClient, ProxyAwsClient, ProdAwsClient } from './AwsClient';
 
 const DEFAULT_ROLE_NAME = 'fusebit-aws-connector-role';
 const CONFIG_TYPE_AWS = 'AWS';
-const MAX_AWS_SESS_DURATION = 3000;
 const REFRESH_BACKOFF_ITER = 40;
 const TIMEOUT_PER_ITER = 2;
 const MAX_FUSEBIT_INTEGRATION_RUNTIME = 900;
@@ -19,16 +19,20 @@ const TOTAL_MIN_TIME_BEFORE_REFRESH =
 const S3_BASE_URL = 's3.amazonaws.com';
 const IAM_ARN_PREFIX = 'arn:aws:iam';
 const RETRY_AFTER_TIME = 30 * 1000;
-let proxyConfig: IAwsProxyConfig;
 
 const getTokenClient = (ctx: Internal.Types.Context) =>
   ctx.state.tokenClient as Internal.Provider.BaseTokenClient<IAssumeRoleConfiguration>;
 
 class AwsEngine {
   public cfg: IAwsConfig;
-
+  private awsClient: BaseAwsClient;
   constructor(private ctx: Connector.Types.Context) {
     this.cfg = ctx.state.manager.config.configuration as IAwsConfig;
+    if (this.cfg.mode?.useProduction) {
+      this.awsClient = new ProdAwsClient(this.getAwsSdk(AWS.S3, this.cfg.IAM), this.getBaseStsClient(), this.cfg);
+    } else {
+      this.awsClient = new ProxyAwsClient(this.ctx, this.cfg);
+    }
   }
 
   private getAwsSdk<T>(AWSClient: new (creds: any) => T, token: IAwsToken) {
@@ -42,17 +46,6 @@ class AwsEngine {
     return this.getAwsSdk(AWS.STS, this.cfg.IAM);
   }
 
-  public async getProxyCredentials(ctx: Internal.Types.Context) {
-    if (proxyConfig) {
-      return proxyConfig;
-    }
-
-    const response = await superagent.get(`${ctx.state.params.baseUrl}/proxy/aws/config`);
-
-    proxyConfig = response.body;
-    return proxyConfig;
-  }
-
   /**
    * Returns a valid IAM key pair to the customer's AWS account.
    * The key pair defaults to time out after 900 seconds, which is the max time a integration
@@ -61,40 +54,13 @@ class AwsEngine {
    */
   public async assumeCustomerRole(ctx: Internal.Types.Context, cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
     try {
-      let assumeRoleCredentials: any;
-      const duration = Math.max(MAX_AWS_SESS_DURATION, parseInt(this.cfg.IAM?.timeout || '0'));
-      if (this.cfg.mode?.useProduction) {
-        const baseStsClient = this.getBaseStsClient();
-        const totpToken = authenticator.generate(this.cfg.IAM?.otpSecret);
-        assumeRoleCredentials = await baseStsClient
-          .assumeRole({
-            ExternalId: cfg.externalId,
-            RoleSessionName: uuidv4(),
-            RoleArn: cfg.roleArn,
-            TokenCode: totpToken,
-            DurationSeconds: duration,
-            SerialNumber: this.cfg.IAM?.mfaSerial,
-          })
-          .promise();
-      } else {
-        const tempAssumeRoleCredentials = (
-          await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
-            action: 'STS.AssumeRole',
-            externalId: cfg.externalId,
-            roleArn: cfg.roleArn,
-            durationSeconds: duration,
-          })
-        ).body;
-        assumeRoleCredentials = {
-          Credentials: {
-            AccessKeyId: tempAssumeRoleCredentials.accessKeyId,
-            SecretAccessKey: tempAssumeRoleCredentials.secretAccessKey,
-            Expiration: new Date(tempAssumeRoleCredentials.expiration),
-            SessionToken: tempAssumeRoleCredentials.sessionToken,
-          },
-        };
-      }
-      return this.sanitizeCredentials(assumeRoleCredentials.Credentials as AWS.STS.Credentials);
+      const assumeRoleCredentials = await this.awsClient.assumeRole(cfg);
+      return this.sanitizeCredentials({
+        AccessKeyId: assumeRoleCredentials.accessKeyId,
+        SecretAccessKey: assumeRoleCredentials.secretAccessKey,
+        SessionToken: assumeRoleCredentials.sessionToken,
+        Expiration: assumeRoleCredentials.expiration,
+      } as AWS.STS.Credentials);
     } catch (e) {
       if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
         throw new errors.RetryError('Please Retry');
@@ -109,50 +75,17 @@ class AwsEngine {
   private async generateCustomerCloudformation(ctx: Connector.Types.Context, externalId: string, roleName: string) {
     const baseFile = this.cfg.customTemplate?.cfnObject || templates.getCFNTemplate();
     return baseFile
-      .replace('##BASE_ACCOUNT_ID##', (await this.getBaseAccountId(ctx)) as string)
+      .replace('##BASE_ACCOUNT_ID##', (await this.awsClient.getIdentity()) as string)
       .replace('##EXTERNAL_ID##', externalId)
       .replace('##ROLE_NAME##', roleName);
   }
 
   private async uploadS3(ctx: Connector.Types.Context, cfnContent: string, sessionId: string) {
-    const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    if (this.cfg.mode?.useProduction) {
-      await s3Sdk
-        .putObject({
-          Bucket: this.cfg.bucketName,
-          Body: Buffer.from(cfnContent),
-          ContentType: 'text/plain',
-          Key: `${this.cfg.bucketPrefix}/${sessionId}`,
-        })
-        .promise();
-    } else {
-      await superagent
-        .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
-        .send({ action: 'S3.PutObject', sessionId, body: cfnContent });
-    }
-
-    return `https://${S3_BASE_URL}/${
-      this.cfg.mode?.useProduction ? this.cfg.bucketName : (await this.getProxyCredentials(ctx)).bucketName
-    }/${`${
-      this.cfg.mode?.useProduction ? this.cfg.bucketPrefix : (await this.getProxyCredentials(ctx)).bucketPrefix
-    }/${sessionId}`}`;
+    return this.awsClient.putObject(cfnContent, sessionId);
   }
 
   public async cleanupS3(ctx: Internal.Types.Context, sessionId: string) {
-    const bucketName = this.cfg.bucketName;
-    const s3Sdk = this.getAwsSdk(AWS.S3, this.cfg.IAM);
-    if (this.cfg.mode?.useProduction) {
-      await s3Sdk
-        .deleteObject({
-          Bucket: this.cfg.bucketName,
-          Key: `${bucketName}/${sessionId}`,
-        })
-        .promise();
-    } else {
-      await superagent
-        .post(`${ctx.state.params.baseUrl}/proxy/aws/action`)
-        .send({ action: 'S3.DeleteObject', sessionId });
-    }
+    return this.awsClient.deleteObject(sessionId);
   }
 
   public async handleFirstInstallStep(ctx: Connector.Types.Context) {
@@ -178,27 +111,6 @@ class AwsEngine {
     htmlTemplate = htmlTemplate.replace('##S3_CONSOLE_URL##', consoleUrl);
     htmlTemplate = htmlTemplate.replace('##FINAL_URL##', FINAL_URL);
     return htmlTemplate;
-  }
-
-  private async getBaseAccountId(ctx: Connector.Types.Context): Promise<string | undefined> {
-    const stsClient = new AWS.STS({
-      accessKeyId: this.cfg.IAM?.accessKeyId,
-      secretAccessKey: this.cfg.IAM?.secretAccessKey,
-    });
-    try {
-      if (this.cfg.mode?.useProduction) {
-        const me = await stsClient.getCallerIdentity().promise();
-        return me.Account;
-      } else {
-        const response = await superagent.post(`${ctx.state.params.baseUrl}/proxy/aws/action`).send({
-          action: 'STS.GetCallerIdentity',
-        });
-        return response.body.accountId;
-      }
-    } catch (e) {
-      console.log(`CONNECTOR FAILURE: ${(e as any).code}`);
-      ctx.throw(500);
-    }
   }
 
   private sanitizeCredentials(rawCreds: AWS.STS.Credentials): IAwsToken {
