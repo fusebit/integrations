@@ -18,4 +18,34 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   ctx.body = { message: `${response.Buckets?.length} buckets discovered from the AWS account.` };
 });
 
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const credentials = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  const client = new S3(credentials);
+
+  const response = await client.listBuckets({});
+
+  const bucketList = await Promise.all(
+    response.Buckets?.map(async (bucket) => {
+      const bucketDetail = await client.getBucketLocation({ Bucket: bucket.Name });
+      return {
+        bucketRegion: bucketDetail.LocationConstraint,
+        bucketName: bucket.Name,
+      };
+    })
+  );
+
+  return bucketList;
+});
+
+router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  const credentials = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  const { bucketName, bucketRegion } = ctx.req.body;
+
+  const client = new S3({ ...credentials, region: bucketRegion });
+
+  await client.createBucket({ Bucket: bucketName });
+});
+
 module.exports = integration;
