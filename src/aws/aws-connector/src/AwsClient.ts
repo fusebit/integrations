@@ -14,7 +14,7 @@ interface assumeRoleResponse {
   accessKeyId: string;
   secretAccessKey: string;
   sessionToken: string;
-  expiration: Date;
+  expiration: number;
 }
 
 abstract class BaseAwsClient {
@@ -52,7 +52,7 @@ class ProdAwsClient extends BaseAwsClient {
       accessKeyId: response.Credentials?.AccessKeyId as string,
       secretAccessKey: response.Credentials?.SecretAccessKey as string,
       sessionToken: response.Credentials?.SessionToken as string,
-      expiration: response.Credentials?.Expiration as Date,
+      expiration: response.Credentials?.Expiration.getTime() as number,
     };
   }
 

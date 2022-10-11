@@ -54,13 +54,7 @@ class AwsEngine {
    */
   public async assumeCustomerRole(ctx: Internal.Types.Context, cfg: IAssumeRoleConfiguration): Promise<IAwsToken> {
     try {
-      const assumeRoleCredentials = await this.awsClient.assumeRole(cfg);
-      return this.sanitizeCredentials({
-        AccessKeyId: assumeRoleCredentials.accessKeyId,
-        SecretAccessKey: assumeRoleCredentials.secretAccessKey,
-        SessionToken: assumeRoleCredentials.sessionToken,
-        Expiration: assumeRoleCredentials.expiration,
-      } as AWS.STS.Credentials);
+      return await this.awsClient.assumeRole(cfg);
     } catch (e) {
       if ((e as any).message.includes('MultiFactorAuthentication failed with invalid MFA one time pass code.')) {
         throw new errors.RetryError('Please Retry');
