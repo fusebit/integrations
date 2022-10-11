@@ -111,7 +111,7 @@ class AwsConnector<S extends Connector.Types.Service = Connector.Service> extend
     this.router.get('/api/authorize/finalize', async (ctx: Connector.Types.Context) => {
       ctx.state.tokenClient = this.createSessionClient(ctx);
       const engine: AwsEngine = ctx.state.engine;
-      await engine.cleanupS3(ctx.query.sessionId);
+      await engine.cleanupS3(ctx, ctx.query.sessionId);
       ctx.redirect(engine.getFinalCallbackUrl(ctx));
     });
 

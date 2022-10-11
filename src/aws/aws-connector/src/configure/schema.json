@@ -1,6 +1,15 @@
 {
   "type": "object",
   "properties": {
+    "mode": {
+      "type": "object",
+      "properties": {
+        "useProduction": {
+          "title": "Production Credentials",
+          "type": "boolean"
+        }
+      }
+    },
     "sessionName": {
       "title": "AssumeRole session name.",
       "type": "string"

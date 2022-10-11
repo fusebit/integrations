@@ -3,7 +3,7 @@ import AwsCredentials from './types';
 
 export default class AwsProvider extends Internal.Provider.Activator<AwsCredentials> {
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<AwsCredentials> {
-    const creds = (await this.requestConnectorToken({ ctx, lookupKey })) as unknown;
-    return creds as AwsCredentials;
+    const credentials = (await this.requestConnectorToken({ ctx, lookupKey })) as unknown;
+    return { credentials } as AwsCredentials;
   }
 }

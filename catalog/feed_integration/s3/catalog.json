@@ -10,7 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
-    "integrationsDocUrl": "https://developer.fusebit.io/docs/getting-started"
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/aws"
   },
   "configuration": {
     "schema": "config/schema.json",
