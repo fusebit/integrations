@@ -25,6 +25,10 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
 
   const response = await client.listBuckets({});
 
+  if (!response.Buckets) {
+    return [];
+  }
+
   const bucketList = await Promise.all(
     response.Buckets?.map(async (bucket) => {
       const bucketDetail = await client.getBucketLocation({ Bucket: bucket.Name });
