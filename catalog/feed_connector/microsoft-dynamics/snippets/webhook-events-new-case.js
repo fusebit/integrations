@@ -3,14 +3,14 @@ const method = async (ctx) => {
   const client = await integration.service.getSdk(ctx, connectorName, ctx.req.body.installIds[0]);
   const caseId = ctx.req.body.data.ParentContext.PrimaryEntityId;
   const { title, ticketnumber } = await client.retrieve(caseId, 'incidents', ['title', 'ticketnumber']);
-  ctx.body = `Case ${title} created with number ${ticketnumber}`;
+  console.log(`Case ${title} created with number ${ticketnumber}`);
 };
 
 const code = `
 /**
  * Use Fusebit's Event Handler to respond to Microsoft Dynamics Webhook Events
  */
- integration.event.on(${method.toString()})
+ integration.event.on('/:componentName/webhook/incident:create', ${method.toString()})
   `;
 
 module.exports = {
