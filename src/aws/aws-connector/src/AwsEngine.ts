@@ -107,15 +107,6 @@ class AwsEngine {
     return htmlTemplate;
   }
 
-  private sanitizeCredentials(rawCreds: AWS.STS.Credentials): IAwsToken {
-    return {
-      accessKeyId: rawCreds.AccessKeyId,
-      secretAccessKey: rawCreds.SecretAccessKey,
-      sessionToken: rawCreds.SessionToken,
-      expiration: rawCreds.Expiration.getTime(),
-    };
-  }
-
   public async storeSetupInformation(
     ctx: Connector.Types.Context,
     accountId: string,
