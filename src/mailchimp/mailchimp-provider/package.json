@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/mailchimp-provider",
-  "version": "7.51.15",
+  "version": "7.51.16",
   "description": "Mailchimp provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.15",
-    "@fusebit-int/play": "^7.51.15",
+    "@fusebit-int/framework": "^7.51.16",
+    "@fusebit-int/play": "^7.51.16",
     "@playwright/test": "^1.16.3",
     "@types/mailchimp__mailchimp_marketing": "^3.0.4",
     "@types/node": "^16.9.2",
