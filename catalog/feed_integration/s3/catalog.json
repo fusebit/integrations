@@ -10,7 +10,28 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/aws#creating-your-own-aws-app",
-    "integrationsDocUrl": "https://developer.fusebit.io/docs/aws"
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/aws",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": true,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your buckets from S3",
+        "postFail": "Oops! Something went wrong and we couldn't create the bucket within S3",
+        "postSuccess": "The bucket was successfully created",
+        "itemName": "Bucket",
+        "properties": [
+          {
+            "name": "bucketName",
+            "label": "Bucket Name"
+          },
+          {
+            "name": "bucketRegion",
+            "label": "Bucket Region"
+          }
+        ]
+      }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",

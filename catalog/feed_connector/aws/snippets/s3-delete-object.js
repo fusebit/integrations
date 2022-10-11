@@ -23,7 +23,7 @@ ${awsS3DeleteObject.toString()}
 `;
 
 module.exports = {
-  name: 'Delete Object Within S3',
+  name: 'S3 - Delete Object',
   description: 'Delete a specific object within S3 when passed in bucket name and object name.',
   code,
 };
