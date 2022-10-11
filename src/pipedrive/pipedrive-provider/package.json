@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/pipedrive-provider",
-  "version": "7.51.16",
+  "version": "7.51.17",
   "description": "Pipedrive provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.16",
-    "@fusebit-int/play": "^7.51.16",
+    "@fusebit-int/framework": "^7.51.17",
+    "@fusebit-int/play": "^7.51.17",
     "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
