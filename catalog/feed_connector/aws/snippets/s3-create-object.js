@@ -25,7 +25,7 @@ ${awsS3CreateObject.toString()}
 `;
 
 module.exports = {
-  name: 'Create Object Within S3',
+  name: 'S3 - Create Object',
   description:
     'Create an specific object with cotent within s3 when passed in bucketName, objectName, and objectContent.',
   code,

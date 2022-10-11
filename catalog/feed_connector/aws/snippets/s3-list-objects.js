@@ -23,7 +23,7 @@ ${awsS3ListObjects.toString()}
 `;
 
 module.exports = {
-  name: 'List Objects Within S3',
+  name: 'S3 - List Objects',
   description: 'List objects when given a s3 bucket name.',
   code,
 };
