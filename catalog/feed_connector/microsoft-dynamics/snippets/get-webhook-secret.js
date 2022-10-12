@@ -6,7 +6,7 @@ async function getWebhookSecret(ctx, organizationId) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  return await webhookClient.get(organizationId);
+  return webhookClient.get(organizationId);
 }
 
 const code = `

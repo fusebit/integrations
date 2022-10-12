@@ -5,8 +5,7 @@ async function getOrganization(ctx) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const { OrganizationId } = await client.executeUnboundFunction('WhoAmI');
-  return OrganizationId;
+  return client.fusebit.credentials.params.organizationId;
 }
 
 const code = `
