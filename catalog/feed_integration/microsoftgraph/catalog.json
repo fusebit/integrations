@@ -1,0 +1,48 @@
+{
+  "id": "microsoft-graph",
+  "name": "Microsoft Graph",
+  "smallIcon": "#/assets/microsoftgraph.svg",
+  "largeIcon": "#/assets/microsoftgraphLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Email,Messaging,Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoftgraph#creating-your-own-microsoftgraph-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn&#39;t retrieve your Azure AD account details",
+        "itemName": "Account",
+        "properties": [
+          {
+            "name": "displayName",
+            "label": "Display Name"
+          },
+          {
+            "name": "mail",
+            "label": "Account"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftgraphConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "microsoftgraphIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

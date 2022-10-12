@@ -22,7 +22,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 });
 
 <% if (locals.isGetEnabled) { -%>
-// Endpoint for Sample App: Retrieve a list of <%= h.pluralize(itemName) %> from <%= h.capitalize(name) %>
+// Endpoint for Sample App: Retrieve a list of <%= h.inflection.pluralize(itemName) %> from <%= h.capitalize(name) %>
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const <%= name.toLowerCase() %>Client = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);

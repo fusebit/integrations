@@ -1,0 +1,36 @@
+{
+  "id": "microsoft-graph",
+  "name": "Microsoft Graph",
+  "smallIcon": "#/assets/microsoftgraph.svg",
+  "largeIcon": "#/assets/microsoftgraphLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Email,Messaging,Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/microsoftgraph#creating-your-own-microsoftgraph-app",
+    "connectorSDKDocUrl": "https://github.com/microsoftgraph/msgraph-sdk-javascript"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "microsoftgraphConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/microsoftgraph-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}

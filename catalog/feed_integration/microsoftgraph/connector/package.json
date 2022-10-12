@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-microsoftgraph-connector",
+  "version": "7.51.17",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.51.17",
+    "@fusebit-int/microsoftgraph-connector": ">=7.51.17"
+  }
+}

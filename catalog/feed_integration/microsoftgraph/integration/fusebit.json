@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "MicrosoftGraph"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "microsoftgraphConnector",
+      "skip": false,
+      "provider": "@fusebit-int/microsoftgraph-provider",
+      "entityId": "<% global.entities.microsoftgraphConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
