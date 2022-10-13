@@ -3,6 +3,7 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
 import { schema, uischema } from './configure';
+import MicrosoftDynamicsOAuthEngine from './Engine';
 
 const TOKEN_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/token';
 const AUTHORIZATION_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/authorize';
@@ -15,6 +16,7 @@ const REQUIRED_SCOPES = ['offline_access'];
 
 class ServiceConnector extends OAuthConnector<Service> {
   static Service = Service;
+  protected readonly OAuthEngine = MicrosoftDynamicsOAuthEngine;
 
   protected createService() {
     return new ServiceConnector.Service();

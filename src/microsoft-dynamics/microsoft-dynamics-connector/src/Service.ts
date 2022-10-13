@@ -1,6 +1,5 @@
 import { Connector } from '@fusebit-int/framework';
-import { OAuthConnector } from '@fusebit-int/oauth-connector';
-import superagent from 'superagent';
+import { IOAuthToken, OAuthConnector } from '@fusebit-int/oauth-connector';
 import { randomBytes, timingSafeEqual } from 'crypto';
 
 class Service extends OAuthConnector.Service {
@@ -11,16 +10,6 @@ class Service extends OAuthConnector.Service {
   private getWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(organizationId));
   };
-
-  private async getOrganizationInfo(token: any) {
-    // Replace the Dynamics API Permission to get the server root
-    const serverUrl = `${token.scope.replace('/user_impersonation', '')}/api/data/v9.2/WhoAmI`;
-    const instanceResponse = await superagent
-      .get(serverUrl)
-      .set('Authorization', `Bearer ${token.access_token}`)
-      .set('Accept', 'application/json');
-    return instanceResponse.body;
-  }
 
   public updateWebhook = async (ctx: Connector.Types.Context, organizationId: string) => {
     const secret = randomBytes(16).toString('hex');
@@ -37,13 +26,12 @@ class Service extends OAuthConnector.Service {
     return `organization/${event.OrganizationId}`;
   }
 
-  public async configure(ctx: Connector.Types.Context, token: any) {
+  public async configure(ctx: Connector.Types.Context, token: IOAuthToken) {
     // Generate a new Webhook secret associated to the specific organization.
-    const { OrganizationId } = await this.getOrganizationInfo(token);
-    const webhookStorage = await this.getWebhookStorage(ctx, OrganizationId);
+    const webhookStorage = await this.getWebhookStorage(ctx, token.params.organizationId);
 
     if (!webhookStorage) {
-      await this.updateWebhook(ctx, OrganizationId);
+      await this.updateWebhook(ctx, token.params.organizationId);
     }
   }
 
@@ -84,9 +72,8 @@ class Service extends OAuthConnector.Service {
     return false;
   }
 
-  public async getTokenAuthId(ctx: Connector.Types.Context, token: any): Promise<string | string[] | void> {
-    const { OrganizationId, UserId } = await this.getOrganizationInfo(token);
-    return [`organization/${OrganizationId}`, `user/${UserId}`];
+  public async getTokenAuthId(ctx: Connector.Types.Context, token: IOAuthToken): Promise<string | string[] | void> {
+    return [`organization/${token.params.organizationId}`, `user/${token.params.userId}`];
   }
 
   public getWebhookEventType(event: any): string {
