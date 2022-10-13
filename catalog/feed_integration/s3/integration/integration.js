@@ -35,7 +35,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
     })
   );
 
-  return bucketList;
+  ctx.body = bucketList;
 });
 
 router.post('/api/tenant/:tenantId/item', integration.middleware.authorizeUser('install:get'), async (ctx) => {
