@@ -1,14 +1,14 @@
 async function awsS3ListObjects(ctx, bucketName) {
   // For the Aws SDK documentation, see {enter-url-here}.
-  const credentials = await integration.tenant.getSdkByTenant(
+  const awsCredentials = await integration.tenant.getSdkByTenant(
     ctx,
     '<% connectorName %>',
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const client = new S3(credentials);
+  const s3Client = new S3({ ...awsCredentials });
 
-  const objects = await client.listObjectsV2();
+  const objects = await s3Client.listObjectsV2();
   return objects.Contents;
 }
 
