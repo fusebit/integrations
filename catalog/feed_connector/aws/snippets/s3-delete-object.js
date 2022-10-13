@@ -6,7 +6,7 @@ async function awsS3DeleteObject(ctx, bucketName, objectName) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const s3Client = new S3({ ...awsCredentials });
+  const s3Client = new S3(awsCredentials);
 
   await s3Client.deleteObject({ Bucket: bucketName, Key: objectName });
 }

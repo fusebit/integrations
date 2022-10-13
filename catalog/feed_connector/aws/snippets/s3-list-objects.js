@@ -6,7 +6,7 @@ async function awsS3ListObjects(ctx, bucketName) {
     ctx.params.tenantId || '<% defaultTenantId %>'
   );
 
-  const s3Client = new S3({ ...awsCredentials });
+  const s3Client = new S3(awsCredentials);
 
   const objects = await s3Client.listObjectsV2();
   return objects.Contents;

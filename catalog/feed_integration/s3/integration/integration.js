@@ -12,7 +12,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const awsCredentials = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/index.html
-  const s3Client = new S3({ ...awsCredentials });
+  const s3Client = new S3(awsCredentials);
   const response = await s3Client.listBuckets({});
 
   ctx.body = { message: `${response.Buckets?.length} buckets discovered from the AWS account.` };
@@ -21,7 +21,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const awsCredentials = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
-  const s3Client = new S3({ ...awsCredentials });
+  const s3Client = new S3(awsCredentials);
 
   const response = await s3Client.listBuckets({});
 
