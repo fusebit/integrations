@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/quickbooks-connector",
-  "version": "7.51.18",
+  "version": "7.51.19",
   "description": "QuickBooks Connector",
   "keywords": [
     "Fusebit",
@@ -35,11 +35,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.51.18",
+    "@fusebit-int/oauth-connector": "^7.51.19",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.18",
+    "@fusebit-int/framework": "^7.51.19",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
