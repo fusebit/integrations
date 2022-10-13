@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-discord-slash-commands-integration",
-  "version": "7.51.17",
+  "version": "7.51.18",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/discord-provider": "^7.51.17",
-    "@fusebit-int/framework": "^7.51.17",
+    "@fusebit-int/discord-provider": "^7.51.18",
+    "@fusebit-int/framework": "^7.51.18",
     "superagent": "^6.1.0"
   },
   "files": [

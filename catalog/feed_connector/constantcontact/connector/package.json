@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-constantcontact-connector",
-  "version": "7.51.17",
+  "version": "7.51.18",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/constantcontact-connector": "^7.51.17",
-    "@fusebit-int/framework": "^7.51.17"
+    "@fusebit-int/constantcontact-connector": "^7.51.18",
+    "@fusebit-int/framework": "^7.51.18"
   }
 }
