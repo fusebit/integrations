@@ -2,9 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <meta
+      name="viewport"
+      content="minimum-scale=1, initial-scale=1, width=device-width"
+    />
     <title>##windowTitle##</title>
-
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react.production.min.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/react-dom.production.min.js"></script>
@@ -16,12 +18,21 @@
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-core.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-react.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-material.js"></script>
-
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://unpkg.com/mapping-renderer@1.0.41/dist/cjs/index.js"></script>
+​
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
-
   <body>
     <div id="root"></div>
     <script type="text/babel" crossorigin>
@@ -37,8 +48,8 @@
         TextField,
         Grid,
         Icon,
+        Typography,
       } = MaterialUI;
-
       const FusebitTheme = {
         ...createMuiTheme({
           // Overrides of default MUI theme:
@@ -54,9 +65,17 @@
             },
           },
           overrides: {
+            MuiTypography: {
+              h4: {
+                fontWeight: 600,
+              },
+              h5: {
+                fontWeight: 600,
+              }
+            },
             MuiTab: {
               wrapper: {
-                fontFamily: '"Poppins", sans-serif',
+                fontFamily: '"Nunito Sans", sans-serif',
               },
             },
             MuiButton: {
@@ -73,52 +92,60 @@
                 paddingTop: '30px',
               },
             },
+            MuiFormLabel: {
+              disabled: {
+                color: 'black !important',
+              },
+            },
           },
         }),
       };
-
       const { useState } = React;
-
       function postForm(path, payload) {
         const form = document.createElement('form');
         form.method = 'post';
         form.action = path;
-
+​
         const payloadField = document.createElement('input');
         payloadField.type = 'hidden';
         payloadField.name = 'payload';
         payloadField.value = JSON.stringify({ payload, state: ##state## });
-
+​
         form.appendChild(payloadField);
-
+​
         document.body.appendChild(form);
         form.submit();
       }
-
       function App() {
-        const renderers = JSONFormsMaterial.materialRenderers;
+        const renderers = [
+          ...JSONFormsMaterial.materialRenderers,
+          MappingRenderer.MappingRendererControl,
+          MappingRenderer.SourceTableControl,
+          MappingRenderer.TransformedTableControl,
+        ];
         const cells = JSONFormsMaterial.materialCells;
-
+​
         const schema = ##schema##;
         const uischema = ##uischema##;
         const [data, setData] = useState(##data##);
-
+​
         const submitForm = () => {
           const target = ##submitUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          console.log('Sending JSON.stringify(data) to target from window.location.href');
           postForm(target, data);
         };
-
+​
         const cancelForm = () => {
           const target = ##cancelUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
+          console.log('Sending JSON.stringify(data) to target from window.location.href');
           postForm(target, {});
         };
-
         return (
-          <Dialog open={true} fullWidth maxWidth="md" disableBackdropClick disableEscapeKeyDown>
+          <Dialog open={true} fullWidth maxWidth="lg" disableBackdropClick disableEscapeKeyDown>
             <DialogTitle>
-              ##dialogTitle##
+              <Typography variant="h4" style={{ width: 'max-content', margin: '16px 0' }}>
+                ##dialogTitle##
+              </Typography>
             </DialogTitle>
             <DialogContent>
       {/*
@@ -147,7 +174,6 @@
           </Dialog>
         );
       }
-
       ReactDOM.render(
         <ThemeProvider theme={FusebitTheme}>
           <App />
