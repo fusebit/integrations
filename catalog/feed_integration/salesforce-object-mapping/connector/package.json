@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.19",
-    "@fusebit-int/salesforce-connector": "^7.51.19"
+    "@fusebit-int/framework": ">=7.51.19",
+    "@fusebit-int/salesforce-connector": ">=7.51.19"
   }
 }
