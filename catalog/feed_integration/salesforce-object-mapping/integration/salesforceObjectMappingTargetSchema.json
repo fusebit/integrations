@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "title": "Target Schema Configuration",
+    "properties": {
+      "FieldOne": {
+        "type": "string",
+        "label": "First Field to Map"
+      },
+      "FieldTwo": {
+        "type": "string",
+        "label": "Second Field to Map"
+      }
+    }
+  }

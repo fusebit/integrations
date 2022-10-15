@@ -1,0 +1,17 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-salesforce-object-mapping-integration",
+  "version": "7.51.19",
+  "private": true,
+  "scripts": {
+    "deploy": "fuse integration deploy <% this.id %> -d .",
+    "get": "fuse integration get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": "^7.51.19",
+    "@fusebit-int/salesforce-provider": "^7.51.19"
+  },
+  "files": [
+    "./integration.js",
+    "README.md"
+  ]
+}
