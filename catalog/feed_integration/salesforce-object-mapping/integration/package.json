@@ -17,7 +17,7 @@
     "chooseSalesforceObjectSchema.json",
     "chooseSalesforceObjectuiSchema.json",
     "salesforceObjectMapping.js",
-    "salesforceObjectMappingTargetSchema.js",
-    "salesforceObjectMappinguiSchema.js"
+    "salesforceObjectMappingTargetSchema.json",
+    "salesforceObjectMappinguiSchema.json"
   ]
 }
