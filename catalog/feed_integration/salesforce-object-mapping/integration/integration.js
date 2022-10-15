@@ -1,7 +1,7 @@
 const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 
-const { chooseSalesforceObject } = require('./chooseObject.js');
+const { chooseSalesforceObject } = require('./chooseSalesforceObject.js');
 const { salesforceObjectMapping } = require('./salesforceObjectMapping.js');
 
 const { objectMap } = require('session-data-mapper');

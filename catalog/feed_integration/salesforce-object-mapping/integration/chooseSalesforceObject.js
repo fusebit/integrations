@@ -2,7 +2,7 @@ const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 const connectorName = 'salesforceConnector';
 
-const schema = require('./chooseSalesforceObjectschema.json');
+const schema = require('./chooseSalesforceObjectSchema.json');
 const uiSchema = require('./chooseSalesforceObjectuiSchema.json');
 
 const chooseSalesforceObject = async (ctx) => {
@@ -26,6 +26,7 @@ const chooseSalesforceObject = async (ctx) => {
     schema,
     uiSchema,
     windowTitle: 'Salesforce Object Selection',
+    dialogTitle: 'Choose a Salesforce Object to Map',
     submitUrl: 'form/submitted',
     state: {
       session: ctx.query.session,

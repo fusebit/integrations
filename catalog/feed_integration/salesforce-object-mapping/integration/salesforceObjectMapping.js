@@ -55,6 +55,7 @@ const salesforceObjectMapping = async (ctx) => {
     uiSchema: uiSchema,
     data: data,
     windowTitle: 'Salesforce Object Mapping',
+    dialogTitle: 'Choose the Corresponding Fields for Salesforce',
     submitUrl: 'form/submitted',
     state: {
       session: ctx.query.session,

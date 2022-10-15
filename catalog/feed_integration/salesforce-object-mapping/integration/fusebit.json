@@ -17,21 +17,16 @@
       "name": "salesforceObjectSelection",
       "path": "/api/configure/chooseSalesforceObject",
       "skip": false,
-      "entityId": "<% global.entities.salesforceConnector.id %>",
-      "dependsOn": [
-        "salesforceConnector"
-      ],
+      "entityId": "<% this.id %>",
+      "dependsOn": ["salesforceConnector"],
       "entityType": "integration"
     },
     {
       "name": "salesforceObjectMapping",
       "path": "/api/configure/mapSalesforceObject",
       "skip": false,
-      "entityId": "<% global.entities.salesforceConnector.id %>",
-      "dependsOn": [
-        "salesforceConnector",
-        "salesforceObjectSelection"
-      ],
+      "entityId": "<% this.id %>",
+      "dependsOn": ["salesforceConnector", "salesforceObjectSelection"],
       "entityType": "integration"
     }
   ],

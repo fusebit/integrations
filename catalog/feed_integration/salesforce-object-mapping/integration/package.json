@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "@fusebit-int/framework": "^7.51.19",
-    "@fusebit-int/salesforce-provider": "^7.51.19"
+    "@fusebit-int/salesforce-provider": "^7.51.19",
+    "superagent": "*",
+    "session-data-mapper": "1.0.19"
   },
   "files": [
     "./integration.js",
