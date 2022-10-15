@@ -28,7 +28,7 @@ const salesforceObjectMapping = async (ctx) => {
   // Create "Source" Schema from Salesforce Object (See Target Schema for Formatting)
   const salesforceObjectSchema = {
     type: `object`,
-    title: objectName,
+    title: `Salesforce ${objectName} Fields`,
     properties: {},
   };
 
