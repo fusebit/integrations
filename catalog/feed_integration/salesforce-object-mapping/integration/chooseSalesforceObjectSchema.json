@@ -1,11 +1,10 @@
 {
-    "type": "object",
-    "properties": {
-      "salesforceObject": {
-        "type": "string",
-        "description": "Choose the Salesforce Object you want to Map",
-        "enum": []
-      }
+  "type": "object",
+  "properties": {
+    "salesforceObject": {
+      "type": "string",
+      "description": "Choose the Salesforce Object you want to Map",
+      "enum": []
     }
   }
-  
+}
