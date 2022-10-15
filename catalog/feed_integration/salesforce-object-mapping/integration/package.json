@@ -12,6 +12,12 @@
   },
   "files": [
     "./integration.js",
-    "README.md"
+    "README.md",
+    "chooseSalesforceObject.js",
+    "chooseSalesforceObjectSchema.json",
+    "chooseSalesforceObjectuiSchema.json",
+    "salesforceObjectMapping.js",
+    "salesforceObjectMappingTargetSchema.js",
+    "salesforceObjectMappinguiSchema.js"
   ]
 }
