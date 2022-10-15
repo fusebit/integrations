@@ -105,13 +105,11 @@
 
         const submitForm = () => {
           const target = ##submitUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
           postForm(target, data);
         };
 
         const cancelForm = () => {
           const target = ##cancelUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
           postForm(target, {});
         };
 
