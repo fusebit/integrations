@@ -2,7 +2,7 @@ const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 const connectorName = 'salesforceConnector';
 
-const { objectMap } = require('session-data-mapper');
+const { objectMap } = require('@fusebit/objectmap-utils');
 const superagent = require('superagent');
 
 const uiSchema = require('./salesforceObjectMappinguiSchema.json');

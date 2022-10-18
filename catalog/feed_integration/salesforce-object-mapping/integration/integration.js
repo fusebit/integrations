@@ -4,7 +4,7 @@ const integration = new Integration();
 const { chooseSalesforceObject } = require('./chooseSalesforceObject.js');
 const { salesforceObjectMapping } = require('./salesforceObjectMapping.js');
 
-const { objectMap } = require('session-data-mapper');
+const { objectMap } = require('@fusebit/objectmap-utils');
 const superagent = require('superagent');
 
 // Koa Router: https://koajs.com
