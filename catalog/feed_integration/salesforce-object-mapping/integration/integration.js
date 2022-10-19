@@ -2,10 +2,11 @@ const superagent = require('superagent');
 
 const { objectMap } = require('@fusebit/objectmap-utils');
 const { Integration } = require('@fusebit-int/framework');
-const integration = new Integration();
 
 const { chooseSalesforceObject } = require('./chooseSalesforceObject');
 const { salesforceObjectMapping } = require('./salesforceObjectMapping');
+
+const integration = new Integration();
 
 // Koa Router: https://koajs.com
 const router = integration.router;
