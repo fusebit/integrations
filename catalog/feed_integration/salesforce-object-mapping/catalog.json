@@ -16,16 +16,16 @@
       "isGetEnabled": true,
       "isPostEnabled": false,
       "terms": {
-        "getFail": "Oops! Something went wrong and we couldn't retrieve your contacts from Salesforce",
-        "itemName": "Contact",
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Mapped Fields from Salesforce",
+        "itemName": "Mapped Fields",
         "properties": [
           {
-            "name": "contactName",
-            "label": "Name"
+            "name": "FieldOne",
+            "label": "First Mapped Field"
           },
           {
-            "name": "contactEmail",
-            "label": "Email"
+            "name": "FieldTwo",
+            "label": "Second Mapped Field"
           }
         ]
       }

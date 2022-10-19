@@ -59,17 +59,30 @@ router.post('/api/configure/form/submitted', async (ctx) => {
   return ctx.redirect(`${ctx.state.params.baseUrl}/session/${pl.state.session}/callback`);
 });
 
-// Endpoint for Sample App: Retrieve Name and Email from Salesforce
+// Endpoint for Sample App: Retrieve Fields from Salesforce & Map
 router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
   const salesforceClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
-  const contacts = await salesforceClient.query('SELECT name, email FROM Contact');
 
-  const contactsList = contacts.records.map((contact) => ({
-    contactName: contact.Name,
-    contactEmail: contact.Email,
-  }));
+  // Retrieve Tenant Mapping
+  const configuration = await integration.tenant.getTenantInstalls(ctx, ctx.params.tenantId);
+  const { salesforceObject: objectName } = configuration[0].data.salesforceObjectSelection;
+  const tenantMapping = configuration[0].data.salesforceObjectMapping;
 
-  ctx.body = contactsList;
+  // Retrieve 20 Records of Selected Object
+  const queryObjectData = await salesforceClient.sobject(objectName).find().limit(20);
+  const transformedData = [];
+
+  // Handle No Records Found
+  if (!queryObjectData.length) {
+  } else {
+    for (const m in queryObjectData) {
+      // Clean up Metadata and Apply Mapping
+      delete queryObjectData[m].attributes;
+      transformedData[m] = objectMap.transformData(tenantMapping, queryObjectData[m]);
+    }
+  }
+
+  ctx.body = transformedData;
 });
 
 module.exports = integration;
