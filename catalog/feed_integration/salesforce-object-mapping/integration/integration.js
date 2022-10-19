@@ -23,14 +23,13 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // API Reference: https://jsforce.github.io/.
   const queryObjectData = await salesforceClient.sobject(objectName).find().limit(20);
 
-
-
   // Handle No Records Found
   if (!queryObjectData.length) {
     queryObjectData[0] = {};
     for (const m in describeSobjects.fields) {
       queryObjectData[0][describeSobjects.fields[m].name] = null;
     }
+  }
 
   // Remove Redundant Data
   delete queryObjectData[0]?.attributes;
@@ -84,6 +83,5 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
 
   ctx.body = transformedData;
 });
-
 
 module.exports = integration;
