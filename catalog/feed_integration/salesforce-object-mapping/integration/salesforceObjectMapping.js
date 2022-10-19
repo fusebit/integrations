@@ -1,12 +1,13 @@
-const { Integration } = require('@fusebit-int/framework');
-const integration = new Integration();
-const connectorName = 'salesforceConnector';
+const superagent = require('superagent');
 
 const { objectMap } = require('@fusebit/objectmap-utils');
-const superagent = require('superagent');
+const { Integration } = require('@fusebit-int/framework');
+const integration = new Integration();
 
 const uiSchema = require('./salesforceObjectMappinguiSchema.json');
 const targetSchema = require('./salesforceObjectMappingTargetSchema.json');
+
+const connectorName = 'salesforceConnector';
 
 const salesforceObjectMapping = async (ctx) => {
   // Get this session
@@ -47,10 +48,10 @@ const salesforceObjectMapping = async (ctx) => {
     for (const m in describeSobjects.fields) {
       salesforceObjectRecord[0][describeSobjects.fields[m].name] = null;
     }
-  } else {
-    // Salesforce Query Metadata cleanup
-    delete salesforceObjectRecord[0].attributes;
   }
+
+  // Remove Redundant Data
+  delete salesforceObjectRecord[0]?.attributes;
 
   // Helper Function to Generate Schema & Source Data for ObjectMap Jsonforms Component
   const { data: data, schema: schema } = objectMap.createSchema({

@@ -1,11 +1,11 @@
+const superagent = require('superagent');
+
+const { objectMap } = require('@fusebit/objectmap-utils');
 const { Integration } = require('@fusebit-int/framework');
 const integration = new Integration();
 
-const { chooseSalesforceObject } = require('./chooseSalesforceObject.js');
-const { salesforceObjectMapping } = require('./salesforceObjectMapping.js');
-
-const { objectMap } = require('@fusebit/objectmap-utils');
-const superagent = require('superagent');
+const { chooseSalesforceObject } = require('./chooseSalesforceObject');
+const { salesforceObjectMapping } = require('./salesforceObjectMapping');
 
 // Koa Router: https://koajs.com
 const router = integration.router;
@@ -17,11 +17,13 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const salesforceClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // Retrieve 20 Records of Object Data selected by Tenant
-  const configuration = await integration.tenant.getTenantInstalls(ctx, ctx.params.tenantId);
-  const { salesforceObject: objectName } = configuration[0].data.salesforceObjectSelection;
+  const configuration = (await integration.tenant.getTenantInstalls(ctx, ctx.params.tenantId))[0];
+  const { salesforceObject: objectName } = configuration.data.salesforceObjectSelection;
 
   // API Reference: https://jsforce.github.io/.
   const queryObjectData = await salesforceClient.sobject(objectName).find().limit(20);
+
+
 
   // Handle No Records Found
   if (!queryObjectData.length) {
@@ -29,15 +31,16 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
     for (const m in describeSobjects.fields) {
       queryObjectData[0][describeSobjects.fields[m].name] = null;
     }
-  } else {
-    // Salesforce Query Metadata cleanup
-    delete queryObjectData[0].attributes;
-  }
+
+  // Remove Redundant Data
+  delete queryObjectData[0]?.attributes;
 
   // Apply Mapping & Return Data
-  const transformedData = objectMap.transformData(configuration[0].data.salesforceObjectMapping, queryObjectData[0]);
+  const transformedData = objectMap.transformData(configuration.data.salesforceObjectMapping, queryObjectData[0]);
 
-  ctx.body = { transformedData };
+  ctx.body = {
+    Message: `Success! FieldOne has the following value ${transformedData.FieldOne} and FieldTwo has the following value ${transformedData.FieldTwo}`,
+  };
 });
 
 // Install Flow - Choose a Salesforce Object to Map
@@ -49,8 +52,6 @@ router.get('/api/configure/mapSalesforceObject', salesforceObjectMapping);
 // Installation Flow - Form Submission
 router.post('/api/configure/form/submitted', async (ctx) => {
   const pl = JSON.parse(ctx.req.body.payload);
-  console.log(ctx.req.body.payload);
-  console.log('form submitted!');
 
   await superagent
     .put(`${ctx.state.params.baseUrl}/session/${pl.state.session}`)
@@ -73,8 +74,7 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   const transformedData = [];
 
   // Handle No Records Found
-  if (!queryObjectData.length) {
-  } else {
+  if (queryObjectData.length) {
     for (const m in queryObjectData) {
       // Clean up Metadata and Apply Mapping
       delete queryObjectData[m].attributes;
@@ -84,5 +84,6 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
 
   ctx.body = transformedData;
 });
+
 
 module.exports = integration;
