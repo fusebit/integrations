@@ -112,6 +112,7 @@
         document.body.appendChild(form);
         form.submit();
       }
+
       function App() {
         const renderers = [
           ...JSONFormsMaterial.materialRenderers,
@@ -134,6 +135,7 @@
           const target = ##cancelUrl##;
           postForm(target, {});
         };
+
         return (
           <Dialog open={true} fullWidth maxWidth="lg" disableBackdropClick disableEscapeKeyDown>
             <DialogTitle>
