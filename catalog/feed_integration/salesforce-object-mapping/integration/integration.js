@@ -22,7 +22,17 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
 
   // API Reference: https://jsforce.github.io/.
   const queryObjectData = await salesforceClient.sobject(objectName).find().limit(20);
-  delete queryObjectData[0].attributes;
+
+  // Handle No Records Found
+  if (!queryObjectData.length) {
+    queryObjectData[0] = {};
+    for (const m in describeSobjects.fields) {
+      queryObjectData[0][describeSobjects.fields[m].name] = null;
+    }
+  } else {
+    // Salesforce Query Metadata cleanup
+    delete queryObjectData[0].attributes;
+  }
 
   // Apply Mapping & Return Data
   const transformedData = objectMap.transformData(configuration[0].data.salesforceObjectMapping, queryObjectData[0]);

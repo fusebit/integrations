@@ -40,7 +40,17 @@ const salesforceObjectMapping = async (ctx) => {
 
   // Query Single Record for the Selected Object
   const salesforceObjectRecord = await salesforceClient.sobject(objectName).find().limit(1);
-  delete salesforceObjectRecord[0].attributes;
+
+  // Handle No Records Found
+  if (!queryObjectData.length) {
+    queryObjectData[0] = {};
+    for (const m in describeSobjects.fields) {
+      queryObjectData[0][describeSobjects.fields[m].name] = null;
+    }
+  } else {
+    // Salesforce Query Metadata cleanup
+    delete queryObjectData[0].attributes;
+  }
 
   // Helper Function to Generate Schema & Source Data for ObjectMap Jsonforms Component
   const { data: data, schema: schema } = objectMap.createSchema({
