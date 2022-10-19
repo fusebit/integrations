@@ -21,11 +21,11 @@
         "properties": [
           {
             "name": "FieldOne",
-            "label": "First Mapped Field"
+            "label": "ID Field"
           },
           {
             "name": "FieldTwo",
-            "label": "Second Mapped Field"
+            "label": "Name Field"
           }
         ]
       }
