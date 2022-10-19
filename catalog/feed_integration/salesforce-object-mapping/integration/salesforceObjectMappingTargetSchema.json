@@ -4,11 +4,11 @@
   "properties": {
     "FieldOne": {
       "type": "string",
-      "label": "First Field to Map"
+      "label": "ID Field"
     },
     "FieldTwo": {
       "type": "string",
-      "label": "Second Field to Map"
+      "label": "Name Field"
     }
   }
 }

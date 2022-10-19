@@ -11,7 +11,7 @@
     },
     {
       "type": "ObjectMap",
-      "scope": "#/properties/keys"
+      "scope": "#/properties/objectMap"
     }
   ]
 }
