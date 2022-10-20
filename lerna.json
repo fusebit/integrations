@@ -7,14 +7,12 @@
     "catalog",
     "workspace/*",
     "catalog/feed_*/**",
-    "./play"
+    "./play",
+    "./tool/publish-docs"
   ],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     }
   },

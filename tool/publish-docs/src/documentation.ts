@@ -1,7 +1,6 @@
-///<reference path="documentation.d.ts" />
 import { existsSync } from 'fs';
 import { resolve, basename, dirname } from 'path';
-import documentation from 'documentation';
+const documentation = require('documentation');
 import ReadmeApi from './ReadmeApi';
 import markdownCleaner, { IReplaceableTerms } from './markdownCleaner';
 import resolveTheme from './themes/resolveTheme';
