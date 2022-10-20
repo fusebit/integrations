@@ -17,15 +17,15 @@
       "isPostEnabled": false,
       "terms": {
         "getFail": "Oops! Something went wrong and we couldn't retrieve your Mapped Fields from Salesforce",
-        "itemName": "Mapped Fields",
+        "itemName": "Mapped Field",
         "properties": [
           {
-            "name": "FieldOne",
-            "label": "ID Field"
+            "name": "ID",
+            "label": "ID"
           },
           {
-            "name": "FieldTwo",
-            "label": "Name Field"
+            "name": "Name",
+            "label": "Name"
           }
         ]
       }

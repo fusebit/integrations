@@ -2,13 +2,13 @@
   "type": "object",
   "title": "Target Schema Configuration",
   "properties": {
-    "FieldOne": {
+    "ID": {
       "type": "string",
-      "label": "ID Field"
+      "label": "ID"
     },
-    "FieldTwo": {
+    "Name": {
       "type": "string",
-      "label": "Name Field"
+      "label": "Name"
     }
   }
 }
