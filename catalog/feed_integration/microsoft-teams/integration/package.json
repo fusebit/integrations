@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-microsoft-teams-integration",
-  "version": "7.51.21",
+  "version": "7.51.22",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.21",
-    "@fusebit-int/microsoft-bot-framework-provider": "^7.51.21",
+    "@fusebit-int/framework": "^7.51.22",
+    "@fusebit-int/microsoft-bot-framework-provider": "^7.51.22",
     "botbuilder": "^4.14.1"
   },
   "files": [

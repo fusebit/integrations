@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-microsoft-bot-framework-connector",
-  "version": "7.51.21",
+  "version": "7.51.22",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.name %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.name %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.21",
-    "@fusebit-int/microsoft-bot-framework-connector": "^7.51.21"
+    "@fusebit-int/framework": "^7.51.22",
+    "@fusebit-int/microsoft-bot-framework-connector": "^7.51.22"
   }
 }
