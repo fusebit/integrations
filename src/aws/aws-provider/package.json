@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/aws-provider",
-  "version": "7.51.24",
+  "version": "7.51.25",
   "description": "AWS provider",
   "keywords": [
     "Fusebit",
@@ -39,8 +39,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.24",
-    "@fusebit-int/play": "^7.51.24",
+    "@fusebit-int/framework": "^7.51.25",
+    "@fusebit-int/play": "^7.51.25",
     "@playwright/test": "^1.16.3",
     "@types/express": "^4.17.13",
     "@types/node": "^16.9.2",
