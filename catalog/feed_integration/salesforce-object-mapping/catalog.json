@@ -1,0 +1,49 @@
+{
+  "id": "salesforce-object-mapping",
+  "name": "Salesforce Object Mapping",
+  "smallIcon": "#/assets/salesforce.svg",
+  "largeIcon": "#/assets/salesforceLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "CRM"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/creating-your-own-salesforce-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/salesforce",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Mapped Fields from Salesforce",
+        "itemName": "Mapped Fields",
+        "properties": [
+          {
+            "name": "FieldOne",
+            "label": "ID Field"
+          },
+          {
+            "name": "FieldTwo",
+            "label": "Name Field"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "salesforceConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "salesforceIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

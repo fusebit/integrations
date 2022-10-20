@@ -1,0 +1,17 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "SourceTable",
+      "scope": "#/properties/sourceTable"
+    },
+    {
+      "type": "TransformedTable",
+      "scope": "#/properties/transformedTable"
+    },
+    {
+      "type": "ObjectMap",
+      "scope": "#/properties/objectMap"
+    }
+  ]
+}

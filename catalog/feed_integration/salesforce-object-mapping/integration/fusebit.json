@@ -1,0 +1,35 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Salesforce"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "salesforceConnector",
+      "skip": false,
+      "provider": "@fusebit-int/salesforce-provider",
+      "entityId": "<% global.entities.salesforceConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    },
+    {
+      "name": "salesforceObjectSelection",
+      "path": "/api/configure/chooseSalesforceObject",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["salesforceConnector"],
+      "entityType": "integration"
+    },
+    {
+      "name": "salesforceObjectMapping",
+      "path": "/api/configure/mapSalesforceObject",
+      "skip": false,
+      "entityId": "<% this.id %>",
+      "dependsOn": ["salesforceConnector", "salesforceObjectSelection"],
+      "entityType": "integration"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

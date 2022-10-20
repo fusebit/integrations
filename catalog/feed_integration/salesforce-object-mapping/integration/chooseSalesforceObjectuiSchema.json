@@ -1,0 +1,11 @@
+{
+  "type": "VerticalLayout",
+  "label": "Which Salesforce Object do you want to map?",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/salesforceObject",
+      "label": "Salesforce Object"
+    }
+  ]
+}

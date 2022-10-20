@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "title": "Target Schema Configuration",
+  "properties": {
+    "FieldOne": {
+      "type": "string",
+      "label": "ID Field"
+    },
+    "FieldTwo": {
+      "type": "string",
+      "label": "Name Field"
+    }
+  }
+}

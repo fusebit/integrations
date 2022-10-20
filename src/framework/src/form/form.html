@@ -16,8 +16,12 @@
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-core.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-react.js"></script>
     <script src="https://cdn.fusebit.io/fusebit/js/fusebit-form/latest/jsonforms-material.js"></script>
+    <script src="https://unpkg.com/@fusebit/objectmap-jsonforms@1.4/dist/cjs/index.js"></script>
 
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   </head>
@@ -37,6 +41,7 @@
         TextField,
         Grid,
         Icon,
+        Typography,
       } = MaterialUI;
 
       const FusebitTheme = {
@@ -54,9 +59,17 @@
             },
           },
           overrides: {
+            MuiTypography: {
+              h4: {
+                fontWeight: 600,
+              },
+              h5: {
+                fontWeight: 600,
+              }
+            },
             MuiTab: {
               wrapper: {
-                fontFamily: '"Poppins", sans-serif',
+                fontFamily: '"Nunito Sans", sans-serif',
               },
             },
             MuiButton: {
@@ -71,6 +84,11 @@
               root: {
                 paddingBottom: '30px',
                 paddingTop: '30px',
+              },
+            },
+            MuiFormLabel: {
+              disabled: {
+                color: 'black !important',
               },
             },
           },
@@ -96,7 +114,12 @@
       }
 
       function App() {
-        const renderers = JSONFormsMaterial.materialRenderers;
+        const renderers = [
+          ...JSONFormsMaterial.materialRenderers,
+          ObjectMap.ObjectMapControl,
+          ObjectMap.SourceTableControl,
+          ObjectMap.TransformedTableControl,
+        ];
         const cells = JSONFormsMaterial.materialCells;
 
         const schema = ##schema##;
@@ -105,20 +128,20 @@
 
         const submitForm = () => {
           const target = ##submitUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
           postForm(target, data);
         };
 
         const cancelForm = () => {
           const target = ##cancelUrl##;
-          console.log(`Sending ${JSON.stringify(data)} to ${target} from ${window.location.href}`);
           postForm(target, {});
         };
 
         return (
-          <Dialog open={true} fullWidth maxWidth="md" disableBackdropClick disableEscapeKeyDown>
+          <Dialog open={true} fullWidth maxWidth="lg" disableBackdropClick disableEscapeKeyDown>
             <DialogTitle>
-              ##dialogTitle##
+              <Typography variant="h4" style={{ width: 'max-content', margin: '16px 0' }}>
+                ##dialogTitle##
+              </Typography>
             </DialogTitle>
             <DialogContent>
       {/*

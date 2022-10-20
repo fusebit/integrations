@@ -1,0 +1,20 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Salesforce"
+  },
+  "handler": "@fusebit-int/salesforce-connector",
+  "configuration": {
+    "mode": {
+      "useProduction": false
+    },
+    "scope": "api offline_access refresh_token",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
+    "refreshErrorLimit": 100000,
+    "refreshInitialBackoff": 100000,
+    "refreshWaitCountLimit": 100000,
+    "refreshBackoffIncrement": 100000,
+    "accessTokenExpirationBuffer": 500
+  }
+}
