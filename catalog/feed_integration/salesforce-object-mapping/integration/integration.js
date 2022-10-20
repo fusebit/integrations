@@ -22,7 +22,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const { salesforceObject: objectName } = configuration.data.salesforceObjectSelection;
 
   // API Reference: https://jsforce.github.io/.
-  const queryObjectData = await salesforceClient.sobject(objectName).find().limit(20);
+  const queryObjectData = await salesforceClient.sobject(objectName).find().limit(1);
 
   // Handle No Records Found
   if (!queryObjectData.length) {
@@ -39,7 +39,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const transformedData = objectMap.transformData(configuration.data.salesforceObjectMapping, queryObjectData[0]);
 
   ctx.body = {
-    Message: `Success! FieldOne has the following value ${transformedData.FieldOne} and FieldTwo has the following value ${transformedData.FieldTwo}`,
+    Message: `Success! ID is ${transformedData.ID} and Name is ${transformedData.Name}`,
   };
 });
 
