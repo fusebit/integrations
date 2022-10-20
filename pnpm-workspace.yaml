@@ -1,0 +1,10 @@
+packages
+  - "./"
+  - "src/*/*-connector"
+  - "src/*/*-provider"
+  - "src/framework"
+  - "catalog"
+  - "workspace/*"
+  - "catalog/feed_*/**"
+  - "./play"
+  - "./tool/publish-docs"

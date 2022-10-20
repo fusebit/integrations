@@ -1,15 +1,4 @@
 {
-  "packages": [
-    "./",
-    "src/*/*-connector",
-    "src/*/*-provider",
-    "src/framework",
-    "catalog",
-    "workspace/*",
-    "catalog/feed_*/**",
-    "./play",
-    "./tool/publish-docs"
-  ],
   "command": {
     "publish": {
       "ignoreChanges": [
@@ -20,5 +9,7 @@
     }
   },
   "version": "7.51.21",
-  "useNx": true
+  "useNx": true,
+  "npmClient": "pnpm",
+  "useWorkspaces": true
 }
