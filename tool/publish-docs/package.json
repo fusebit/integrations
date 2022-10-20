@@ -1,5 +1,5 @@
 {
-  "name": "publish-docs",
+  "name": "@fusebit-int/publish-docs",
   "version": "7.51.22",
   "description": "Fusebit Docs publishing and generation tool",
   "author": "Fusebit, Inc",
