@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-procore-integration",
-  "version": "7.51.20",
+  "version": "7.51.21",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.20",
-    "@fusebit-int/procore-provider": "^7.51.20"
+    "@fusebit-int/framework": "^7.51.21",
+    "@fusebit-int/procore-provider": "^7.51.21"
   },
   "files": [
     "./integration.js",
