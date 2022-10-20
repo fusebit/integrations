@@ -16,7 +16,7 @@
     "docs:lint": "node . lint"
   },
   "dependencies": {
-    "documentation": "^14.0.0",
+    "documentation": "^13.2.5",
     "superagent": "^6.1.0"
   },
   "devDependencies": {
