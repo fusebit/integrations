@@ -27,6 +27,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // Handle No Records Found
   if (!queryObjectData.length) {
     queryObjectData[0] = {};
+    const describeSobjects = await salesforceClient.describe(objectName);
     for (const m in describeSobjects.fields) {
       queryObjectData[0][describeSobjects.fields[m].name] = null;
     }
