@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-twitter-bot-integration",
-  "version": "7.51.25",
+  "version": "7.51.26",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.25",
-    "@fusebit-int/twitter-provider": "^7.51.25"
+    "@fusebit-int/framework": "^7.51.26",
+    "@fusebit-int/twitter-provider": "^7.51.26"
   },
   "files": [
     "./integration.js",

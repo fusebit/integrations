@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/aws-connector",
-  "version": "7.51.25",
+  "version": "7.51.26",
   "description": "AWS Connector",
   "keywords": [
     "Fusebit",
@@ -42,7 +42,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.25",
+    "@fusebit-int/framework": "^7.51.26",
     "@types/superagent": "^4.1.12",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^3.8.0",
