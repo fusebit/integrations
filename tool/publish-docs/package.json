@@ -6,6 +6,7 @@
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
+  "private": "true",
   "scripts": {
     "build": "tsc -b --pretty && npm run copy-files",
     "dev": "tsc --watch --pretty",
