@@ -10,8 +10,8 @@
     "catalog": "Productivity, Office"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/google-sheets#creating-your-own-google-sheets-app",
-    "integrationsDocUrl": "https://developer.fusebit.io/docs/google-sheets",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
     "sampleConfig": {
       "isEnabled": false
     }
