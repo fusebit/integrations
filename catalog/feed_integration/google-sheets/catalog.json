@@ -1,6 +1,6 @@
 {
   "id": "google-sheets",
-  "name": "Google-sheets",
+  "name": "Google Sheets",
   "smallIcon": "#/assets/google-sheets.svg",
   "largeIcon": "#/assets/google-sheetsLarge.svg",
   "version": "5.2.0",
