@@ -3,7 +3,9 @@
   "properties": {
     "organization": {
       "title": "Organization name",
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "description": "If your environment is \"foo.crm.dynamics.com\", specify \"foo\""
     }
   },
   "required": ["organization"]
