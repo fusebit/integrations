@@ -1,0 +1,18 @@
+{
+  "value": [
+    {
+      "subscriptionId": "33e9ec73-e56c-4807-8cda-d0f9a1a5c3e5",
+      "subscriptionExpirationDateTime": "2022-10-27T15:57:14+00:00",
+      "changeType": "updated",
+      "resource": "Users('4bd1a2ab-6bfb-4902-a476-e86f6dc356de')/messages('AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA=')",
+      "clientState": "6330991c2ca5e36e1f60a76d2ade6590",
+      "tenantId": "bddfc9c9-fda8-45c9-a9f6-b0bbf8eb99d2",
+      "resourceData": {
+        "@odata.type": "#microsoft.graph.message",
+        "@odata.id": "Users('4bd1a2ab-6bfb-4902-a476-e86f6dc356de')/messages('AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA=')",
+        "@odata.etag": "W/\"CQAAABYAAADwmRRQwtmZRJd4So10axlTAACzlbgu\"",
+        "id": "AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA="
+      }
+    }
+  ]
+}
