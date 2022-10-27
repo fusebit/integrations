@@ -1,0 +1,33 @@
+{
+  "id": "google-sheets",
+  "name": "Google Sheets",
+  "smallIcon": "#/assets/google-sheets.svg",
+  "largeIcon": "#/assets/google-sheetsLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Productivity, Office"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "google-sheetsConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "google-sheetsIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
