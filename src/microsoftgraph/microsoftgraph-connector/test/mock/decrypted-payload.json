@@ -1,0 +1,11 @@
+{
+  "subject": "tes",
+  "sender": {
+    "@odata.type": "#microsoft.graph.recipient",
+    "emailAddress": {
+      "@odata.type": "#microsoft.graph.emailAddress",
+      "name": "Shehzad Akbar",
+      "address": "msakbar@4h2wbf.onmicrosoft.com"
+    }
+  }
+}

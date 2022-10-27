@@ -1,0 +1,25 @@
+{
+  "value": [
+    {
+      "subscriptionId": "33e9ec73-e56c-4807-8cda-d0f9a1a5c3e5",
+      "subscriptionExpirationDateTime": "2022-10-27T15:57:14+00:00",
+      "changeType": "updated",
+      "resource": "Users('4bd1a2ab-6bfb-4902-a476-e86f6dc356de')/messages('AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA=')",
+      "clientState": "6330991c2ca5e36e1f60a76d2ade6590",
+      "tenantId": "bddfc9c9-fda8-45c9-a9f6-b0bbf8eb99d2",
+      "resourceData": {
+        "@odata.type": "#microsoft.graph.message",
+        "@odata.id": "Users('4bd1a2ab-6bfb-4902-a476-e86f6dc356de')/messages('AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA=')",
+        "@odata.etag": "W/\"CQAAABYAAADwmRRQwtmZRJd4So10axlTAACzlbgu\"",
+        "id": "AAMkADRiYzM0MzgzLWIyODgtNDA0OS04YmU5LTNiMmNhMzg4ODk3ZQBGAAAAAABiosr4hTrGQ6E3DuFIYAtBBwDwmRRQwtmZRJd4So10axlTAAAAAAEJAADwmRRQwtmZRJd4So10axlTAACzrcOfAAA="
+      },
+      "encryptedContent": {
+        "data": "7CKSbeW+OuH3pWVM15a161pO8QrtbMYZuXJhQFLc6sZ1Iu/IrsCY5R4pqqvC/j7baN4Gljrd2GM1kiaex5x3WZGzNw+5469E7RZlSk0h+w0qiJ0/AorcQ6hw9wX6j4h+bPlwgYRi7NYmGjvpKORtqxyK/5hWqgCEmASYB8KUneDeoZ4lN0pxeGNGQHNFUl6Z2kZOuBiDIjwYAgwB/5jJCeMll2O0Xw0yOwxxjyKGsfLhjDXOp3cf1HBnnUaYmi+QeDXeGTImkB7CSFXlSSjlHQ==",
+        "dataKey": "cEX/T3sxeoFIwmt1WX8fJbigJ87sQvTSoTJ9aUy1d595GKjc/Av8FUvgkH6+E2DreuxH+af27AgDDV/mPfvWJJyDdThGZE7DBMJ5Wu+pSybGc7XhMHz58XzuyFNvj0rOERki9SnAhn7+JvGYUifcnrfsUCLNrWe73fj7br/lH2BZSvLv42fzusWyN+80xgQGmMdwx2OaYU7FJJzing9+6t7P8Ou1om0V6aZZqvWfx/FKbOFDjmMM2Jxyf+/QKk+qJqi2YTKqDXr4buxSwzkl20RQAjwaMdJoB9WNRTH7NA03/x5XIs8laVmKiNYQWIuecQ/AQccBr2zOjh91xwkBfih/BDsecc2AWsqPTuWwwubHth8lRiKQtT7218SonX8Ml7oteQfOaDPK9D5H5L7FHWKQ2nRnoWwLXii7bFB11CHUDW0qJREjDJnBHSM5L782AQOuJNbVm53s6nivnWeYvt3SlxcDj9CgZU+rrktqXPGdpd4KtsMK82IX+y7+AgENbncPp4hXQfG9AiXpTEjfXpzot5mpv0VUq2GVRbODoEQhukkGyJquEEYMwsqiJlC8/gi7iCb7vfnxZRBsGJTxPUpvi+xA8cx99rLSNMirOtMwHDa2J9eeo5Gw3wP2P2d4g2eQj2GZvN5LxVvOJtIiqsKvMYNp2f3STydfIKKmw18=",
+        "dataSignature": "AUVgErPXuTdE5rSDz9lV2OxGqk8tlanLhvJoU0RuGs4=",
+        "encryptionCertificateId": "dev",
+        "encryptionCertificateThumbprint": "200287D228B6C9771EC7B4BCDD04CE7B497E0882"
+      }
+    }
+  ]
+}

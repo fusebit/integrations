@@ -17,7 +17,7 @@ class Service extends OAuthConnector.Service {
   };
 
   private isSubscriptionHealthCheck = (ctx: Connector.Types.Context) => {
-    return !!ctx.request.query.validationToken;
+    return !!ctx.query.validationToken;
   };
 
   public async configure(ctx: Connector.Types.Context, token: IOAuthToken) {
@@ -39,12 +39,12 @@ class Service extends OAuthConnector.Service {
 
     // If resource data is encrypted and a key-pair is configured, decrypt it before returning the payload.
     const payload = ctx.req.body.value[0];
-    const { publicKey, privateKey } = ctx.state.manager.config.configuration;
+    const { privateKey } = ctx.state.manager.config.configuration;
 
-    if (payload.encryptedContent && publicKey && privateKey) {
+    if (payload.encryptedContent && privateKey) {
       try {
         const { dataSignature, data, dataKey } = payload.encryptedContent;
-
+        delete payload.encryptedContent;
         // Decrypt the symetric key
         const base64encodedKey = dataKey;
         const asymetricPrivateKey = privateKey
@@ -54,9 +54,12 @@ class Service extends OAuthConnector.Service {
         const decryptedSymetricKey = privateDecrypt(asymetricPrivateKey, decodedKey);
         const hmac = createHmac('sha256', decryptedSymetricKey);
         hmac.write(data, 'base64');
+
         // Compare data signature using HMAC-SHA256
         // If they do not match, assume the payload has been tampered with and do not decrypt it
-        if (dataSignature === hmac.digest('base64')) {
+        const dataSignatureBuffer = Buffer.from(dataSignature, 'utf8');
+        const hmacBuffer = Buffer.from(hmac.digest('base64'), 'utf8');
+        if (timingSafeEqual(dataSignatureBuffer, hmacBuffer)) {
           // Continue with decryption of the encryptedPayload.
           const iv = Buffer.alloc(16, 0);
           decryptedSymetricKey.copy(iv, 0, 0, 16);
@@ -64,15 +67,15 @@ class Service extends OAuthConnector.Service {
           let decryptedPayload = decipher.update(data, 'base64', 'utf8');
           decryptedPayload += decipher.final('utf8');
 
-          return [{ ...ctx.req.body.value[0], decryptedPayload: JSON.parse(decryptedPayload) }];
+          return [{ ...payload, decryptedPayload: JSON.parse(decryptedPayload) }];
         }
       } catch (error) {
-        console.log(`Failed to decrypt resource data:${(error as any).message}`);
+        console.log(`Failed to decrypt resource data: ${(error as any).message}`);
         // If we fail to decrypt, lets just return the original data with encrypted content.
-        return [{ ...ctx.req.body.value[0] }];
+        return [{ ...payload }];
       }
     }
-    return [{ ...ctx.req.body.value[0] }];
+    return [{ ...payload }];
   }
 
   public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
@@ -82,42 +85,48 @@ class Service extends OAuthConnector.Service {
   }
 
   public async validateWebhookEvent(ctx: Connector.Types.Context): Promise<boolean> {
-    // If the request is coming from a triggered subscription
-    if (ctx.req.body?.value) {
-      const { clientState, tenantId, organizationId } = ctx.req.body?.value[0];
-      if (!clientState && !tenantId && !organizationId) {
-        return false;
-      }
-
-      const webhookStorage = await this.getWebhookStorage(ctx, tenantId || organizationId);
-      if (!webhookStorage) {
-        return false;
-      }
-
-      const requestSecretBuffer = Buffer.from(clientState, 'utf8');
-      const storedSecretBuffer = Buffer.from(webhookStorage.data.clientState, 'utf8');
-      const isClientStateEqual = timingSafeEqual(requestSecretBuffer, storedSecretBuffer);
-
-      // Subscriptions with resource data include an extra property to verify validation tokens.
-      if (ctx.req.body.validationTokens) {
-        const { clientId } = ctx.state.manager.config.configuration;
-        for await (const token of ctx.req.body.validationTokens) {
-          const isValid = await isTokenValid(token, clientId, tenantId || organizationId);
-          if (!isValid) {
-            return false;
-          }
-        }
-      }
-
-      return isClientStateEqual;
-    }
-
     // Subscription creation health check
     if (this.isSubscriptionHealthCheck(ctx)) {
       return true;
     }
 
-    return false;
+    if (!ctx.req.body?.value) {
+      return false;
+    }
+
+    // If the request is coming from a triggered subscription
+    const { clientState, tenantId, organizationId } = ctx.req.body?.value[0];
+    if (!clientState && !tenantId && !organizationId) {
+      return false;
+    }
+
+    const webhookStorage = await this.getWebhookStorage(ctx, tenantId || organizationId);
+    if (!webhookStorage) {
+      return false;
+    }
+
+    const requestSecretBuffer = Buffer.from(clientState, 'utf8');
+    const storedSecretBuffer = Buffer.from(webhookStorage.data.clientState, 'utf8');
+    let isClientStateEqual = false;
+
+    try {
+      isClientStateEqual = timingSafeEqual(requestSecretBuffer, storedSecretBuffer);
+    } catch (error) {
+      // Omit any error here, since it can throw an error for many reasons, like different byte length, etc.
+    }
+
+    // Subscriptions with resource data include an extra property to verify validation tokens.
+    if (ctx.req.body.validationTokens) {
+      const { clientId } = ctx.state.manager.config.configuration;
+      for await (const token of ctx.req.body.validationTokens) {
+        const isValid = await isTokenValid(token, clientId, tenantId || organizationId);
+        if (!isValid) {
+          return false;
+        }
+      }
+    }
+
+    return isClientStateEqual;
   }
 
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
@@ -129,10 +138,11 @@ class Service extends OAuthConnector.Service {
   }
 
   public async createWebhookResponse(ctx: Connector.Types.Context): Promise<void> {
-    if (this.isSubscriptionHealthCheck(ctx)) {
-      ctx.header['content-type'] = 'text/plain';
-      ctx.body = ctx.request.query.validationToken;
+    if (!this.isSubscriptionHealthCheck(ctx)) {
+      return;
     }
+    ctx.header['content-type'] = 'text/plain';
+    ctx.body = ctx.request.query.validationToken;
   }
 
   public getWebhookEventType(event: any): string {
@@ -159,10 +169,11 @@ class Service extends OAuthConnector.Service {
     const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
     // We keep a Webhook secret per Azure tenant (1 to n subscriptions)
     const webhookStorage = await this.getWebhookStorage(ctx, tenantId);
-    if (webhookStorage) {
-      return microsoftGraphClient.createSubscription(data, webhookStorage.data.clientState);
+    if (!webhookStorage) {
+      ctx.throw('Webhook client state Not Found', 404);
     }
-    ctx.throw('Webhook client state Not Found', 404);
+
+    return microsoftGraphClient.createSubscription(data, webhookStorage.data.clientState);
   }
 
   public async updateWebhook(
