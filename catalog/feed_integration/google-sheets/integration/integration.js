@@ -3,7 +3,7 @@ const integration = new Integration();
 
 // Koa Router: https://koajs.com/
 const router = integration.router;
-const connectorName = 'google-connector-432';
+const connectorName = 'googleConnector';
 
 // Test Endpoint: Get the openid and email of the currently authenticated user
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {
