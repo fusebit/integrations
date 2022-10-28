@@ -15,6 +15,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const range = 'A1:Z1000';
 
   // Fetch the desired spreadsheet rows
+  // API Reference: https://developers.google.com/sheets/api/guides/concepts
   const {
     data: { values },
   } = await googleClient.sheets('v4').spreadsheets.values.get({
@@ -32,9 +33,11 @@ router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('
   // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
   const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
+  // Using a Public Google Sheets: https://docs.google.com/spreadsheets/d/1__6I6SzTJ7JRWM5WMYdkrA6RE9J6YuGzAgGJvD4lrA4/
   const spreadsheetId = '1__6I6SzTJ7JRWM5WMYdkrA6RE9J6YuGzAgGJvD4lrA4';
 
   // Retrieve Grouping Information from Spreadsheet
+  // API Reference: https://developers.google.com/sheets/api/guides/concepts
   const metadata = await googleClient.sheets('v4').spreadsheets.get({ spreadsheetId });
   const { rowGroups: groups } = metadata.data.sheets[0];
   const {
