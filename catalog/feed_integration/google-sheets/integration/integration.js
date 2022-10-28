@@ -27,4 +27,43 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   };
 });
 
+// Endpoint for Sample App: Retrieve "Food Items" from Spreadsheet & Map into Grocery List
+router.get('/api/tenant/:tenantId/items', integration.middleware.authorizeUser('install:get'), async (ctx) => {
+  // API Reference: https://developer.fusebit.io/reference/fusebit-int-framework-integration
+  const googleClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
+
+  const spreadsheetId = '1__6I6SzTJ7JRWM5WMYdkrA6RE9J6YuGzAgGJvD4lrA4';
+
+  // Retrieve Grouping Information from Spreadsheet
+  const metadata = await googleClient.sheets('v4').spreadsheets.get({ spreadsheetId });
+  const { rowGroups: groups } = metadata.data.sheets[0];
+  const {
+    range: { endIndex },
+  } = groups[groups.length - 1];
+
+  // Fetch the desired spreadsheet rows
+  const {
+    data: { values },
+  } = await googleClient.sheets('v4').spreadsheets.values.get({
+    spreadsheetId,
+    range: `A1:${endIndex}`,
+  });
+
+  // Create object from Row Values
+  const groupList = [];
+  groups.forEach(({ range: { startIndex, endIndex } }) => {
+    const groupData = values.slice(startIndex - 1, endIndex).flat();
+    const groupItems = groupData.slice(1, endIndex);
+
+    groupItems.forEach((value, i) => {
+      groupList.push({
+        foodType: groupData[0], // First item will be always the group name
+        foodItem: groupItems[i],
+      });
+    });
+  });
+
+  ctx.body = groupList;
+});
+
 module.exports = integration;
