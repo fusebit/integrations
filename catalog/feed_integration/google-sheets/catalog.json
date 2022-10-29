@@ -12,7 +12,24 @@
     "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
     "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
     "sampleConfig": {
-      "isEnabled": false
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Oops! Something went wrong and we couldn't retrieve your Grocery list from Google Sheets",
+        "itemName": "Grocery",
+        "itemNamePlural": "Groceries",
+        "properties": [
+          {
+            "name": "foodType",
+            "label": "Food Type"
+          },
+          {
+            "name": "foodItem",
+            "label": "Food Item"
+          }
+        ]
+      }
     }
   },
   "configuration": {
