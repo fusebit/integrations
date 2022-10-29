@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-linear-form-integration",
-  "version": "7.51.31",
+  "version": "7.51.32",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.31",
-    "@fusebit-int/linear-provider": "^7.51.31",
+    "@fusebit-int/framework": "^7.51.32",
+    "@fusebit-int/linear-provider": "^7.51.32",
     "@linear/sdk": "^1.21.0",
     "superagent": "6.1.0"
   },
