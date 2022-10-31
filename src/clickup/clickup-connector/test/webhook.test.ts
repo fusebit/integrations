@@ -19,7 +19,7 @@ beforeEach(() => {
   service = new ServiceConnector().service;
 });
 
-describe('ClickUp Webhook Events', () => {
+describe.skip('ClickUp Webhook Events', () => {
   test.todo('Validate: getEventsFromPayload', async () => {
     expect(service.getEventsFromPayload(sampleCtx)).toEqual([sampleEvent]);
   });
