@@ -1,0 +1,32 @@
+{
+  "id": "clickup",
+  "name": "ClickUp",
+  "smallIcon": "#/assets/clickup.svg",
+  "largeIcon": "#/assets/clickupLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Productivity"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/clickup#creating-your-own-clickup-app",
+    "sampleConfig": {
+      "isEnabled": false
+          }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "clickupConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "clickupIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

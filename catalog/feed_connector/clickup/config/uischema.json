@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/clickupConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}
