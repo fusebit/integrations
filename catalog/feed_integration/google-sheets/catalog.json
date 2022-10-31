@@ -17,8 +17,7 @@
       "isPostEnabled": false,
       "terms": {
         "getFail": "Oops! Something went wrong and we couldn't retrieve your Grocery list from Google Sheets",
-        "itemName": "Grocery",
-        "itemNamePlural": "Groceries",
+        "itemName": "Item",
         "properties": [
           {
             "name": "foodType",
