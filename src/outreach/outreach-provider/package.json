@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/outreach-provider",
-  "version": "7.51.33",
+  "version": "7.51.34",
   "description": "Outreach provider",
   "keywords": [
     "Fusebit",
@@ -38,8 +38,8 @@
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.33",
-    "@fusebit-int/play": "^7.51.33",
+    "@fusebit-int/framework": "^7.51.34",
+    "@fusebit-int/play": "^7.51.34",
     "@playwright/test": "^1.16.3",
     "@types/node": "^16.9.2",
     "@types/request": "^2.48.7",
