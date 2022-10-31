@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/google-connector",
-  "version": "7.51.32",
+  "version": "7.51.33",
   "description": "Google Connector",
   "keywords": [
     "Fusebit",
@@ -35,11 +35,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.51.32",
+    "@fusebit-int/oauth-connector": "^7.51.33",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.32",
+    "@fusebit-int/framework": "^7.51.33",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
