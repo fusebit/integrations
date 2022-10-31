@@ -1,29 +1,29 @@
 {
-  "id": "clickup",
-  "name": "ClickUp",
-  "smallIcon": "#/assets/clickup.svg",
-  "largeIcon": "#/assets/clickupLarge.svg",
+  "id": "drift",
+  "name": "Drift",
+  "smallIcon": "#/assets/drift.svg",
+  "largeIcon": "#/assets/driftLarge.svg",
   "version": "5.2.0",
   "description": "#README.md",
   "tags": {
-    "catalog": "Productivity"
+    "catalog": "Marketing"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/clickup#creating-your-own-clickup-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/drift#creating-your-own-drift-app",
     "sampleConfig": {
       "isEnabled": false
-    }
+          }
   },
   "configuration": {
     "schema": "config/schema.json",
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "clickupConnector": {
+      "driftConnector": {
         "entityType": "connector",
         "path": "connector/"
       },
-      "clickupIntegration": {
+      "driftIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }

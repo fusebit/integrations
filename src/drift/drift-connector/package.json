@@ -1,20 +1,13 @@
 {
-  "name": "@fusebit-int/clickup-connector",
+  "name": "@fusebit-int/drift-connector",
   "version": "7.51.35",
-  "description": "ClickUp Connector",
-  "keywords": [
-    "Fusebit",
-    "ClickUp"
-  ],
+  "description": "Drift Connector",
+  "keywords": ["Fusebit", "Drift"],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": [
-    "libc/**/*.js",
-    "libc/**/*.d.ts",
-    "libc/**/*.json"
-  ],
+  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
