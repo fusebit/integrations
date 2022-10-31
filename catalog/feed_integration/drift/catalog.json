@@ -12,7 +12,7 @@
     "configureAppDocUrl": "https://developer.fusebit.io/docs/drift#creating-your-own-drift-app",
     "sampleConfig": {
       "isEnabled": false
-          }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
