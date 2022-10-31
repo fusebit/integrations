@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "ClickUp"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "clickupConnector",
+      "skip": false,
+      "provider": "@fusebit-int/clickup-provider",
+      "entityId": "<% global.entities.clickupConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
