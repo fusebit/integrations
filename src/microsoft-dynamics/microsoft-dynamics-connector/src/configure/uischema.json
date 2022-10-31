@@ -2,19 +2,9 @@
   "type": "VerticalLayout",
   "elements": [
     {
-      "type": "Group",
       "label": "Organization name",
-      "elements": [
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/organization"
-            }
-          ]
-        }
-      ]
+      "type": "Control",
+      "scope": "#/properties/organization"
     }
   ]
 }

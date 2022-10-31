@@ -125,15 +125,29 @@
         const schema = ##schema##;
         const uischema = ##uischema##;
         const [data, setData] = useState(##data##);
+        const [hasErrors, setHasErrors] = useState(false);
 
         const submitForm = () => {
           const target = ##submitUrl##;
+
+          if (hasErrors) {
+            return;
+          }
           postForm(target, data);
         };
 
         const cancelForm = () => {
           const target = ##cancelUrl##;
           postForm(target, {});
+        };
+
+        const AlertError = () => {
+          return  (
+            <div style={{ padding: '10px', backgroundColor: '#fdeded', color: 'rgb(95, 33, 32)', fontFamily: '"Nunito Sans", sans-serif', display: 'flex' }}>
+                <Icon style={{padding: '5px', fill: 'currentcolor', height: '1em', width: '1em'}}>error</Icon>
+                <div style={{paddingTop: '7px'}}>Please specify all the required fields</div>
+            </div>
+          );
         };
 
         return (
@@ -144,28 +158,32 @@
               </Typography>
             </DialogTitle>
             <DialogContent>
-      {/*
-              <Grid container spacing={21}>
-                <Grid item xs={12}>
-                  <Grid container spacing={2}>
-      */}
-                    <JSONFormsReact.JsonForms
-                      renderers={renderers}
-                      cells={cells}
-                      schema={schema}
-                      uischema={uischema}
-                      data={data}
-                      onChange={({ errors, data }) => setData(data)}
-                    />
-      {/*
+                {hasErrors && <AlertError /> }
+              {/*
+                <Grid container spacing={21}>
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+        */}
+              <JSONFormsReact.JsonForms
+                renderers={renderers}
+                cells={cells}
+                schema={schema}
+                uischema={uischema}
+                data={data}
+                onChange={({ errors, data }) => {
+                  setHasErrors(!!errors.length);
+                  setData(data);
+                }}
+              />
+              {/*
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-      */}
+        */}
             </DialogContent>
             <DialogActions>
               <Button variant="text" onClick={cancelForm}> Cancel </Button>
-              <Button variant="contained" color="primary" onClick={submitForm}> Submit </Button>
+              <Button variant="contained" color="primary" disabled={ hasErrors } onClick={submitForm}> Submit</Button>
             </DialogActions>
           </Dialog>
         );
