@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/microsoft-bot-framework-provider",
-  "version": "7.51.35",
+  "version": "7.51.36",
   "description": "Microsoft Bot Framework provider",
   "keywords": [
     "Fusebit",
@@ -33,7 +33,7 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.35",
+    "@fusebit-int/framework": "^7.51.36",
     "@types/node": "^16.11.7",
     "@types/request": "^2.48.7",
     "@types/superagent": "^4.1.13",
