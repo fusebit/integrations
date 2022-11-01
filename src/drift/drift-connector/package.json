@@ -1,10 +1,10 @@
 {
-  "name": "@fusebit-int/clickup-connector",
+  "name": "@fusebit-int/drift-connector",
   "version": "7.51.35",
-  "description": "ClickUp Connector",
+  "description": "Drift Connector",
   "keywords": [
     "Fusebit",
-    "ClickUp"
+    "Drift"
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "driftConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  }
+}

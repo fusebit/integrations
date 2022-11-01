@@ -47,7 +47,7 @@ test.beforeEach(async ({ page }) => {
   // Execute test prerequisites here
 });
 
-test('clickup-provider test', async ({ page }) => {
+test('drift-provider test', async ({ page }) => {
   const { app, url: localUrl } = await startHttpServer();
 
   const called = waitForExpress();

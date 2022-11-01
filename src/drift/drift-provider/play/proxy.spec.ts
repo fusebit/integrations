@@ -9,8 +9,8 @@ test.beforeAll(async () => {
   account = getAccount();
 });
 
-test('Proxy: ClickUp', async ({ page }) => {
+test('Proxy: Drift', async ({ page }) => {
   // TODO: update the 'some message' param with the message Daisy will get on the
   // log console on our portal/editor when clicking the run button.
-  await Utilities.runProxyTest(account, page, 'ClickUp', authenticate, 'some message');
+  await Utilities.runProxyTest(account, page, 'Drift', authenticate, 'some message');
 }, 180000);

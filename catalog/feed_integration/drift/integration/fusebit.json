@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Drift"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "driftConnector",
+      "skip": false,
+      "provider": "@fusebit-int/drift-provider",
+      "entityId": "<% global.entities.driftConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
