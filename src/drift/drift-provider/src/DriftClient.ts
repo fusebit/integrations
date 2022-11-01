@@ -2,7 +2,7 @@ import { Internal } from '@fusebit-int/framework';
 
 export class DriftClient extends Internal.Provider.ApiClient {
   public fusebit: Internal.Types.IFusebitCredentials;
-  private baseUrl = 'https://driftapi.com/';
+  private baseUrl = 'https://driftapi.com';
   private ctx: Internal.Types.Context;
 
   constructor(ctx: Internal.Types.Context, fusebit: Internal.Types.IFusebitCredentials) {

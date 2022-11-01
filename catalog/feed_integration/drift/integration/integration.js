@@ -14,7 +14,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const accounts = await driftClient.get('/accounts');
 
   ctx.body = {
-    message: `Successfully loaded ${accounts.data.total} contacts from Drift`,
+    message: `Successfully loaded ${accounts.data.total} accounts from Drift`,
   };
 });
 
