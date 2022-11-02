@@ -12,7 +12,7 @@
     "configureAppDocUrl": "https://developer.fusebit.io/docs/gong#creating-your-own-gong-app",
     "sampleConfig": {
       "isEnabled": false
-          }
+    }
   },
   "configuration": {
     "schema": "config/schema.json",
