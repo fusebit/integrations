@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Gong"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "gongConnector",
+      "skip": false,
+      "provider": "@fusebit-int/gong-provider",
+      "entityId": "<% global.entities.gongConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
