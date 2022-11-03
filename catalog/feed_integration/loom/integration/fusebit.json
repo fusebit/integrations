@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Loom"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "loomConnector",
+      "skip": false,
+      "provider": "@fusebit-int/loom-provider",
+      "entityId": "<% global.entities.loomConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

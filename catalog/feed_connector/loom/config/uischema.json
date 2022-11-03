@@ -1,0 +1,10 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/loomConnector/properties/id",
+      "label": "Name"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@fusebit-int/catalog-feed-integration-loom-integration",
+  "version": "7.51.38",
+  "private": true,
+  "dependencies": {
+    "ejs": "^3.1.8"
+  },
+  "files": [
+    "./integration.js",
+    "./template.ejs",
+    "README.md"
+  ]
+}

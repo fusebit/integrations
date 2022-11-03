@@ -1,0 +1,32 @@
+{
+  "id": "loom",
+  "name": "Loom",
+  "smallIcon": "#/assets/loom.svg",
+  "largeIcon": "#/assets/loomLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing,Video Conferencing"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/loom#creating-your-own-loom-app",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "loomConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "loomIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

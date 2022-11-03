@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "privateKey": {
+      "title": "Private Key",
+      "type": "string",
+      "minLength": 1,
+      "description": "A private key is used for sign tokens to load the recordSDK"
+    },
+    "publicAppId": {
+      "title": "Public App ID",
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["privateKey", "publicAppId"]
+}
