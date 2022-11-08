@@ -14,10 +14,10 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const loomClient = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
 
   // API Reference: https://dev.loom.com/docs/record-sdk/details/key-pair-auth#using-your-private-key
-  ctx.body = `A JWS was generated automatically: ${client.fusebit.credentials.jws}, you can use it to render a Loom customSDK, open it <a href="${client.baseUrl}/api/tenant/${ctx.params.tenantId}/test">here</a>`;
+  ctx.body = `A JWS was generated automatically: ${client.fusebit.credentials.jws}, you can use it to render a Loom customSDK, open it <a href="${client.baseUrl}/api/tenant/${ctx.params.tenantId}/record">here</a>`;
 });
 
-router.get('/api/tenant/:tenantId/test', async (ctx) => {
+router.get('/api/tenant/:tenantId/record', async (ctx) => {
   const client = await integration.tenant.getSdkByTenant(ctx, connectorName, ctx.params.tenantId);
   const file = readFileSync(`${__dirname}/template.ejs`).toString('utf-8');
   const template = compile(file, { openDelimiter: '{{', closeDelimiter: '}}' });

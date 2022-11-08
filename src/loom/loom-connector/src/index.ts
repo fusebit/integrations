@@ -148,7 +148,10 @@ class ServiceConnector extends Connector<Service> {
       }),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createSessionClient(ctx);
-        await getToken(ctx);
+        const jws = await getToken(ctx);
+        ctx.body = {
+          jws,
+        };
       }
     );
 
@@ -166,9 +169,7 @@ class ServiceConnector extends Connector<Service> {
         .setIssuer(publicAppId)
         .setExpirationTime('2m')
         .sign(importedPrivateKey);
-      ctx.body = {
-        jws,
-      };
+      return jws;
     };
 
     this.router.get(
@@ -181,7 +182,10 @@ class ServiceConnector extends Connector<Service> {
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.state.tokenClient = this.createIdentityClient(ctx);
-        await getToken(ctx);
+        const jws = await getToken(ctx);
+        ctx.body = {
+          jws,
+        };
       }
     );
 
