@@ -8,7 +8,7 @@
     "mode": {
       "useProduction": false
     },
-    "scope": "crm.objects.contacts.read",
+    "scope": "crm.objects.contacts.read crm.objects.contacts.write",
     "clientId": "<% global.consts.random %>",
     "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
