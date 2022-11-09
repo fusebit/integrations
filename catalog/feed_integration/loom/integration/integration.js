@@ -15,7 +15,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   // The loomClient contains a jws generated automatically with the configured Loom private key.
   // it can be accessed via loomClient.fusebit.credentials.jws
   // API Reference: https://dev.loom.com/docs/record-sdk/details/key-pair-auth#using-your-private-key
-  ctx.body = `A JWS was generated automatically, you can use it to render a Loom recordSDK, see an example implementation at ${client.baseUrl}/api/tenant/${ctx.params.tenantId}/record`;
+  ctx.body = `A JWS was generated automatically, you can use it to render a Loom recordSDK, see an example implementation at ${loomClient.baseUrl}/api/tenant/${ctx.params.tenantId}/record`;
 });
 
 // Renders an HTML page with an authenticated Loom recordSDK
