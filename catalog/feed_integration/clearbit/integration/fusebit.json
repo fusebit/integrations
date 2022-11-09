@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Clearbit"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "clearbitConnector",
+      "skip": false,
+      "provider": "@fusebit-int/clearbit-provider",
+      "entityId": "<% global.entities.clearbitConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}
