@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "privateKey": {
+      "title": "Loom provided private key",
+      "type": "string",
+      "minLength": 1,
+      "description": "A private key is used for sign tokens to load the recordSDK"
+    },
+    "publicAppId": {
+      "title": "Public App ID",
+      "type": "string",
+      "minLength": 1,
+      "description": "The unique identifier of your Loom recordSDK Application"
+    }
+  },
+  "required": ["privateKey", "publicAppId"]
+}

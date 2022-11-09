@@ -1,0 +1,18 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "label": "Loom provided private key",
+      "type": "Control",
+      "scope": "#/properties/privateKey",
+      "options": {
+        "format": "password"
+      }
+    },
+    {
+      "label": "Public App ID",
+      "type": "Control",
+      "scope": "#/properties/publicAppId"
+    }
+  ]
+}
