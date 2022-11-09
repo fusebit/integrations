@@ -2,7 +2,7 @@
   "type": "VerticalLayout",
   "elements": [
     {
-      "label": "Private key",
+      "label": "Loom provided private key",
       "type": "Control",
       "scope": "#/properties/privateKey",
       "options": {

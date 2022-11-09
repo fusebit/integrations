@@ -29,10 +29,9 @@ class ServiceConnector extends Connector<Service> {
         return result;
       },
       validateToken: (token: Types.LoomToken) => {
-        if (token) {
-          return;
+        if (!token || !token.privateKey || !token.publicAppId) {
+          throw new Error('Missing Private Key or Public App Id');
         }
-        throw new Error('Missing Private Key or Public App Id');
       },
     });
   }
@@ -56,6 +55,23 @@ class ServiceConnector extends Connector<Service> {
     const lookupKeySchema = Joi.string()
       .regex(/^idn-[a-f0-9]{32}$/)
       .required();
+
+    this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+      // No current support for proxy credentials, as there's no demo account available for Loom recordSDK.
+      ctx.body = {
+        schema: {
+          properties: {
+            useProduction: {
+              options: {
+                readonly: true,
+              },
+            },
+          },
+        },
+      };
+
+      return next();
+    });
 
     // Override the authorize endpoint to render a Form requiring the Private Key and Public App Id.
     this.router.get(
@@ -147,16 +163,18 @@ class ServiceConnector extends Connector<Service> {
         }),
       }),
       async (ctx: Connector.Types.Context) => {
-        ctx.state.tokenClient = this.createSessionClient(ctx);
-        const jws = await getToken(ctx);
-        ctx.body = {
-          jws,
-        };
+        const client = this.createSessionClient(ctx);
+        const jws = await getToken(ctx, client, ctx.params.lookupKey);
+        ctx.body = { jws };
       }
     );
 
-    const getToken = async (ctx: Connector.Types.Context) => {
-      const { privateKey, publicAppId } = ctx.state.manager.config.configuration;
+    const getToken = async (
+      ctx: Connector.Types.Context,
+      tokenClient: Internal.Provider.BaseTokenClient<Types.LoomToken>,
+      lookupKey: string
+    ) => {
+      const { privateKey, publicAppId } = await tokenClient.get(lookupKey);
 
       const formattedKey = privateKey
         .replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n')
@@ -169,6 +187,7 @@ class ServiceConnector extends Connector<Service> {
         .setIssuer(publicAppId)
         .setExpirationTime('2m')
         .sign(importedPrivateKey);
+
       return jws;
     };
 
@@ -181,11 +200,9 @@ class ServiceConnector extends Connector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.state.tokenClient = this.createIdentityClient(ctx);
-        const jws = await getToken(ctx);
-        ctx.body = {
-          jws,
-        };
+        const client = this.createIdentityClient(ctx);
+        const jws = await getToken(ctx, client, ctx.params.lookupKey);
+        ctx.body = { jws };
       }
     );
 
@@ -212,28 +229,11 @@ class ServiceConnector extends Connector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.state.tokenClient = this.createIdentityClient(ctx);
-        await getToken(ctx);
+        const client = this.createIdentityClient(ctx);
+        await getToken(ctx, client, ctx.params.lookupKey);
         ctx.status = 200;
       }
     );
-
-    this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      // No current support for proxy credentials, as there's no demo account available for Loom recordSDK.
-      ctx.body = {
-        schema: {
-          properties: {
-            useProduction: {
-              options: {
-                readonly: true,
-              },
-            },
-          },
-        },
-      };
-
-      return next();
-    });
   }
 }
 
