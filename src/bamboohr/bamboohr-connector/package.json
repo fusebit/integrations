@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/bamboohr-connector",
-  "version": "7.51.39",
+  "version": "7.51.40",
   "description": "BambooHR Connector",
   "keywords": [
     "Fusebit",
@@ -35,12 +35,12 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.51.39",
+    "@fusebit-int/oauth-connector": "^7.51.40",
     "superagent": "6.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.39",
+    "@fusebit-int/framework": "^7.51.40",
     "@types/superagent": "^4.1.12",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^4.31.0",

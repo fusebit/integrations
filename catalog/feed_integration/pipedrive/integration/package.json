@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-pipedrive-integration",
-  "version": "7.51.39",
+  "version": "7.51.40",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.39",
-    "@fusebit-int/pipedrive-provider": "^7.51.39"
+    "@fusebit-int/framework": "^7.51.40",
+    "@fusebit-int/pipedrive-provider": "^7.51.40"
   },
   "files": [
     "./integration.js",
