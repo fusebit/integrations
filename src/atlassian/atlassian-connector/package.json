@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/atlassian-connector",
-  "version": "7.51.42",
+  "version": "7.51.43",
   "description": "Jira Connector",
   "keywords": [
     "Fusebit",
@@ -34,12 +34,12 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.51.42",
+    "@fusebit-int/oauth-connector": "^7.51.43",
     "jsonwebtoken": "^8.5.1",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.42",
+    "@fusebit-int/framework": "^7.51.43",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
