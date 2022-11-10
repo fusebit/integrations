@@ -14,6 +14,7 @@ router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('
   const companyApi = clearbitClient.makeApiClient('company', 'v2');
   const domain = ctx.query.domain || 'fusebit.io';
   const { legalName, description, foundedYear } = await companyApi.get(`companies/find?domain=${domain}`);
+
   ctx.body = `Got details for ${domain}, legal name: ${legalName}, founded: ${foundedYear}, description: ${description}`;
 });
 
