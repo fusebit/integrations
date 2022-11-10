@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "Mastodon"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "mastodonConnector",
+      "skip": false,
+      "provider": "@fusebit-int/mastodon-provider",
+      "entityId": "<% global.entities.mastodonConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

@@ -1,0 +1,36 @@
+{
+  "id": "mastodon",
+  "name": "Mastodon",
+  "smallIcon": "#/assets/mastodon.svg",
+  "largeIcon": "#/assets/mastodonLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Messaging"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/mastodon#creating-your-own-mastodon-app",
+    "connectorSDKDocUrl": "https://docs.joinmastodon.org/client/intro/"
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "mastodonConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      }
+    },
+    "components": [
+      {
+        "name": "<% this.id %>",
+        "skip": false,
+        "provider": "@fusebit-int/mastodon-provider",
+        "entityId": "<% this.id %>",
+        "dependsOn": [],
+        "entityType": "connector"
+      }
+    ]
+  }
+}
