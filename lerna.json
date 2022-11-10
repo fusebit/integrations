@@ -8,14 +8,12 @@
     "workspace/*",
     "catalog/feed_*/**",
     "./play",
-    "./tool/publish-docs"
+    "./tool/publish-docs",
+    "src/privatekey-connector"
   ],
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     }
   },

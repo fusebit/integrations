@@ -1,0 +1,14 @@
+{
+  "name": "@fusebit-int/catalog-feed-connector-calendly-connector",
+  "version": "7.51.43",
+  "private": true,
+  "scripts": {
+    "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
+    "deploy": "fuse connector deploy <% this.id %> -d .",
+    "get": "fuse connector get <% this.id %> -d ."
+  },
+  "dependencies": {
+    "@fusebit-int/framework": ">=7.51.43",
+    "@fusebit-int/calendly-connector": ">=7.51.43"
+  }
+}
