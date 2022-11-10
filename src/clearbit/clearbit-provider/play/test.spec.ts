@@ -9,7 +9,7 @@ import {
   commitSession,
   fusebitRequest,
   RequestMethod,
-  waitForWebhook
+  waitForWebhook,
 } from '@fusebit-int/play';
 import { authenticate } from './actions';
 
