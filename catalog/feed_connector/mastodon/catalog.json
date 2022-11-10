@@ -10,7 +10,7 @@
   },
   "resources": {
     "configureAppDocUrl": "https://developer.fusebit.io/docs/mastodon#creating-your-own-mastodon-app",
-    "connectorSDKDocUrl": ""
+    "connectorSDKDocUrl": "https://docs.joinmastodon.org/client/intro/"
   },
   "configuration": {
     "schema": "config/schema.json",
