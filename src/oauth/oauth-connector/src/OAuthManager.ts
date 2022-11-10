@@ -250,6 +250,13 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
     return ctx.redirect(await ctx.state.engine.getAuthorizationUrl(ctx));
   }
 
+  /**
+   * Support enhancing the token response with connector configuration, needed for mastodon
+   */
+  protected async enhanceTokenResponse(ctx: Connector.Types.Context, token: any): Promise<any> {
+    return token;
+  }
+
   constructor() {
     super();
 
@@ -316,7 +323,10 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
         ctx.state.tokenClient = this.createSessionClient(ctx);
         try {
-          ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
+          ctx.body = await this.enhanceTokenResponse(
+            ctx,
+            this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey))
+          );
         } catch (error) {
           ctx.throw(500, error.message);
         }
@@ -334,7 +344,10 @@ class OAuthConnector<S extends Connector.Types.Service = Connector.Service> exte
       async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
         ctx.state.tokenClient = this.createIdentityClient(ctx);
         try {
-          ctx.body = this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey));
+          ctx.body = await this.enhanceTokenResponse(
+            ctx,
+            this.sanitizeCredentials(await ctx.state.engine.ensureAccessToken(ctx, ctx.params.lookupKey))
+          );
         } catch (error) {
           ctx.throw(500, error.message);
         }
