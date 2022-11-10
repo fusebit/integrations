@@ -1,0 +1,48 @@
+{
+  "id": "clearbit",
+  "name": "Clearbit",
+  "smallIcon": "#/assets/clearbit.svg",
+  "largeIcon": "#/assets/clearbitLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Marketing"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/clearbit#creating-your-own-clearbit-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Failed to search companies",
+        "itemName": "Company",
+        "properties": [
+          {
+            "name": "name",
+            "label": "Name"
+          },
+          {
+            "name": "domain",
+            "label": "Domain"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "clearbitConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "clearbitIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}

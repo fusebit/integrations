@@ -1,0 +1,13 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "label": "Your Clearbit account API Key",
+      "type": "Control",
+      "scope": "#/properties/apiKey",
+      "options": {
+        "format": "password"
+      }
+    }
+  ]
+}
