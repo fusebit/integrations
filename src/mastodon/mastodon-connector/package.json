@@ -2,12 +2,19 @@
   "name": "@fusebit-int/mastodon-connector",
   "version": "7.51.41",
   "description": "Mastodon Connector",
-  "keywords": ["Fusebit", "Mastodon"],
+  "keywords": [
+    "Fusebit",
+    "Mastodon"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
