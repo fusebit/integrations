@@ -7,6 +7,8 @@ PKGS="src/framework src/*/*-connector src/*/*-provider"
 
 publish()
 {
+  echo PUBLISHING TO:
+  fuse profile get
   echo > ~/.npmrc
   fuse npm login > /dev/null
 
