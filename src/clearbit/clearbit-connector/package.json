@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@fusebit-int/oauth-connector": "^7.51.44",
+    "@fusebit-int/privatekey-connector": "^7.51.45",
     "superagent": "6.1.0"
   },
   "devDependencies": {
