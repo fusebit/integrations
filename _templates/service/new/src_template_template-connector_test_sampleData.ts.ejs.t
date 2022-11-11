@@ -11,8 +11,8 @@ export const sampleConfig = {
     scope: '',
     clientId: 'id',
     clientSecret: 'secret',
-    tokenUrl: '<%= connector.tokenUrl %>',
-    authorizationUrl: '<%= connector.authorizationUrl %>',
+    tokenUrl: '<%= connector ? connector.tokenUrl : null %>',
+    authorizationUrl: '<%= connector ? connector.authorizationUrl : null %>',
   },
   mountUrl: '/v2/account/acc-12d136912f0c4912/subscription/sub-a447d98de09c4cfe/integration/test-<%= name.toLowerCase() %>-connector',
 };

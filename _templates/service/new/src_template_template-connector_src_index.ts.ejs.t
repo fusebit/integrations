@@ -1,12 +1,12 @@
 ---
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-connector/src/index.ts
+to: "<%= connector.tokenUrl ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/src/index.ts` : null %>"
 ---
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
 
-const TOKEN_URL = '<%= connector.tokenUrl %>';
+const TOKEN_URL = '<%= connector.tokenUrl%>';
 const AUTHORIZATION_URL = '<%= connector.authorizationUrl %>';
 const REVOCATION_URL = '<%= connector.revokeUrl %>';
 const SERVICE_NAME = '<%= h.capitalize(name) %>';

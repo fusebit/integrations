@@ -10,7 +10,7 @@ INTEGRATION_ID=test-play-<%= name.toLowerCase() %>-int
 CONNECTOR_ID=test-play-<%= name.toLowerCase() %>-con
 PACKAGE_PROVIDER=@fusebit-int/<%= name.toLowerCase() %>-provider
 PACKAGE_CONNECTOR=@fusebit-int/<%= name.toLowerCase() %>-connector
-AUTHORIZATION_URL=<%= connector.authorizationUrl %>
-TOKEN_URL=<%= connector.tokenUrl.toLowerCase() %>
+AUTHORIZATION_URL=<%= connector.authorizationUrl ? connector.authorizationUrl : null %>
+TOKEN_URL=<%= connector.tokenUrl ? connector.tokenUrl.toLowerCase() : null %>
 SIGNING_SECRET=
 OAUTH_AUDIENCE=
