@@ -1,10 +1,10 @@
 {
-  "name": "@fusebit-int/clearbit-connector",
-  "version": "7.51.44",
-  "description": "Clearbit Connector",
+  "name": "@fusebit-int/calendly-connector",
+  "version": "7.51.43",
+  "description": "Calendly Connector",
   "keywords": [
     "Fusebit",
-    "Clearbit"
+    "Calendly"
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
@@ -35,12 +35,11 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": "^7.51.44",
     "@fusebit-int/privatekey-connector": "^7.51.45",
     "superagent": "6.1.0"
   },
   "devDependencies": {
-    "@fusebit-int/framework": "^7.51.44",
+    "@fusebit-int/framework": ">=7.51.43",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
