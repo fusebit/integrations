@@ -8,8 +8,7 @@
     "workspace/*",
     "catalog/feed_*/**",
     "./play",
-    "./tool/publish-docs",
-    "src/privatekey-connector"
+    "./tool/publish-docs"
   ],
   "command": {
     "publish": {

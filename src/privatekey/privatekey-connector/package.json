@@ -28,14 +28,11 @@
     "tsc:version": "tsc --version",
     "build": "tsc -b --pretty",
     "dev": "tsc --watch --pretty",
-    "lint:check": "eslint . --ext .ts --color --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../.eslintignore"
+    "lint:check": "eslint . --ext .ts --color --ignore-path ../../../.eslintignore",
+    "lint:fix": "eslint . --ext .ts --color --fix --ignore-path ../../../.eslintignore"
   },
   "bugs": {
     "url": "https://github.com/fusebit/integrations/issues"
-  },
-  "dependencies": {
-    "@fusebit-int/oauth-connector": ">=7.51.43"
   },
   "devDependencies": {
     "@fusebit-int/framework": ">=7.51.43",

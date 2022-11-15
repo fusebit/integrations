@@ -35,7 +35,6 @@
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
-    "@fusebit-int/oauth-connector": ">=7.51.43",
     "@fusebit-int/privatekey-connector": "^7.51.45",
     "superagent": "6.1.0"
   },

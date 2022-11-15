@@ -1,7 +1,6 @@
 import { Connector } from '@fusebit-int/framework';
-import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
-class Service extends OAuthConnector.Service {
+class Service extends Connector.Service {
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     ctx.throw(500, 'Event location configuration missing. Required for webhook processing.');
   }

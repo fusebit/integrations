@@ -87,22 +87,20 @@ export abstract class PrivateKeyConnector<S extends Connector.Service = Connecto
     });
   }
 
-  protected async onConfigure(): Promise<any> {
-    return async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
-      ctx.body = {
-        schema: {
-          properties: {
-            useProduction: {
-              options: {
-                readonly: true,
-              },
+  protected async onConfigure(ctx: Connector.Types.Context, next: Connector.Types.Next) {
+    ctx.body = {
+      schema: {
+        properties: {
+          useProduction: {
+            options: {
+              readonly: true,
             },
           },
         },
-      };
-
-      return next();
+      },
     };
+
+    return next();
   }
 
   protected async renderAuthorizationForm(
@@ -197,7 +195,13 @@ export abstract class PrivateKeyConnector<S extends Connector.Service = Connecto
       .regex(/^idn-[a-f0-9]{32}$/)
       .required();
 
-    this.router.get('/api/configure', this.onConfigure);
+    this.router.get('/api/configure', async (ctx: Connector.Types.Context, next: Connector.Types.Next) => {
+      await this.onConfigure(ctx, next);
+    });
+
+    this.router.post('/api/session/:session/cancel', async (ctx: Connector.Types.Context) => {
+      await this.onCancelAuthorization(ctx);
+    });
 
     // Override the authorize endpoint to render a Form requiring the Private Key
     this.router.get(
@@ -215,8 +219,6 @@ export abstract class PrivateKeyConnector<S extends Connector.Service = Connecto
         });
       }
     );
-
-    this.router.post('/api/session/:session/cancel', this.onCancelAuthorization);
 
     this.router.post(
       '/api/form/submit',
