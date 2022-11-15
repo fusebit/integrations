@@ -55,5 +55,6 @@
   "dependencies": {
     "@fusebit-int/reddit-connector": "^7.51.45",
     "snoowrap": "^1.23.0"
-  }
+  },
+  "gitHead": "94995fae21c62ae454523cb0c84d060116ee54dd"
 }

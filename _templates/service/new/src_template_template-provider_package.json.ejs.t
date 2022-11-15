@@ -1,5 +1,5 @@
 ---
-to: src/<%= name.toLowerCase() %>/<%= name.toLowerCase() %>-provider/package.json
+to: "<%= provider.package && !generateTypes ? `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/package.json` : null %>"
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-provider",

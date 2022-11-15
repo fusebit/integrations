@@ -3,18 +3,14 @@ to: "<%= includeWebhooks ? `src/${name.toLowerCase()}/${name.toLowerCase()}-prov
 ---
 import { Internal } from '@fusebit-int/framework';
 
-interface ICreateWebhookProps {}
-
-interface IUpdateWebhookProps {}
-
-interface ICreateWebhookResponse {}
-
-interface IUpdateWebhookResponse {}
-
-interface IWebhookGetResponse {}
-
-
-interface IDeleteWebhookResponse {}
+import {
+  ICreateWebhookProps,
+  IUpdateWebhookProps,
+  ICreateWebhookResponse,
+  IUpdateWebhookResponse,
+  IWebhookGetResponse,
+  IDeleteWebhookResponse,
+} from '@fusebit-int/<%= name.toLowerCase() %>-types';
 
 class <%= h.capitalize(name) %>Webhook extends Internal.Provider.WebhookClient {
   

@@ -1,13 +1,12 @@
 import { randomBytes, timingSafeEqual, privateDecrypt, createHmac, createDecipheriv } from 'crypto';
 
 import { Connector } from '@fusebit-int/framework';
-import { IOAuthToken, OAuthConnector } from '@fusebit-int/oauth-connector';
+import { IOAuthToken } from '@fusebit-int/oauth-connector';
 
 import { isTokenValid } from './tokenValidator';
 import MicrosoftGraphClient from './MicrosoftGraphClient';
-import { IMicrosoftGraphSubscriptionData, IMicrosoftGraphUpdateSubscriptionData } from './types';
 
-class Service extends OAuthConnector.Service {
+class Service extends Connector.Service {
   private getStorageKey = (tenantId: string) => {
     return `webhook/ms-graph/tenant/${tenantId}`;
   };
@@ -152,11 +151,9 @@ class Service extends OAuthConnector.Service {
     return event.changeType;
   }
 
-  public async registerWebhook(
-    ctx: Connector.Types.Context,
-    tenantId: string,
-    data: IMicrosoftGraphSubscriptionData & { accessToken: string }
-  ) {
+  public async registerWebhook(ctx: Connector.Types.Context) {
+    const { data } = ctx.body;
+    const { tenantId } = ctx.params;
     if (data.includeResourceData) {
       const { clientId, publicKey } = ctx.state.manager.config.configuration;
       if (data.includeResourceData) {
@@ -166,7 +163,7 @@ class Service extends OAuthConnector.Service {
         data.encryptionCertificate = publicKey;
       }
     }
-    const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
+    const microsoftGraphClient = new MicrosoftGraphClient(ctx);
     // We keep a Webhook secret per Azure tenant (1 to n subscriptions)
     const webhookStorage = await this.getWebhookStorage(ctx, tenantId);
     if (!webhookStorage) {
@@ -176,35 +173,27 @@ class Service extends OAuthConnector.Service {
     return microsoftGraphClient.createSubscription(data, webhookStorage.data.clientState);
   }
 
-  public async updateWebhook(
-    ctx: Connector.Types.Context,
-    subscriptionId: string,
-    data: IMicrosoftGraphUpdateSubscriptionData
-  ) {
-    const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
+  public async updateWebhook(ctx: Connector.Types.Context) {
+    const { data } = ctx.body;
+    const { subscriptionId } = ctx.params;
+    const microsoftGraphClient = new MicrosoftGraphClient(ctx);
     return microsoftGraphClient.updateSubscription(subscriptionId, data.expirationDateTime);
   }
 
-  public async deleteWebhook(
-    ctx: Connector.Types.Context,
-    subscriptionId: string,
-    data: IMicrosoftGraphUpdateSubscriptionData
-  ) {
-    const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
+  public async deleteWebhook(ctx: Connector.Types.Context) {
+    const { subscriptionId } = ctx.params;
+    const microsoftGraphClient = new MicrosoftGraphClient(ctx);
     return microsoftGraphClient.deleteSubscription(subscriptionId);
   }
 
-  public async getWebhook(
-    ctx: Connector.Types.Context,
-    subscriptionId: string,
-    data: IMicrosoftGraphUpdateSubscriptionData
-  ) {
-    const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
+  public async getWebhook(ctx: Connector.Types.Context) {
+    const { subscriptionId } = ctx.params;
+    const microsoftGraphClient = new MicrosoftGraphClient(ctx);
     return microsoftGraphClient.getSubscription(subscriptionId);
   }
 
-  public async listWebhooks(ctx: Connector.Types.Context, data: IMicrosoftGraphUpdateSubscriptionData) {
-    const microsoftGraphClient = new MicrosoftGraphClient(ctx, { accessToken: data.accessToken });
+  public async listWebhooks(ctx: Connector.Types.Context) {
+    const microsoftGraphClient = new MicrosoftGraphClient(ctx);
     return microsoftGraphClient.listSubscriptions();
   }
 }

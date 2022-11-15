@@ -51,5 +51,6 @@
   "dependencies": {
     "@linear/sdk": "^1.21.0",
     "uuid": "^8.3.2"
-  }
+  },
+  "gitHead": "94995fae21c62ae454523cb0c84d060116ee54dd"
 }

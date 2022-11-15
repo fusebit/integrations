@@ -1,5 +1,5 @@
 ---
-to: "<%= connector.tokenUrl  ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/package.json` : null %>"
+to: "<%= connector.tokenUrl && !(includeWebhooks || generateTypes)  ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/package.json` : null %>"
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-connector",

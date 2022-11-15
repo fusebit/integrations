@@ -23,6 +23,18 @@ function skipIfAPIClientNotCreated() {
   return !this.state.answers?.includeApiClient;
 }
 
+function skipIfWebhooksAreIncluded() {
+  return this.state.answers?.includeWebhooks;
+}
+
+function skipIfConnectorAPIClientUsesSameAsProvider() {
+  return !this.state.answers?.includeConnectorAPIClient ? true : this.state.answers?.useProviderAPIClientBaseUrl;
+}
+
+function skipIfConnectorAPIClientNotEnable() {
+  return !this.state.answers?.includeConnectorAPIClient;
+}
+
 module.exports = [
   {
     type: 'input',
@@ -93,5 +105,33 @@ module.exports = [
     name: 'includeWebhooks',
     message: 'Do you want to generate a Webhook Client?',
     validate: requireAllValues,
+  },
+  {
+    type: 'confirm',
+    name: 'includeConnectorAPIClient',
+    message:
+      'Do you want to generate a Connector API Client? (useful for Webhooks, or accessing the underlying service API from the Connector)',
+    validate: requireAllValues,
+  },
+  {
+    type: 'confirm',
+    name: 'useProviderAPIClientBaseUrl',
+    message: 'Does the Connector API Client uses the same base URL from the Provider API Client?',
+    validate: requireAllValues,
+    skip: skipIfConnectorAPIClientNotEnable,
+  },
+  {
+    type: 'input',
+    name: 'connectorAPIClientBaseUrl',
+    message: "What's the API Client base URL (example: https://admin.example.com/api/v2)?",
+    validate: requireAllValues,
+    skip: skipIfConnectorAPIClientUsesSameAsProvider,
+  },
+  {
+    type: 'confirm',
+    name: 'generateTypes',
+    message: 'Do you have shared types between the provider and the connector?',
+    validate: requireAllValues,
+    skip: skipIfWebhooksAreIncluded,
   },
 ].map((e) => ({ ...e, required: true }));

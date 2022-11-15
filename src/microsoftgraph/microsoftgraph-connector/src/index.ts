@@ -89,7 +89,7 @@ class ServiceConnector extends OAuthConnector<Service> {
             );
           }
         }
-        ctx.body = await this.service.registerWebhook(ctx, ctx.params.tenantId, ctx.req.body);
+        ctx.body = await this.service.registerWebhook(ctx);
       }
     );
 
@@ -103,7 +103,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.updateWebhook(ctx, ctx.params.subscriptionId, ctx.req.body);
+        ctx.body = await this.service.updateWebhook(ctx);
       }
     );
 
@@ -111,7 +111,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:subscriptionId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.deleteWebhook(ctx, ctx.params.subscriptionId, ctx.req.body);
+        ctx.body = await this.service.deleteWebhook(ctx);
       }
     );
 
@@ -119,7 +119,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:subscriptionId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.getWebhook(ctx, ctx.params.subscriptionId, ctx.req.body);
+        ctx.body = await this.service.getWebhook(ctx);
       }
     );
 
@@ -127,7 +127,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.listWebhooks(ctx, ctx.req.body);
+        ctx.body = await this.service.listWebhooks(ctx);
       }
     );
   }

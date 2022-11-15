@@ -1,5 +1,5 @@
 ---
-to: "<%= connector.tokenUrl ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/src/index.ts` : null %>"
+to: "<%= connector.tokenUrl && !includeWebhooks ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/src/index.ts` : null %>"
 ---
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';

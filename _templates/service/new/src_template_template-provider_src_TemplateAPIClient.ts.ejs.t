@@ -1,5 +1,5 @@
 ---
-to: "<%= !provider.package ? `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/src/${h.capitalize(name)}Client.ts` : null  %>"
+to: "<%= !provider.package && includeApiClient ? `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/src/${h.capitalize(name)}Client.ts` : null  %>"
 ---
 import { Internal } from '@fusebit-int/framework';
 

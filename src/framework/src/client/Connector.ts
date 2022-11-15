@@ -224,6 +224,41 @@ export class Service extends EntityBase.ServiceDefault {
   public getWebhookBody(ctx: Connector.Types.Context): any {
     return ctx.req?.body;
   }
+
+  /**
+   * Override
+   */
+  public registerWebhook(ctx: Connector.Types.Context) {
+    ctx.throw(500, 'Method not implemented');
+  }
+
+  /**
+   * Override
+   */
+  public updateWebhook(ctx: Connector.Types.Context) {
+    ctx.throw(500, 'Method not implemented');
+  }
+
+  /**
+   * Override
+   */
+  public deleteWebhook(ctx: Connector.Types.Context) {
+    ctx.throw(500, 'Method not implemented');
+  }
+
+  /**
+   * Override
+   */
+  public getWebhook(ctx: Connector.Types.Context) {
+    ctx.throw(500, 'Method not implemented');
+  }
+
+  /**
+   * Override
+   */
+  public listWebhooks(ctx: Connector.Types.Context) {
+    ctx.throw(500, 'Method not implemented');
+  }
 }
 
 /**

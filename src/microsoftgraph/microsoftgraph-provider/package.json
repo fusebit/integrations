@@ -56,5 +56,6 @@
     "@fusebit-int/microsoftgraph-connector": "^7.51.45",
     "@microsoft/microsoft-graph-client": "3.0.2",
     "isomorphic-fetch": "^3.0.0"
-  }
+  },
+  "gitHead": "94995fae21c62ae454523cb0c84d060116ee54dd"
 }
