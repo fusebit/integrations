@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-aws-connector",
-  "version": "7.51.45",
+  "version": "7.51.46",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/aws-connector": "^7.51.45",
-    "@fusebit-int/framework": "^7.51.45"
+    "@fusebit-int/aws-connector": "^7.51.46",
+    "@fusebit-int/framework": "^7.51.46"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/play",
-  "version": "7.51.45",
+  "version": "7.51.46",
   "description": "Common building blocks for Playwright tests",
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
