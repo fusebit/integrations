@@ -2,12 +2,19 @@
   "name": "@fusebit-int/sendgrid-connector",
   "version": "7.51.44",
   "description": "Sendgrid Connector",
-  "keywords": ["Fusebit", "Sendgrid"],
+  "keywords": [
+    "Fusebit",
+    "Sendgrid"
+  ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
   "license": "SEE LICENSE IN LICENSE",
   "main": "libc/index.js",
-  "files": ["libc/**/*.js", "libc/**/*.d.ts", "libc/**/*.json"],
+  "files": [
+    "libc/**/*.js",
+    "libc/**/*.d.ts",
+    "libc/**/*.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fusebit/integrations.git"
