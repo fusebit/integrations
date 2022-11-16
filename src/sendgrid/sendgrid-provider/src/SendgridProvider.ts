@@ -10,7 +10,6 @@ export default class SendgridProvider extends Internal.Provider.Activator<Fusebi
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitSendgridClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
     const client: FusebitSendgridClient = new Client();
-    console.log(client.fusebit);
     client.fusebit = {
       credentials,
       lookupKey,
