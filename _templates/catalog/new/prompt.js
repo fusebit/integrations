@@ -28,11 +28,6 @@ module.exports = [
     message: 'Glyph and Wordmark SVG Image (two blank lines to finish)\n',
     multiline: true,
   },
-  // {
-  //   type: 'input',
-  //   name: 'feedTags',
-  //   message: 'Comma separated list of tags for the feed',
-  // },
   {
     type: 'multiselect',
     name: 'feedTags',

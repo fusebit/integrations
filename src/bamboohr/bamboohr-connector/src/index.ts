@@ -261,6 +261,8 @@ class ServiceConnector extends Connector<Service> {
     });
 
     const webhookSchema = Joi.object({
+      apiKey: Joi.string().required(),
+      companyDomain: Joi.string().required(),
       name: Joi.string().required(),
       monitorFields: Joi.array().items(Joi.string()).required().min(1),
       postFields: Joi.object().optional().min(1),
@@ -291,8 +293,7 @@ class ServiceConnector extends Connector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        const { apiKey, companyDomain } = await this.getCredentials(ctx);
-        ctx.body = await this.service.registerWebhook(ctx, apiKey, companyDomain);
+        ctx.body = await this.service.registerWebhook(ctx);
       }
     );
 
@@ -307,8 +308,7 @@ class ServiceConnector extends Connector<Service> {
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        const { apiKey, companyDomain } = await this.getCredentials(ctx);
-        ctx.body = await this.service.updateWebhook(ctx, apiKey, companyDomain);
+        ctx.body = await this.service.updateWebhook(ctx);
       }
     );
 
@@ -319,11 +319,14 @@ class ServiceConnector extends Connector<Service> {
           id: Joi.number().required(),
           lookupKey: lookupKeySchema,
         }),
+        body: Joi.object({
+          apiKey: Joi.string().required(),
+          companyDomain: Joi.string().required(),
+        }),
       }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        const { apiKey, companyDomain } = await this.getCredentials(ctx);
-        ctx.body = await this.service.deleteWebhook(ctx, apiKey, companyDomain);
+        ctx.body = await this.service.deleteWebhook(ctx);
       }
     );
 

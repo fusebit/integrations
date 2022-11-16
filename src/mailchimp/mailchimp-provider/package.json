@@ -59,6 +59,5 @@
     "@mailchimp/mailchimp_marketing": "3.0.75",
     "superagent": "^7.1.3",
     "uuid": "^8.3.2"
-  },
-  "gitHead": "94995fae21c62ae454523cb0c84d060116ee54dd"
+  }
 }

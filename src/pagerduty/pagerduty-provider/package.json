@@ -59,6 +59,5 @@
     "@pagerduty/pdjs": "^2.2.3",
     "superagent": "^6.1.0",
     "uuid": "^8.3.2"
-  },
-  "gitHead": "94995fae21c62ae454523cb0c84d060116ee54dd"
+  }
 }

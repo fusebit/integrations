@@ -10,6 +10,10 @@ import {
 } from './types';
 
 class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRClient> {
+  private getCredentials() {
+    const { apiKey, companyDomain } = (this.client?.fusebit?.credentials as unknown) as Types.BambooHRToken;
+    return { apiKey, companyDomain };
+  }
   /**
    * @typedef {object} BambooHRWebhookResponse
    * @property {number} id The id of the webhook
@@ -117,6 +121,7 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRCli
 
   private makeRequest = <T>(verb: string) => {
     return async (path: string, data?: any): Promise<T> => {
+      const { apiKey, companyDomain } = this.getCredentials();
       const params = this.ctx.state.params;
       const baseUrl = `${params.endpoint}/v2/account/${params.accountId}/subscription/${params.subscriptionId}`;
       const webhookUrl = `${baseUrl}/connector/${this.config.entityId}/api/webhook/${path}`;
@@ -124,7 +129,7 @@ class BambooHRWebhook extends Internal.Provider.WebhookClient<FusebitBambooHRCli
         await (superagent as any)
           [verb](webhookUrl)
           .set('Authorization', `Bearer ${params.functionAccessToken}`)
-          .send(data)
+          .send({ ...data, apiKey, companyDomain })
       ).body;
     };
   };
