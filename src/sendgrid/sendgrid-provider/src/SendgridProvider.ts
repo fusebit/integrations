@@ -1,7 +1,7 @@
 import { Internal } from '@fusebit-int/framework';
-import * as sendgridClient from '@sendgrid/client';
+import { Client } from '@sendgrid/client';
 
-type FusebitSendgridClient = typeof sendgridClient & { fusebit?: Internal.Types.IFusebitCredentials };
+type FusebitSendgridClient = Client & { fusebit?: Internal.Types.IFusebitCredentials };
 
 export default class SendgridProvider extends Internal.Provider.Activator<FusebitSendgridClient> {
   /*
@@ -9,7 +9,8 @@ export default class SendgridProvider extends Internal.Provider.Activator<Fusebi
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitSendgridClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitSendgridClient = sendgridClient;
+    const client: FusebitSendgridClient = new Client();
+    console.log(client.fusebit);
     client.fusebit = {
       credentials,
       lookupKey,
