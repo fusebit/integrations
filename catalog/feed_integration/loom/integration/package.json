@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-loom-integration",
-  "version": "7.51.46",
+  "version": "7.51.47",
   "private": true,
   "dependencies": {
     "ejs": "^3.1.8"
