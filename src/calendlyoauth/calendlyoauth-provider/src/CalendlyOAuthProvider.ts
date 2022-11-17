@@ -9,7 +9,7 @@ export default class CalendlyOAuthProvider extends Internal.Provider.Activator<F
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitCalendlyOAuthClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitCalendlyOAuthClient = new Client(ctx, {
+    const client: FusebitCalendlyOAuthClient = new Client({
       credentials,
       lookupKey,
       connectorId: this.config.entityId,
