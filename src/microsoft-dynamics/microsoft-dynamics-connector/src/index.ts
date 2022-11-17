@@ -129,7 +129,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.deleteWebhook(ctx, ctx.params.organizationId);
+        ctx.body = await this.service.deleteWebhook(ctx);
       }
     );
 
@@ -137,7 +137,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.updateWebhook(ctx, ctx.params.organizationId);
+        ctx.body = await this.service.updateWebhook(ctx);
       }
     );
 
@@ -145,7 +145,7 @@ class ServiceConnector extends OAuthConnector<Service> {
       '/api/webhook/:organizationId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.getWebhook(ctx, ctx.params.organizationId);
+        ctx.body = await this.service.getWebhook(ctx);
       }
     );
   }
