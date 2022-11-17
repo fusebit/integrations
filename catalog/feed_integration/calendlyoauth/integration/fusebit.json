@@ -1,0 +1,19 @@
+{
+  "id": "<% this.id %>",
+  "tags": {
+    "fusebit.service": "CalendlyOAuth"
+  },
+  "handler": "./integration",
+  "components": [
+    {
+      "name": "calendlyoauthConnector",
+      "skip": false,
+      "provider": "@fusebit-int/calendlyoauth-provider",
+      "entityId": "<% global.entities.calendlyoauthConnector.id %>",
+      "dependsOn": [],
+      "entityType": "connector"
+    }
+  ],
+  "componentTags": {},
+  "configuration": {}
+}

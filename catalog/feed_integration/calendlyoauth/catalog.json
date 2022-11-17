@@ -1,0 +1,48 @@
+{
+  "id": "calendlyoauth",
+  "name": "Calendly OAuth",
+  "smallIcon": "#/assets/calendly.svg",
+  "largeIcon": "#/assets/calendlyLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "tags": {
+    "catalog": "Office,Productivity,Calendar,Video Conferencing"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/calendly#creating-your-own-calendly-oauth-app",
+    "sampleConfig": {
+      "isEnabled": true,
+      "isGetEnabled": true,
+      "isPostEnabled": false,
+      "terms": {
+        "getFail": "Failed to get your Calendly scheduled events",
+        "itemName": "Scheduled event",
+        "properties": [
+          {
+            "name": "name",
+            "label": "Name"
+          },
+          {
+            "name": "location",
+            "label": "Location"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "calendlyoauthConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "calendlyoauthIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
