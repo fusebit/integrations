@@ -1,5 +1,5 @@
 ---
-to: "<%= connector.tokenUrl && !(includeWebhooks || generateTypes)  ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/package.json` : null %>"
+to: "<%= `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/package.json` %>"
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-connector",
@@ -31,10 +31,18 @@ to: "<%= connector.tokenUrl && !(includeWebhooks || generateTypes)  ? `src/${nam
     "url": "https://github.com/fusebit/integrations/issues"
   },
   "dependencies": {
+    <% if(connector.tokenUrl ){ -%>
     "@fusebit-int/oauth-connector": ">=<%= h.currentVersion %>",
+    <% } -%>
+    <% if(!connector.tokenUrl){ -%>
+    "@fusebit-int/privatekey-connector": ">=<%= h.currentVersion %>",
+    <% } -%>
     "superagent": "6.1.0"
   },
   "devDependencies": {
+    <% if(includeWebhooks || generateTypes){ -%>
+    "@fusebit-int/<%= name.toLowerCase() %>-types": ">=<%= h.currentVersion %>",
+    <% } -%>
     "@fusebit-int/framework": ">=<%= h.currentVersion %>",
     "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.0",

@@ -1,5 +1,5 @@
 ---
-to: "<%= provider.package && !generateTypes ? `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/package.json` : null %>"
+to: "<%= `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/package.json` %>"
 ---
 {
   "name": "@fusebit-int/<%= name.toLowerCase() %>-provider",
@@ -35,6 +35,9 @@ to: "<%= provider.package && !generateTypes ? `src/${name.toLowerCase()}/${name.
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
+    <% if(generateTypes){ -%>
+    "@fusebit-int/<%= name.toLowerCase() %>-types": ">=<%= h.currentVersion %>",
+    <% } -%>
     "@fusebit-int/framework": ">=<%= h.currentVersion %>",
     "@fusebit-int/play": ">=<%= h.currentVersion %>",
     "@playwright/test": "^1.16.3",
@@ -49,7 +52,9 @@ to: "<%= provider.package && !generateTypes ? `src/${name.toLowerCase()}/${name.
     "jest": "^27.2.4",
     "typescript": "~4.4.3"
   },
+  <% if(provider.package){ -%>
   "dependencies": {
     "<%= provider.package %>": "<%= provider.semver %>"
   }
+  <% } -%>
 }

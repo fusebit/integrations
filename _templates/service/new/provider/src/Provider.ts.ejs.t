@@ -12,11 +12,16 @@ export default class <%= h.capitalize(name) %>Provider extends Internal.Provider
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<Fusebit<%= h.capitalize(name) %>Client> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: Fusebit<%= h.capitalize(name) %>Client = new Client(ctx, {
+  <% if (provider.package) { -%>
+    const client: Fusebit<%= h.capitalize(name) %>Client = new Client();
+    client.fusebit = { credentials };
+  <% } else {-%>
+    const client: Fusebit<%= h.capitalize(name) %>Client = new Client({
       credentials,
       lookupKey,
       connectorId: this.config.entityId,
     });
+  <% } -%>
     return client;
   }
 }

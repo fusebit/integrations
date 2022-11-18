@@ -1,9 +1,10 @@
 ---
-to: "<%= connector.tokenUrl && !includeWebhooks ? `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/src/index.ts` : null %>"
+to: "<%= `src/${name.toLowerCase()}/${name.toLowerCase()}-connector/src/index.ts` %>"
 ---
+
+<% if (connector.tokenUrl) { -%>
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
-
 import { Service } from './Service';
 
 const TOKEN_URL = '<%= connector.tokenUrl%>';
@@ -24,10 +25,30 @@ class ServiceConnector extends OAuthConnector<Service> {
   protected addUrlConfigurationAdjustment(): Connector.Types.Handler {
     return this.adjustUrlConfiguration(TOKEN_URL, AUTHORIZATION_URL, PROXY_KEY);
   }
+<% } else { -%>
+import { PrivateKeyConnector } from '@fusebit-int/privatekey-connector';
+import { Service } from './Service';
+
+class ServiceConnector extends PrivateKeyConnector<Service> {
+  static Service = Service;
+
+  protected createService() {
+  return new ServiceConnector.Service();
+  }
+
+  protected getServiceName(): string {
+  return '<%= name %>';
+  }
+
+  protected getKeyName(): string {
+  return '<%= privateKeyFieldName %>';
+  }
+<% } -%>
 
   public constructor() {
     super();
 
+<% if (connector.tokenUrl) { -%>
     this.router.get('/api/configure', async (ctx: Connector.Types.Context) => {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
@@ -38,6 +59,53 @@ class ServiceConnector extends OAuthConnector<Service> {
       ctx.body.schema.properties.clientId.description = `The Client ID from your ${SERVICE_NAME} App`;
       ctx.body.schema.properties.clientSecret.description = `The Client Secret from your ${SERVICE_NAME} App`;
     });
+<% } -%>
+
+<% if (includeWebhooks) { -%>
+    // TODO: Implement proper Webhook Schema validation
+    const Joi = this.middleware.validate.joi;
+
+    // Webhook management
+    this.router.post(
+      '/api/webhook',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.registerWebhook(ctx);
+      }
+    );
+
+    this.router.patch(
+      '/api/webhook/:id',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.updateWebhook(ctx);
+      }
+    );
+
+    this.router.delete(
+      '/api/webhook/:id',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.deleteWebhook(ctx);
+      }
+    );
+
+    this.router.get(
+      '/api/webhook/:id',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.getWebhook(ctx);
+      }
+    );
+
+    this.router.get(
+      '/api/webhook',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.listWebhooks(ctx);
+      }
+    );
+<% } -%>
   }
 }
 
