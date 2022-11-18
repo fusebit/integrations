@@ -1,14 +1,14 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-xero-integration",
-  "version": "7.51.48",
+  "version": "7.51.49",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.48",
-    "@fusebit-int/xero-provider": "^7.51.48"
+    "@fusebit-int/framework": "^7.51.49",
+    "@fusebit-int/xero-provider": "^7.51.49"
   },
   "files": [
     "./integration.js",
