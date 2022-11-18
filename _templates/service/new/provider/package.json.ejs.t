@@ -35,7 +35,7 @@ to: "<%= `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/package.json`
     "@fusebit-int/framework": "*"
   },
   "devDependencies": {
-    <% if(generateTypes){ -%>
+    <% if(includeWebhooks || generateTypes){ -%>
     "@fusebit-int/<%= name.toLowerCase() %>-types": ">=<%= h.currentVersion %>",
     <% } -%>
     "@fusebit-int/framework": ">=<%= h.currentVersion %>",
@@ -51,10 +51,10 @@ to: "<%= `src/${name.toLowerCase()}/${name.toLowerCase()}-provider/package.json`
     "eslint-plugin-security": "^1.4.0",
     "jest": "^27.2.4",
     "typescript": "~4.4.3"
-  },
+  }
   <% if(provider.package){ -%>
-  "dependencies": {
-    "<%= provider.package %>": "<%= provider.semver %>"
+  , "dependencies": {
+      "<%= provider.package %>": "<%= provider.semver %>"
   }
   <% } -%>
 }

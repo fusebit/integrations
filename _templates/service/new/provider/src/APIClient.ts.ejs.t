@@ -10,6 +10,5 @@ export class <%= h.capitalize(name) %>Client extends Internal.Provider.ApiClient
   constructor(fusebit: Internal.Types.IFusebitCredentials) {
     super((url: string) => `${this.baseUrl}${url}`, fusebit.connectorId, fusebit.credentials.access_token);
     this.fusebit = fusebit;
-    this.baseUrl = (fusebit.credentials as any).baseUrl;
   }
 }
