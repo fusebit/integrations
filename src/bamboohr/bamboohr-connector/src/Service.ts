@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
-import { IBambooHRWebhook, IBambooHRWebhookResponse, IWebhookUrlParts } from './types';
+import { IBambooHRWebhook, IBambooHRWebhookResponse, IWebhookUrlParts, BambooHRToken } from './types';
 import Client from './Client';
 
 class Service extends OAuthConnector.Service {
@@ -91,7 +91,7 @@ class Service extends OAuthConnector.Service {
     return `webhook/${webhookId}`;
   };
 
-  private sanitizeWebhookData = (data: IBambooHRWebhook) => {
+  private sanitizeWebhookData = (data: IBambooHRWebhook & BambooHRToken) => {
     // We use the Webhook name property to identify the event type
     data.name = (data.name || 'bamboohr-event').replace(/\s/g, '-');
     return { ...data };
@@ -103,8 +103,9 @@ class Service extends OAuthConnector.Service {
     return `${baseUrl}/connector/${entityId}/api/fusebit/webhook/event/${webhookId}/action/${eventType}`;
   };
 
-  public registerWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+  public registerWebhook = async (ctx: Connector.Types.Context) => {
     const webhookData = this.sanitizeWebhookData(ctx.req.body);
+    const { apiKey, companyDomain } = webhookData;
     const client = new Client({
       apiKey,
       companyDomain,
@@ -135,8 +136,9 @@ class Service extends OAuthConnector.Service {
     return { ...createdWebhook, privateKey: '' };
   };
 
-  public updateWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+  public updateWebhook = async (ctx: Connector.Types.Context) => {
     const webhookData = this.sanitizeWebhookData(ctx.req.body);
+    const { apiKey, companyDomain } = webhookData;
     const { id } = ctx.params;
     const { entityId } = ctx.state.params;
     const client = new Client({
@@ -156,8 +158,9 @@ class Service extends OAuthConnector.Service {
     return updatedWebhook;
   };
 
-  public deleteWebhook = async (ctx: Connector.Types.Context, apiKey: string, companyDomain: string) => {
+  public deleteWebhook = async (ctx: Connector.Types.Context) => {
     const { id, entityId } = ctx.params;
+    const { apiKey, companyDomain } = ctx.req.body;
     const client = new Client({
       apiKey,
       companyDomain,

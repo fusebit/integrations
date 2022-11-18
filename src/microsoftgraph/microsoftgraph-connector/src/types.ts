@@ -29,11 +29,6 @@ export interface IMicrosoftGraphSubscription {
   notificationUrlAppId: string;
 }
 
-export interface IMicrosoftGraphUpdateSubscriptionData {
-  expirationDateTime: string;
-  accessToken: string;
-}
-
 export interface IMicrosoftGraphSubscriptionList {
   value: Array<IMicrosoftGraphSubscription>;
 }
