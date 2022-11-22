@@ -2,6 +2,7 @@ import { Connector } from '@fusebit-int/framework';
 import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
+import GongOAuthEngine from './Engine';
 
 const TOKEN_URL = 'https://app.gong.io/oauth2/generate-token';
 const AUTHORIZATION_URL = 'https://app.gong.io/oauth2/authorize';
@@ -12,6 +13,7 @@ const PROXY_KEY = 'gong';
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';
 
 class ServiceConnector extends OAuthConnector<Service> {
+  protected readonly OAuthEngine = GongOAuthEngine;
   static Service = Service;
 
   protected createService() {
