@@ -10,7 +10,7 @@ const REVOCATION_URL = 'https://authz.constantcontact.com/oauth2/default/v1/revo
 const SERVICE_NAME = 'ConstantContact';
 
 class ServiceConnector extends OAuthConnector {
-  protected readonly OAuthENgine = ConstantContactOAuthEngine;
+  protected readonly OAuthEngine = ConstantContactOAuthEngine;
   static Service = Service;
 
   protected createService() {
