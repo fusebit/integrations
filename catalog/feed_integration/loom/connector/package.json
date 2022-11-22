@@ -1,8 +1,8 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-loom-connector",
-  "version": "7.51.50",
+  "version": "7.51.51",
   "private": true,
   "dependencies": {
-    "@fusebit-int/loom-connector": "^7.51.50"
+    "@fusebit-int/loom-connector": "^7.51.51"
   }
 }
