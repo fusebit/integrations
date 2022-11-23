@@ -15,7 +15,7 @@ export default class MicrosoftDynamicsProvider extends Internal.Provider.Activat
    */
   public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitMicrosoftDynamicsClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const serverUrl = credentials.scope.replace('/user_impersonation', '');
+    const serverUrl = `https://${credentials.params?.organizationName}.api.crm.dynamics.com`;
     const client: FusebitMicrosoftDynamicsClient = new Client({
       webApiUrl: `${serverUrl}/api/data/v9.2/`,
       onTokenRefresh: (_) => _(credentials.access_token),

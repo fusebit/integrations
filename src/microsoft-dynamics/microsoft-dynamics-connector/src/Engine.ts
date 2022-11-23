@@ -4,8 +4,8 @@ import { getOrganizationInfo } from './utils';
 
 class MicrosoftDynamicsOAuthEngine extends OAuthEngine {
   protected async enrichInitialToken(ctx: Internal.Types.Context, token: IOAuthToken) {
-    const { OrganizationId, BusinessUnitId, UserId } = await getOrganizationInfo(token);
-    token.params = { organizationId: OrganizationId, businessUnitId: BusinessUnitId, userId: UserId };
+    const { organizationId, userId, businessUnitId, organizationName } = await getOrganizationInfo(token);
+    token.params = { organizationId, businessUnitId, userId, organizationName };
   }
 }
 

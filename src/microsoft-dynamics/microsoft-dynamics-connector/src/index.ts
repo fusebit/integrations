@@ -3,6 +3,7 @@ import { OAuthConnector } from '@fusebit-int/oauth-connector';
 
 import { Service } from './Service';
 import { schema, uischema } from './configure';
+import { schema as webhookSchema, uischema as webhookUISchema } from './configure/global';
 import MicrosoftDynamicsOAuthEngine from './Engine';
 
 const TOKEN_URL = 'https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/token';
@@ -30,6 +31,17 @@ class ServiceConnector extends OAuthConnector<Service> {
     await this.service.configure(ctx, token);
   }
 
+  protected async handleCallback(ctx: Connector.Types.Context) {
+    const { webhooks } = ctx.state.manager.config.configuration.splash || {};
+    // Webhooks only works in production mode.
+    ctx.state.displaySplash = webhooks?.length && ctx.state.manager.config.configuration.mode?.useProduction;
+    await super.handleCallback(ctx);
+  }
+
+  protected async handleSplashScreen(ctx: Connector.Types.Context) {
+    await this.service.configure(ctx, ctx.state.tokenInfo);
+  }
+
   protected async onAuthorize(ctx: Connector.Types.Context) {
     const [form, contentType] = Internal.Form({
       schema,
@@ -53,6 +65,10 @@ class ServiceConnector extends OAuthConnector<Service> {
       // Adjust the configuration elements here
       ctx.body.uischema.elements.find((element: { label: string }) => element.label == 'OAuth2 Configuration').label =
         'Microsoft Dynamics Configuration';
+
+      // Adjust Webhooks configuration screen
+      ctx.body.schema.properties.splash = webhookSchema;
+      ctx.body.uischema.elements.push(webhookUISchema);
 
       this.addConfigurationElement(ctx, CONFIGURATION_SECTION, 'tenant');
 
@@ -126,26 +142,42 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     // Webhook management
     this.router.delete(
-      '/api/webhook/:organizationId',
+      '/api/webhook/organization',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.deleteWebhook(ctx);
       }
     );
 
-    this.router.patch(
-      '/api/webhook/:organizationId',
+    this.router.get(
+      '/api/webhook',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.updateWebhook(ctx);
+        ctx.body = await this.service.getWebhook(ctx);
+      }
+    );
+
+    this.router.delete(
+      '/api/webhook/steps/:webhookStepId',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.deleteWebhookStep(ctx);
       }
     );
 
     this.router.get(
-      '/api/webhook/:organizationId',
+      '/api/webhook/steps/:webhookStepId',
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
-        ctx.body = await this.service.getWebhook(ctx);
+        ctx.body = await this.service.getWebhookStep(ctx);
+      }
+    );
+
+    this.router.get(
+      '/api/webhook/steps',
+      this.middleware.authorizeUser('connector:execute'),
+      async (ctx: Connector.Types.Context) => {
+        ctx.body = await this.service.getWebhookSteps(ctx);
       }
     );
   }
