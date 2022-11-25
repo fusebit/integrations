@@ -140,9 +140,18 @@ class ServiceConnector extends OAuthConnector<Service> {
         'The process has been canceled; please start over to authorize access to your Microsoft Dynamics account.';
     });
 
+    const webhookCommonBodySchema = Joi.object({
+      accessToken: Joi.string().required(),
+      organizationName: Joi.string().required(),
+      organizationId: Joi.string().required(),
+    });
+
     // Webhook management
     this.router.delete(
       '/api/webhook/organization',
+      this.middleware.validate({
+        body: webhookCommonBodySchema,
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.deleteWebhook(ctx);
@@ -151,6 +160,9 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     this.router.get(
       '/api/webhook',
+      this.middleware.validate({
+        body: webhookCommonBodySchema,
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.getWebhook(ctx);
@@ -159,6 +171,12 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     this.router.delete(
       '/api/webhook/steps/:webhookStepId',
+      this.middleware.validate({
+        body: webhookCommonBodySchema,
+        params: Joi.object({
+          webhookStepId: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.deleteWebhookStep(ctx);
@@ -167,6 +185,12 @@ class ServiceConnector extends OAuthConnector<Service> {
 
     this.router.get(
       '/api/webhook/steps/:webhookStepId',
+      this.middleware.validate({
+        body: webhookCommonBodySchema,
+        params: Joi.object({
+          webhookStepId: Joi.string().required(),
+        }),
+      }),
       this.middleware.authorizeUser('connector:execute'),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.getWebhookStep(ctx);
@@ -176,6 +200,9 @@ class ServiceConnector extends OAuthConnector<Service> {
     this.router.get(
       '/api/webhook/steps',
       this.middleware.authorizeUser('connector:execute'),
+      this.middleware.validate({
+        body: webhookCommonBodySchema,
+      }),
       async (ctx: Connector.Types.Context) => {
         ctx.body = await this.service.getWebhookSteps(ctx);
       }

@@ -1,8 +1,8 @@
 import { Internal } from '@fusebit-int/framework';
 import { IOAuthToken } from '@fusebit-int/oauth-connector';
 import {
-  ICreateWebhokData,
-  ICreateWebhokStepData,
+  ICreateWebhookData,
+  ICreateWebhookStepData,
   ISdkMessageIdResponse,
   ISdkMessageFilterResponse,
   ISdkMessageResponse,
@@ -28,7 +28,7 @@ class MicrosofDynamicsClient extends Internal.Provider.ApiClient {
     this.webhookUrl = `${baseUrl}/connector/${ctx.state.params.entityId}/api/fusebit/webhook/event`;
   }
 
-  public async createWebhook(webhookData: ICreateWebhokData) {
+  public async createWebhook(webhookData: ICreateWebhookData) {
     return this.post('serviceendpoints', {
       ...webhookData,
       url: this.webhookUrl,
@@ -43,7 +43,7 @@ class MicrosofDynamicsClient extends Internal.Provider.ApiClient {
     messageId,
     messageFilterId,
     supportedDeployment,
-  }: ICreateWebhokStepData) {
+  }: ICreateWebhookStepData) {
     const requestData = { name, stage, rank, supporteddeployment: supportedDeployment };
     (requestData as any)['eventhandler_serviceendpoint@odata.bind'] = `/serviceendpoints(${serviceEndpointId})`;
     (requestData as any)['sdkmessageid@odata.bind'] = `/sdkmessages(${messageId})`;

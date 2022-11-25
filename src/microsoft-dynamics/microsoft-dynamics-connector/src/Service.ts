@@ -7,40 +7,29 @@ import MicrosofDynamicsClient from './MicrosoftDynamicsClient';
 import { IWebhookStepData } from './Types';
 
 const MICROSOFT_DYNAMICS_WEBHOOK_NAME = 'Fusebit';
-
+const MICROSOFT_DYNAMICS_WEBHOOK_CONTRACT_TYPE = 8; // Means Webhook
+const MICROSOFT_DYNAMICS_WEBHOOK_AUTH_TYPE = 4; // Means Webhook Key
+const MICROSOFT_DYNAMICS_WEBHOOK_SUPPORTED_DEPLOYMENT = 0; // Means Server Only.
+enum OperationType {
+  PreValidation = 10,
+  PreOperation = 20,
+  PostOperation = 40,
+}
 class Service extends Connector.Service {
-  public getStorageKey = (organizationId: string) => {
-    return `webhook/ms-dynamics/${organizationId}`;
-  };
-
   private getWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(organizationId));
   };
 
-  public updateWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
-    const secret = randomBytes(16).toString('hex');
-    const lastUpdate = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
-    return { secret, lastUpdate };
-  };
-  public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
-    return [{ ...ctx.req.body }];
-  }
-
-  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
-    return `organization/${event.OrganizationId}`;
-  }
-
   private mapStageToValue = (stage: string) => {
     switch (stage) {
       case 'pre-validation':
-        return 10;
+        return OperationType.PreValidation;
       case 'pre-operation':
-        return 20;
+        return OperationType.PreOperation;
       case 'post-operation':
-        return 40;
+        return OperationType.PostOperation;
       default:
-        return 40;
+        return OperationType.PostOperation;
     }
   };
 
@@ -73,7 +62,7 @@ class Service extends Connector.Service {
           serviceEndpointId: webhookId,
           messageId: sdkMessageId,
           messageFilterId: sdkMessageFilterId,
-          supportedDeployment: 0, // Always 0 for server
+          supportedDeployment: MICROSOFT_DYNAMICS_WEBHOOK_SUPPORTED_DEPLOYMENT,
         });
       }
     }
@@ -89,8 +78,8 @@ class Service extends Connector.Service {
 
     await dynamicsClient.createWebhook({
       name: MICROSOFT_DYNAMICS_WEBHOOK_NAME,
-      contract: 8, // Means Webhook
-      authtype: 4, // Means Webhook Key
+      contract: MICROSOFT_DYNAMICS_WEBHOOK_CONTRACT_TYPE,
+      authtype: MICROSOFT_DYNAMICS_WEBHOOK_AUTH_TYPE,
       authvalue: webhookSecret,
     });
 
@@ -104,6 +93,24 @@ class Service extends Connector.Service {
     }
     const { secret } = await this.updateWebhookStorage(ctx, organizationId);
     return secret;
+  }
+
+  public getStorageKey = (organizationId: string) => {
+    return `webhook/ms-dynamics/${organizationId}`;
+  };
+
+  public updateWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
+    const secret = randomBytes(16).toString('hex');
+    const lastUpdate = Date.now();
+    await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
+    return { secret, lastUpdate };
+  };
+  public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
+    return [{ ...ctx.req.body }];
+  }
+
+  public getAuthIdFromEvent(ctx: Connector.Types.Context, event: any): string | void {
+    return `organization/${event.OrganizationId}`;
   }
 
   public async configure(ctx: Connector.Types.Context, token: IOAuthToken) {

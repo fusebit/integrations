@@ -4,14 +4,14 @@ export interface IWebhookStepData {
   stage: string;
 }
 
-export interface ICreateWebhokData {
+export interface ICreateWebhookData {
   name: string;
   contract: number;
   authtype: number;
   authvalue: string;
 }
 
-export interface ICreateWebhokStepData {
+export interface ICreateWebhookStepData {
   name: string;
   stage: number;
   rank: number;
