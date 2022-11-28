@@ -1,0 +1,29 @@
+{
+  "type": "Group",
+  "label": "Microsoft Dynamics Webhooks Configuration",
+  "rule": {
+    "effect": "SHOW",
+    "condition": {
+      "scope": "#/properties/mode/properties/useProduction",
+      "schema": {
+        "const": true
+      }
+    }
+  },
+  "elements": [
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/splash"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

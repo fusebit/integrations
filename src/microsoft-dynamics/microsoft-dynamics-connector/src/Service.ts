@@ -2,26 +2,109 @@ import { Connector } from '@fusebit-int/framework';
 import { IOAuthToken } from '@fusebit-int/oauth-connector';
 import { randomBytes, timingSafeEqual } from 'crypto';
 
-class Service extends Connector.Service {
-  public getStorageKey = (organizationId: string) => {
-    return `webhook/ms-dynamics/${organizationId}`;
-  };
+import MicrosofDynamicsClient from './MicrosoftDynamicsClient';
 
+import { IWebhookStepData } from './Types';
+
+const MICROSOFT_DYNAMICS_WEBHOOK_NAME = 'Fusebit';
+const MICROSOFT_DYNAMICS_WEBHOOK_CONTRACT_TYPE = 8; // Means Webhook
+const MICROSOFT_DYNAMICS_WEBHOOK_AUTH_TYPE = 4; // Means Webhook Key
+const MICROSOFT_DYNAMICS_WEBHOOK_SUPPORTED_DEPLOYMENT = 0; // Means Server Only.
+enum OperationType {
+  PreValidation = 10,
+  PreOperation = 20,
+  PostOperation = 40,
+}
+class Service extends Connector.Service {
   private getWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
     return this.utilities.getData(ctx, this.getStorageKey(organizationId));
+  };
+
+  private mapStageToValue = (stage: string) => {
+    switch (stage) {
+      case 'pre-validation':
+        return OperationType.PreValidation;
+      case 'pre-operation':
+        return OperationType.PreOperation;
+      case 'post-operation':
+        return OperationType.PostOperation;
+      default:
+        return OperationType.PostOperation;
+    }
+  };
+
+  private async registerWebhookSteps(
+    dynamicsClient: MicrosofDynamicsClient,
+    webhooks: Array<IWebhookStepData>,
+    webhookId: string
+  ) {
+    for await (const { sdkMessageFilter, sdkMessage, stage } of webhooks) {
+      const sdkMessageResponse = await dynamicsClient.getSdkMessageId(sdkMessageFilter, sdkMessage);
+
+      if (!sdkMessageResponse) {
+        console.log(
+          `Could not find a message ${sdkMessage} for filter ${sdkMessageFilter} ensure your Microsoft Dynamics instance is properly configured`
+        );
+        continue;
+      }
+
+      const { sdkMessageFilterId, sdkMessageId } = sdkMessageResponse;
+      const stepName = `${sdkMessageFilter}:${sdkMessage}`;
+      const stageValue = this.mapStageToValue(stage);
+      const webhookStep = await dynamicsClient.getWebhookStep(webhookId, sdkMessageId, stepName, stageValue);
+
+      // Ensure we don't have a duplicated step.
+      if (!webhookStep) {
+        await dynamicsClient.createWebhookStep({
+          name: stepName,
+          stage: stageValue,
+          rank: 1,
+          serviceEndpointId: webhookId,
+          messageId: sdkMessageId,
+          messageFilterId: sdkMessageFilterId,
+          supportedDeployment: MICROSOFT_DYNAMICS_WEBHOOK_SUPPORTED_DEPLOYMENT,
+        });
+      }
+    }
+  }
+
+  private async createOrRetrieveWebhook(dynamicsClient: MicrosofDynamicsClient, webhookSecret: string) {
+    // The Webhook registration operation needs to happen only once per organization.
+    const webhook = await dynamicsClient.getWebhookByName(MICROSOFT_DYNAMICS_WEBHOOK_NAME);
+
+    if (webhook) {
+      return webhook;
+    }
+
+    await dynamicsClient.createWebhook({
+      name: MICROSOFT_DYNAMICS_WEBHOOK_NAME,
+      contract: MICROSOFT_DYNAMICS_WEBHOOK_CONTRACT_TYPE,
+      authtype: MICROSOFT_DYNAMICS_WEBHOOK_AUTH_TYPE,
+      authvalue: webhookSecret,
+    });
+
+    return dynamicsClient.getWebhookByName(MICROSOFT_DYNAMICS_WEBHOOK_NAME);
+  }
+
+  private async retrieveWebhookSecretFromStorage(ctx: Connector.Types.Context, organizationId: string) {
+    const webhookStorage = await this.getWebhookStorage(ctx, organizationId);
+    if (webhookStorage) {
+      return webhookStorage?.data.secret;
+    }
+    const { secret } = await this.updateWebhookStorage(ctx, organizationId);
+    return secret;
+  }
+
+  public getStorageKey = (organizationId: string) => {
+    return `webhook/ms-dynamics/${organizationId}`;
   };
 
   public updateWebhookStorage = async (ctx: Connector.Types.Context, organizationId: string) => {
     const secret = randomBytes(16).toString('hex');
     const lastUpdate = Date.now();
-    await this.utilities.setData(ctx, this.getStorageKey(ctx.params.organizationId), { data: { secret, lastUpdate } });
+    await this.utilities.setData(ctx, this.getStorageKey(organizationId), { data: { secret, lastUpdate } });
     return { secret, lastUpdate };
   };
-
-  public updateWebhook = async (ctx: Connector.Types.Context) => {
-    return this.updateWebhookStorage(ctx, ctx.params.organizationId);
-  };
-
   public getEventsFromPayload(ctx: Connector.Types.Context): any[] | void {
     return [{ ...ctx.req.body }];
   }
@@ -31,11 +114,34 @@ class Service extends Connector.Service {
   }
 
   public async configure(ctx: Connector.Types.Context, token: IOAuthToken) {
-    // Generate a new Webhook secret associated to the specific organization.
-    const webhookStorage = await this.getWebhookStorage(ctx, token.params.organizationId);
+    try {
+      const { webhooks } = ctx.state.manager.config.configuration.splash;
 
-    if (!webhookStorage) {
-      await this.updateWebhookStorage(ctx, token.params.organizationId);
+      // So far, this configuration step is for Webhooks only, hence we're skipping if no webhooks are configured,
+      // Be careful if you want to run any other configuration here aside of Webhooks.
+      if (!webhooks?.length) {
+        return;
+      }
+
+      // Generate a new Webhook secret associated to the specific organization.
+      const authSecret = await this.retrieveWebhookSecretFromStorage(ctx, token.params.organizationId);
+      const dynamicsClient = new MicrosofDynamicsClient(ctx, token.params.organizationName, token.access_token);
+      const microsoftDynamicsWebhook = await this.createOrRetrieveWebhook(dynamicsClient, authSecret);
+
+      if (!microsoftDynamicsWebhook) {
+        console.log(`Unable to find a Fusebit webhook for organization ${token.params.organizationName}`);
+        return;
+      }
+
+      // Register Webhook Steps based on Connector configuration
+      await this.registerWebhookSteps(dynamicsClient, webhooks, microsoftDynamicsWebhook.serviceendpointid);
+    } catch (error) {
+      console.log(
+        `Failed to register webhook for organization ${token.params.organizationName}: ${(error as any).message}`
+      );
+      ctx.throw(
+        `Failed to register webhook for organization ${token.params.organizationName}: ${(error as any).message}`
+      );
     }
   }
 
@@ -60,16 +166,44 @@ class Service extends Connector.Service {
     return timingSafeEqual(requestSecretBuffer, storedSecretBuffer);
   }
 
-  public getWebhook = async (ctx: Connector.Types.Context) => {
-    const webhookStorage = await this.getWebhookStorage(ctx, ctx.params.organizationId);
-    if (!webhookStorage) {
+  public async getWebhookSteps(ctx: Connector.Types.Context) {
+    const { accessToken, organizationName } = ctx.req.body;
+    const dynamicsClient = new MicrosofDynamicsClient(ctx, organizationName, accessToken);
+    const webhook = await dynamicsClient.getWebhookByName(MICROSOFT_DYNAMICS_WEBHOOK_NAME);
+    if (!webhook) {
       return (ctx.status = 404);
     }
-    return webhookStorage.data;
+    return dynamicsClient.getWebhookSteps(webhook.serviceendpointid);
+  }
+
+  public async getWebhookStep(ctx: Connector.Types.Context) {
+    const { accessToken, organizationName } = ctx.req.body;
+    const dynamicsClient = new MicrosofDynamicsClient(ctx, organizationName, accessToken);
+    return dynamicsClient.getWebhookStepById(ctx.params.webhookStepId);
+  }
+
+  public getWebhook = async (ctx: Connector.Types.Context) => {
+    const { accessToken, organizationName } = ctx.req.body;
+    const dynamicsClient = new MicrosofDynamicsClient(ctx, organizationName, accessToken);
+    return dynamicsClient.getWebhookByName(MICROSOFT_DYNAMICS_WEBHOOK_NAME);
+  };
+
+  public deleteWebhookStep = async (ctx: Connector.Types.Context) => {
+    const { accessToken, organizationName } = ctx.req.body;
+    const dynamicsClient = new MicrosofDynamicsClient(ctx, organizationName, accessToken);
+    return dynamicsClient.deleteWebhookStep(ctx.params.webhookStepId);
   };
 
   public deleteWebhook = async (ctx: Connector.Types.Context) => {
-    await this.utilities.deleteData(ctx, this.getStorageKey(ctx.params.organizationId));
+    const { accessToken, organizationName, organizationId } = ctx.req.body;
+    const dynamicsClient = new MicrosofDynamicsClient(ctx, organizationName, accessToken);
+    await this.utilities.deleteData(ctx, this.getStorageKey(organizationId));
+    const webhook = await dynamicsClient.getWebhookByName(MICROSOFT_DYNAMICS_WEBHOOK_NAME);
+    if (!webhook) {
+      return (ctx.status = 404);
+    }
+
+    return dynamicsClient.deleteWebhook(webhook.serviceendpointid);
   };
 
   public async initializationChallenge(ctx: Connector.Types.Context): Promise<boolean> {
