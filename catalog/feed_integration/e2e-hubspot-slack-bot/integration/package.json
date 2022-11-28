@@ -1,15 +1,15 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-e2e-hubspot-slack-bot-integration",
-  "version": "7.51.51",
+  "version": "7.51.52",
   "private": "true",
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.51",
-    "@fusebit-int/hubspot-provider": "^7.51.51",
-    "@fusebit-int/slack-provider": "^7.51.51"
+    "@fusebit-int/framework": "^7.51.52",
+    "@fusebit-int/hubspot-provider": "^7.51.52",
+    "@fusebit-int/slack-provider": "^7.51.52"
   },
   "files": [
     "./integration.js",

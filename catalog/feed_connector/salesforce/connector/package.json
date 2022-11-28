@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-salesforce-connector",
-  "version": "7.51.51",
+  "version": "7.51.52",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,7 +8,7 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.51.51",
-    "@fusebit-int/salesforce-connector": "^7.51.51"
+    "@fusebit-int/framework": "^7.51.52",
+    "@fusebit-int/salesforce-connector": "^7.51.52"
   }
 }
