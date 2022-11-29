@@ -3,7 +3,7 @@ import { CalendlyClient as Client } from './CalendlyClient';
 
 type FusebitCalendlyOAuthClient = Client & { fusebit?: Internal.Types.IFusebitCredentials };
 
-export default class CalendlyOAuthProvider extends Internal.Provider.Activator<FusebitCalendlyOAuthClient> {
+export default class CalendlyProvider extends Internal.Provider.Activator<FusebitCalendlyOAuthClient> {
   /*
    * This function will create an authorized wrapper of the CalendlyOAuth SDK client.
    */

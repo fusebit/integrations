@@ -6,7 +6,7 @@ import { Service } from './Service';
 const TOKEN_URL = 'https://auth.calendly.com/oauth/token';
 const AUTHORIZATION_URL = 'https://auth.calendly.com/oauth/authorize';
 const REVOCATION_URL = 'https://auth.calendly.com/oauth/revoke';
-const SERVICE_NAME = 'CalendlyOAuth';
+const SERVICE_NAME = 'Calendly';
 const PROXY_KEY = 'calendly';
 // Configuration section name used to add extra configuration elements via this.addConfigurationElement
 const CONFIGURATION_SECTION = 'Fusebit Connector Configuration';

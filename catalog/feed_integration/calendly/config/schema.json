@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "calendlyoauthIntegration": {
+    "calendlyIntegration": {
       "type": "object",
       "properties": {
         "id": {
@@ -10,7 +10,7 @@
         }
       }
     },
-    "calendlyoauthConnector": {
+    "calendlyConnector": {
       "type": "object",
       "properties": {
         "id": {

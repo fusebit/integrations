@@ -1,5 +1,5 @@
 {
-  "calendlyoauthConnector": {
-    "calendlyoauthName": "calendlyoauth-connector"
+  "calendlyhConnector": {
+    "calendlyName": "calendly-connector"
   }
 }

@@ -35,11 +35,11 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "calendlyoauthConnector": {
+      "calendlyConnector": {
         "entityType": "connector",
         "path": "connector/"
       },
-      "calendlyoauthIntegration": {
+      "calendlyIntegration": {
         "entityType": "integration",
         "path": "integration/"
       }

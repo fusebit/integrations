@@ -1,3 +1,3 @@
-import Provider from './CalendlyOAuthProvider';
+import Provider from './CalendlyProvider';
 
 export default Provider;

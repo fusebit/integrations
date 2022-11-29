@@ -7,7 +7,7 @@
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/calendlyoauth-provider": "^7.51.52",
+    "@fusebit-int/calendly-provider": "^7.51.52",
     "@fusebit-int/framework": "^7.51.52"
   },
   "files": [

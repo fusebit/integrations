@@ -9,7 +9,7 @@
     "catalog": "Office,Productivity,Calendar,Video Conferencing"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/calendlyoauth#creating-your-own-calendly-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/calendlyoh#creating-your-own-calendly-app",
     "connectorSDKDocUrl": "https://developer.calendly.com/api-docs"
   },
   "configuration": {
@@ -17,7 +17,7 @@
     "uischema": "config/uischema.json",
     "data": "config/defaults.json",
     "entities": {
-      "calendlyoauthConnector": {
+      "calendlyConnector": {
         "entityType": "connector",
         "path": "connector/"
       }

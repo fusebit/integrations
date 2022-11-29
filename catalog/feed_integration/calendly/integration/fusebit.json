@@ -8,7 +8,7 @@
     {
       "name": "calendlyConnector",
       "skip": false,
-      "provider": "@fusebit-int/calendlyoauth-provider",
+      "provider": "@fusebit-int/calendly-provider",
       "entityId": "<% global.entities.calendlyConnector.id %>",
       "dependsOn": [],
       "entityType": "connector"
