@@ -1,9 +1,9 @@
 {
   "id": "<% this.id %>",
   "tags": {
-    "fusebit.service": "Calendly OAuth"
+    "fusebit.service": "Calendly"
   },
-  "handler": "@fusebit-int/calendlyoauth-connector",
+  "handler": "@fusebit-int/calendly-connector",
   "configuration": {
     "mode": {
       "useProduction": false

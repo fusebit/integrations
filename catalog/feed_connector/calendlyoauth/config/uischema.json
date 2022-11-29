@@ -3,7 +3,7 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/calendlyoauthConnector/properties/id",
+      "scope": "#/properties/calendlyConnector/properties/id",
       "label": "Name"
     }
   ]

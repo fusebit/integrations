@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const calendlyConnector = require('@fusebit-int/calendly-connector');
+const calendlyoauthConnector = require('@fusebit-int/calendly-connector');
 
 // TODO: DEMONSTRATE API
 ```

@@ -3,7 +3,7 @@ const integration = new Integration();
 
 // Koa Router: https://koajs.com/
 const router = integration.router;
-const connectorName = 'calendlyoauthConnector';
+const connectorName = 'calendlyConnector';
 
 // Test Endpoint: Get basic information about your Calendly user account
 router.post('/api/tenant/:tenantId/test', integration.middleware.authorizeUser('install:get'), async (ctx) => {

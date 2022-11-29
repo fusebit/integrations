@@ -1,6 +1,6 @@
 {
-  "id": "calendlyoauth",
-  "name": "Calendly OAuth",
+  "id": "calendly",
+  "name": "Calendly",
   "smallIcon": "#/assets/calendly.svg",
   "largeIcon": "#/assets/calendlyLarge.svg",
   "version": "5.2.0",
@@ -9,7 +9,7 @@
     "catalog": "Office,Productivity,Calendar,Video Conferencing"
   },
   "resources": {
-    "configureAppDocUrl": "https://developer.fusebit.io/docs/calendly#creating-your-own-calendly-oauth-app",
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/calendly#creating-your-own-calendly-app",
     "sampleConfig": {
       "isEnabled": true,
       "isGetEnabled": true,

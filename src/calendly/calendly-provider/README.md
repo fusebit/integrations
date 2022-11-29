@@ -1,11 +1,11 @@
-# `@fusebit-int/calendly-provider`
+# `@fusebit-int/calendlyoauth-provider`
 
 > TODO: description
 
 ## Usage
 
 ```
-const calendlyProvider = require('@fusebit-int/calendly-provider');
+const calendlyoauthProvider = require('@fusebit-int/calendlyoauth-provider');
 
 // TODO: DEMONSTRATE API
 ```
