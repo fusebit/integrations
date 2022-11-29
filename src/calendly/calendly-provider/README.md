@@ -1,4 +1,4 @@
-# `@fusebit-int/calendlyoauth-provider`
+# `@fusebit-int/calendly-provider`
 
 > TODO: description
 

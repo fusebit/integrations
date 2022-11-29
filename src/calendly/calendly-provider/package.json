@@ -1,5 +1,5 @@
 {
-  "name": "@fusebit-int/calendlyoauth-provider",
+  "name": "@fusebit-int/calendly-provider",
   "version": "7.51.52",
   "description": "CalendlyOAuth provider",
   "keywords": [
