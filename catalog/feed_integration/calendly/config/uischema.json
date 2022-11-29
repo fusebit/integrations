@@ -17,7 +17,7 @@
     {
       "type": "Control",
       "scope": "#/properties/calendlyConnector/properties/id",
-      "label": "Calendly Connector name",
+      "label": "CalendlyOAuth Connector name",
       "rule": {
         "effect": "SHOW",
         "condition": {

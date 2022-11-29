@@ -8,8 +8,8 @@ export const sampleConfig = {
     scope: '',
     clientId: 'id',
     clientSecret: 'secret',
-    tokenUrl: 'nan',
-    authorizationUrl: 'nan',
+    tokenUrl: 'https://auth.calendly.com/oauth/token',
+    authorizationUrl: 'https://auth.calendly.com/oauth/authorize',
   },
   mountUrl: '/v2/account/acc-12d136912f0c4912/subscription/sub-a447d98de09c4cfe/integration/test-calendly-connector',
 };

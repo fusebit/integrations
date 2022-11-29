@@ -6,11 +6,11 @@
   "handler": "@fusebit-int/calendly-connector",
   "configuration": {
     "mode": {
-      "useProduction": true
+      "useProduction": false
     },
-    "scope": "",
-    "clientId": "",
-    "clientSecret": "",
+    "scope": "default",
+    "clientId": "<% global.consts.random %>",
+    "clientSecret": "<% global.consts.random %>",
     "refreshErrorLimit": 100000,
     "refreshInitialBackoff": 100000,
     "refreshWaitCountLimit": 100000,

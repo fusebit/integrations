@@ -1,15 +1,15 @@
 import { Internal } from '@fusebit-int/framework';
 import { CalendlyClient as Client } from './CalendlyClient';
 
-type FusebitCalendlyClient = Client & { fusebit?: Internal.Types.IFusebitCredentials };
+type FusebitCalendlyOAuthClient = Client & { fusebit?: Internal.Types.IFusebitCredentials };
 
-export default class CalendlyProvider extends Internal.Provider.Activator<FusebitCalendlyClient> {
+export default class CalendlyProvider extends Internal.Provider.Activator<FusebitCalendlyOAuthClient> {
   /*
-   * This function will create an authorized wrapper of the Calendly SDK client.
+   * This function will create an authorized wrapper of the CalendlyOAuth SDK client.
    */
-  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitCalendlyClient> {
+  public async instantiate(ctx: Internal.Types.Context, lookupKey: string): Promise<FusebitCalendlyOAuthClient> {
     const credentials = await this.requestConnectorToken({ ctx, lookupKey });
-    const client: FusebitCalendlyClient = new Client(ctx, {
+    const client: FusebitCalendlyOAuthClient = new Client({
       credentials,
       lookupKey,
       connectorId: this.config.entityId,
