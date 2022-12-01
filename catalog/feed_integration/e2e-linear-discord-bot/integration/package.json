@@ -1,15 +1,15 @@
 {
   "name": "@fusebit-int/catalog-feed-integration-e2e-linear-discord-bot-integration",
-  "version": "7.52.0",
+  "version": "7.53.0",
   "private": true,
   "scripts": {
     "deploy": "fuse integration deploy <% this.id %> -d .",
     "get": "fuse integration get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/discord-provider": "^7.52.0",
-    "@fusebit-int/framework": "^7.52.0",
-    "@fusebit-int/linear-provider": "^7.52.0",
+    "@fusebit-int/discord-provider": "^7.53.0",
+    "@fusebit-int/framework": "^7.53.0",
+    "@fusebit-int/linear-provider": "^7.53.0",
     "superagent": "^6.1.0"
   },
   "files": [
