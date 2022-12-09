@@ -1,1 +1,0 @@
-This Integration works closely with Google Calendar and enables you to create new events with Google Meet.
