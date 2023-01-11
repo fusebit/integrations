@@ -9,5 +9,6 @@
     "./integration.js",
     "./template.ejs",
     "README.md"
-  ]
+  ],
+  "license": "MIT"
 }

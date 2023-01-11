@@ -21,5 +21,6 @@
     "salesforceObjectMapping.js",
     "salesforceObjectMappingTargetSchema.json",
     "salesforceObjectMappinguiSchema.json"
-  ]
+  ],
+  "license": "MIT"
 }
