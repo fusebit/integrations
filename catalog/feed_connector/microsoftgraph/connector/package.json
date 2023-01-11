@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/catalog-feed-connector-microsoftgraph-connector",
-  "version": "7.53.0",
+  "version": "7.53.1",
   "private": true,
   "scripts": {
     "redeploy": "fuse connector rm <% this.id %> && yarn deploy",
@@ -8,8 +8,8 @@
     "get": "fuse connector get <% this.id %> -d ."
   },
   "dependencies": {
-    "@fusebit-int/framework": "^7.53.0",
-    "@fusebit-int/microsoftgraph-connector": "^7.53.0"
+    "@fusebit-int/framework": "^7.53.1",
+    "@fusebit-int/microsoftgraph-connector": "^7.53.1"
   },
   "license": "MIT"
 }
