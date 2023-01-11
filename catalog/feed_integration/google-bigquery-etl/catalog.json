@@ -1,0 +1,34 @@
+{
+  "id": "google-bigquery-etl",
+  "name": "Google BigQuery ETL",
+  "smallIcon": "#/assets/google.svg",
+  "largeIcon": "#/assets/googleLarge.svg",
+  "version": "5.2.0",
+  "description": "#README.md",
+  "private": true,
+  "tags": {
+    "catalog": "ETL"
+  },
+  "resources": {
+    "configureAppDocUrl": "https://developer.fusebit.io/docs/google#creating-your-own-google-app",
+    "integrationsDocUrl": "https://developer.fusebit.io/docs/google",
+    "sampleConfig": {
+      "isEnabled": false
+    }
+  },
+  "configuration": {
+    "schema": "config/schema.json",
+    "uischema": "config/uischema.json",
+    "data": "config/defaults.json",
+    "entities": {
+      "google-bigquery-etlConnector": {
+        "entityType": "connector",
+        "path": "connector/"
+      },
+      "google-bigquery-etlIntegration": {
+        "entityType": "integration",
+        "path": "integration/"
+      }
+    }
+  }
+}
