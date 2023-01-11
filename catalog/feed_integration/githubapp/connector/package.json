@@ -10,5 +10,6 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.53.0",
     "@fusebit-int/githubapp-connector": "^7.53.0"
-  }
+  },
+  "license": "MIT"
 }

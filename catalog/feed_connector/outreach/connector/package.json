@@ -10,5 +10,6 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.53.0",
     "@fusebit-int/outreach-connector": "^7.53.0"
-  }
+  },
+  "license": "MIT"
 }

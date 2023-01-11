@@ -17,5 +17,6 @@
     "README.md",
     "schema.json",
     "uiSchema.json"
-  ]
+  ],
+  "license": "MIT"
 }

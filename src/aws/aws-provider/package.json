@@ -9,7 +9,7 @@
   ],
   "author": "Fusebit, Inc",
   "homepage": "https://fusebit.io",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "main": "libc/index.js",
   "files": [
     "libc/*.js",

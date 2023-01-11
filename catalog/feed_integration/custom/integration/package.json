@@ -12,5 +12,6 @@
   "files": [
     "./integration.js",
     "README.md"
-  ]
+  ],
+  "license": "MIT"
 }
