@@ -1,6 +1,6 @@
 {
   "name": "@fusebit-int/integrations",
-  "private": true,
+  "license": "MIT",
   "version": "7.53.0",
   "devDependencies": {
     "@babel/preset-env": "^7.15.6",
@@ -41,6 +41,5 @@
   },
   "dependencies": {
     "superagent": "^6.1.0"
-  },
-  "license": "MIT"
+  }
 }
