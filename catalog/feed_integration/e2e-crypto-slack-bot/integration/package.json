@@ -6,7 +6,7 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.53.1",
     "@fusebit-int/slack-provider": "^7.53.1",
-    "undici": "^4.15.1"
+    "undici": "^5.19.1"
   },
   "files": [
     "./integration.js",
