@@ -9,7 +9,7 @@
   "dependencies": {
     "@fusebit-int/framework": "^7.53.1",
     "@fusebit-int/microsoft-bot-framework-provider": "^7.53.1",
-    "botbuilder": "^4.14.1"
+    "botbuilder": "^4.19.3"
   },
   "files": [
     "./integration.js",
